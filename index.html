@@ -3,121 +3,250 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Course PWA App</title>
-    <link rel="manifest" href="/manifest.json">
+    <title>Android Magazine</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+            font-family: sans-serif;
             margin: 0;
-            background-color: #f4f4f9;
-        }
-        #login-button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-            background-color: #4285f4;
-            color: white;
-        }
-        #content {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-        }
-        #course-list {
-            list-style-type: none;
             padding: 0;
+            background-color: #f5f5f5; /* Light gray background */
         }
-        #course-list li {
-            margin: 10px 0;
+        header {
+            padding: 20px;
+            background-color: white;
         }
-        #course-list a {
-            text-decoration: none;
-            color: #4285f4;
-            font-size: 18px;
+        .header-content {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
         }
+        .logo {
+          color: #3cba54; /* Green logo */
+          font-size: 24px;
+          font-weight: bold;
+        }
+
+        nav ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+
+        nav li {
+          display: inline;
+          margin-right: 20px;
+        }
+        .search-shop {
+          display: flex;
+          align-items: center;
+        }
+
+        .search-icon {
+          margin-right: 10px;
+          cursor: pointer;
+        }
+
+        .shop-button {
+          background-color: #4285f4; /* Blue button */
+          color: white;
+          padding: 8px 16px;
+          border-radius: 4px;
+          text-decoration: none;
+        }
+
+
+        .hero-section {
+            text-align: center;
+            padding: 50px 20px;
+        }
+        .hero-title {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+
+        .article-section {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+            flex-wrap: wrap;
+        }
+        .article-card {
+            width: 30%;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .article-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .article-title {
+          font-weight: bold;
+          margin-bottom: 10px;
+        }
+        .read-article {
+          background-color: #e0e0e0;
+          color: #333;
+          padding: 8px 16px;
+          border-radius: 4px;
+          text-decoration: none;
+
+        }
+        footer {
+          background-color: #f5f5f5;
+          padding: 40px 20px;
+          text-align: center;
+        }
+        footer a{
+          color: #333;
+          text-decoration: none;
+        }
+
+        .footer-content {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr); /* Creates four equal columns */
+          gap: 20px;
+          max-width: 1200px; /* Sets a maximum width for the footer content */
+          margin: 0 auto; /* Centers the content */
+        }
+        .footer-logo {
+          color: #3cba54; /* Green logo */
+        }
+
+
     </style>
 </head>
 <body>
-    <button id="login-button">Login with Google</button>
-    <div id="content">
-        <h1>Courses</h1>
-        <ul id="course-list"></ul>
+
+  <header>
+    <div class="header-content">
+      <div class="logo">Android</div>
+      <nav>
+        <ul>
+          <li>Discover Android</li>
+          <li>Switch to Android</li>
+          <li>Explore devices</li>
+        </ul>
+      </nav>
+
+      <div class="search-shop">
+        <span class="search-icon">&#128269;</span>
+        <a href="#" class="shop-button">Shop phones</a>
+      </div>
+
     </div>
 
-    <script>
-        const CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID';
-        const API_KEY = 'YOUR_GOOGLE_API_KEY';
-        const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
-        const SCOPES = 'https://www.googleapis.com/auth/drive.readonly';
+  </header>
 
-        function handleClientLoad() {
-            gapi.load('client:auth2', initClient);
-        }
+    <section class="hero-section">
+        <h1 class="hero-title">Android Magazine: Your Source for News, Articles & Tips.</h1>
+    </section>
 
-        function initClient() {
-            gapi.client.init({
-                apiKey: API_KEY,
-                clientId: CLIENT_ID,
-                discoveryDocs: DISCOVERY_DOCS,
-                scope: SCOPES
-            }).then(() => {
-                gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-                updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-                document.getElementById('login-button').onclick = handleAuthClick;
-            });
-        }
 
-        function updateSigninStatus(isSignedIn) {
-            if (isSignedIn) {
-                document.getElementById('login-button').style.display = 'none';
-                document.getElementById('content').style.display = 'flex';
-                listFiles();
-            } else {
-                document.getElementById('login-button').style.display = 'block';
-                document.getElementById('content').style.display = 'none';
-            }
-        }
+    <section class="article-section">
+        <div class="article-card"  style="background-color: #f2f2f2;">
+          <img class="article-image" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=" alt="Article Image"> <div class="article-title">Make payments effortless with Tap to Pay. </div>
+            <a href="#" class="read-article">Read article</a>
+        </div>
+        <div class="article-card"  style="background-color: #edf2fa;">
+          <img class="article-image" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=" alt="Article Image"> <div class="article-title">Reasons why your Android battery drains quickly and how to prevent it. </div>
+            <a href="#" class="read-article">Read article</a>
+        </div>
+        <div class="article-card"  style="background-color: #e8f5e9;">
+          <img class="article-image" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=" alt="Article Image">
+            <div class="article-title">How to Customise & Display Android's Search Bar & Widget. </div>
+            <a href="#" class="read-article">Read article</a>
+        </div>
+        <div class="article-card" style="background-color: #fff9c4;">
+          <img class="article-image" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=" alt="Article Image"> <div class="article-title">How to transfer your messages from an iPhone to your new Android Phone. </div>
+            <a href="#" class="read-article">Read article</a>
+        </div>
 
-        function handleAuthClick(event) {
-            gapi.auth2.getAuthInstance().signIn();
-        }
+    </section>
 
-        function listFiles() {
-            gapi.client.drive.files.list({
-                'q': "mimeType='application/pdf' or mimeType='video/mp4'",
-                'pageSize': 10,
-                'fields': "nextPageToken, files(id, name)"
-            }).then(response => {
-                const files = response.result.files;
-                const fileContainer = document.getElementById('course-list');
-                fileContainer.innerHTML = '';
-                if (files && files.length > 0) {
-                    files.forEach((file) => {
-                        const listItem = document.createElement('li');
-                        const fileLink = document.createElement('a');
-                        fileLink.href = `https://drive.google.com/file/d/${file.id}/view`;
-                        fileLink.textContent = file.name;
-                        fileLink.target = '_blank';
-                        listItem.appendChild(fileLink);
-                        fileContainer.appendChild(listItem);
-                    });
-                } else {
-                    fileContainer.innerHTML = '<li>No files found.</li>';
-                }
-            });
-        }
+      <footer>
+        <div class="footer-content">
 
-        window.onload = handleClientLoad;
-    </script>
-    <script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()" onreadystatechange="if (this.readyState === 'complete') this.onload()">
-    </script>
+          <div>
+            <h3>Follow us</h3>
+              <span>&#10060;</span> <span>&#128247;</span> <span>&#9658;</span> <span>&#128221;</span> <span>&#128222;</span>
+          </div>
+          <div>
+            <h3>Privacy and Safety</h3>
+            <ul>
+              <li><a href="#">Security</a></li>
+              <li><a href="#">Privacy</a></li>
+              <li><a href="#">Physical safety</a></li>
+              <li><a href="#">Find my device</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3>Accessibility</h3>
+            <ul>
+              <li><a href="#">Vision features</a></li>
+              <li><a href="#">Audio features</a></li>
+              <li><a href="#">Mobility features</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3>More from Android</h3>
+            <ul>
+              <li><a href="#">Customize Android Bot</a></li>
+              <li><a href="#">Android TV</a></li>
+              <li><a href="#">Google Mobile Services (GMS)</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3>For enterprise</h3>
+            <ul>
+              <li><a href="#">Overview</a></li>
+              <li><a href="#">Enterprise Devices</a></li>
+              <li><a href="#">Enterprise Support</a></li>
+              <li><a href="#">Enterprise blog</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3>For the press</h3>
+            <ul>
+              <li><a href="#">Android blog</a></li>
+              <li><a href="#">Press corner</a></li>
+              <li><a href="#">Contact Press team</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3>For developers</h3>
+            <ul>
+              <li><a href="#">Developer resources</a></li>
+              <li><a href="#">Android Studio and SDK</a></li>
+              <li><a href="#">Android Open Source Project</a></li>
+              <li><a href="#">How Google Play works</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3>Support</h3>
+            <ul>
+              <li><a href="#">Help Centre</a></li>
+              <li><a href="#">Find My Device</a></li>
+              <li><a href="#">Join user studies</a></li>
+            </ul>
+          </div>
+
+
+        </div>
+        <div><a href="#">Privacy Policy</a> | <span>English (India)</span></div>
+          <div class="footer-logo">Android</div>
+      </footer>
+
 </body>
 </html>
