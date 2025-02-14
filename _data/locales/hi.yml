@@ -1,0 +1,91 @@
+# The layout text of site
+
+# ----- Commons label -----
+
+layout:
+  post: लेख 
+  category: वर्ग
+  tag: विषय 
+
+# The tabs of sidebar
+tabs:
+  # format: <filename_without_extension>: <value>
+  home: मुख्य पृष्ठ
+  categories: वर्ग
+  tags: विषय
+  archives: अभिलेखागार
+  about: जानकारी
+
+# the text displayed in the search bar & search results
+search:
+  hint: खोजें
+  cancel: रद्द करे
+  no_results: हे राम! कोई परिणाम नहीं मिला.
+
+panel:
+  lastmod: नवीनतम अद्यतन
+  trending_tags: लोकप्रिय विषय
+  toc: विषयसूची
+
+copyright:
+  # Shown at the bottom of the post
+  license:
+    template: यह लेख :LICENSE_NAME अनुज्ञप्ति के अधीन है।
+    name: CC BY 4.0
+    link: https://creativecommons.org/licenses/by/4.0/
+
+  # Displayed in the footer
+  brief: किंचित अधिकार आरक्षित हैं।
+  verbose: >-
+    जब तक अन्यथा उल्लेख न किया जाए, इस अंतरजाल स्थल पर लेख, लेखक द्वारा 
+    रचनात्मक सामान्य आरोपण ४.० अंतरराष्ट्रीय अनुज्ञप्ति (CC BY 4.0) के अंतर्गत लाइसेंस प्राप्त हैं।
+
+meta: :PLATFORM के लिए :THEME विषयवस्तु का उपयोग मैं हे।
+
+not_found:
+  statement: क्षमा करें, हमने URL गलत स्थान पर रख दिया है। या यह किसी ऐसी चीज़ की ओर इशारा करता है जो अब अस्तित्व में नहीं है।
+
+notification:
+  update_found: सामग्री का एक नया संस्करण उपलब्ध है।
+  update: अद्यतन
+
+# ----- Posts related labels -----
+
+post:
+  written_by: द्वारा लिखित
+  posted: को प्रकाशित
+  updated: को अद्यतन
+  words: शब्द
+  pageview_measure: बार पढ़ा गया
+  read_time:
+    unit: मिनट
+    prompt: का अध्ययन समय
+  relate_posts: और पढ़ें
+  share: साझा करे
+  button:
+    next: नये
+    previous: पुराने
+    copy_code:
+      succeed: प्रतिलिपि किया गया!
+    share_link:
+      title: URL प्रतिलिपि करें
+      succeed: URL सफलतापूर्वक प्रतिलिपि किया गया!
+
+# Date time format.
+# See: <http://strftime.net/>, <https://day.js.org/docs/en/display/format>
+df:
+  post:
+    strftime: "%b %e, %Y"
+    dayjs: "ll"
+  archives:
+    strftime: "%b"
+    dayjs: "MMM"
+
+# categories page
+categories:
+  category_measure:
+    singular: वर्ग
+    plural: अनेक वर्ग
+  post_measure:
+    singular: लेख
+    plural: अनेक लेख
