@@ -1,3 +1,4 @@
+```
 npm install gh-pages --save-dev --legacy-peer-deps
 ⠸^C
 ~/.../main/irbox.github.io $ ls
@@ -68,3 +69,4 @@ npm error permissions of the file and its containing directories, or try running
 npm error the command again as root/Administrator.
 npm error A complete log of this run can be found in: /data/data/com.termux/files/home/.npm/_logs/2025-03-01T21_20_16_996Z-debug-0.log
 ~/.../main/irbox.github.io $
+```
