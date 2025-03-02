@@ -1,0 +1,1 @@
+{"version":3,"names":["_createMaterialTopTabNavigator","require","_MaterialTopTabBar","_MaterialTopTabView","_useTabAnimation"],"sourceRoot":"../../src","sources":["index.tsx"],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAGA,IAAAA,8BAAA,GAAAC,OAAA;AAKA,IAAAC,kBAAA,GAAAD,OAAA;AACA,IAAAE,mBAAA,GAAAF,OAAA;AAKA,IAAAG,gBAAA,GAAAH,OAAA","ignoreList":[]}

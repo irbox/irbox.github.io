@@ -1,0 +1,108 @@
+{
+  "name": "@formidable-webview/webshell",
+  "version": "2.6.0",
+  "description": "🔥 Craft Robust React Native WebView-based components with ease.",
+  "main": "lib/commonjs/index.js",
+  "types": "types/@formidable-webview/webshell/index.d.ts",
+  "files": [
+    "lib/commonjs",
+    "src",
+    "types"
+  ],
+  "scripts": {
+    "test": "yarn test:ts && yarn test:lint && yarn test:jest",
+    "test:jest": "jest src/",
+    "test:ts": "tsc --noEmit --project tsconfig.json",
+    "test:lint": "eslint --ext webjs,ts,tsx src/",
+    "build": "yarn build:source && yarn build:defs",
+    "build:source": "bob build",
+    "build:defs": "api-extractor run --local --verbose",
+    "prepack": "cp ../../README.md ./ && yarn build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/formidable-webview/webshell.git"
+  },
+  "homepage": "https://formidable-webview.github.io/webshell/",
+  "devDependencies": {
+    "@babel/cli": "^7.12.8",
+    "@babel/core": "^7.12.9",
+    "@babel/plugin-transform-react-jsx": "^7.12.7",
+    "@babel/preset-typescript": "^7.12.7",
+    "@babel/runtime": "^7.12.5",
+    "@formidable-webview/ersatz": "^2.1.2",
+    "@formidable-webview/ersatz-testing": "^2.0.5",
+    "@microsoft/api-extractor": "7.9.22",
+    "@react-native-community/bob": "^0.16.2",
+    "@release-it/conventional-changelog": "^2.0.0",
+    "@testing-library/react-native": "^7.0.2",
+    "@tsconfig/react-native": "^1.0.2",
+    "@types/jest": "^26.0.14",
+    "@types/react": "^16.14.2",
+    "@types/react-native": "^0.63.37",
+    "@types/react-test-renderer": "^16.9.4",
+    "babel-jest": "^26.6.3",
+    "babel-plugin-inline-import": "^3.0.0",
+    "eslint": "^7.14.0",
+    "jest": "^26.4.2",
+    "metro-react-native-babel-preset": "^0.63.0",
+    "react": "*",
+    "react-native": "*",
+    "react-native-webview": "^11.0.0",
+    "react-test-renderer": "*",
+    "release-it": "^14.2.1",
+    "typescript": "3.9.7"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": ">= 0.59.0"
+  },
+  "keywords": [
+    "react-native",
+    "react-native-webview",
+    "autoheight",
+    "event",
+    "DOM"
+  ],
+  "author": "Jules Sam. Randolph <jules.sam.randolph@gmail.com> (https://github.com/jsamr)",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "chore: release @formidable-webview/webshell ${version}",
+      "tagName": "v${version}"
+    },
+    "npm": {
+      "publish": true
+    },
+    "github": {
+      "release": true
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": "angular",
+        "infile": "CHANGELOG.MD"
+      }
+    }
+  },
+  "@react-native-community/bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      [
+        "commonjs",
+        {
+          "babelrc": true
+        }
+      ],
+      [
+        "typescript",
+        {
+          "project": "tsconfig.build.json"
+        }
+      ]
+    ]
+  }
+}
