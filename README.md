@@ -1,5 +1,22 @@
 ```
+# Updated Dependencies
+The following changes were made to the dependencies:
+- Updated all dependencies in `package.json` to their latest versions.
+- Installed dependencies using `npm install --legacy-peer-deps` to resolve conflicts.
+
+# Deployment Instructions
+To deploy the app on GitHub Pages, run the following command:
 npm install gh-pages --save-dev --legacy-peer-deps
+
+Add the following scripts to your `package.json`:
+```json
+"scripts": {
+  "predeploy": "npm run build",
+  "deploy": "gh-pages -d build"
+}
+```
+After adding the scripts, you can deploy the app by running:
+npm run deploy
 ⠸^C
 ~/.../main/irbox.github.io $ ls
 App.js   README.md  android   babel.config.js  ios             metro.config.js  src            yarn.lock
