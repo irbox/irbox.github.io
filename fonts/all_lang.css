@@ -1,0 +1,438 @@
+/* hindi */
+@font-face {
+    font-family: "ChanakyaUni";
+    src: url("/fonts/hindi/chanakyaunin.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/hindi/chanakyaunin.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("/fonts/hindi/chanakyaunin.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/hindi/chanakyaunin.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/hindi/chanakyaunin.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/hindi/chanakyaunin.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/hindi/chanakyaunin.woff2") format("woff2"); /* Modern Browsers */
+	font-style:normal;
+	font-weight:normal;
+}
+
+@font-face {
+    font-family: "ChanakyaUni";
+    src: url("/fonts/hindi/chanakyaunii.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/hindi/chanakyaunii.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("/fonts/hindi/chanakyaunii.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/hindi/chanakyaunii.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/hindi/chanakyaunii.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/hindi/chanakyaunii.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/hindi/chanakyaunii.woff2") format("woff2"); /* Modern Browsers */
+    font-style:italic;
+	font-weight:normal;
+}
+
+@font-face {
+    font-family: "ChanakyaUni";
+    src: url("/fonts/hindi/chanakyaunib.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/hindi/chanakyaunib.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("/fonts/hindi/chanakyaunib.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/hindi/chanakyaunib.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/hindi/chanakyaunib.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/hindi/chanakyaunib.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/hindi/chanakyaunib.woff2") format("woff2"); /* Modern Browsers */
+    font-style:normal;
+	font-weight:bold;
+}
+
+@font-face {
+    font-family: "ChanakyaUni";
+    src: url("/fonts/hindi/chanakyaunibi.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/hindi/chanakyaunibi.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("/fonts/hindi/chanakyaunibi.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/hindi/chanakyaunibi.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/hindi/chanakyaunibi.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/hindi/chanakyaunibi.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/hindi/chanakyaunibi.woff2") format("woff2"); /* Modern Browsers */
+    font-style:italic;
+	font-weight:bold;
+}
+
+/* english */
+@font-face {
+    font-family: "NalandaTim";
+	src: url("/fonts/english/nalandatim.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/english/nalandatim.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+	url("/fonts/english/nalandatim.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/english/nalandatim.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/english/nalandatim.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/english/nalandatim.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/english/nalandatim.woff2") format("woff2"); /* Modern Browsers */
+	font-style:normal;
+	font-weight:normal;
+}
+
+@font-face {
+	font-family: "NalandaTim";
+    src: url("/fonts/english/nalandatimb.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/english/nalandatimb.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+	url("/fonts/english/nalandatimb.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/english/nalandatimb.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/english/nalandatimb.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/english/nalandatimb.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/english/nalandatimb.woff2") format("woff2"); /* Modern Browsers */
+	font-style:normal;
+	font-weight:bold;
+}
+
+@font-face {
+    font-family: "NalandaTim";
+	src: url("/fonts/english/nalandatimi.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/english/nalandatimi.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+	url("/fonts/english/nalandatimi.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/english/nalandatimi.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/english/nalandatimi.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/english/nalandatimi.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/english/nalandatimi.woff2") format("woff2"); /* Modern Browsers */
+	font-style:italic;
+	font-weight:normal;
+}
+
+/* Kannada */
+@font-face {
+    font-family: "Tunga";
+	src: url("/fonts/kannada/tunga.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/kannada/tunga.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("/fonts/kannada/Tunga.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/kannada/Tunga.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/kannada/tunga.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/kannada/Tunga.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/kannada/tunga.woff2") format("woff2"); /* Modern Browsers */
+	font-style:normal;
+	font-weight:normal;
+}
+
+@font-face {
+	font-family: "Tunga";
+    src: url("/fonts/kannada/tungab.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/kannada/tungab.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("/fonts/kannada/Tungab.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/kannada/Tungab.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/kannada/tungab.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/kannada/Tungab.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/kannada/tungab.woff2") format("woff2"); /* Modern Browsers */
+	font-style:normal;
+	font-weight:bold;
+}
+
+/* Bangla */
+@font-face {
+    font-family: "Shonar Bangla";
+	src: url("/fonts/bangla/shonar_bangla.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/bangla/shonar_bangla.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+	url("/fonts/bangla/shonar_bangla.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/bangla/shonar_bangla.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/bangla/shonar_bangla.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/bangla/shonar_bangla.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/bangla/shonar_bangla.woff2") format("woff2"); /* Modern Browsers */
+	font-style:normal;
+	font-weight:normal;
+}
+
+@font-face {
+	font-family: "Shonar Bangla";
+    src: url("/fonts/bangla/shonar_banglab.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/bangla/shonar_banglab.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("/fonts/bangla/shonar_banglab.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/bangla/shonar_banglab.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/bangla/shonar_banglab.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/bangla/shonar_banglab.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/bangla/shonar_banglab.woff2") format("woff2"); /* Modern Browsers */
+	font-style:normal;
+	font-weight:bold;
+}
+
+/* Ruposhi Bangla Unicode */						
+@font-face {
+    font-family: "Ruposhi Bangla Unicode";
+	src: url("/fonts/bangla/RuposhiBanglaUnicode.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/bangla/RuposhiBanglaUnicode.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+	url("/fonts/bangla/RuposhiBanglaUnicode.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/bangla/RuposhiBanglaUnicode.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/bangla/RuposhiBanglaUnicode.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/bangla/RuposhiBanglaUnicode.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/bangla/RuposhiBanglaUnicode.woff2") format("woff2"); /* Modern Browsers */
+	font-style:normal;
+	font-weight:normal;
+}
+
+@font-face {
+	font-family: "Ruposhi Bangla Unicode";
+    src: url("/fonts/bangla/RuposhiBanglaUnicode-Bold.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/bangla/RuposhiBanglaUnicode-Bold.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+	url("/fonts/bangla/RuposhiBanglaUnicode-Bold.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/bangla/RuposhiBanglaUnicode-Bold.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/bangla/RuposhiBanglaUnicode-Bold.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/bangla/RuposhiBanglaUnicode-Bold.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/bangla/RuposhiBanglaUnicode-Bold.woff2") format("woff2"); /* Modern Browsers */
+	font-style:normal;
+	font-weight:bold;
+}
+
+@font-face {
+	font-family: "Ruposhi Bangla Unicode";
+    src: url("/fonts/bangla/RuposhiBanglaUnicode-Italic.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/bangla/RuposhiBanglaUnicode-Italic.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+	url("/fonts/bangla/RuposhiBanglaUnicode-Italic.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/bangla/RuposhiBanglaUnicode-Italic.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/bangla/RuposhiBanglaUnicode-Italic.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/bangla/RuposhiBanglaUnicode-Italic.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/bangla/RuposhiBanglaUnicode-Italic.woff2") format("woff2"); /* Modern Browsers */
+	font-style:Italic;
+	font-weight:normal;
+}
+
+@font-face {
+    font-family: "Ruposhi Bangla Unicode";
+	src: url("/fonts/bangla/RuposhiBanglaUnicode-BoldItalic.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/bangla/RuposhiBanglaUnicode-BoldItalic.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+	url("/fonts/bangla/RuposhiBanglaUnicode-BoldItalic.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/bangla/RuposhiBanglaUnicode-BoldItalic.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/bangla/RuposhiBanglaUnicode-BoldItalic.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/bangla/RuposhiBanglaUnicode-BoldItalic.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/bangla/RuposhiBanglaUnicode-BoldItalic.woff2") format("woff2"); /* Modern Browsers */
+	font-style:italic;
+	font-weight:bold;
+}
+
+
+/* Tamil */
+@font-face {
+    font-family: "Latha";
+	src: url("/fonts/tamil/LATHA.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/tamil/LATHA.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("/fonts/tamil/LATHA.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/tamil/LATHA.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/tamil/LATHA.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/tamil/LATHA.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/tamil/LATHA.woff2") format("woff2"); /* Modern Browsers */
+	font-style:normal;
+	font-weight:normal;
+}
+
+@font-face {
+	font-family: "Latha";
+    src: url("/fonts/tamil/LATHAB.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/tamil/LATHAB.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("/fonts/tamil/LATHAB.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/tamil/LATHAB.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/tamil/LATHAB.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/tamil/LATHAB.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/tamil/LATHAB.woff2") format("woff2"); /* Modern Browsers */
+	font-style:normal;
+	font-weight:bold;
+}
+
+/* Oriya */
+@font-face {
+    font-family: "Kalinga";
+	src: url("/fonts/oriya/kalinga.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/oriya/kalinga.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+	url("/fonts/oriya/kalinga.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/oriya/kalinga.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/oriya/kalinga.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/oriya/kalinga.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/oriya/kalinga.woff2") format("woff2"); /* Modern Browsers */
+	font-style:normal;
+	font-weight:normal;
+}
+
+@font-face {
+	font-family: "Kalinga";
+    src: url("/fonts/oriya/kalingab.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/oriya/kalingab.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+	url("/fonts/oriya/kalingab.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/oriya/kalingab.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/oriya/kalingab.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/oriya/kalingab.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/oriya/kalingab.woff2") format("woff2"); /* Modern Browsers */
+	font-style:normal;
+	font-weight:bold;
+}
+
+@font-face {
+	font-family: "SubhadraVUni";
+    src: url("/fonts/oriya/SubhadraVUniN.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/oriya/SubhadraVUniN.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+	url("/fonts/oriya/SubhadraVUniN.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/oriya/SubhadraVUniN.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/oriya/SubhadraVUniN.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/oriya/SubhadraVUniN.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/oriya/SubhadraVUniN.woff2") format("woff2"); /* Modern Browsers */
+	font-style:normal;
+	font-weight:bold;
+}
+
+@font-face {
+    font-family: "KalingaVUni";
+    src: url("/fonts/oriya/KalingaVUniN.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/oriya/KalingaVUniN.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+	url("/fonts/oriya/KalingaVUniN.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/oriya/KalingaVUniN.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/oriya/KalingaVUniN.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/oriya/KalingaVUniN.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/oriya/KalingaVUniN.woff2") format("woff2"); /* Modern Browsers */
+    font-style: normal;
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "KalingaVUni";
+    src: url("/fonts/oriya/KalingaVUniB.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/oriya/KalingaVUniB.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+	url("/fonts/oriya/KalingaVUniB.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/oriya/KalingaVUniB.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/oriya/KalingaVUniB.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/oriya/KalingaVUniB.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/oriya/KalingaVUniB.woff2") format("woff2"); /* Modern Browsers */
+    font-style: normal;
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "KalingaVUni";
+    src: url("/fonts/oriya/KalingaVUniBI.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/oriya/KalingaVUniBI.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+	url("/fonts/oriya/KalingaVUniBI.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/oriya/KalingaVUniBI.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/oriya/KalingaVUniBI.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/oriya/KalingaVUniBI.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/oriya/KalingaVUniBI.woff2") format("woff2"); /* Modern Browsers */
+    font-style: normal;
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "KalingaVUni";
+    src: url("/fonts/oriya/KalingaVUniI.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/oriya/KalingaVUniI.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+	url("/fonts/oriya/KalingaVUniI.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/oriya/KalingaVUniI.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/oriya/KalingaVUniI.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/oriya/KalingaVUniI.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/oriya/KalingaVUniI.woff2") format("woff2"); /* Modern Browsers */
+    font-style: normal;
+    font-weight: bold;
+}
+
+/* VEDICN */
+@font-face {
+    font-family: "APS-DV-Vedic";
+	src: url("/fonts/VEDICN/VEDICN.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/VEDICN/VEDICN.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+	url("/fonts/VEDICN/VEDICN.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/VEDICN/VEDICN.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/VEDICN/VEDICN.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/VEDICN/VEDICN.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/VEDICN/VEDICN.woff2") format("woff2"); /* Modern Browsers */
+	font-style:normal;
+	font-weight:normal;
+}
+
+/* Odia */
+@font-face {
+    font-family: "KalingaVUni";
+	src: url("/fonts/odia/KalingaVUniB.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/odia/KalingaVUniB.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+	url("/fonts/odia/KalingaVUniB.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/odia/KalingaVUniB.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/odia/KalingaVUniB.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/odia/KalingaVUniB.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/odia/KalingaVUniB.woff2") format("woff2"); /* Modern Browsers */
+	font-style:normal;
+	font-weight:bold;
+}
+
+@font-face {
+	font-family: "KalingaVUni";
+    src: url("/fonts/odia/KalingaVUniBI.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/odia/KalingaVUniBI.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+	url("/fonts/odia/KalingaVUniBI.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/odia/KalingaVUniBI.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/odia/KalingaVUniBI.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/odia/KalingaVUniBI.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/odia/KalingaVUniBI.woff2") format("woff2"); /* Modern Browsers */
+	font-style:italic;
+	font-weight:bold;
+}
+
+@font-face {
+	font-family: "KalingaVUni";
+    src: url("/fonts/odia/KalingaVUniI.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/odia/KalingaVUniI.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+	url("/fonts/odia/KalingaVUniI.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/odia/KalingaVUniI.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/odia/KalingaVUniI.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/odia/KalingaVUniI.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/odia/KalingaVUniI.woff2") format("woff2"); /* Modern Browsers */
+	font-style:italic;
+	font-weight:normal;
+}
+
+@font-face {
+    font-family: "KalingaVUni";
+    src: url("/fonts/odia/KalingaVUniN.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/odia/KalingaVUniN.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+	url("/fonts/odia/KalingaVUniN.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/odia/KalingaVUniN.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/odia/KalingaVUniN.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/odia/KalingaVUniN.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/odia/KalingaVUniN.woff2") format("woff2"); /* Modern Browsers */
+    font-style: normal;
+    font-weight: normal;
+}
+
+/* Gujarati */
+@font-face {
+    font-family: "Rasa";
+	src: url("/fonts/Gujarati/Rasa-Regular.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/Gujarati/Rasa-Regular.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+	url("/fonts/Gujarati/Rasa-Regular.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/Gujarati/Rasa-Regular.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/Gujarati/Rasa-Regular.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/Gujarati/Rasa-Regular.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/Gujarati/Rasa-Regular.woff2") format("woff2"); /* Modern Browsers */
+	font-style:normal;
+	font-weight:normal;
+}
+
+@font-face {
+	font-family: "Rasa";
+    src: url("/fonts/Gujarati/Rasa-Bold.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/Gujarati/Rasa-Bold.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+	url("/fonts/Gujarati/Rasa-Bold.otf") format("opentype"), /* Open Type Font */
+    url("/fonts/Gujarati/Rasa-Bold.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/Gujarati/Rasa-Bold.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/Gujarati/Rasa-Bold.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/Gujarati/Rasa-Bold.woff2") format("woff2"); /* Modern Browsers */
+	font-style:normal;
+	font-weight:bold;
+}
+@font-face {
+    font-family: "Noto Serif Gujarati";
+	src: url("/fonts/Gujarati/NotoSerifGujarati-Regular.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/Gujarati/NotoSerifGujarati-Regular.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("/fonts/Gujarati/NotoSerifGujarati-Regular.otf") format("opentype"), /* Open Type Font */	
+    url("/fonts/Gujarati/NotoSerifGujarati-Regular.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/Gujarati/NotoSerifGujarati-Regular.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/Gujarati/NotoSerifGujarati-Regular.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/Gujarati/NotoSerifGujarati-Regular.woff2") format("woff2"); /* Modern Browsers */
+	font-style:normal;
+	font-weight:normal;
+}
+
+@font-face {
+	font-family: "Noto Serif Gujarati";
+    src: url("/fonts/Gujarati/NotoSerifGujarati-Bold.eot"); /* IE9 Compat Modes */
+    src: url("/fonts/Gujarati/NotoSerifGujarati-Bold.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+	url("/fonts/Gujarati/NotoSerifGujarati-Bold.otf") format("opentype"), /* Open Type Font */	
+    url("/fonts/Gujarati/NotoSerifGujarati-Bold.svg") format("svg"), /* Legacy iOS */
+    url("/fonts/Gujarati/NotoSerifGujarati-Bold.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("/fonts/Gujarati/NotoSerifGujarati-Bold.woff") format("woff"), /* Modern Browsers */
+    url("/fonts/Gujarati/NotoSerifGujarati-Bold.woff2") format("woff2"); /* Modern Browsers */
+	font-style:normal;
+	font-weight:bold;
+}
