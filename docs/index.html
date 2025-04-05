@@ -1,23 +1,159 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>HTML Ordered List</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beautiful Responsive Link List</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, #3a7bd5, #00d2ff);
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+        }
+        
+        h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            opacity: 0.8;
+            font-size: 16px;
+        }
+        
+        .link-list {
+            list-style: none;
+            counter-reset: link-counter;
+            padding: 20px;
+        }
+        
+        .link-list li {
+            margin-bottom: 15px;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+            counter-increment: link-counter;
+        }
+        
+        .link-list li:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            background-color: #e9f5ff;
+        }
+        
+        .link-list a {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: #2c3e50;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 500;
+            position: relative;
+            height: 100%;
+            width: 100%;
+        }
+        
+        .link-list a::before {
+            content: counter(link-counter);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(to right, #3a7bd5, #00d2ff);
+            border-radius: 50%;
+            color: white;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .link-list a::after {
+            content: "→";
+            position: absolute;
+            right: 20px;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .link-list li:hover a::after {
+            opacity: 1;
+            transform: translateX(5px);
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                border-radius: 10px;
+            }
+            
+            header {
+                padding: 20px 15px;
+            }
+            
+            h2 {
+                font-size: 24px;
+            }
+            
+            .link-list a {
+                font-size: 16px;
+                padding: 18px 15px;
+            }
+            
+            .link-list a::before {
+                width: 32px;
+                height: 32px;
+                margin-right: 12px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h2>My List</h2>
-<ol>
-  <li><a href="A/1.html">Link 1</a></li>
-  <li><a href="A/2.html">Link 2</a></li>
-  <li><a href="A/3.html">Link 3</a></li>
-  <li><a href="A/4.html">Link 4</a></li>
-  <li><a href="A/5.html">Link 5</a></li>
-  <li><a href="A/6.html">Link 6</a></li>
-  <li><a href="A/7.html">Link 7</a></li>
-  <li><a href="A/8.html">Link 8</a></li>
-  <li><a href="A/9.html">Link 9</a></li>
-  <li><a href="A/10.html">Link 10</a></li>
-  <li><a href="A/11.html">Link 11</a></li>
-  <li><a href="A/12.html">Link 12</a></li>
-</ol>
+    <div class="container">
+        <header>
+            <h2>Section A Collection</h2>
+            <div class="subtitle">Past 5 years PYQs and Answers</div>
+        </header>
+        
+        <ul class="link-list">
+            <li><a href="A/1.html">Link 1</a></li>
+            <li><a href="A/2.html">Link 2</a></li>
+            <li><a href="A/3.html">Link 3</a></li>
+            <li><a href="A/4.html">Link 4</a></li>
+            <li><a href="A/5.html">Link 5</a></li>
+            <li><a href="A/6.html">Link 6</a></li>
+            <li><a href="A/7.html">Link 7</a></li>
+            <li><a href="A/8.html">Link 8</a></li>
+            <li><a href="A/9.html">Link 9</a></li>
+            <li><a href="A/10.html">Link 10</a></li>
+            <li><a href="A/11.html">Link 11</a></li>
+            <li><a href="A/12.html">Link 12</a></li>
+        </ul>
+    </div>
 </body>
 </html>
