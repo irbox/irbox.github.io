@@ -1,3 +1,6 @@
+* TOC
+{:toc}
+
 Okay, here are concise, exam-focused answers for Surgery Paper 1, tailored for an RGUHS Final Year (RS4 CBME) student facing the exam tomorrow. Focus is on keywords, classifications, and management principles.
 
 **Surgery Paper 1 - RGUHS RS4 CBME Focus Notes**
