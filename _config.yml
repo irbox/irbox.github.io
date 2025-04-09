@@ -1,3 +1,5 @@
+theme: minima
+
 # TOC
 kramdown:
   input: GFM # Use GitHub Flavored Markdown
