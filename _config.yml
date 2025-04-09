@@ -1,0 +1,6 @@
+# TOC
+kramdown:
+  input: GFM # Use GitHub Flavored Markdown
+  hard_wrap: false
+  syntax_highlighter: rouge
+  toc_levels: 2..4  # Generate TOC for heading levels h2, h3, h4 (adjust as needed)
