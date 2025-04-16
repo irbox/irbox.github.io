@@ -5,28 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Veducation - Home</title>
     <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com?plugins=typography,line-clamp"></script>
-    <!-- Custom CSS (if needed later) -->
+    <script src="https://cdn.tailwindcss.com?plugins=typography,line-clamp,forms"></script> <!-- Added forms for consistency -->
+    <!-- markdown-it CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/13.0.1/markdown-it.min.js" integrity="sha512-SYfDUYPg5xspsG6OOpXU3mdOUu9knmZSBl/gki7iFeFckFpAFuwCevNHrCiZxGcHPeM2B3AZIAnUNCZjA3ZOqw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="css/custom.css">
     <!-- Favicon -->
     <link rel="icon" href="/favicon.ico" />
-    <!-- Font Awesome for icons (example, replace if needed) -->
+    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style type="text/tailwindcss">
-        /* Include base styles from globals.css that aren't utilities */
-        /* (Example: You might need to manually add font definitions or specific body styles here if not covered by Tailwind base) */
+        /* Base styles */
         body {
-            @apply min-h-screen bg-background font-sans text-lg text-neutral-600 pb-[6rem]; /* From globals.css */
+            @apply min-h-screen bg-background font-sans text-lg text-neutral-600 pb-[6rem];
         }
-        h1 {
-            @apply mb-2 font-sans text-5xl font-semibold text-neutral-800 sm:text-7xl md:text-8xl lg:text-9xl; /* From globals.css */
-          }
-          /* Add other base styles (h2-h6, p, a, etc.) from globals.css if needed */
-          /* ... */
+        h1 { @apply mb-2 font-sans text-3xl font-semibold text-neutral-800 md:text-5xl lg:text-6xl; }
+        h2 { @apply mb-2 font-sans text-2xl font-semibold text-neutral-800 md:text-3xl; }
+        h3 { @apply mb-2 text-xl font-bold text-neutral-700 md:text-2xl; }
+        h4 { @apply mb-1 text-lg font-bold text-neutral-700; }
+        h5 { @apply mb-2 text-base font-semibold text-neutral-800; }
+        p { @apply text-neutral-600 mb-4; }
+        p.small { @apply text-sm; }
+        a { @apply text-primary hover:text-primary-dark transition-colors; }
+        .prose { /* Basic prose styling for markdown */
+             @apply max-w-none;
+        }
+        .prose p { @apply mb-3 text-base leading-relaxed; }
+        .prose strong { @apply font-semibold text-neutral-700;}
+        /* Add other essential base styles */
 
-        /* Add styles converted from .module.css files if not using utility classes directly */
-        /* Example: .cardRoot { @apply grid; grid-template-columns: 1fr; } */
+        /* Custom component base styles if needed */
+         .more-link-item {
+            @apply flex items-center justify-between p-4 border-b border-gray-200 hover:bg-gray-100 transition-colors duration-200;
+        }
+        .more-link-item i.fa-chevron-right { @apply text-gray-400; }
+        .more-link-item .item-icon { @apply mr-3 text-primary w-5 text-center; }
+        .more-link-item .item-text { @apply text-neutral-700 font-medium; }
       </style>
 
 </head>
@@ -35,51 +50,33 @@
     <!-- Header -->
     <header id="main-header" class="sticky top-0 z-20 bg-background p-2 flex justify-between items-center shadow-md">
         <!-- Header content will be injected by JS -->
+        <p class="text-xs">Loading Header...</p>
     </header>
 
     <!-- Main Content Area -->
-    <main id="main-content" class="container mx-auto px-4 py-6">
-        <!-- Homepage content will be dynamically loaded here -->
-        <!-- Example structure based on typical Next.js page -->
-        <section id="home-banner" class="mb-8">
-            <!-- Banner content -->
-            <p>Loading Banner...</p>
-        </section>
-        <section id="about-section" class="mb-8">
-             <!-- About section content -->
-             <p>Loading About Section...</p>
-        </section>
-        <section id="product-list-1" class="mb-8">
-            <!-- Product list content (e.g., Books) -->
-             <p>Loading Products...</p>
-        </section>
-         <section id="product-list-2" class="mb-8">
-            <!-- Product list content (e.g., Yoddha Store) -->
-             <p>Loading Products...</p>
-        </section>
-         <section id="courses-section" class="mb-8">
-            <!-- Courses list content -->
-             <p>Loading Courses...</p>
-        </section>
-         <section id="donations-section" class="mb-8">
-            <!-- Donations section content -->
-             <p>Loading Donations...</p>
-        </section>
-        <!-- Add more sections as needed based on original page structure -->
+    <main id="main-content" class="container mx-auto py-6">
+        <!-- Homepage content structure -->
+        <section id="home-banner" class="mb-8"></section>
+        <section id="about-section" class="mb-8 px-container md:px-0"></section>
+        <section id="product-list-books" class="mb-8 px-container md:px-0"></section>
+        <section id="product-list-store" class="mb-8 px-container md:px-0"></section>
+        <section id="courses-section" class="mb-8 px-container md:px-0"></section>
+        <section id="donations-section" class="mb-8 px-container md:px-0"></section>
+        <!-- Initial Loading messages will be placed here by app.js -->
     </main>
 
     <!-- Footer / Navbar -->
     <nav id="main-navbar" class="fixed bottom-0 left-0 w-full bg-background shadow-inner z-10 border-t border-gray-200">
         <!-- Navbar content will be injected by JS -->
+        <p class="text-center text-xs p-2">Loading Navigation...</p>
     </nav>
 
     <!-- Core JavaScript -->
+    <script src="js/utils.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/api.js"></script>
     <script src="js/app.js"></script>
-    <!-- Page-specific script (can be added for complex pages) -->
-    <!-- <script src="js/home.js"></script> -->
 
 </body>
 </html>
