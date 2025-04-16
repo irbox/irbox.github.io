@@ -421,6 +421,103 @@ function renderDonationsSection(containerOrSelector, donations) {
 }
 
 
+/**
+ * Renders the list of options for the "More" page.
+ * Dynamically shows Login/Logout based on auth state.
+ * @param {string | HTMLElement} containerOrSelector - CSS selector or the container element.
+ * @param {object | null} user - The current user object or null.
+ */
+function renderMorePageList(containerOrSelector, user) {
+    const container = typeof containerOrSelector === 'string' ? $(containerOrSelector) : containerOrSelector;
+     if (!container) {
+        console.warn(`More options container "${containerOrSelector}" not found.`);
+        return;
+    }
+
+    const commonLinks = [
+        { href: '/about.html', iconClass: 'fas fa-info-circle', text: 'About Us' },
+        { href: '/donations.html', iconClass: 'fas fa-hand-holding-heart', text: 'Donations' },
+        { href: '/contact.html', iconClass: 'fas fa-envelope', text: 'Contact Us' }, // Example link
+        { href: '/faq.html', iconClass: 'fas fa-question-circle', text: 'FAQ' }, // Example link
+        // Add other common links here
+    ];
+
+    const loggedInLinks = [
+        { href: '/profile.html', iconClass: 'fas fa-user-circle', text: 'My Profile' },
+        { href: '/orders.html', iconClass: 'fas fa-box-open', text: 'My Orders' }, // Assuming orders.html
+        { href: '/settings.html', iconClass: 'fas fa-cog', text: 'Settings' }, // Assuming settings.html
+        // Add other logged-in specific links
+    ];
+
+    let linksHTML = '';
+
+    if (user) {
+        // Combine common and logged-in links
+        [...loggedInLinks, ...commonLinks].forEach(link => {
+            linksHTML += `
+                <a href="${link.href}" class="more-link-item">
+                    <div class="flex items-center">
+                         <i class="${link.iconClass} item-icon"></i>
+                         <span class="item-text">${link.text}</span>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            `;
+        });
+        // Add Logout button
+        linksHTML += `
+            <button id="more-logout-button" class="more-link-item w-full text-left text-red-600">
+                 <div class="flex items-center">
+                    <i class="fas fa-sign-out-alt item-icon"></i>
+                    <span class="item-text font-semibold">Logout</span>
+                </div>
+                 <i class="fas fa-chevron-right"></i>
+            </button>
+        `;
+    } else {
+        // Show common links and Login button
+         commonLinks.forEach(link => {
+            linksHTML += `
+                <a href="${link.href}" class="more-link-item">
+                     <div class="flex items-center">
+                         <i class="${link.iconClass} item-icon"></i>
+                         <span class="item-text">${link.text}</span>
+                    </div>
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            `;
+        });
+         // Add Login button
+         linksHTML += `
+            <button id="more-login-button" class="more-link-item w-full text-left text-green-600">
+                 <div class="flex items-center">
+                    <i class="fab fa-github item-icon"></i>
+                    <span class="item-text font-semibold">Login with GitHub</span>
+                 </div>
+                 <i class="fas fa-chevron-right"></i>
+            </button>
+        `;
+    }
+
+    container.innerHTML = linksHTML;
+
+     // Add event listeners for login/logout buttons within the list
+     if (user) {
+        const logoutBtn = $('#more-logout-button');
+        if (logoutBtn) {
+            logoutBtn.removeEventListener('click', handleLogout); // Prevent duplicates
+            logoutBtn.addEventListener('click', handleLogout); // Defined in auth.js
+        }
+     } else {
+        const loginBtn = $('#more-login-button');
+        if (loginBtn) {
+             loginBtn.removeEventListener('click', handleLogin); // Prevent duplicates
+             loginBtn.addEventListener('click', handleLogin); // Defined in auth.js
+         }
+     }
+}
+
+
 // --- Helper function (example - defined in app.js or specific cart file) ---
 // function getCartItemCount() { /* ... implementation ... */ return 0; }
 // function updateCartBadge() { /* ... implementation ... */ }
