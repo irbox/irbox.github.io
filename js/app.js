@@ -400,3 +400,128 @@ document.addEventListener('DOMContentLoaded', initializePage);
 
 // --- Handle Browser Navigation (Back/Forward buttons) ---
 window.addEventListener('popstate', loadPageContent);
+
+// ...(previous code in app.js)...
+
+// --- Routing and Page Initialization ---
+
+/**
+ * Loads content based on the current URL path.
+ */
+async function loadPageContent() {
+  const path = window.location.pathname;
+  const mainContent = $('#main-content');
+  if (!mainContent) return;
+
+  // Clear previous content and show loading state
+  mainContent.innerHTML = '<p class="text-center p-10">Loading...</p>';
+
+  if (path === '/' || path === '/index.html') {
+    await loadHomePageContent(mainContent);
+  } else if (path.startsWith('/product.html')) {
+    await loadProductDetailsPageContent(mainContent);
+  } else if (path === '/cart.html') {
+    await loadCartPageContent(mainContent);
+   } else if (path === '/library.html') {
+     await loadLibraryPageContent(mainContent);
+   } else if (path.startsWith('/readbook.html')) {
+     await loadReadBookPageContent(mainContent);
+   } else if (path === '/courses.html') {
+     await loadCoursesPageContent(mainContent);
+   } else if (path.startsWith('/course-details.html')) {
+      await loadCourseDetailsPageContent(mainContent);
+   } else if (path === '/yoddha-store.html') {
+      await loadYoddhaStorePageContent(mainContent);
+   } else if (path === '/profile.html') {
+      await loadProfilePageContent(mainContent); // Placeholder exists
+   } else if (path === '/login.html') {
+       loadLoginPageContent(mainContent);
+   } else if (path === '/notifications.html') {
+      await loadNotificationsPageContent(mainContent);
+   } else if (path === '/orderconfirmed.html') {
+        await loadOrderConfirmedPageContent(mainContent);
+   } else if (path === '/billingdetails.html') {
+        await loadBillingDetailsPageContent(mainContent);
+   } else if (path === '/more.html') {
+        await loadMorePageContent(mainContent); // Call the new loader
+   } else if (path === '/about.html') {
+        await loadAboutPageContent(mainContent);
+   } else if (path === '/donations.html') {
+        await loadDonationsPageContent(mainContent);
+   } else if (path.startsWith('/products.html')) {
+        await loadProductCategoryPageContent(mainContent);
+   } else if (path === '/orders.html') { // Added route for orders
+        await loadOrderHistoryPageContent(mainContent); // Assuming a function to load orders
+   } else if (path === '/settings.html') { // Added route for settings
+        await loadSettingsPageContent(mainContent); // Assuming a function to load settings
+   } else if (path === '/contact.html') { // Added route for contact
+        await loadContactPageContent(mainContent); // Assuming a function to load contact
+   } else if (path === '/faq.html') { // Added route for faq
+        await loadFaqPageContent(mainContent); // Assuming a function to load faq
+   }
+  else {
+    renderComponent(mainContent, `<h2>404 - Page Not Found</h2><p>The requested page ${path} could not be found.</p>`);
+  }
+
+  // Re-render navbar AFTER loading content to ensure correct active state
+  renderNavbar(window.location.pathname);
+}
+
+// ...(loadHomePageContent, loadProductDetailsPageContent, etc.)...
+
+/**
+ * Loads and renders content for the More Page.
+ * @param {HTMLElement} container - The main content container element.
+ */
+async function loadMorePageContent(container) {
+    const user = getCurrentUser(); // Check login status from auth.js
+    // Render the list using the function from ui.js
+    renderMorePageList('#more-options-list', user); // Pass the user status
+}
+
+// --- Add loader functions for other pages linked from "More" ---
+async function loadOrderHistoryPageContent(container) { renderComponent(container, `<h2>Order History</h2><p>Content coming soon...</p>`); }
+async function loadSettingsPageContent(container) { renderComponent(container, `<h2>Settings</h2><p>Content coming soon...</p>`); }
+async function loadContactPageContent(container) { renderComponent(container, `<h2>Contact Us</h2><p>Content coming soon...</p>`); }
+async function loadFaqPageContent(container) { renderComponent(container, `<h2>FAQ</h2><p>Content coming soon...</p>`); }
+async function loadProfilePageContent(container) {
+    const user = getCurrentUser();
+    if (user) {
+        // Fetch actual profile/billing data if needed from api.js
+        // const profileData = await fetchUserProfile(user.id);
+        // const billingData = await fetchBillingDetails(user.id);
+
+        renderComponent('#profile-content-area', `
+            <div class="flex flex-col items-center md:items-start md:flex-row gap-6 p-4 bg-white rounded shadow border">
+                <img src="${user.avatar_url || '/icons/profile.svg'}" alt="${user.login}" class="w-24 h-24 rounded-full border-2 border-primary">
+                <div>
+                    <h2 class="text-xl font-bold">${user.name || user.login}</h2>
+                    <p class="text-neutral-600">${user.email || 'No email provided'}</p>
+                    <!-- Display other profile info here -->
+                    <button class="mt-4 text-sm text-blue-600 hover:underline">Edit Profile (Not implemented)</button>
+                </div>
+            </div>
+        `);
+        // Load order history (placeholder)
+        $('#orders-list').innerHTML = `<p>Order history loading soon...</p>`;
+    } else {
+         renderComponent('#profile-content-area', `
+            <div class="text-center p-6 bg-white rounded shadow border">
+                <p class="mb-4">You need to be logged in to view your profile.</p>
+                 <button id="profile-login-button" class="bg-primary text-white text-sm font-bold py-2 px-4 rounded hover:bg-primary-dark">
+                     <i class="fab fa-github mr-2"></i> Login with GitHub
+                 </button>
+             </div>
+         `);
+         // Hide order history if not logged in
+          $('#order-history-section').style.display = 'none';
+
+         const loginBtn = $('#profile-login-button');
+         if (loginBtn) {
+            loginBtn.removeEventListener('click', handleLogin); // Prevent duplicates
+            loginBtn.addEventListener('click', handleLogin);
+         }
+    }
+ }
+
+// ...(rest of app.js, including initializePage, event listeners)...
