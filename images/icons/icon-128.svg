@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-<!--Background Circle-->
-  <circle cx="50" cy="50" r="50" fill="#189e65"/>
-<!--Main Plus Symbol-->
-<!--M = Move to | H = Horizontal Line | V = Vertical Line | Z = Close Path 
-    Path description: Move to top-left corner of vertical bar, draw down, right, up, right, down, right, up, left, down, left, up, left (back to start)-->
-  <path d="M 40,25 H 60 V 40 H 75 V 60 H 60 V 75 H 40 V 60 H 25 V 40 H 40 Z" fill="#FFFFFF"/>
-</svg>
