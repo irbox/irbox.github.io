@@ -153,37 +153,57 @@ function renderHomeBanner(containerSelector, data) {
     renderComponent(containerSelector, htmlContent);
 }
 
+
 /**
  * Renders the About Section on the Home Page.
  * Translates the structure from the AboutPage component.
- * @param {string} containerSelector - CSS selector for the container element.
+ * Safely handles Markdown rendering.
+ * @param {string | HTMLElement} containerOrSelector - CSS selector or the container element.
  * @param {object} data - About section data { title, greet, desc, img }.
  */
-function renderAboutSection(containerSelector, data) {
-     // Convert markdown description to HTML (requires markdown-it library)
-     let descriptionHtml = data.desc || '';
-     if (typeof window.markdownit === 'function') {
-         const md = window.markdownit({ html: true, breaks: true }); // Enable HTML and line breaks
-         descriptionHtml = md.render(descriptionHtml);
-     } else {
-         // Fallback: replace newlines with <br> manually if markdown-it isn't loaded
-         descriptionHtml = descriptionHtml.replace(/\n/g, '<br>');
-     }
+function renderAboutSection(containerOrSelector, data) {
+    const container = typeof containerOrSelector === 'string' ? $(containerOrSelector) : containerOrSelector;
+    if (!container) {
+        console.warn(`About section container "${containerOrSelector}" not found.`);
+        return;
+    }
+
+    // Ensure data and description exist
+    const descriptionText = data?.desc || '';
+    let descriptionHtml = '';
+
+    // Safely attempt Markdown rendering
+    try {
+        if (typeof window.markdownit === 'function') {
+            const md = window.markdownit({ html: true, breaks: true }); // Enable HTML and line breaks
+            descriptionHtml = md.render(descriptionText);
+        } else {
+            // Fallback: replace newlines with <br> manually - escape HTML to prevent XSS if source is untrusted
+            const escapedText = descriptionText.replace(/</g, "<").replace(/>/g, ">");
+            descriptionHtml = `<p>${escapedText.replace(/\n/g, '<br>')}</p>`; // Wrap in paragraph
+        }
+    } catch (e) {
+        console.error("Error rendering markdown:", e);
+        // Fallback if markdown rendering itself fails
+         const escapedText = descriptionText.replace(/</g, "<").replace(/>/g, ">");
+         descriptionHtml = `<p>${escapedText.replace(/\n/g, '<br>')}</p>`;
+    }
+
 
     const htmlContent = `
         <div class="flex flex-col md:flex-row items-center gap-6 md:gap-10 bg-background p-4 rounded-lg shadow">
             <div class="w-full md:w-2/5 flex-shrink-0">
                 <div class="relative aspect-square object-contain rounded-lg overflow-hidden shadow-md">
-                    <img src="${data.img || '/placeholder-image.png'}" alt="${data.title || 'About'}" class="absolute inset-0 w-full h-full object-cover">
+                    <img src="${data?.img || '/placeholder-image.png'}" alt="${data?.title || 'About'}" class="absolute inset-0 w-full h-full object-cover">
                 </div>
-                <div class="mt-[-60px] ml-4 relative z-10 text-left md:mt-[-80px] md:ml-6">
-                    <p class="text-xl md:text-2xl text-secondary leading-tight">${data.greet || ''}</p>
-                    <p class="text-xl md:text-2xl text-primary2 font-bold leading-tight max-w-[240px]">${data.title || ''}</p>
+                 <div class="mt-[-60px] ml-4 relative z-10 text-left md:mt-[-80px] md:ml-6">
+                    <p class="text-xl md:text-2xl text-secondary leading-tight">${data?.greet || ''}</p>
+                    <p class="text-xl md:text-2xl text-primary2 font-bold leading-tight max-w-[240px]">${data?.title || ''}</p>
                 </div>
             </div>
             <div class="w-full md:w-3/5 mt-[-20px] md:mt-0">
-                <div class="prose prose-neutral max-w-none text-base leading-6 text-neutral-600">
-                   ${descriptionHtml}
+                <div class="prose prose-neutral max-w-none text-base leading-relaxed text-neutral-600">
+                   ${descriptionHtml} <!-- Use rendered HTML -->
                 </div>
                 <div class="mt-5">
                      <a href="/about.html" class="inline-block bg-primary text-white font-bold py-3 px-6 rounded-md hover:bg-primary-dark transition duration-300 text-base w-full text-center md:w-auto">
@@ -193,7 +213,7 @@ function renderAboutSection(containerSelector, data) {
             </div>
         </div>
     `;
-    renderComponent(containerSelector, htmlContent);
+    renderComponent(container, htmlContent); // Use the generic renderer
 }
 
 
