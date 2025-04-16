@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veducation - Courses</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=typography,line-clamp"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/custom.css">
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" />
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style type="text/tailwindcss">
+        /* Include base styles needed for courses page */
+        body {
+            @apply min-h-screen bg-background font-sans text-lg text-neutral-600 pb-[6rem];
+        }
+        /* Add other base styles if needed */
+
+        /* Styles for course cards */
+        /* .course-card { @apply ...; } */
+      </style>
+</head>
+<body class="bg-background text-neutral-600 font-sans">
+
+    <!-- Header -->
+    <header id="main-header" class="sticky top-0 z-20 bg-background p-2 flex justify-between items-center shadow-md">
+        <!-- Header content will be injected by JS -->
+        <p>Loading Header...</p>
+    </header>
+
+    <!-- Main Content Area -->
+    <!-- The loadCoursesPageContent function in app.js will populate this -->
+    <main id="main-content" class="container mx-auto py-6 px-container md:px-0">
+        <h1 class="text-2xl font-bold mb-6">Our Courses</h1>
+
+        <section id="all-courses-section">
+             <h2 class="text-xl font-semibold mb-4">Available Courses</h2>
+             <div id="courses-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                 <!-- Course cards will be rendered here by js/app.js -> loadCoursesPageContent() -> renderCourseList() -->
+                 <p class="col-span-full text-center p-10">Loading courses...</p>
+             </div>
+        </section>
+
+        <!-- Optional: Could add sections for categories or featured courses -->
+
+    </main>
+
+    <!-- Footer / Navbar -->
+    <nav id="main-navbar" class="fixed bottom-0 left-0 w-full bg-background shadow-inner z-10 border-t border-gray-200">
+        <!-- Navbar content will be injected by JS -->
+         <p class="text-center text-xs p-2">Loading Navigation...</p>
+    </nav>
+
+    <!-- Core JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+    <!-- Potentially a courses-specific script if complex -->
+    <!-- <script src="js/courses.js"></script> -->
+
+</body>
+</html>
