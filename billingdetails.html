@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veducation - Billing Details</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=typography,line-clamp,forms"></script> <!-- Added forms plugin -->
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/custom.css">
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.ico" />
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style type="text/tailwindcss">
+        /* Include base styles */
+        body {
+            @apply min-h-screen bg-background font-sans text-lg text-neutral-600 pb-[6rem];
+        }
+        /* Add form-specific styles if needed */
+        label {
+             @apply block text-sm font-medium text-neutral-700 mb-1;
+         }
+         input[type="text"],
+         input[type="email"],
+         input[type="tel"],
+         textarea,
+         select {
+             @apply block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm;
+             /* Using Tailwind Forms plugin defaults - customize if needed */
+         }
+         textarea {
+             min-height: 80px;
+         }
+         .billing-form-grid {
+             @apply grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6;
+         }
+         .billing-form-field-full { @apply sm:col-span-6; }
+         .billing-form-field-half { @apply sm:col-span-3; }
+         /* ... other base styles ... */
+      </style>
+</head>
+<body class="bg-background text-neutral-600 font-sans">
+
+    <!-- Header -->
+    <header id="main-header" class="sticky top-0 z-20 bg-background p-2 flex justify-between items-center shadow-md">
+        <!-- Header content will be injected by JS -->
+        <p>Loading Header...</p>
+    </header>
+
+    <!-- Main Content Area -->
+    <!-- The loadBillingDetailsPageContent function in app.js will manage this -->
+    <main id="main-content" class="container mx-auto py-6 px-container md:px-0">
+        <h1 class="text-2xl font-bold mb-6">Shipping & Billing Details</h1>
+
+        <div id="billing-details-form-container" class="bg-white p-6 rounded-lg shadow border border-gray-200">
+            <!-- Form will be rendered/managed by JS (e.g., using Formik logic adapted for plain JS) -->
+            <!-- Or define static form fields here directly -->
+            <form id="billing-form" novalidate>
+                <div class="billing-form-grid">
+                    <div class="billing-form-field-half">
+                        <label for="name">First name</label>
+                        <input type="text" name="name" id="name" required>
+                        <p class="text-red-500 text-xs mt-1 field-error" data-field="name"></p> <!-- Placeholder for JS errors -->
+                    </div>
+
+                    <div class="billing-form-field-half">
+                        <label for="lastname">Last name</label>
+                        <input type="text" name="lastname" id="lastname" required>
+                         <p class="text-red-500 text-xs mt-1 field-error" data-field="lastname"></p>
+                    </div>
+
+                    <div class="billing-form-field-full">
+                        <label for="email">Email address</label>
+                        <input type="email" name="email" id="email" required>
+                         <p class="text-red-500 text-xs mt-1 field-error" data-field="email"></p>
+                    </div>
+
+                     <div class="billing-form-field-full">
+                        <label for="phone">Phone</label>
+                        <input type="tel" name="phone" id="phone" required>
+                         <p class="text-red-500 text-xs mt-1 field-error" data-field="phone"></p>
+                    </div>
+
+                    <div class="billing-form-field-full">
+                        <label for="country">Country</label>
+                        <select id="country" name="country" required>
+                            <option value="">Select Country</option>
+                            <option value="USA">United States</option>
+                            <option value="CAN">Canada</option>
+                            <option value="IND">India</option>
+                            <!-- Add more countries -->
+                        </select>
+                         <p class="text-red-500 text-xs mt-1 field-error" data-field="country"></p>
+                    </div>
+
+
+                    <div class="billing-form-field-full">
+                        <label for="street">Street address</label>
+                        <input type="text" name="street" id="street" placeholder="House number and street name" required>
+                         <p class="text-red-500 text-xs mt-1 field-error" data-field="street"></p>
+                    </div>
+
+                    <div class="billing-form-field-half">
+                        <label for="city">Town / City</label>
+                        <input type="text" name="city" id="city" required>
+                         <p class="text-red-500 text-xs mt-1 field-error" data-field="city"></p>
+                    </div>
+
+                    <div class="billing-form-field-half">
+                        <label for="postcode">Postcode / ZIP</label>
+                        <input type="text" name="postcode" id="postcode" required>
+                         <p class="text-red-500 text-xs mt-1 field-error" data-field="postcode"></p>
+                    </div>
+
+                     <div class="billing-form-field-full">
+                        <label for="orderNote">Order notes (optional)</label>
+                         <textarea name="orderNote" id="orderNote" rows="3" placeholder="Notes about your order, e.g. special notes for delivery."></textarea>
+                         <p class="text-red-500 text-xs mt-1 field-error" data-field="orderNote"></p>
+                    </div>
+                </div>
+
+                <!-- Placeholder for server errors -->
+                <p id="server-error" class="text-red-600 text-sm mt-4"></p>
+
+                <div class="mt-8">
+                    <button type="submit" id="submit-billing-btn" class="w-full bg-primary text-white font-bold py-3 px-6 rounded hover:bg-primary-dark transition duration-300">
+                        Save Address & Continue
+                    </button>
+                </div>
+            </form>
+             <p class="text-center p-10 hidden" id="billing-loading">Saving details...</p> <!-- Loading indicator -->
+        </div>
+
+    </main>
+
+    <!-- Footer / Navbar -->
+    <nav id="main-navbar" class="fixed bottom-0 left-0 w-full bg-background shadow-inner z-10 border-t border-gray-200">
+        <!-- Navbar content will be injected by JS -->
+         <p class="text-center text-xs p-2">Loading Navigation...</p>
+    </nav>
+
+    <!-- Core JavaScript -->
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+    <!-- Billing-specific script to handle form validation and submission -->
+    <script src="js/billing.js"></script>
+
+</body>
+</html>
