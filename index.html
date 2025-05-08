@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WASM Video Merger</title>
+    <title>WASM Video Merger (v0.12)</title>
     <style>
         body {
             font-family: sans-serif;
@@ -40,6 +40,7 @@
             white-space: pre-wrap; /* Keep newlines in log */
             max-height: 200px;
             overflow-y: auto;
+            font-size: 0.9em;
         }
         video {
             max-width: 100%;
@@ -57,7 +58,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Video Merger (WASM)</h1>
+        <h1>Video Merger (WASM - ffmpeg.wasm v0.12)</h1>
         <p>Select two or more video files (MP4 recommended, with similar codecs/resolutions for best results) to merge.</p>
 
         <input type="file" id="fileInput" multiple accept="video/mp4,video/*">
@@ -77,13 +78,8 @@
         </div>
     </div>
 
-    <!-- IMPORTANT: Load ffmpeg.wasm. This uses a CDN. -->
-    <!-- For a truly self-contained app without external fetches, -->
-    <!-- you'd need to serve these files yourself and handle COOP/COEP headers -->
-    <!-- if you want to use the multi-threaded version. -->
-    <!-- We use the single-threaded version here (ffmpeg-core.js) for broader compatibility -->
-    <!-- when serving from simple static hosts or file:// -->
-    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.0/dist/ffmpeg.min.js"></script>
+    <!-- Use ffmpeg.wasm v0.12.0 -->
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.12.0/dist/ffmpeg.min.js"></script>
 
     <script>
         const { createFFmpeg, fetchFile } = FFmpeg;
@@ -102,17 +98,21 @@
 
         async function loadFFmpeg() {
             if (isFFmpegLoaded && ffmpeg) return ffmpeg;
-            statusDiv.textContent = 'Loading FFmpeg-core... (this may take a moment)';
+            statusDiv.textContent = 'Loading FFmpeg-core v0.12.0... (this may take a moment)';
             logContainer.style.display = 'block';
             logDiv.textContent = ''; // Clear previous logs
 
             try {
+                // For ffmpeg.wasm v0.12.0, explicitly provide corePath and wasmPath for single-threaded mode.
+                // This is crucial to avoid SharedArrayBuffer issues when COOP/COEP headers are not set
+                // (like on GitHub Pages or when opening file://).
+                const corePath = 'https://unpkg.com/@ffmpeg/core@0.12.0/dist/ffmpeg-core.js';
+                const wasmPath = 'https://unpkg.com/@ffmpeg/core@0.12.0/dist/ffmpeg-core.wasm';
+                // workerPath is NOT needed for single-threaded @ffmpeg/core
+
                 ffmpeg = createFFmpeg({
-                    // corePath: 'https://unpkg.com/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js', // Single-threaded
-                    // For multi-threaded, you'd use ffmpeg-core-mt.js and need COOP/COEP headers
-                    // corePath: 'https://unpkg.com/@ffmpeg/core-mt@0.11.0/dist/ffmpeg-core-mt.js',
-                    // wasmPath: 'https://unpkg.com/@ffmpeg/core-mt@0.11.0/dist/ffmpeg-core.wasm',
-                    // workerPath: 'https://unpkg.com/@ffmpeg/core-mt@0.11.0/dist/ffmpeg-core-worker.js',
+                    corePath,
+                    wasmPath,
                     log: true, // Enable logging from FFmpeg
                 });
 
@@ -121,12 +121,20 @@
                     logDiv.scrollTop = logDiv.scrollHeight; // Auto-scroll
                 });
 
-                ffmpeg.setProgress(({ ratio }) => {
-                    statusDiv.textContent = `Processing... ${(ratio * 100).toFixed(2)}%`;
-                     if (ratio === 1) {
-                        statusDiv.textContent = "Processing complete. Finalizing...";
+                // Updated progress handler for v0.12.0
+                ffmpeg.setProgress((progress) => {
+                    let message = statusDiv.textContent; // Keep last message if no new info
+                    if (typeof progress.ratio === 'number' && progress.ratio >= 0) {
+                        message = `Processing... ${(progress.ratio * 100).toFixed(2)}%`;
+                        if (progress.ratio >= 0.99) { // Use >= 0.99 as sometimes it doesn't hit exactly 1.0
+                            message = "Processing almost complete. Finalizing...";
+                        }
+                    } else if (typeof progress.time === 'number') {
+                        message = `Working... (t=${(progress.time / 1000).toFixed(1)}s)`;
                     }
+                    statusDiv.textContent = message;
                 });
+
 
                 await ffmpeg.load();
                 isFFmpegLoaded = true;
@@ -162,7 +170,6 @@
 
                 for (let i = 0; i < files.length; i++) {
                     const file = files[i];
-                    // Sanitize filename for FFmpeg's virtual filesystem
                     const safeName = `input${i}.${file.name.split('.').pop() || 'mp4'}`;
                     inputPaths.push(safeName);
                     fileListContent += `file '${safeName}'\n`;
@@ -177,21 +184,17 @@
                 statusDiv.textContent = 'Starting merge process...';
                 logDiv.textContent += 'Executing FFmpeg command...\n';
 
-                // FFmpeg command for concatenation
-                // -f concat: uses the concat demuxer
-                // -safe 0: allows unsafe file paths (not strictly needed here as we control names)
-                // -i mylist.txt: input file list
-                // -c copy: copies streams without re-encoding (FAST, but requires compatible codecs)
-                // output.mp4: the output file name
                 await ffmpeg.run('-f', 'concat', '-safe', '0', '-i', 'mylist.txt', '-c', 'copy', 'output.mp4');
 
-                statusDiv.textContent = 'Merge complete! Reading output file...';
+                statusDiv.textContent = 'Merge almost complete! Reading output file...';
                 const data = ffmpeg.FS('readFile', 'output.mp4');
 
                 // Clean up files from virtual FS
                 inputPaths.forEach(path => ffmpeg.FS('unlink', path));
                 ffmpeg.FS('unlink', 'mylist.txt');
-                ffmpeg.FS('unlink', 'output.mp4'); // Not strictly necessary before exit, but good practice
+                // Don't unlink output.mp4 if you might re-run or debug, but for one-shot it's fine.
+                // ffmpeg.FS('unlink', 'output.mp4');
+
 
                 const videoBlob = new Blob([data.buffer], { type: 'video/mp4' });
                 const videoUrl = URL.createObjectURL(videoBlob);
@@ -210,8 +213,8 @@
             }
         });
 
-        // Pre-load FFmpeg on page load for better UX, but can be deferred to button click
-        // loadFFmpeg().catch(err => console.warn("Pre-loading FFmpeg failed, will try on demand."));
+        // Optional: Pre-load FFmpeg on page load for better UX.
+        // loadFFmpeg().catch(err => console.warn("Pre-loading FFmpeg failed, will try on demand:", err));
 
     </script>
 </body>
