@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Merger</title>
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f7f6;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #34495e;
+        }
+        input[type="file"] {
+            display: block;
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #ecf0f1;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        #log, #output {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 0.9em;
+        }
+        #output video {
+            max-width: 100%;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .note {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #ecf0f1;
+            border-left: 3px solid #3498db;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Video Merger</h1>
+
+        <label for="videoFiles">Select videos to merge (in order):</label>
+        <input type="file" id="videoFiles" multiple accept="video/*">
+
+        <button id="mergeButton">Merge Videos</button>
+
+        <div class="note">
+            <strong>Note:</strong> For best results and speed, use videos with the same codec, resolution, and frame rate (e.g., multiple MP4 files from the same camera).
+            The process can take time depending on video size and your computer.
+        </div>
+
+        <label for="log">Log:</label>
+        <pre id="log">Awaiting files...</pre>
+
+        <label for="output">Output:</label>
+        <div id="output"></div>
+    </div>
+
+    <script>
+        const { createFFmpeg, fetchFile } = FFmpeg;
+        let ffmpeg;
+
+        const videoFilesInput = document.getElementById('videoFiles');
+        const mergeButton = document.getElementById('mergeButton');
+        const logElement = document.getElementById('log');
+        const outputElement = document.getElementById('output');
+
+        async function loadFFmpeg() {
+            if (!ffmpeg || !ffmpeg.isLoaded()) {
+                logMessage('Loading ffmpeg-core.js (this might take a moment)...');
+                ffmpeg = createFFmpeg({
+                    log: true, // Enable FFmpeg's internal logging
+                    corePath: 'https://unpkg.com/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js', // Path for worker
+                    // Use `mainName: 'main'` for FFMpeg.wasm v0.12 and above
+                });
+                await ffmpeg.load();
+                logMessage('FFmpeg loaded successfully!');
+            }
+        }
+
+        function logMessage(message) {
+            console.log(message);
+            logElement.textContent += message + '\n';
+            logElement.scrollTop = logElement.scrollHeight; // Scroll to bottom
+        }
+
+        mergeButton.addEventListener('click', async () => {
+            const files = videoFilesInput.files;
+            if (files.length < 2) {
+                alert('Please select at least two video files to merge.');
+                return;
+            }
+
+            mergeButton.disabled = true;
+            outputElement.innerHTML = ''; // Clear previous output
+            logElement.textContent = ''; // Clear previous log
+
+            try {
+                await loadFFmpeg();
+
+                logMessage(`Starting merge process for ${files.length} videos...`);
+
+                const inputPaths = [];
+                let fileListContent = '';
+
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const inputFileName = `input${i}.${file.name.split('.').pop() || 'mp4'}`; // e.g., input0.mp4
+                    logMessage(`Writing ${file.name} as ${inputFileName} to virtual FS...`);
+                    ffmpeg.FS('writeFile', inputFileName, await fetchFile(file));
+                    inputPaths.push(inputFileName);
+                    fileListContent += `file '${inputFileName}'\n`;
+                }
+
+                logMessage('Creating file list (mylist.txt)...');
+                ffmpeg.FS('writeFile', 'mylist.txt', fileListContent);
+
+                const outputFileName = 'merged_output.mp4';
+                logMessage(`Running FFmpeg command: -f concat -safe 0 -i mylist.txt -c copy ${outputFileName}`);
+                logMessage('This might take some time depending on video sizes...');
+
+                await ffmpeg.run(
+                    '-f', 'concat',
+                    '-safe', '0', // Required for concat demuxer with relative paths
+                    '-i', 'mylist.txt',
+                    '-c', 'copy', // Stream copy, much faster if codecs are compatible
+                    // If you need re-encoding (e.g., different codecs/resolutions):
+                    // Remove '-c', 'copy' and FFmpeg will try to re-encode.
+                    // You might want to specify codecs: '-c:v', 'libx264', '-c:a', 'aac'
+                    outputFileName
+                );
+
+                logMessage('FFmpeg command finished.');
+                logMessage(`Reading merged file: ${outputFileName}...`);
+                const data = ffmpeg.FS('readFile', outputFileName);
+
+                logMessage('Creating download link and video player...');
+                const videoBlob = new Blob([data.buffer], { type: 'video/mp4' });
+                const videoUrl = URL.createObjectURL(videoBlob);
+
+                const videoPlayer = document.createElement('video');
+                videoPlayer.controls = true;
+                videoPlayer.src = videoUrl;
+                outputElement.appendChild(videoPlayer);
+
+                const downloadLink = document.createElement('a');
+                downloadLink.href = videoUrl;
+                downloadLink.download = outputFileName;
+                downloadLink.textContent = `Download Merged Video (${(videoBlob.size / 1024 / 1024).toFixed(2)} MB)`;
+                downloadLink.style.display = 'block';
+                downloadLink.style.marginTop = '10px';
+                outputElement.appendChild(downloadLink);
+
+                logMessage('Merge successful! Output ready.');
+
+                // Cleanup virtual file system
+                inputPaths.forEach(path => ffmpeg.FS('unlink', path));
+                ffmpeg.FS('unlink', 'mylist.txt');
+                ffmpeg.FS('unlink', outputFileName);
+
+
+            } catch (error) {
+                logMessage(`Error: ${error.message || error}`);
+                console.error(error);
+                outputElement.innerHTML = `<p style="color: red;">An error occurred: ${error.message || error}</p>`;
+            } finally {
+                mergeButton.disabled = false;
+            }
+        });
+
+        // Optional: Preload FFmpeg on page load for faster first merge
+        // window.addEventListener('load', async () => {
+        //     mergeButton.disabled = true;
+        //     logMessage('Preloading FFmpeg...');
+        //     try {
+        //         await loadFFmpeg();
+        //     } catch (e) {
+        //         logMessage('Failed to preload FFmpeg: ' + e);
+        //     } finally {
+        //         mergeButton.disabled = false;
+        //         if (ffmpeg && ffmpeg.isLoaded()) logMessage('FFmpeg ready.');
+        //         else logMessage('FFmpeg not yet loaded. It will load on first merge attempt.');
+        //     }
+        // });
+    </script>
+</body>
+</html>
