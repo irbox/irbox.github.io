@@ -1,47 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Client-Side Video Merger</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+<html>
+<head><title>FFmpeg Test</title></head>
 <body>
-    <div class="container">
-        <h1>Video Merger (Client-Side)</h1>
-
-        <div class="upload-section">
-            <label for="videoFiles" class="file-label">Select Videos to Merge (MP4 recommended):</label>
-            <input type="file" id="videoFiles" accept="video/mp4,video/*" multiple>
-            <p class="small-text">Note: For best results and speed, use videos with similar codecs and resolutions.</p>
-        </div>
-
-        <div class="file-list-section">
-            <h2>Selected Files (Drag to reorder):</h2>
-            <ul id="selectedFileList">
-                <!-- Selected files will be listed here -->
-            </ul>
-            <button id="clearFiles" class="btn btn-secondary" disabled>Clear Files</button>
-        </div>
-
-        <div class="merge-section">
-            <button id="mergeButton" class="btn btn-primary" disabled>Merge Videos</button>
-        </div>
-
-        <div class="progress-section">
-            <h2>Progress:</h2>
-            <progress id="progressBar" value="0" max="100" style="display:none;"></progress>
-            <div id="logOutput"></div>
-        </div>
-
-        <div class="download-section" style="display:none;">
-            <h2>Merged Video:</h2>
-            <a id="downloadLink" class="btn btn-success">Download Merged Video</a>
-        </div>
-    </div>
-
-    <!-- FFmpeg.wasm (using unpkg CDN for simplicity) -->
+    <h1>FFmpeg Load Test</h1>
+    <div id="log"></div>
     <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.0/dist/ffmpeg.min.js"></script>
-    <script src="script.js"></script>
+    <script>
+        const { createFFmpeg } = FFmpeg;
+        const logElement = document.getElementById('log');
+        async function run() {
+            logElement.textContent = 'Loading FFmpeg...\n';
+            try {
+                const ffmpeg = createFFmpeg({
+                    // Try different core paths here:
+                    corePath: 'https://unpkg.com/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js',
+                    // corePath: 'https://unpkg.com/@ffmpeg/core-st@0.11.0/dist/ffmpeg-core.js', // if exists
+                    // corePath: 'https://unpkg.com/@ffmpeg/core@0.10.0/dist/ffmpeg-core.js',
+                    log: true,
+                });
+                await ffmpeg.load();
+                logElement.textContent += 'FFmpeg loaded successfully!\n';
+                logElement.textContent += `isLoaded: ${ffmpeg.isLoaded()}\n`;
+            } catch (e) {
+                logElement.textContent += `Error: ${e.message}\n${e.stack}\n`;
+                console.error(e);
+            }
+        }
+        run();
+    </script>
 </body>
 </html>
