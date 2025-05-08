@@ -17,222 +17,201 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-        h1 {
-            text-align: center;
-            color: #2c3e50;
-        }
         input[type="file"], button {
-            display: block;
-            margin: 10px auto;
+            margin-top: 10px;
+            margin-bottom: 10px;
             padding: 10px;
-            border-radius: 5px;
+            border-radius: 4px;
             border: 1px solid #ddd;
         }
         button {
-            background-color: #3498db;
+            background-color: #007bff;
             color: white;
             cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #2980b9;
         }
         button:disabled {
-            background-color: #bdc3c7;
-            cursor: not-allowed;
+            background-color: #ccc;
         }
-        #status, #logOutput {
-            margin-top: 20px;
+        #status, #log {
+            margin-top: 15px;
             padding: 10px;
-            border: 1px solid #eee;
-            background-color: #ecf0f1;
-            border-radius: 5px;
-            white-space: pre-wrap; /* For log output */
-            word-wrap: break-word;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            white-space: pre-wrap; /* Keep newlines in log */
+            max-height: 200px;
+            overflow-y: auto;
         }
-        #selectedFilesList {
-            list-style-type: none;
-            padding: 0;
-        }
-        #selectedFilesList li {
-            background-color: #f9f9f9;
-            border: 1px dashed #ccc;
-            padding: 5px;
-            margin-bottom: 5px;
-            border-radius: 3px;
-        }
-        #outputVideo {
-            display: block;
-            margin: 20px auto;
+        video {
             max-width: 100%;
-            border: 1px solid #ccc;
+            margin-top: 15px;
+            border: 1px solid #ddd;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
         }
     </style>
-    <!-- Load FFmpeg.wasm -->
-    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.0/dist/ffmpeg.min.js"></script>
 </head>
 <body>
     <div class="container">
         <h1>Video Merger (WASM)</h1>
-        <p style="text-align: center; font-size: 0.9em; color: #7f8c8d;">
-            Select multiple video files (ideally with the same codecs/resolution) to merge.
-            Merging happens entirely in your browser.
-        </p>
+        <p>Select two or more video files (MP4 recommended, with similar codecs/resolutions for best results) to merge.</p>
 
-        <input type="file" id="fileInput" multiple accept="video/*">
+        <input type="file" id="fileInput" multiple accept="video/mp4,video/*">
+        <button id="mergeButton">Merge Videos</button>
 
-        <div id="selectedFilesInfo">
-            <h4>Selected Files:</h4>
-            <ul id="selectedFilesList"></ul>
+        <div id="status">Status: Idle</div>
+        <div id="log-container" style="display:none;">
+            <h3>FFmpeg Log:</h3>
+            <pre id="log"></pre>
         </div>
 
-        <button id="mergeButton" disabled>Merge Videos</button>
-
-        <div id="status">Status: Waiting for files...</div>
-        <pre id="logOutput"></pre>
-
-        <div id="outputContainer" style="text-align: center;">
-            <video id="outputVideo" controls style="display:none;"></video>
-            <a id="downloadLink" style="display:none;">Download Merged Video</a>
+        <div id="outputArea" style="display:none;">
+            <h3>Merged Video:</h3>
+            <video id="outputVideo" controls></video>
+            <br>
+            <a id="downloadLink" href="#" download="merged_video.mp4">Download Merged Video</a>
         </div>
     </div>
 
+    <!-- IMPORTANT: Load ffmpeg.wasm. This uses a CDN. -->
+    <!-- For a truly self-contained app without external fetches, -->
+    <!-- you'd need to serve these files yourself and handle COOP/COEP headers -->
+    <!-- if you want to use the multi-threaded version. -->
+    <!-- We use the single-threaded version here (ffmpeg-core.js) for broader compatibility -->
+    <!-- when serving from simple static hosts or file:// -->
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.0/dist/ffmpeg.min.js"></script>
+
     <script>
-        const { createFFmpeg, fetchFile } = FFmpeg; // Destructure from window.FFmpeg
-        let ffmpeg;
-        let selectedFiles = [];
+        const { createFFmpeg, fetchFile } = FFmpeg;
+        let ffmpeg; // Keep ffmpeg instance
 
         const fileInput = document.getElementById('fileInput');
         const mergeButton = document.getElementById('mergeButton');
         const statusDiv = document.getElementById('status');
-        const logOutput = document.getElementById('logOutput');
+        const logDiv = document.getElementById('log');
+        const logContainer = document.getElementById('log-container');
+        const outputArea = document.getElementById('outputArea');
         const outputVideo = document.getElementById('outputVideo');
         const downloadLink = document.getElementById('downloadLink');
-        const selectedFilesList = document.getElementById('selectedFilesList');
+
+        let isFFmpegLoaded = false;
 
         async function loadFFmpeg() {
-            if (!ffmpeg || !ffmpeg.isLoaded()) {
-                statusDiv.textContent = 'Loading FFmpeg-core.js... This might take a moment.';
-                logOutput.textContent = ''; // Clear previous logs
+            if (isFFmpegLoaded && ffmpeg) return ffmpeg;
+            statusDiv.textContent = 'Loading FFmpeg-core... (this may take a moment)';
+            logContainer.style.display = 'block';
+            logDiv.textContent = ''; // Clear previous logs
+
+            try {
                 ffmpeg = createFFmpeg({
-                    // corePath: 'https://unpkg.com/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js', // FFmpeg v0.11
-                    // For FFmpeg v0.12+ you might need different core paths for MT/non-MT versions
-                    // For simplicity, assuming v0.11 or that createFFmpeg handles corePath if not specified for some versions
-                    // Check the specific FFmpeg.wasm version documentation for corePath requirements
-                    log: true, // Enable logging to console
-                    logger: ({ message }) => { // Custom logger to display in HTML
-                        logOutput.textContent += message + '\n';
-                        logOutput.scrollTop = logOutput.scrollHeight; // Scroll to bottom
-                    },
-                    progress: (p) => {
-                        statusDiv.textContent = `Processing: ${Math.round(p.ratio * 100)}%`;
+                    // corePath: 'https://unpkg.com/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js', // Single-threaded
+                    // For multi-threaded, you'd use ffmpeg-core-mt.js and need COOP/COEP headers
+                    // corePath: 'https://unpkg.com/@ffmpeg/core-mt@0.11.0/dist/ffmpeg-core-mt.js',
+                    // wasmPath: 'https://unpkg.com/@ffmpeg/core-mt@0.11.0/dist/ffmpeg-core.wasm',
+                    // workerPath: 'https://unpkg.com/@ffmpeg/core-mt@0.11.0/dist/ffmpeg-core-worker.js',
+                    log: true, // Enable logging from FFmpeg
+                });
+
+                ffmpeg.setLogger(({ type, message }) => {
+                    logDiv.textContent += `[${type}] ${message}\n`;
+                    logDiv.scrollTop = logDiv.scrollHeight; // Auto-scroll
+                });
+
+                ffmpeg.setProgress(({ ratio }) => {
+                    statusDiv.textContent = `Processing... ${(ratio * 100).toFixed(2)}%`;
+                     if (ratio === 1) {
+                        statusDiv.textContent = "Processing complete. Finalizing...";
                     }
                 });
+
                 await ffmpeg.load();
-                statusDiv.textContent = 'FFmpeg loaded successfully!';
+                isFFmpegLoaded = true;
+                statusDiv.textContent = 'FFmpeg loaded. Ready to merge.';
+                return ffmpeg;
+            } catch (error) {
+                statusDiv.textContent = 'Error loading FFmpeg: ' + error.message;
+                logDiv.textContent += 'Error loading FFmpeg: ' + error.stack + '\n';
+                console.error("FFmpeg load error:", error);
+                isFFmpegLoaded = false;
+                throw error; // Re-throw to stop processing
             }
         }
 
-        fileInput.addEventListener('change', (event) => {
-            selectedFiles = Array.from(event.target.files);
-            selectedFilesList.innerHTML = ''; // Clear previous list
-            outputVideo.style.display = 'none';
-            downloadLink.style.display = 'none';
-
-            if (selectedFiles.length > 1) {
-                mergeButton.disabled = false;
-                statusDiv.textContent = `${selectedFiles.length} files selected. Ready to merge.`;
-                selectedFiles.forEach(file => {
-                    const listItem = document.createElement('li');
-                    listItem.textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
-                    selectedFilesList.appendChild(listItem);
-                });
-            } else {
-                mergeButton.disabled = true;
-                statusDiv.textContent = 'Please select at least two video files.';
-            }
-        });
-
         mergeButton.addEventListener('click', async () => {
-            if (selectedFiles.length < 2) {
-                alert('Please select at least two video files to merge.');
+            const files = fileInput.files;
+            if (files.length < 2) {
+                alert('Please select at least two video files.');
                 return;
             }
 
             mergeButton.disabled = true;
-            outputVideo.style.display = 'none';
-            downloadLink.style.display = 'none';
-            logOutput.textContent = ''; // Clear logs
-            statusDiv.textContent = 'Initializing...';
+            outputArea.style.display = 'none';
+            logContainer.style.display = 'block';
+            logDiv.textContent = ''; // Clear previous logs
 
             try {
                 await loadFFmpeg(); // Ensure FFmpeg is loaded
 
-                statusDiv.textContent = 'Writing files to FFmpeg virtual file system...';
-                const fileNames = [];
+                statusDiv.textContent = 'Preparing files...';
+                const inputPaths = [];
                 let fileListContent = "";
 
-                for (let i = 0; i < selectedFiles.length; i++) {
-                    const file = selectedFiles[i];
-                    // Sanitize file names for FFmpeg if necessary, though modern browsers handle most chars well
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    // Sanitize filename for FFmpeg's virtual filesystem
                     const safeName = `input${i}.${file.name.split('.').pop() || 'mp4'}`;
-                    fileNames.push(safeName);
-                    ffmpeg.FS('writeFile', safeName, await fetchFile(file));
+                    inputPaths.push(safeName);
                     fileListContent += `file '${safeName}'\n`;
+                    statusDiv.textContent = `Loading ${file.name} to memory...`;
+                    ffmpeg.FS('writeFile', safeName, await fetchFile(file));
+                    logDiv.textContent += `Wrote ${file.name} as ${safeName} to virtual FS.\n`;
                 }
 
-                ffmpeg.FS('writeFile', 'filelist.txt', fileListContent);
-                statusDiv.textContent = 'Files written. Starting merge process...';
-                logOutput.textContent += '--- FFmpeg Command Arguments ---\n';
-                logOutput.textContent += `ffmpeg -f concat -safe 0 -i filelist.txt -c copy output.mp4\n`;
-                logOutput.textContent += '-------------------------------\n';
+                ffmpeg.FS('writeFile', 'mylist.txt', fileListContent);
+                logDiv.textContent += 'Created mylist.txt for concatenation.\n';
 
+                statusDiv.textContent = 'Starting merge process...';
+                logDiv.textContent += 'Executing FFmpeg command...\n';
 
-                // FFmpeg command to concatenate videos
-                // -f concat: Use the concat demuxer
-                // -safe 0: Required for concat demuxer with relative paths in filelist.txt
-                // -i filelist.txt: Input file list
-                // -c copy: Stream copy (no re-encoding). This is fast but requires compatible codecs.
-                // output.mp4: Output file name
-                await ffmpeg.run('-f', 'concat', '-safe', '0', '-i', 'filelist.txt', '-c', 'copy', 'output.mp4');
+                // FFmpeg command for concatenation
+                // -f concat: uses the concat demuxer
+                // -safe 0: allows unsafe file paths (not strictly needed here as we control names)
+                // -i mylist.txt: input file list
+                // -c copy: copies streams without re-encoding (FAST, but requires compatible codecs)
+                // output.mp4: the output file name
+                await ffmpeg.run('-f', 'concat', '-safe', '0', '-i', 'mylist.txt', '-c', 'copy', 'output.mp4');
 
                 statusDiv.textContent = 'Merge complete! Reading output file...';
                 const data = ffmpeg.FS('readFile', 'output.mp4');
 
-                // Create a URL for the output video
-                const videoBlob = new Blob([data.buffer], { type: 'video/mp4' }); // Assuming MP4 output
+                // Clean up files from virtual FS
+                inputPaths.forEach(path => ffmpeg.FS('unlink', path));
+                ffmpeg.FS('unlink', 'mylist.txt');
+                ffmpeg.FS('unlink', 'output.mp4'); // Not strictly necessary before exit, but good practice
+
+                const videoBlob = new Blob([data.buffer], { type: 'video/mp4' });
                 const videoUrl = URL.createObjectURL(videoBlob);
 
                 outputVideo.src = videoUrl;
-                outputVideo.style.display = 'block';
-
                 downloadLink.href = videoUrl;
-                downloadLink.download = 'merged_video.mp4';
-                downloadLink.textContent = 'Download Merged Video';
-                downloadLink.style.display = 'inline-block';
-
-                statusDiv.textContent = 'Merged video ready for preview and download!';
-
-                // Cleanup virtual file system (optional, new ffmpeg instance on next run will clear it)
-                fileNames.forEach(name => ffmpeg.FS('unlink', name));
-                ffmpeg.FS('unlink', 'filelist.txt');
-                ffmpeg.FS('unlink', 'output.mp4');
+                outputArea.style.display = 'block';
+                statusDiv.textContent = 'Merge successful! Output ready.';
 
             } catch (error) {
-                statusDiv.textContent = `Error: ${error.message || error}`;
-                logOutput.textContent += `\nERROR: ${error.message || error}\n${error.stack || ''}\n`;
-                console.error(error);
+                statusDiv.textContent = 'Error during merge: ' + error.message;
+                logDiv.textContent += 'Error: ' + error.stack + '\n';
+                console.error("Merge error:", error);
             } finally {
                 mergeButton.disabled = false;
-                if (selectedFiles.length < 2) mergeButton.disabled = true;
             }
         });
 
-        // Initial load attempt (optional, can be deferred to button click)
-        // loadFFmpeg().catch(err => {
-        //    statusDiv.textContent = "Failed to pre-load FFmpeg. It will load on first merge attempt.";
-        //    console.error("FFmpeg pre-load failed:", err);
-        // });
+        // Pre-load FFmpeg on page load for better UX, but can be deferred to button click
+        // loadFFmpeg().catch(err => console.warn("Pre-loading FFmpeg failed, will try on demand."));
 
     </script>
 </body>
