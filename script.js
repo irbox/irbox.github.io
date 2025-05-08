@@ -12,6 +12,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     const downloadLink = document.getElementById('downloadLink');
     const downloadSection = document.querySelector('.download-section');
 
+    let ffmpeg;
+
+    log('Loading FFmpeg...');
+    // ...
+    try {
+        ffmpeg = createFFmpeg({ // Correct for @ffmpeg/ffmpeg@0.11.0
+            corePath: 'https://unpkg.com/@ffmpeg/core-st@0.11.0/dist/ffmpeg-core.js', // SINGLE-THREADED CORE
+            log: true,
+        });
+        await ffmpeg.load();
+        log('FFmpeg loaded successfully.');
+        updateButtonStates();
+    } catch (error) {
+        // ...
+    }
+
+    // ... in mergeButton click handler ...
+    ffmpeg.FS('writeFile', uniqueFileName, await fetchFile(file)); // Correct for @ffmpeg/ffmpeg@0.11.0
+    // ...
+});
     // --- Initialize FFmpeg ---
     log('Loading FFmpeg...');
     mergeButton.disabled = true;
