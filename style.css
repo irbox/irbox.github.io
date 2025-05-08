@@ -157,8 +157,13 @@ input[type="file"] {
     word-break: break-all;
 }
 
-.download-section a {
+.download-section a, .download-section video {
     display: block;
     width: fit-content;
     margin: 10px auto;
+}
+
+#mergedVideoPreview {
+    border: 1px solid #ccc;
+    background-color: #000;
 }
