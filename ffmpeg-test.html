@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Minimal FFmpeg ST Load Test</title>
+    <title>Minimal FFmpeg ST Load Test (Revised)</title>
 </head>
 <body>
-    <h1>Minimal FFmpeg ST Load Test</h1>
+    <h1>Minimal FFmpeg ST Load Test (Revised)</h1>
     <div id="log" style="white-space: pre-wrap; font-family: monospace; border: 1px solid #ccc; padding: 10px;"></div>
 
     <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.0/dist/ffmpeg.min.js"></script>
@@ -19,11 +19,15 @@
         async function runTest() {
             logMsg('Attempting to load FFmpeg (using @ffmpeg/core-st@0.11.0)...');
             try {
-                const { createFFmpeg } = FFmpeg; // FFmpeg should be global
+                const { createFFmpeg } = FFmpeg;
                 const ffmpeg = createFFmpeg({
+                    // mainName: 'main', // Might indicate single-threaded operation to the library
                     corePath: 'https://unpkg.com/@ffmpeg/core-st@0.11.0/dist/ffmpeg-core.js',
-                    log: true, // Enable FFmpeg's internal logging to console
-                    logger: ({ message }) => logMsg(`FFMPEG_LOGGER: ${message}`), // Capture FFmpeg's own logs
+                    // Explicitly tell it NOT to load a worker if this option exists,
+                    // or ensure it knows the ST core handles its own threading.
+                    // The documentation for 0.11.0 isn't super clear on disabling worker attempts.
+                    log: true,
+                    logger: ({ type, message }) => logMsg(`FFMPEG_LOGGER (${type}): ${message}`),
                 });
                 logMsg('createFFmpeg called. Awaiting ffmpeg.load()...');
                 await ffmpeg.load();
