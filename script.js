@@ -1,8 +1,12 @@
-const { createFFmpeg, fetchFile } = FFmpeg;
-let ffmpeg;
-let selectedFilesData = []; // To store File objects in order
+// FFmpeg is loaded globally from the script tag in index.html
+// const { createFFmpeg, fetchFile } = FFmpeg; // This line is not strictly needed if FFmpeg is global
 
 document.addEventListener('DOMContentLoaded', async () => {
+    // Destructure from global FFmpeg object for convenience
+    const { createFFmpeg, fetchFile } = FFmpeg;
+
+    let ffmpeg; // Declare ffmpeg instance variable
+
     const videoFilesInput = document.getElementById('videoFiles');
     const selectedFileList = document.getElementById('selectedFileList');
     const mergeButton = document.getElementById('mergeButton');
@@ -11,35 +15,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     const logOutput = document.getElementById('logOutput');
     const downloadLink = document.getElementById('downloadLink');
     const downloadSection = document.querySelector('.download-section');
+    const mergedVideoPreview = document.getElementById('mergedVideoPreview');
 
-    let ffmpeg;
+    let selectedFilesData = []; // To store File objects in order
 
-    log('Loading FFmpeg...');
-    // ...
-    try {
-        ffmpeg = createFFmpeg({ // Correct for @ffmpeg/ffmpeg@0.11.0
-            corePath: 'https://unpkg.com/@ffmpeg/core-st@0.11.0/dist/ffmpeg-core.js', // SINGLE-THREADED CORE
-            log: true,
-        });
-        await ffmpeg.load();
-        log('FFmpeg loaded successfully.');
-        updateButtonStates();
-    } catch (error) {
-        // ...
-    }
-
-    // ... in mergeButton click handler ...
-    ffmpeg.FS('writeFile', uniqueFileName, await fetchFile(file)); // Correct for @ffmpeg/ffmpeg@0.11.0
-    // ...
-});
     // --- Initialize FFmpeg ---
     log('Loading FFmpeg...');
     mergeButton.disabled = true;
     clearFilesButton.disabled = true;
     try {
         ffmpeg = createFFmpeg({
-            // corePath: '/path/to/ffmpeg-core.js', // If self-hosting
-            corePath: 'https://unpkg.com/@ffmpeg/core@0.10.0/dist/ffmpeg-core.js',
+            // Use the single-threaded core for compatibility (e.g., on GitHub Pages)
+            corePath: 'https://unpkg.com/@ffmpeg/core-st@0.11.0/dist/ffmpeg-core.js',
             log: true, // Enable FFmpeg's own logging
         });
         await ffmpeg.load();
@@ -48,35 +35,41 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (error) {
         log(`Error loading FFmpeg: ${error.message}`);
         console.error("FFmpeg loading error:", error);
-        alert("Failed to load FFmpeg. Please check your internet connection or browser console for errors.");
+        alert("Failed to load FFmpeg. Please check your internet connection or browser console for errors. This app might not work on your browser/device.");
         return;
     }
 
-
     ffmpeg.setLogger(({ type, message }) => {
-        // Log FFmpeg's internal messages (optional but good for debugging)
-        if (type !== 'info' && type !== 'fferr') { // Avoid too much noise
+        if (type !== 'info' && type !== 'fferr') {
              log(`FFmpeg: ${message}`);
         }
     });
 
     ffmpeg.setProgress(({ ratio }) => {
         progressBar.style.display = 'block';
-        progressBar.value = Math.max(0, Math.min(100, ratio * 100)); // Ensure value is between 0 and 100
-        log(`Progress: ${(ratio * 100).toFixed(2)}%`);
+        const progressPercent = Math.max(0, Math.min(100, ratio * 100));
+        progressBar.value = progressPercent;
+        // Avoid flooding logs with progress updates for better readability
+        if (progressPercent === 0 || progressPercent === 100 || progressBar.value % 5 === 0) { // Log every 5%
+            log(`Progress: ${progressPercent.toFixed(2)}%`);
+        }
     });
 
     // --- File Input Handling ---
     videoFilesInput.addEventListener('change', (event) => {
         const newFiles = Array.from(event.target.files);
         newFiles.forEach(file => {
-            if (!selectedFilesData.find(f => f.name === file.name && f.size === file.size)) { // Avoid duplicates
-                selectedFilesData.push(file);
+            if (file.type.startsWith('video/')) {
+                if (!selectedFilesData.find(f => f.name === file.name && f.size === file.size)) {
+                    selectedFilesData.push(file);
+                }
+            } else {
+                log(`Skipping non-video file: ${file.name}`);
             }
         });
         renderFileList();
         updateButtonStates();
-        videoFilesInput.value = ''; // Reset input to allow selecting the same file again if removed
+        videoFilesInput.value = '';
     });
 
     // --- Render File List with Drag-and-Drop Reordering ---
@@ -91,7 +84,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const removeBtn = document.createElement('button');
             removeBtn.textContent = 'Remove';
             removeBtn.onclick = (e) => {
-                e.stopPropagation(); // Prevent drag start
+                e.stopPropagation();
                 selectedFilesData.splice(index, 1);
                 renderFileList();
                 updateButtonStates();
@@ -108,49 +101,34 @@ document.addEventListener('DOMContentLoaded', async () => {
         this.style.opacity = '0.4';
         dragSrcElement = this;
         e.dataTransfer.effectAllowed = 'move';
-        e.dataTransfer.setData('text/html', this.innerHTML); // For Firefox
+        e.dataTransfer.setData('text/html', this.innerHTML);
     }
 
     function handleDragOver(e) {
-        if (e.preventDefault) {
-            e.preventDefault();
-        }
+        if (e.preventDefault) e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
         return false;
     }
 
-    function handleDragEnter(e) {
-        this.classList.add('dragging');
-    }
-
-    function handleDragLeave(e) {
-        this.classList.remove('dragging');
-    }
+    function handleDragEnter(e) { this.classList.add('dragging'); }
+    function handleDragLeave(e) { this.classList.remove('dragging'); }
 
     function handleDrop(e) {
-        if (e.stopPropagation) {
-            e.stopPropagation();
-        }
+        if (e.stopPropagation) e.stopPropagation();
         if (dragSrcElement !== this) {
             const srcIndex = parseInt(dragSrcElement.dataset.index);
             const targetIndex = parseInt(this.dataset.index);
-
-            // Reorder selectedFilesData array
             const [draggedItem] = selectedFilesData.splice(srcIndex, 1);
             selectedFilesData.splice(targetIndex, 0, draggedItem);
-
-            renderFileList(); // Re-render the list to reflect new order
+            renderFileList();
         }
         this.classList.remove('dragging');
         return false;
     }
 
-    function handleDragEnd(e) {
+    function handleDragEnd() {
         this.style.opacity = '1';
-        const items = document.querySelectorAll('#selectedFileList li');
-        items.forEach(item => {
-            item.classList.remove('dragging');
-        });
+        document.querySelectorAll('#selectedFileList li').forEach(item => item.classList.remove('dragging'));
     }
 
     function addDragAndDropHandlers() {
@@ -174,6 +152,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         progressBar.style.display = 'none';
         progressBar.value = 0;
         downloadSection.style.display = 'none';
+        mergedVideoPreview.style.display = 'none';
+        mergedVideoPreview.src = '';
         if (downloadLink.href) {
             URL.revokeObjectURL(downloadLink.href);
             downloadLink.removeAttribute('href');
@@ -188,26 +168,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         log('Starting merge process...');
-        mergeButton.disabled = true;
-        clearFilesButton.disabled = true;
-        videoFilesInput.disabled = true;
-        progressBar.style.display = 'block';
-        progressBar.value = 0;
-        downloadSection.style.display = 'none';
-        if (downloadLink.href) {
-            URL.revokeObjectURL(downloadLink.href);
-        }
+        setProcessingState(true);
 
         try {
-            // 1. Create a file list for FFmpeg's concat demuxer
             let fileListContent = '';
             const inputFilenames = [];
 
             for (let i = 0; i < selectedFilesData.length; i++) {
                 const file = selectedFilesData[i];
                 const uniqueFileName = `input${i}.${getSafeExtension(file.name)}`;
-                log(`Writing ${file.name} to FFmpeg's virtual filesystem as ${uniqueFileName}...`);
-                // `fetchFile` converts the File object into a Uint8Array
+                log(`Writing ${file.name} to FFmpeg's virtual FS as ${uniqueFileName}...`);
                 ffmpeg.FS('writeFile', uniqueFileName, await fetchFile(file));
                 fileListContent += `file '${uniqueFileName}'\n`;
                 inputFilenames.push(uniqueFileName);
@@ -215,28 +185,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             ffmpeg.FS('writeFile', 'mylist.txt', fileListContent);
             log('Generated input file list (mylist.txt).');
 
-            // 2. Run FFmpeg command
-            // Using concat demuxer: fast, but requires files to be very similar (codec, resolution, etc.)
-            // `-c copy` avoids re-encoding.
-            // `-safe 0` is needed for concat demuxer when using relative paths in the list.
-            // `-fflags +igndts` can sometimes help with timestamp issues.
-            // `-ignore_unknown` ignores unknown stream types that might cause issues.
             const outputFilename = 'merged_output.mp4';
-            log('Running FFmpeg command: ffmpeg -f concat -safe 0 -i mylist.txt -c copy -fflags +igndts -ignore_unknown ' + outputFilename);
+            log(`Running FFmpeg command: ffmpeg -f concat -safe 0 -i mylist.txt -c copy -fflags +igndts -ignore_unknown ${outputFilename}`);
 
             await ffmpeg.run(
                 '-f', 'concat',
                 '-safe', '0',
                 '-i', 'mylist.txt',
-                '-c', 'copy',        // Stream copy, much faster if compatible
-                // '-bsf:a', 'aac_adtstoasc', // Sometimes needed for AAC audio
-                '-fflags', '+igndts', // Ignore DTS issues that can stop concat
-                '-ignore_unknown',   // Ignore unknown stream types
+                '-c', 'copy',
+                '-fflags', '+igndts',
+                '-ignore_unknown',
                 outputFilename
             );
             log('FFmpeg processing finished.');
 
-            // 3. Get the output
             const data = ffmpeg.FS('readFile', outputFilename);
             log(`Output file size: ${(data.buffer.byteLength / 1024 / 1024).toFixed(2)} MB`);
 
@@ -244,25 +206,28 @@ document.addEventListener('DOMContentLoaded', async () => {
             const videoUrl = URL.createObjectURL(videoBlob);
 
             downloadLink.href = videoUrl;
-            downloadLink.download = 'merged_video.mp4'; // Suggested download name
+            downloadLink.download = 'merged_video.mp4';
+            mergedVideoPreview.src = videoUrl;
+            mergedVideoPreview.style.display = 'block';
             downloadSection.style.display = 'block';
-            log('Merged video is ready for download.');
+            log('Merged video is ready for download and preview.');
 
-            // 4. Cleanup FFmpeg's virtual filesystem
             ffmpeg.FS('unlink', 'mylist.txt');
             inputFilenames.forEach(name => ffmpeg.FS('unlink', name));
             ffmpeg.FS('unlink', outputFilename);
             log('Cleaned up virtual filesystem.');
 
         } catch (error) {
-            log(`Error during merge: ${error.message}`);
+            log(`Error during merge: ${error.message || error}`);
             console.error("Merge Error:", error);
-            alert(`An error occurred during merging: ${error}. Check console for details. Often this means videos are not compatible for direct stream copy.`);
+            alert(`An error occurred during merging: ${error.message || error}. Check console for details. This often means videos are not compatible for direct stream copy (e.g., different codecs, resolutions, or corrupted files).`);
+            progressBar.value = 0; // Reset progress on error
         } finally {
-            updateButtonStates(); // Re-enable based on current state
-            videoFilesInput.disabled = false;
-            progressBar.value = 100; // Show completion, even if an error occurred after some progress
-            // Don't hide progress bar on error so user sees the final state
+            setProcessingState(false);
+            // Ensure progress bar shows completion if successful, or final state on error
+            if (progressBar.value > 0 && progressBar.value < 100 && !error) { // If no error but ratio wasn't 1
+                progressBar.value = 100;
+            }
         }
     });
 
@@ -270,7 +235,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function log(message) {
         const timestamp = new Date().toLocaleTimeString();
         logOutput.innerHTML += `[${timestamp}] ${message}\n`;
-        logOutput.scrollTop = logOutput.scrollHeight; // Auto-scroll
+        logOutput.scrollTop = logOutput.scrollHeight;
         console.log(message);
     }
 
@@ -278,20 +243,36 @@ document.addEventListener('DOMContentLoaded', async () => {
         const parts = filename.split('.');
         if (parts.length > 1) {
             let ext = parts.pop().toLowerCase();
-            return ext.replace(/[^a-z0-9]/gi, ''); // Sanitize extension
+            return ext.replace(/[^a-z0-9]/gi, '') || 'mp4'; // Ensure it's sanitized or default
         }
-        return 'mp4'; // Default extension
+        return 'mp4';
+    }
+
+    function setProcessingState(isProcessing) {
+        mergeButton.disabled = isProcessing;
+        clearFilesButton.disabled = isProcessing;
+        videoFilesInput.disabled = isProcessing;
+        if (isProcessing) {
+            progressBar.style.display = 'block';
+            progressBar.value = 0;
+            downloadSection.style.display = 'none';
+            mergedVideoPreview.style.display = 'none';
+            mergedVideoPreview.src = '';
+            if (downloadLink.href) {
+                URL.revokeObjectURL(downloadLink.href);
+            }
+        }
     }
 
     function updateButtonStates() {
         const hasFiles = selectedFilesData.length > 0;
         const enoughFilesToMerge = selectedFilesData.length >= 2;
+        const ffmpegReady = ffmpeg && ffmpeg.isLoaded();
 
-        clearFilesButton.disabled = !hasFiles;
-        mergeButton.disabled = !(ffmpeg && ffmpeg.isLoaded() && enoughFilesToMerge);
+        clearFilesButton.disabled = !hasFiles || mergeButton.disabled; // Also disable if processing
+        mergeButton.disabled = !(ffmpegReady && enoughFilesToMerge) || videoFilesInput.disabled; // Also disable if processing
 
-        // If FFmpeg failed to load, merge button remains disabled
-        if (ffmpeg && !ffmpeg.isLoaded()) {
+        if (!ffmpegReady) {
             mergeButton.disabled = true;
         }
     }
