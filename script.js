@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         ffmpeg = createFFmpeg({
             // corePath: '/path/to/ffmpeg-core.js', // If self-hosting
-            corePath: 'https://unpkg.com/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js',
+            corePath: 'https://unpkg.com/@ffmpeg/core@0.10.0/dist/ffmpeg-core.js',
             log: true, // Enable FFmpeg's own logging
         });
         await ffmpeg.load();
