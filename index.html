@@ -3,219 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WASM Video Merger (v0.12)</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            margin: 20px;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-        .container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        input[type="file"], button {
-            margin-top: 10px;
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-        }
-        button {
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-        }
-        button:disabled {
-            background-color: #ccc;
-        }
-        #status, #log {
-            margin-top: 15px;
-            padding: 10px;
-            background-color: #e9ecef;
-            border-radius: 4px;
-            white-space: pre-wrap; /* Keep newlines in log */
-            max-height: 200px;
-            overflow-y: auto;
-            font-size: 0.9em;
-        }
-        video {
-            max-width: 100%;
-            margin-top: 15px;
-            border: 1px solid #ddd;
-        }
-        a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <title>Client-Side Video Merger</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Video Merger (WASM - ffmpeg.wasm v0.12)</h1>
-        <p>Select two or more video files (MP4 recommended, with similar codecs/resolutions for best results) to merge.</p>
+        <h1>Video Merger (Client-Side)</h1>
 
-        <input type="file" id="fileInput" multiple accept="video/mp4,video/*">
-        <button id="mergeButton">Merge Videos</button>
-
-        <div id="status">Status: Idle</div>
-        <div id="log-container" style="display:none;">
-            <h3>FFmpeg Log:</h3>
-            <pre id="log"></pre>
+        <div class="upload-section">
+            <label for="videoFiles" class="file-label">Select Videos to Merge (MP4 recommended):</label>
+            <input type="file" id="videoFiles" accept="video/mp4,video/*" multiple>
+            <p class="small-text">Note: For best results and speed, use videos with similar codecs and resolutions.</p>
         </div>
 
-        <div id="outputArea" style="display:none;">
-            <h3>Merged Video:</h3>
-            <video id="outputVideo" controls></video>
-            <br>
-            <a id="downloadLink" href="#" download="merged_video.mp4">Download Merged Video</a>
+        <div class="file-list-section">
+            <h2>Selected Files (Drag to reorder):</h2>
+            <ul id="selectedFileList">
+                <!-- Selected files will be listed here -->
+            </ul>
+            <button id="clearFiles" class="btn btn-secondary" disabled>Clear Files</button>
+        </div>
+
+        <div class="merge-section">
+            <button id="mergeButton" class="btn btn-primary" disabled>Merge Videos</button>
+        </div>
+
+        <div class="progress-section">
+            <h2>Progress:</h2>
+            <progress id="progressBar" value="0" max="100" style="display:none;"></progress>
+            <div id="logOutput"></div>
+        </div>
+
+        <div class="download-section" style="display:none;">
+            <h2>Merged Video:</h2>
+            <a id="downloadLink" class="btn btn-success">Download Merged Video</a>
         </div>
     </div>
 
-    <!-- Use ffmpeg.wasm v0.12.0 -->
-    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.12.0/dist/ffmpeg.min.js"></script>
-
-    <script>
-        const { createFFmpeg, fetchFile } = FFmpeg;
-        let ffmpeg; // Keep ffmpeg instance
-
-        const fileInput = document.getElementById('fileInput');
-        const mergeButton = document.getElementById('mergeButton');
-        const statusDiv = document.getElementById('status');
-        const logDiv = document.getElementById('log');
-        const logContainer = document.getElementById('log-container');
-        const outputArea = document.getElementById('outputArea');
-        const outputVideo = document.getElementById('outputVideo');
-        const downloadLink = document.getElementById('downloadLink');
-
-        let isFFmpegLoaded = false;
-
-        async function loadFFmpeg() {
-            if (isFFmpegLoaded && ffmpeg) return ffmpeg;
-            statusDiv.textContent = 'Loading FFmpeg-core v0.12.0... (this may take a moment)';
-            logContainer.style.display = 'block';
-            logDiv.textContent = ''; // Clear previous logs
-
-            try {
-                // For ffmpeg.wasm v0.12.0, explicitly provide corePath and wasmPath for single-threaded mode.
-                // This is crucial to avoid SharedArrayBuffer issues when COOP/COEP headers are not set
-                // (like on GitHub Pages or when opening file://).
-                const corePath = 'https://unpkg.com/@ffmpeg/core@0.12.0/dist/ffmpeg-core.js';
-                const wasmPath = 'https://unpkg.com/@ffmpeg/core@0.12.0/dist/ffmpeg-core.wasm';
-                // workerPath is NOT needed for single-threaded @ffmpeg/core
-
-                ffmpeg = createFFmpeg({
-                    corePath,
-                    wasmPath,
-                    log: true, // Enable logging from FFmpeg
-                });
-
-                ffmpeg.setLogger(({ type, message }) => {
-                    logDiv.textContent += `[${type}] ${message}\n`;
-                    logDiv.scrollTop = logDiv.scrollHeight; // Auto-scroll
-                });
-
-                // Updated progress handler for v0.12.0
-                ffmpeg.setProgress((progress) => {
-                    let message = statusDiv.textContent; // Keep last message if no new info
-                    if (typeof progress.ratio === 'number' && progress.ratio >= 0) {
-                        message = `Processing... ${(progress.ratio * 100).toFixed(2)}%`;
-                        if (progress.ratio >= 0.99) { // Use >= 0.99 as sometimes it doesn't hit exactly 1.0
-                            message = "Processing almost complete. Finalizing...";
-                        }
-                    } else if (typeof progress.time === 'number') {
-                        message = `Working... (t=${(progress.time / 1000).toFixed(1)}s)`;
-                    }
-                    statusDiv.textContent = message;
-                });
-
-
-                await ffmpeg.load();
-                isFFmpegLoaded = true;
-                statusDiv.textContent = 'FFmpeg loaded. Ready to merge.';
-                return ffmpeg;
-            } catch (error) {
-                statusDiv.textContent = 'Error loading FFmpeg: ' + error.message;
-                logDiv.textContent += 'Error loading FFmpeg: ' + error.stack + '\n';
-                console.error("FFmpeg load error:", error);
-                isFFmpegLoaded = false;
-                throw error; // Re-throw to stop processing
-            }
-        }
-
-        mergeButton.addEventListener('click', async () => {
-            const files = fileInput.files;
-            if (files.length < 2) {
-                alert('Please select at least two video files.');
-                return;
-            }
-
-            mergeButton.disabled = true;
-            outputArea.style.display = 'none';
-            logContainer.style.display = 'block';
-            logDiv.textContent = ''; // Clear previous logs
-
-            try {
-                await loadFFmpeg(); // Ensure FFmpeg is loaded
-
-                statusDiv.textContent = 'Preparing files...';
-                const inputPaths = [];
-                let fileListContent = "";
-
-                for (let i = 0; i < files.length; i++) {
-                    const file = files[i];
-                    const safeName = `input${i}.${file.name.split('.').pop() || 'mp4'}`;
-                    inputPaths.push(safeName);
-                    fileListContent += `file '${safeName}'\n`;
-                    statusDiv.textContent = `Loading ${file.name} to memory...`;
-                    ffmpeg.FS('writeFile', safeName, await fetchFile(file));
-                    logDiv.textContent += `Wrote ${file.name} as ${safeName} to virtual FS.\n`;
-                }
-
-                ffmpeg.FS('writeFile', 'mylist.txt', fileListContent);
-                logDiv.textContent += 'Created mylist.txt for concatenation.\n';
-
-                statusDiv.textContent = 'Starting merge process...';
-                logDiv.textContent += 'Executing FFmpeg command...\n';
-
-                await ffmpeg.run('-f', 'concat', '-safe', '0', '-i', 'mylist.txt', '-c', 'copy', 'output.mp4');
-
-                statusDiv.textContent = 'Merge almost complete! Reading output file...';
-                const data = ffmpeg.FS('readFile', 'output.mp4');
-
-                // Clean up files from virtual FS
-                inputPaths.forEach(path => ffmpeg.FS('unlink', path));
-                ffmpeg.FS('unlink', 'mylist.txt');
-                // Don't unlink output.mp4 if you might re-run or debug, but for one-shot it's fine.
-                // ffmpeg.FS('unlink', 'output.mp4');
-
-
-                const videoBlob = new Blob([data.buffer], { type: 'video/mp4' });
-                const videoUrl = URL.createObjectURL(videoBlob);
-
-                outputVideo.src = videoUrl;
-                downloadLink.href = videoUrl;
-                outputArea.style.display = 'block';
-                statusDiv.textContent = 'Merge successful! Output ready.';
-
-            } catch (error) {
-                statusDiv.textContent = 'Error during merge: ' + error.message;
-                logDiv.textContent += 'Error: ' + error.stack + '\n';
-                console.error("Merge error:", error);
-            } finally {
-                mergeButton.disabled = false;
-            }
-        });
-
-        // Optional: Pre-load FFmpeg on page load for better UX.
-        // loadFFmpeg().catch(err => console.warn("Pre-loading FFmpeg failed, will try on demand:", err));
-
-    </script>
+    <!-- FFmpeg.wasm (using unpkg CDN for simplicity) -->
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.0/dist/ffmpeg.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
