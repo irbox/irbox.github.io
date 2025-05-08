@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Minimal FFmpeg ST Load Test</title>
+</head>
+<body>
+    <h1>Minimal FFmpeg ST Load Test</h1>
+    <div id="log" style="white-space: pre-wrap; font-family: monospace; border: 1px solid #ccc; padding: 10px;"></div>
+
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.0/dist/ffmpeg.min.js"></script>
+    <script>
+        const logElement = document.getElementById('log');
+        function logMsg(message) {
+            console.log(message);
+            logElement.textContent += message + '\n';
+        }
+
+        async function runTest() {
+            logMsg('Attempting to load FFmpeg (using @ffmpeg/core-st@0.11.0)...');
+            try {
+                const { createFFmpeg } = FFmpeg; // FFmpeg should be global
+                const ffmpeg = createFFmpeg({
+                    corePath: 'https://unpkg.com/@ffmpeg/core-st@0.11.0/dist/ffmpeg-core.js',
+                    log: true, // Enable FFmpeg's internal logging to console
+                    logger: ({ message }) => logMsg(`FFMPEG_LOGGER: ${message}`), // Capture FFmpeg's own logs
+                });
+                logMsg('createFFmpeg called. Awaiting ffmpeg.load()...');
+                await ffmpeg.load();
+                logMsg('FFmpeg (ST core) loaded successfully!');
+                logMsg(`ffmpeg.isLoaded(): ${ffmpeg.isLoaded()}`);
+            } catch (e) {
+                logMsg(`ERROR loading FFmpeg: ${e.message}`);
+                logMsg(`Stack: ${e.stack}`);
+                console.error("Minimal Test Error:", e);
+            }
+        }
+        runTest();
+    </script>
+</body>
+</html>
