@@ -1,8 +1,0 @@
-<svg version="1.1" 
-	xmlns="http://www.w3.org/2000/svg" 
-	xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
-<path d="M0 64V224H224V36L0 64Z" fill="#c8232c"/>
-<path d="M256 32V224H512V0L256 32Z" fill="#c8232c"/>
-<path d="M256 256V448L512 480V256H256Z" fill="#c8232c"/>
-<path d="M0 256V416L224 444V256H0Z" fill="#c8232c"/>
-</svg>
