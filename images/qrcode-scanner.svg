@@ -1,23 +1,26 @@
-<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
- width="580.000000pt" height="580.000000pt" viewBox="0 0 580.000000 580.000000"
- preserveAspectRatio="xMidYMid meet">
-<g transform="translate(0.000000,580.000000) scale(0.100000,-0.100000)"
-fill="#000000" stroke="none">
-<path d="M1200 3820 l0 -720 740 0 740 0 0 720 0 720 -740 0 -740 0 0 -720z
-m1230 0 l0 -470 -487 2 -488 3 -3 455 c-1 250 0 461 3 468 3 9 111 12 490 12
-l485 0 0 -470z"/>
-<path d="M1800 3820 l0 -140 145 0 145 0 0 140 0 140 -145 0 -145 0 0 -140z"/>
-<path d="M3130 3820 l0 -720 740 0 740 0 0 720 0 720 -740 0 -740 0 0 -720z
-m1215 0 l0 -465 -480 0 -480 0 -3 455 c-1 250 0 461 3 468 3 10 105 12 482 10
-l478 -3 0 -465z"/>
-<path d="M3720 3820 l0 -140 150 0 150 0 0 140 0 140 -150 0 -150 0 0 -140z"/>
-<path d="M1200 1980 l0 -720 740 0 740 0 0 720 0 720 -740 0 -740 0 0 -720z
-m1230 0 l0 -470 -487 2 -488 3 -3 455 c-1 250 0 461 3 468 3 9 111 12 490 12
-l485 0 0 -470z"/>
-<path d="M1800 1980 l0 -140 145 0 145 0 0 140 0 140 -145 0 -145 0 0 -140z"/>
-<path d="M3130 2625 l0 -75 120 0 120 0 0 75 0 75 -120 0 -120 0 0 -75z"/>
-<path d="M3651 2553 l1 -148 -258 -5 -259 -5 -3 -567 -2 -568 426 0 427 0 -5
-160 -5 161 316 -1 316 -1 3 560 2 561 -480 0 -481 0 2 -147z"/>
-<path d="M4120 1340 l0 -80 245 0 245 0 0 80 0 80 -245 0 -245 0 0 -80z"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="580" height="580" viewBox="0 0 580 580"
+     preserveAspectRatio="xMidYMid meet">
+<defs>
+    <g id="patternSet1">
+        <rect x="1200" y="3100" width="1480" height="1440" />
+        <path d="M2430 3820 l0 -470 -487 2 -488 3 -3 455 c-1 250 0 461 3 468 c3 9 111 12 490 12 l485 0 0 -470z"/>
+        <rect x="1800" y="3680" width="290" height="280" />
+    </g>
+    <g id="patternSet2">
+        <rect x="3130" y="3100" width="1480" height="1440" />
+        <path d="M4345 3820 l0 -465 -480 0 -480 0 -3 455 c-1 250 0 461 3 468 c3 10 105 12 482 10 l478 -3 0 -465z"/>
+        <rect x="3720" y="3680" width="300" height="280" />
+    </g>
+</defs>
+<g transform="translate(0,580) scale(0.1,-0.1)"
+   fill="#000000" stroke="none">
+    <use xlink:href="#patternSet1" />
+    <use xlink:href="#patternSet2" />
+    <use xlink:href="#patternSet1" transform="translate(0 -1840)" />
+    <rect x="3130" y="2550" width="240" height="150"/>
+    <path d="M3650 2550 v-150 h-520 v-1140 h850 v320 h630 v1120 h-960 v-150 z"/>
+    <rect x="4120" y="1260" width="490" height="160"/>
 </g>
 </svg>
