@@ -16,7 +16,6 @@
     "type": "image/png"
   }],
   "start_url": "/index.html?utm_source=homescreen",
-  "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#000000",
   "screenshots": [
