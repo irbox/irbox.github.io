@@ -1,286 +1,166 @@
 <!DOCTYPE html>
-<html>
-  <head>
+<html lang="en">
+
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://www.minifier.org/web_assets/frontend/css/stylesheet.css" />
-    <link rel="stylesheet" href="https://www.minifier.org/web_assets/frontend/css/prism.css" />
-    <link rel="stylesheet" href="https://www.minifier.org/web_assets/frontend/css/style.css">
-    <link rel="stylesheet" href="https://www.minifier.org/web_assets/frontend/css/tools/qr-code-scanner.css">
-    <link rel="stylesheet" href="https://www.minifier.org/web_assets/frontend/css/components/upload-paste.css" />
+    <title>QR Code Scanner</title>
+
+    <!-- Essential CSS -->
+    <link rel="stylesheet" href="https://www.minifier.org/web_assets/frontend/css/stylesheet.css?v=6.7" />
+    <link rel="stylesheet" href="https://www.minifier.org/web_assets/frontend/css/tools/qr-code-scanner.css?v=6.7">
+    <link rel="stylesheet" href="https://www.minifier.org/web_assets/frontend/css/components/upload-paste.css?v=6.7" />
+    
     <style>
-      .upload-paste-btns {
-      width: max-content;
-      }
+        .upload-paste-btns {
+            width: max-content;
+        }
+        /* Basic body style to prevent complete collapse if stylesheet.css is minimal */
+        body { 
+            font-family: sans-serif; 
+            margin: 0;
+            padding: 1em; /* Add some padding if .container styling is lost */
+        }
+        .container { /* Basic container styling if not fully covered by stylesheet.css */
+            max-width: 900px;
+            margin: 0 auto;
+        }
     </style>
-  </head>
-  <body>
+</head>
+
+<body>
+
+    <!-- Modals for messages/errors (likely used by the scanner's JS) -->
     <div class="overlay"></div>
     <div class="server-message">
-      <div class="error_header">
-        <div class="error_content">
-          <img src="https://www.minifier.org/web_assets/frontend/img/alert.svg" alt="alert-icon">
-          <strong id="error-heading">Empty input field</strong>
+        <div class="error_header">
+            <div class="error_content">
+                <img src="https://www.minifier.org/web_assets/frontend/img/alert.svg" alt="alert-icon">
+                <strong id="error-heading">Empty input field</strong>
+            </div>
+            <p id="error" class="error"></p>
         </div>
-        <p id="error" class="error"></p>
-      </div>
-      <div class="close_modal_icon">
-        <button class="close_error_modal close_modal">Cancel</button>
-      </div>
+        <div class="close_modal_icon">
+            <button class="close_error_modal close_modal">Cancel</button>
+        </div>
     </div>
+
     <div class="server-success-message">
-      <div class="success_header">
-        <div class="success_content">
-          <img src="https://www.minifier.org/web_assets/frontend/img/success.svg" alt="alert-icon">
-          <strong id="success-heading">Empty input field</strong>
+        <div class="success_header">
+            <div class="success_content">
+                <img src="https://www.minifier.org/web_assets/frontend/img/success.svg" alt="alert-icon">
+                <strong id="success-heading">Empty input field</strong>
+            </div>
+            <p id="success" class="success"></p>
         </div>
-        <p id="success" class="success"></p>
-      </div>
-      <div class="close_modal_icon">
-        <button class="close_error_modal close_modal">Cancel</button>
-      </div>
+        <div class="close_modal_icon">
+            <button class="close_error_modal close_modal">Cancel</button>
+        </div>
     </div>
-    <style>
-      .dropdown {
-      position: relative;
-      display: inline-block;
-      }
-      .dropdown-toggle {
-      background-color: #ffffff;
-      color: black;
-      padding: 5px;
-      cursor: pointer;
-      border: 1px solid #e0e0e0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      position: relative;
-      transition: all 2s ease;
-      }
-      .dropdown-content {
-      display: none;
-      position: absolute;
-      background-color: white;
-      min-width: 100px;
-      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-      z-index: 1;
-      right: 0px;
-      }
-      .dropdown-content.active{
-      display: block;
-      }
-      .dropdown-content a {
-      color: black;
-      padding: 10px;
-      text-decoration: none;
-      display: flex;
-      margin-inline: 0;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 5px;
-      }
-      .dropdown-content .selected {
-      background-color: #e0e0e0;
-      font-weight: bold;
-      }
-      .dropdown-content a:hover {
-      background-color: #f0f0f0;
-      }
-      button.dropdown-toggle::after {
-      position: absolute;
-      content: "";
-      right: 2px;
-      transform: rotate(-90deg);
-      color: gray;
-      font-size: 16px;
-      font-weight: 500;
-      }
-      .dropdown-toggle .down-arrow {
-      width: 20px;
-      height: 20px;
-      }
-      @media screen and (max-width: 600px) {
-      .dropdown:hover .dropdown-content {
-      left: 0;
-      }
-      }
-      @media screen and (max-width: 1024px) {
-      .nav-links{
-      flex-direction: column;
-      }
-      }
-    </style>
+
+    <!-- QR Scanner Tool -->
     <div class="container">
-      <h2 class="tool-title">QR Code Scanner Online</h2>
-      <div class="QrTool">
-        <div class="QrScanner p-relative">
-          <div class="actionsScanner">
-            <h3 class="selectFileHeading">Select an option</h3>
-            <div class="actionOption before-upload">
-              <button class="camera">
-              <img src="https://www.minifier.org/web_assets/frontend/img/icons/camera.svg" alt="camera">
-              <span>Camera</span>
-              </button>
-              <button class="uploadFile">
-              <img src="https://www.minifier.org/web_assets/frontend/img/icons/upload-qr.svg" alt="camera">
-              <span>Upload</span>
-              </button>
-              <input hidden="" type="file" accept="image/*" id="Qrfile">
-            </div>
-            <div class="upload-paste-btns">
-              <button class="qr-camera camera">
-              <img src="https://www.minifier.org/web_assets/frontend/img/icons/camera.svg" alt="camera">
-              <span>Camera</span>
-              </button>
-              <label type="button" class="upload-file" for="file"><img
-                src="https://www.minifier.org/web_assets\frontend\img\icons\upload-file.svg" />
-              <span>Upload Image</span></label>
-              <button type="button" class="paste-url"> <img
-                src="https://www.minifier.org/web_assets\frontend\img\icons\paste-url.svg?v=1" />
-              <span>Paste URL</span> </button>
-              <span class="url-input-span d-none">
-              <img src="https://www.minifier.org/web_assets/frontend/img/icons/paste-url.svg?v=1"
-                class="left-icon" />
-              <input type="text" class="url-input" placeholder="Paste URL" />
-              <img src="https://www.minifier.org/web_assets/frontend/img/icons/right-blue-arrow.svg"
-                class="right-icon" />
-              </span>
-            </div>
-            <img src="" id="preview-image" />
-            <div>
-              <div id="qr_scanner" style="position: relative; min-height: 250px;">
-                <div class="camera-issue" id="cameraIssue">Please verify if device has active camera or check
-                  for browser camera permission.
+        <h2 class="tool-title">QR Code Scanner Online</h2>
+
+        <div class="QrTool">
+            <div class="QrScanner p-relative">
+                <div class="actionsScanner">
+                    <h3 class="selectFileHeading">Select an option</h3>
+                    <div class="actionOption before-upload">
+                        <button class="camera">
+                            <img src="https://www.minifier.org/web_assets/frontend/img/icons/camera.svg" alt="camera">
+                            <span>Camera</span>
+                        </button>
+                        <button class="uploadFile">
+                            <img src="https://www.minifier.org/web_assets/frontend/img/icons/upload-qr.svg" alt="camera">
+                            <span>Upload</span>
+                        </button>
+                        <input hidden="" type="file" accept="image/*" id="Qrfile">
+                    </div>
+
+                    <div class="upload-paste-btns">
+                        <button class="qr-camera camera">
+                            <img src="https://www.minifier.org/web_assets/frontend/img/icons/camera.svg" alt="camera">
+                            <span>Camera</span>
+                        </button>
+                        <label type="button" class="upload-file" for="file"><img
+                                src="https://www.minifier.org/web_assets\frontend\img\icons\upload-file.svg" />
+                            <span>Upload Image</span></label>
+                        <button type="button" class="paste-url"> <img
+                                src="https://www.minifier.org/web_assets\frontend\img\icons\paste-url.svg?v=1" />
+                            <span>Paste URL</span> </button>
+                        <span class="url-input-span d-none">
+                            <img src="https://www.minifier.org/web_assets/frontend/img/icons/paste-url.svg?v=1"
+                                class="left-icon" />
+                            <input type="text" class="url-input" placeholder="Paste URL" />
+                            <img src="https://www.minifier.org/web_assets/frontend/img/icons/right-blue-arrow.svg"
+                                class="right-icon" />
+                        </span>
+                    </div>
+                    <img src="" id="preview-image" alt="Preview of QR Code" style="max-width: 100%; height: auto;"/> <!-- Added alt and basic style -->
+
+                    <div>
+                        <div id="qr_scanner" style="position: relative; min-height: 250px; background-color: #f0f0f0; border: 1px solid #ccc;"> <!-- Added basic styling for visibility -->
+                            <div class="camera-issue" id="cameraIssue">Please verify if device has active camera or check
+                                for browser camera permission.</div>
+                        </div>
+                        <div class="scanning-line"></div>
+                        <div class="closeIcon">
+                            <img src="https://www.minifier.org/web_assets/frontend/img/icons/close-camera.svg" alt="close camera"
+                                class="close-camera">
+                        </div>
+                    </div>
                 </div>
-              </div>
-              <div class="scanning-line"></div>
-              <div class="closeIcon">
-                <img src="https://www.minifier.org/web_assets/frontend/img/icons/close-camera.svg" alt="close camera"
-                  class="close-camera">
-              </div>
             </div>
-          </div>
+            <div class="QrResultDiv">
+                <div class="clear white-btn all-btns">
+                    <span>clear</span>
+                </div>
+                <div class="QrResult d-none-mob">
+                    <div class="default">
+                        <span>Your result will be shown here</span>
+                    </div>
+                    <div class="extractUrl">
+                        <label for="url"></label>
+                        <div class="ResultContent"></div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="QrResultDiv">
-          <div class="clear white-btn all-btns">
-            <span>clear</span>
-          </div>
-          <div class="QrResult d-none-mob">
-            <div class="default">
-              <span>Your result will be shown here</span>
-            </div>
-            <div class="extractUrl">
-              <label for="url"></label>
-              <div class="ResultContent"></div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-    <footer>
-      <ul class="ul-footer">
-        <li class="li-footer"> <a href="/">/</a></li>
-      </ul>
-    </footer>
+
+    <!-- Essential JavaScript -->
     <script src="https://www.minifier.org/web_assets/frontend/script/jquery.js"></script>
+    
     <script>
-      const emd_is_tool_premium = 0;
-      const starFull = "https://www.minifier.org/web_assets/frontend/img/star_fill.svg";
-      const starEmpty = "https://www.minifier.org/web_assets/frontend/img/star_empty.svg";
-      const tool_id ="64";
+        // Constants for the QR Scanner script
+        const QrNotFound = "No QR Code Found!";
+        const ScanFile = "Choose a file to scan!";
+        const CopyFailed = "Failed to copy";
+        const CopyToolTip = "copied";
+        const ServerError = "Something went wrong.";
+        const copyText = "copy";
+        const UrlLabel = "URL/Link";
+        const NumericLabel = "Numeric";
+        const ScannedTextLabel = "Scanned Text";
+        const error_heading = "Error!";
+        const invalid_url_popup_heading = "Invalid URL";
+        const invalid_url_popup_text = "Please enter an image URL.";
+        const invalid_size_popup_heading = "Invalid File Size";
+        const invalid_size_popup_text = "File size must be up to 2MB. Please upload a proper file."; // Adjusted message slightly
+        const invalid_type_popup_heading = "Invalid File Type";
+        const invalid_type_popup_text = "File type is invalid. Please upload a valid image file."; // Adjusted message slightly
     </script>
+    
     <script src="https://www.minifier.org/web_assets/frontend/script/common.min.js?v=6.7"></script>
-    <input type="hidden" id="invisible" value="0x4AAAAAAAUwKvasO0jFqxlt">
-    <input type="hidden" id="managed" value="0x4AAAAAAAXmz4VRRVDhM6v7">
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"></script>
-    <script type="text/javascript">
-      var invisible_key = document.getElementById("invisible").value;
-      var managed_key = document.getElementById("managed").value;
-      if (invisible_key.length > 10 && managed_key.length > 10) {
-          function with_cloudflare_captcha(retry, click_time, function_name, theme = null, position = null, body = null,
-              fun =
-              function(
-                  token) {
-                  var start_val = 0;
-                  if (parseInt('1') == 0) {
-                      start_val = 1;
-                  } else {
-                      if (!retry) {
-                          start_val = 2;
-                      }
-                  }
-                  function_name(start_val + '2RlrFrefQZSxeK6wxE0yepxZgw30hKejArrXqhwN', token, body);
-              }) {
-              var now_time = Math.floor(Date.now() / 1000);
-              if (parseInt(now_time - click_time) < 0 || parseInt(now_time - click_time) > 3 || (
-                      typeof click_time) != 'number') {
-                  return false;
-              }
-              if (parseInt('1') == 0) {
-                  fun(null);
-                  return true;
-              }
-              if (retry) {
-                  var siteKey = invisible_key;
-              } else {
-                  var siteKey = managed_key;
-              }
-              var turnstile_obj = turnstile.render(position ?? 'body', {
-                  sitekey: siteKey,
-                  theme: theme ?? 'light',
-                  language: $("html").attr('lang'),
-                  callback: function(token) {
-                      turnstile.remove(turnstile_obj);
-                      fun(token);
-                  },
-                  error: function(error) {
-                      console.log("error calling challenge");
-                      with_cloudflare_captcha(false, (Date.now() / 1000), function_name, body);
-                  }
-              });
-          }
-      } else {
-          console.error("Captcha key is invalid");
-      }
-    </script>
-    <script>
-      const QrNotFound = "No QR Code Found!";
-      const ScanFile = "Choose a file to scan!";
-      const CopyFailed = "Failed to copy";
-      const CopyToolTip = "copied";
-      const ServerError = "Something went wrong.";
-      const copyText = "copy";
-      const UrlLabel = "URL/Link";
-      const NumericLabel = "Numeric";
-      const ScannedTextLabel = "Scanned Text";
-      const error_heading = "Error!";
-      
-      const invalid_url_popup_heading = "Invalid URL";
-      const invalid_url_popup_text = "Please enter an image URL.";
-      const invalid_size_popup_heading = "Invalid File Size";
-      const invalid_size_popup_text =
-          "File size must be up to 2MB. Please upload a proper CSS file.";
-      const invalid_type_popup_heading = "Invalid File Type";
-      const invalid_type_popup_text =
-          "File type is invalid. Please upload a valid CSS file.";
-      
-    </script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"
-      integrity="sha512-r6rDA7W6ZeQhvl8S7yRVQUKVHdexq+GAlNkNNqVC7YyIV+NwqCTJe2hDWCiffTyRNOeGEzRRJ9ifvRm/HCzGYg=="
-      crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        integrity="sha512-r6rDA7W6ZeQhvl8S7yRVQUKVHdexq+GAlNkNNqVC7YyIV+NwqCTJe2hDWCiffTyRNOeGEzRRJ9ifvRm/HCzGYg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script async defer src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.min.js"></script>
-    <script
-      src="https://www.minifier.org/web_assets/frontend/script/tools/qr-code-scanner.min.js?v=6.7"
-      type="module"></script>
-    <script
-      src="https://www.minifier.org/web_assets/frontend/script/components/upload-paste.min.js?v=6.7"></script>
-    <script>
-      $('.dropdown').on('click', function() {
-          $('.dropdown-content').toggleClass('active');
-      });
-    </script>
-    <script src="https://www.minifier.org/web_assets/frontend/script/emd/script.js?v1.0.0"></script>
-    <script src="https://www.minifier.org/web_assets/frontend/script/emd/etrack.js?v1.0.0"></script>
-  </body>
+    
+    <script src="https://www.minifier.org/web_assets/frontend/script/tools/qr-code-scanner.min.js?v=6.7" type="module"></script>
+    <script src="https://www.minifier.org/web_assets/frontend/script/components/upload-paste.min.js?v=6.7"></script>
+
+</body>
 </html>
