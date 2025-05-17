@@ -1,465 +1,52 @@
-/* --- START OF ORIGINAL RESET (Minor changes for font and box-sizing might be done below) --- */
 html,body,p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,iframe,hr,h1,h2,h3,h4,h5,h6{margin:0;padding:0}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}ul{list-style:none}button,input,select,textarea{margin:0}html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}img,embed,object,audio{height:auto;max-width:100%}iframe{border:0}table{border-collapse:collapse;border-spacing:0}td,th{padding:0;text-align:left}
-/* --- END OF ORIGINAL RESET --- */
-
-/* --- AI APP AESTHETIC STYLES --- */
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;600;700;800&display=swap');
-
-:root {
-  --ai-font-primary: 'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --ai-font-secondary: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-
-  /* Core AI Palette - Dark with vibrant, gradient-ready accents */
-  --ai-color-bg-dark: #120F1A; /* Very dark purple-ish black */
-  --ai-color-bg-medium: #1A1625; /* Slightly lighter for base surfaces */
-  --ai-color-surface: #25213A; /* Cards, dialogs - a bit more purple */
-  --ai-color-surface-glass: rgba(37, 33, 58, 0.65); /* For glassmorphic elements */
-
-  --ai-color-text-primary: #E0DFFF; /* Soft, slightly desaturated lavender white */
-  --ai-color-text-secondary: #A09BBD; /* For less prominent text */
-  --ai-color-text-interactive: #C5BFFF; /* For interactive text that isn't a primary accent */
-
-  /* Accents - Chosen for gradient potential and "AI" feel */
-  --ai-color-accent-primary-start: #8A2BE2; /* Blue Violet */
-  --ai-color-accent-primary-end: #FF00FF;   /* Magenta */
-  --ai-color-accent-secondary-start: #00BFFF; /* Deep Sky Blue */
-  --ai-color-accent-secondary-end: #00F5FF;   /* Turquoise like */
-
-  --ai-color-success: #00FF7F;      /* Spring Green - vibrant */
-  --ai-color-outline: #4A4466;      /* Muted outline for text fields */
-
-  --ai-color-scrim: rgba(5, 3, 10, 0.75); /* Very dark scrim for overlays */
-  --ai-color-shadow-soft: rgba(0, 0, 0, 0.25);
-  --ai-color-shadow-strong: rgba(0, 0, 0, 0.4);
-  --ai-color-glow-primary: color-mix(in srgb, var(--ai-color-accent-primary-end) 40%, transparent);
-  --ai-color-glow-secondary: color-mix(in srgb, var(--ai-color-accent-secondary-end) 40%, transparent);
-
-  /* Shapes - Keep the expressive rounding */
-  --ai-shape-corner-medium: 18px;
-  --ai-shape-corner-large: 28px;
-  --ai-shape-corner-xlarge: 36px;
-  --ai-shape-corner-dialog: 40px;
-  --ai-shape-corner-button: 30px;
-  --ai-shape-corner-full: 9999px;
-
-  --ai-transition-duration: 0.3s;
-  --ai-transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
-  --ai-transition-springy: cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-/* Remove tap highlight color globally */
-* {
-  -webkit-tap-highlight-color: transparent;
-  outline-color: var(--ai-color-accent-secondary-start); /* Consistent focus outline color */
-}
-
-
-body {
-  font-family: var(--ai-font-secondary);
-  font-size: 16px;
-  font-weight: 400;
-  color: var(--ai-color-text-primary);
-  /* Background gradient for AI feel */
-  background: linear-gradient(135deg, var(--ai-color-bg-dark) 0%, var(--ai-color-bg-medium) 100%);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  line-height: 1.6;
-  overflow: hidden;
-}
-
-.app__layout {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-/* --- Header / App Bar --- */
-.app__header {
-  width: 100%;
-  height: 72px;
-  color: var(--ai-color-text-primary);
-  background-color: transparent;
-  display: flex;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
-  padding: 0 20px;
-  box-sizing: border-box;
-}
-
-.app__header-icon { /* Reload icon button */
-  width: 52px; /* Slightly larger touch target */
-  height: 52px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  border-radius: var(--ai-shape-corner-full);
-  transition: background-color var(--ai-transition-duration) var(--ai-transition-timing),
-              transform var(--ai-transition-duration) var(--ai-transition-springy);
-}
-.app__header-icon svg {
-  fill: var(--ai-color-text-interactive);
-  width: 28px;
-  height: 28px;
-  transition: fill var(--ai-transition-duration) ease, transform var(--ai-transition-duration) var(--ai-transition-springy);
-}
-.app__header-icon:hover {
-  background-color: rgba(255,255,255,0.05);
-  transform: translateY(-50%) scale(1.15);
-}
-.app__header-icon:hover svg {
-    fill: var(--ai-color-text-primary);
-    transform: rotate(-45deg); /* Subtle rotation on hover for reload icon */
-}
-.app__header-icon:active {
-  background-color: rgba(255,255,255,0.08);
-  transform: translateY(-50%) scale(1.05);
-  opacity: 1;
-}
-.app__header-icon:active svg {
-    transform: rotate(-90deg); /* Further rotation on active */
-}
-.app__header-title { display: none; }
-
-.app__layout-content {
-  height: 100%;
-  position: relative;
-}
-
-/* --- FAB (Floating Action Button) --- */
-.app__select-photos { /* "select image" FAB */
-  position: fixed;
-  right: 28px;
-  bottom: 28px;
-  background: linear-gradient(135deg, var(--ai-color-accent-primary-start), var(--ai-color-accent-primary-end));
-  color: #FFF;
-  border-radius: var(--ai-shape-corner-button);
-  border: 0;
-  width: 68px;
-  height: 68px;
-  outline: 0;
-  box-shadow: 0 8px 20px var(--ai-color-shadow-strong), 0 0 30px var(--ai-color-glow-primary);
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: transform var(--ai-transition-duration) var(--ai-transition-springy),
-              box-shadow var(--ai-transition-duration) var(--ai-transition-timing),
-              background-size var(--ai-transition-duration) ease;
-  background-size: 100% 100%; /* For gradient animation on hover */
-}
-.app__select-photos:hover {
-  transform: scale(1.12) translateY(-5px);
-  box-shadow: 0 12px 25px var(--ai-color-shadow-strong), 0 0 40px var(--ai-color-glow-primary);
-  background-size: 150% 150%; /* Subtle gradient shift */
-}
-.app__select-photos:active {
-  transform: scale(0.98);
-  box-shadow: 0 4px 10px var(--ai-color-shadow-soft), 0 0 15px var(--ai-color-glow-primary);
-  opacity: 1;
-}
-.app__select-photos svg {
-  fill: #FFF;
-  width: 32px;
-  height: 32px;
-}
-.custom-btn, .custom-fab-icon { display: none; }
-
-/* --- Video Background --- */
-video {
-  transform: translateX(-50%) translateY(-50%);
-  top: 50%; left: 50%;
-  min-width: 100%; min-height: 100%;
-  width: auto; height: auto;
-  position: absolute; z-index: -1;
-  object-fit: cover;
-  opacity: 0.8; /* Slightly dim video to let UI pop more */
-}
-
-.hide { display: none !important; }
-
-/* --- Scanner Viewfinder & Animation --- */
-.app__overlay {
-  position: fixed;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  width: 290px; height: 290px;
-  z-index: 1; pointer-events: none;
-  display: flex; align-items: center; justify-content: center;
-}
-
-/* This SVG frame is not used by the new CSS-based scanner frame. */
-/* Your JS might try to show/hide it, but this rule will keep it hidden. */
-.app__scanner-img { display: none !important; }
-.app__overlay-left, .app__overlay-right { display: none !important; }
-
-
-.app__overlay::before { /* The "cutout" overlay */
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: var(--ai-shape-corner-xlarge);
-    box-shadow: 0 0 0 9999px var(--ai-color-scrim);
-    pointer-events: none;
-    z-index: 0;
-}
-.app__overlay::after { /* Futuristic glowing border for the scanner frame */
-    content: '';
-    position: absolute;
-    inset: -3px;
-    border-radius: calc(var(--ai-shape-corner-xlarge) + 3px);
-    border: 2px solid transparent;
-    background: conic-gradient(from 90deg at 50% 50%, var(--ai-color-accent-secondary-start), var(--ai-color-accent-secondary-end), var(--ai-color-accent-secondary-start)) border-box;
-    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: destination-out;
-    mask-composite: exclude;
-    animation: spinBorder 4s linear infinite;
-    box-shadow: 0 0 15px var(--ai-color-glow-secondary), 0 0 25px var(--ai-color-glow-secondary) inset;
-    pointer-events: none;
-    z-index: 1;
-}
-
-@keyframes spinBorder {
-  to { transform: rotate(360deg); }
-}
-
-.custom-scanner { /* The animated scanner line */
-  width: calc(100% - 40px);
-  height: 5px;
-  background: linear-gradient(90deg, transparent, var(--ai-color-success), transparent);
-  position: absolute;
-  box-shadow: 0 0 15px var(--ai-color-success), 0 0 25px var(--ai-color-success);
-  display: block !important; /* Ensure JS can't hide it if it tries to show .app__scanner-img */
-  left: 50%; transform: translateX(-50%);
-  margin: 0;
-  border-radius: var(--ai-shape-corner-full);
-  z-index: 2;
-  animation: scanner 2.5s infinite cubic-bezier(0.65, 0, 0.35, 1); /* Smoother, slightly faster */
-}
-
-@keyframes scanner {
-  0% { bottom: 90%; opacity: 0.6; transform: translateX(-50%) scaleX(0.8); }
-  50% { bottom: 10%; opacity: 1; transform: translateX(-50%) scaleX(1); }
-  100% { bottom: 90%; opacity: 0.6; transform: translateX(-50%) scaleX(0.8); }
-}
-@-webkit-keyframes scanner { /* Duplicate for webkit */
-  0% { bottom: 90%; opacity: 0.6; transform: translateX(-50%) scaleX(0.8); }
-  50% { bottom: 10%; opacity: 1; transform: translateX(-50%) scaleX(1); }
-  100% { bottom: 90%; opacity: 0.6; transform: translateX(-50%) scaleX(0.8); }
-}
-
-
-/* --- Snackbar / Toast --- */
-.app__snackbar {
-  position: fixed;
-  bottom: 30px; left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 40px); max-width: 400px;
-  pointer-events: none; z-index: 10000;
-  display: flex; flex-direction: column-reverse; align-items: center;
-}
-
-.app__snackbar-msg {
-  width: auto; min-width: 220px; max-width: 100%;
-  min-height: 58px;
-  background-color: var(--ai-color-surface-glass); /* Glassmorphic snackbar */
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.1);
-  color: var(--ai-color-text-primary);
-  border-radius: var(--ai-shape-corner-large);
-  box-shadow: 0 6px 18px var(--ai-color-shadow-strong);
-  display: flex; align-items: center; justify-content: center;
-  text-align: center;
-  font-size: 15px; font-weight: 500;
-  padding: 14px 28px;
-  transition: opacity var(--ai-transition-duration) var(--ai-transition-timing),
-              transform var(--ai-transition-duration) var(--ai-transition-springy);
-  margin-bottom: 12px; pointer-events: all;
-  opacity: 0; transform: translateY(25px) scale(0.85);
-}
-/* This class on parent controls visibility of children messages */
-.app__snackbar:not(.app__snackbar--hide) .app__snackbar-msg {
-    opacity: 1; transform: translateY(0px) scale(1);
-}
-
-
-/* --- Dialog (for QR Code result) --- */
-.app__dialog-overlay {
-  position: fixed; inset: 0;
-  background: var(--ai-color-scrim);
-  z-index: 1000; opacity: 0; pointer-events: none;
-  transition: opacity var(--ai-transition-duration) var(--ai-transition-timing);
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-}
-.app__dialog-overlay:not(.app__dialog--hide) {
-  opacity: 1; pointer-events: auto;
-}
-
-.app__dialog {
-  z-index: 1001;
-  background-color: var(--ai-color-surface-glass);
-  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,255,255,0.08);
-  color: var(--ai-color-text-primary);
-  width: calc(100% - 32px); max-width: 380px;
-  min-height: 180px; height: auto;
-  border-radius: var(--ai-shape-corner-dialog);
-  display: flex; flex-direction: column;
-  position: fixed; left: 50%; top: 50%;
-  transform: translate(-50%, -45%) scale(0.85);
-  margin: 0;
-  box-shadow: 0 10px 30px var(--ai-color-shadow-strong);
-  opacity: 0; pointer-events: none;
-  transition: opacity var(--ai-transition-duration) var(--ai-transition-timing),
-              transform var(--ai-transition-duration) var(--ai-transition-springy);
-  overflow: hidden;
-}
-
-.app__dialog:not(.app__dialog--hide) {
-  opacity: 1; pointer-events: auto;
-  transform: translate(-50%, -50%) scale(1);
-}
-
-.app__dialog-content {
-  width: 100%; padding: 32px;
-  box-sizing: border-box; flex-grow: 1;
-}
-
-.app__dialog-content h1 {
-  margin-top: 0; margin-bottom: 24px;
-  font-family: var(--ai-font-primary);
-  font-weight: 800; font-size: 28px;
-  line-height: 1.3;
-  color: var(--ai-color-text-primary);
-  text-align: center;
-}
-
-/* Dialog Input Field */
-.app__dialog input[type="text"] {
-  width: 100%; height: 60px;
-  border: 2px solid var(--ai-color-outline);
-  border-radius: var(--ai-shape-corner-medium);
-  outline: 0;
-  font-family: var(--ai-font-secondary);
-  font-size: 17px; color: var(--ai-color-text-primary);
-  font-weight: 500; padding: 0 22px;
-  box-sizing: border-box;
-  background-color: var(--ai-color-bg-medium);
-  transition: border-color var(--ai-transition-duration) var(--ai-transition-timing),
-              box-shadow var(--ai-transition-duration) var(--ai-transition-timing),
-              background-color var(--ai-transition-duration) var(--ai-transition-timing);
-}
-.app__dialog input[type="text"]::placeholder {
-    color: var(--ai-color-text-secondary); opacity: 0.7;
-}
-.app__dialog input[type="text"]:focus {
-  border-color: var(--ai-color-accent-secondary-start);
-  background-color: var(--ai-color-surface);
-  box-shadow: 0 0 0 3px var(--ai-color-glow-secondary), 0 0 15px var(--ai-color-glow-secondary) inset;
-}
-
-/* Dialog Actions (Buttons) */
-.app__dialog-actions {
-  display: flex; justify-content: center; gap: 16px;
-  padding: 0px 32px 32px 32px;
-  width: 100%; box-sizing: border-box;
-  margin-top: 28px;
-}
-
-.app__dialog-actions button {
-  flex-grow: 1; max-width: 160px;
-  border: 0; height: 56px;
-  padding: 0 22px;
-  font-family: var(--ai-font-primary);
-  font-size: 16px; font-weight: 700;
-  outline: 0; cursor: pointer;
-  border-radius: var(--ai-shape-corner-button);
-  text-transform: capitalize;
-  transition: transform var(--ai-transition-duration) var(--ai-transition-springy),
-              background var(--ai-transition-duration) var(--ai-transition-timing),
-              box-shadow var(--ai-transition-duration) var(--ai-transition-timing);
-  background-size: 200% 200%;
-}
-.app__dialog-actions button:hover {
-    transform: scale(1.06) translateY(-2px);
-    box-shadow: 0 6px 12px var(--ai-color-shadow-soft);
-    background-position: right center;
-}
-.app__dialog-actions button:active {
-    transform: scale(0.97); box-shadow: none;
-}
-
-.app__dialog-open {
-  background: linear-gradient(135deg, var(--ai-color-accent-primary-start), var(--ai-color-accent-primary-end));
-  color: #FFF;
-  box-shadow: 0 0 20px var(--ai-color-glow-primary);
-}
-
-.app__dialog-close {
-  background: var(--ai-color-surface);
-  color: var(--ai-color-text-interactive);
-  border: 1px solid var(--ai-color-outline);
-}
-.app__dialog-close:hover {
-  border-color: var(--ai-color-accent-secondary-start);
-  color: var(--ai-color-text-primary);
-}
-
-
-/* --- Helper texts and other small UI elements --- */
-.app__help-text {
-  color: var(--ai-color-text-secondary);
-  position: absolute;
-  bottom: calc(28px + 68px + 24px); /* Above FAB */
-  font-size: 15px; font-weight: 500;
-  left: 50%; transform: translateX(-50%);
-  text-align: center; user-select: none;
-  padding: 10px 20px;
-  background-color: var(--ai-color-surface-glass);
-  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,0.05);
-  border-radius: var(--ai-shape-corner-medium);
-  z-index: 5; display: block;
-  box-shadow: 0 3px 8px var(--ai-color-shadow-soft);
-}
-
-input[type='file'] { display: none; } /* Kept from original, good practice */
-
-.app__version { /* If you have a version span in your HTML */
-  position: absolute; bottom: 12px; left: 50%;
-  transform: translateX(-50%);
-  font-size: 12px; color: var(--ai-color-text-secondary);
-  opacity: 0.5;
-}
-
-/* --- Media Queries --- */
-@media screen and (max-width: 480px) {
-  .app__header { height: 68px; padding: 0 16px; }
-  .app__header-icon { right: 16px; }
-  .app__select-photos { right: 20px; bottom: 20px; width: 64px; height: 64px; }
-  
-  .app__overlay { width: 260px; height: 260px; }
-
-  .app__dialog {
-    width: calc(100% - 24px);
-    border-radius: var(--ai-shape-corner-xlarge);
-  }
-  .app__dialog-content { padding: 28px; }
-  .app__dialog-content h1 { font-size: 24px; }
-  .app__dialog-actions { padding: 0px 28px 28px 28px; flex-direction: column; gap: 12px;}
-  .app__dialog-actions button { max-width: 100%; }
-
-  .app__snackbar { bottom: 20px; width: calc(100% - 24px); }
-  .app__help-text { bottom: calc(20px + 64px + 20px); font-size: 14px; }
+body{font-family:monospace,sans-serif,serif;-webkit-font-smoothing:antialiased; color: #E5E7EB;}
+.app__layout{position:absolute;width:100%;height:100%;overflow:hidden;background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);}
+.app__header{width:100%;height:56px;color:#E5E7EB;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;position:fixed;top:0;left:0;right:0;z-index:10}
+.app__header-icon{width:35px;height:35px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;cursor:pointer;position:absolute;right:20px;top:20px}
+.app__header-icon:active{opacity:.8}
+.app__header-title{margin-left:5px;font-size:19px;user-select:none}
+.app__layout-content{height:inherit}
+.custom-menu-icon{font-size:28px;line-height:47px}
+.custom-title,.custom-menu-icon{color:#E5E7EB}
+.custom-btn{position:fixed;right:26px;bottom:26px;background:#3B82F6;border-radius:50%;border:0;width:56px;height:56px;outline:0;box-shadow:0 2px 5px rgba(59, 130, 246, 0.4),0 3px 1px -2px rgba(59,130,246,.2),0 1px 5px 0 rgba(59,130,246,.12);z-index:9999}
+.custom-btn:active{box-shadow:none}
+.custom-msg{text-align:center;width:90%;height:50%;overflow:auto;margin:auto;position:absolute;top:0;left:0;bottom:0;right:0;font-size:16px;color: #E5E7EB;}
+.custom-fab-icon{color:#fff;font-size:30px;margin-top:2px;user-select:none}
+video{transform:translateX(-50%) translateY(-50%);top:50%;left:50%;min-width:100%;min-height:100%;width:auto;height:auto;position:absolute}
+#list li{list-style-type:none;text-decoration:underline;color:#00CFE8; text-decoration-color: #00CFE8;}
+.custom-copy-btn{opacity:0}
+.hide{display:none}
+@-webkit-keyframes scanner{0{bottom:90%}50%{bottom:10%}100%{bottom:90%}}@-moz-keyframes scanner{0{bottom:90%}50%{bottom:10%}100%{bottom:90%}}@-o-keyframes scanner{0{bottom:90%}50%{bottom:10%}100%{bottom:90%}}@keyframes scanner{0{bottom:90%}50%{bottom:10%}100%{bottom:90%}}
+.custom-scanner{width:270px;height:3px;background:#00CFE8;position:absolute;-webkit-transition:all 200ms linear;-moz-transition:all 200ms linear;transition:all 200ms linear;-webkit-animation:scanner 3s infinite linear;-moz-animation:scanner 3s infinite linear;-o-animation:scanner 3s infinite linear;animation:scanner 3s infinite linear;box-shadow:0 0 10px #00CFE8, 0 0 5px #00CFE8;display:none;left:-10px;right:0;margin:auto}
+#camera{opacity:0}
+.no-support{font-size:20px;text-align:center; color: #E5E7EB;}
+.app__snackbar{position:fixed;bottom:15px;left:20px;pointer-events:none;z-index:9999}
+.app__snackbar-msg{width:250px;min-height:50px;background-color:#1F2937;color:#E5E7EB;border-radius:3px;box-shadow:0 0 2px rgba(0,0,0,.12),0 2px 4px rgba(0,0,0,.24);display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;font-size:14px;font-weight:500;padding-left:15px;padding-right:10px;word-break:break-all;-webkit-transition:opacity 3s cubic-bezier(0,0,0.30,1) 0;transition:opacity .30s cubic-bezier(0,0,0.30,1) 0;text-transform:initial;margin-bottom:10px;z-index:9999}
+.app__snackbar--hide{opacity:0}
+.app__dialog{z-index:12;background-color:#1F2937;width:290px;height:180px;border-radius:8px;display:flex;position:absolute;left:0;right:0;bottom:0;top:0;margin:auto;box-shadow:0 0 25px rgba(0, 207, 232, 0.15),0 11px 15px -7px rgba(0,0,0,.12),0 24px 38px 3px rgba(0,0,0,.2); color: #E5E7EB;}
+.app__dialog-content{width:100%;padding:15px}
+.app__dialog-content h1{margin-top:5px;margin-bottom:15px;font-weight:600;font-size:19px; color: #E5E7EB;}
+.app__dialog input{width:250px;height:30px;border:0;border-bottom:1px solid #00CFE8;outline:0;font-size:15px;color:#00CFE8;font-weight:500; background-color: #334155; padding-left: 5px;}
+.app__dialog-actions{display:block;position:absolute;bottom:13px;right:20px}
+.app__dialog-open,.app__dialog-close{border:0;height:35px;width:70px;font-size:16px;background:transparent;font-weight:500;outline:0;cursor:pointer;margin-right:-15px; color: #00CFE8;}
+.app__dialog-open{display:none}
+.app__dialog-open:active,.app__dialog-close:active{opacity:.9; background-color: rgba(0, 207, 232, 0.1);}
+.app__dialog--hide{display:none}
+.app__overlay{position:fixed;top:0;bottom:0;right:0;left:0;transition:all 200ms ease-in;width:310px;height:310px;margin:auto}
+.app__overlay-left,.app__overlay-right{width:52px;height:340px;background:rgba(0, 207, 232, 0.1);}
+.app__overlay-left{margin-left:-57px;margin-top:-10px}
+.app__overlay-right{margin-right:-57px;margin-top:-340px;float:right}
+.app__overlay{border:0}
+.app__help-text,.app__select-photos{color:#fff;position:absolute;bottom:-70px;font-size:18px;right:0;text-align:center;user-select:none}
+.app__help-text{display:none;left:0}
+.app__dialog-overlay{position:fixed;left:0;right:0;bottom:0;top:0;background:rgba(0,0,0,0.65);z-index:11}
+.camera__icon,.focus__icon{position:relative;left:10px;display:none}
+.app__select-photos{width:58px;height:58px;cursor:pointer;position:fixed;bottom:20px;right:20px;border-radius:50%;background-color:#3B82F6;display:flex;align-items:center;justify-content:center}
+.app__select-photos:active{opacity:.8}
+input[type='file']{display:none}
+#frame{width:auto;height:auto}
+.app__version{position:absolute;bottom:20px;font-size:12px;color:#9CA3AF;margin-top:15px;display:inline-block}
+.app__scanner-img{z-index:1;position:relative;display:none}
+@media screen and (max-width:480px){
+  /* .app__infodialog specific styles were here, no longer needed */
 }
