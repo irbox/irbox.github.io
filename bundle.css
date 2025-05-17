@@ -199,7 +199,11 @@ video {
   display: flex; align-items: center; justify-content: center;
 }
 
-.app__scanner-img, .app__overlay-left, .app__overlay-right { display: none !important; }
+/* This SVG frame is not used by the new CSS-based scanner frame. */
+/* Your JS might try to show/hide it, but this rule will keep it hidden. */
+.app__scanner-img { display: none !important; }
+.app__overlay-left, .app__overlay-right { display: none !important; }
+
 
 .app__overlay::before { /* The "cutout" overlay */
     content: '';
@@ -236,7 +240,7 @@ video {
   background: linear-gradient(90deg, transparent, var(--ai-color-success), transparent);
   position: absolute;
   box-shadow: 0 0 15px var(--ai-color-success), 0 0 25px var(--ai-color-success);
-  display: block !important;
+  display: block !important; /* Ensure JS can't hide it if it tries to show .app__scanner-img */
   left: 50%; transform: translateX(-50%);
   margin: 0;
   border-radius: var(--ai-shape-corner-full);
@@ -284,6 +288,7 @@ video {
   margin-bottom: 12px; pointer-events: all;
   opacity: 0; transform: translateY(25px) scale(0.85);
 }
+/* This class on parent controls visibility of children messages */
 .app__snackbar:not(.app__snackbar--hide) .app__snackbar-msg {
     opacity: 1; transform: translateY(0px) scale(1);
 }
@@ -295,7 +300,7 @@ video {
   background: var(--ai-color-scrim);
   z-index: 1000; opacity: 0; pointer-events: none;
   transition: opacity var(--ai-transition-duration) var(--ai-transition-timing);
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); /* Stronger blur */
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
 }
 .app__dialog-overlay:not(.app__dialog--hide) {
   opacity: 1; pointer-events: auto;
@@ -303,7 +308,7 @@ video {
 
 .app__dialog {
   z-index: 1001;
-  background-color: var(--ai-color-surface-glass); /* Glassmorphic dialog */
+  background-color: var(--ai-color-surface-glass);
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255,255,255,0.08);
   color: var(--ai-color-text-primary);
@@ -350,7 +355,7 @@ video {
   font-size: 17px; color: var(--ai-color-text-primary);
   font-weight: 500; padding: 0 22px;
   box-sizing: border-box;
-  background-color: var(--ai-color-bg-medium); /* Darker input bg */
+  background-color: var(--ai-color-bg-medium);
   transition: border-color var(--ai-transition-duration) var(--ai-transition-timing),
               box-shadow var(--ai-transition-duration) var(--ai-transition-timing),
               background-color var(--ai-transition-duration) var(--ai-transition-timing);
@@ -382,27 +387,26 @@ video {
   border-radius: var(--ai-shape-corner-button);
   text-transform: capitalize;
   transition: transform var(--ai-transition-duration) var(--ai-transition-springy),
-              background var(--ai-transition-duration) var(--ai-transition-timing), /* For gradient transition */
+              background var(--ai-transition-duration) var(--ai-transition-timing),
               box-shadow var(--ai-transition-duration) var(--ai-transition-timing);
-  background-size: 200% 200%; /* For gradient hover effect */
+  background-size: 200% 200%;
 }
 .app__dialog-actions button:hover {
     transform: scale(1.06) translateY(-2px);
     box-shadow: 0 6px 12px var(--ai-color-shadow-soft);
-    background-position: right center; /* Shift gradient */
+    background-position: right center;
 }
 .app__dialog-actions button:active {
     transform: scale(0.97); box-shadow: none;
 }
 
-.app__dialog-open { /* Primary action button */
+.app__dialog-open {
   background: linear-gradient(135deg, var(--ai-color-accent-primary-start), var(--ai-color-accent-primary-end));
   color: #FFF;
   box-shadow: 0 0 20px var(--ai-color-glow-primary);
-  /* display: none; This was originally here - ensure your JS handles its visibility if needed */
 }
 
-.app__dialog-close { /* Secondary action */
+.app__dialog-close {
   background: var(--ai-color-surface);
   color: var(--ai-color-text-interactive);
   border: 1px solid var(--ai-color-outline);
@@ -430,9 +434,9 @@ video {
   box-shadow: 0 3px 8px var(--ai-color-shadow-soft);
 }
 
-input[type='file'] { display: none; }
+input[type='file'] { display: none; } /* Kept from original, good practice */
 
-.app__version {
+.app__version { /* If you have a version span in your HTML */
   position: absolute; bottom: 12px; left: 50%;
   transform: translateX(-50%);
   font-size: 12px; color: var(--ai-color-text-secondary);
