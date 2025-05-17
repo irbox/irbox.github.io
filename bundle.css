@@ -1,689 +1,443 @@
-/* Reset and Basic Setup */
-html,body,p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,iframe,hr,h1,h2,h3,h4,h5,h6{margin:0;padding:0}
-h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}
-ul{list-style:none}
-button,input,select,textarea{margin:0;font-family:inherit;font-size:inherit;color:inherit;}
-html{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-*,*:before,*:after{box-sizing:inherit}
-img,embed,object,audio,video{height:auto;max-width:100%} /* video added */
-iframe{border:0}
-table{border-collapse:collapse;border-spacing:0}
-td,th{padding:0;text-align:left}
+/* --- START OF EXISTING bundle.css --- */
+html,body,p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,iframe,hr,h1,h2,h3,h4,h5,h6{margin:0;padding:0}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}ul{list-style:none}button,input,select,textarea{margin:0}html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}img,embed,object,audio{height:auto;max-width:100%}iframe{border:0}table{border-collapse:collapse;border-spacing:0}td,th{padding:0;text-align:left}body{font-family:monospace,sans-serif,serif;-webkit-font-smoothing:antialiased}.app__layout{position:absolute;width:100%;height:100%;overflow:hidden;background-color:rgba(0,0,0,0.5)}.app__header{width:100%;height:56px;color:#fff;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;position:fixed;top:0;left:0;right:0;z-index:10}.app__header-icon{width:35px;height:35px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;cursor:pointer;position:absolute;right:20px;top:20px}.app__header-icon:active{opacity:.8}.app__header-title{margin-left:5px;font-size:19px;user-select:none}.app__layout-content{height:inherit}.custom-menu-icon{font-size:28px;line-height:47px}.custom-title,.custom-menu-icon{color:#fff}.custom-btn{position:fixed;right:26px;bottom:26px;background:#448aff;border-radius:50%;border:0;width:56px;height:56px;outline:0;box-shadow:0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);z-index:9999}.custom-btn:active{box-shadow:none}.custom-msg{text-align:center;width:90%;height:50%;overflow:auto;margin:auto;position:absolute;top:0;left:0;bottom:0;right:0;font-size:16px}.custom-fab-icon{color:#fff;font-size:30px;margin-top:2px;user-select:none}video{transform:translateX(-50%) translateY(-50%);top:50%;left:50%;min-width:100%;min-height:100%;width:auto;height:auto;position:absolute}#list li{list-style-type:none;text-decoration:underline;color:#00F}.custom-copy-btn{opacity:0}.hide{display:none}@-webkit-keyframes scanner{0{bottom:90%}50%{bottom:10%}100%{bottom:90%}}@-moz-keyframes scanner{0{bottom:90%}50%{bottom:10%}100%{bottom:90%}}@-o-keyframes scanner{0{bottom:90%}50%{bottom:10%}100%{bottom:90%}}@keyframes scanner{0{bottom:90%}50%{bottom:10%}100%{bottom:90%}}.custom-scanner{width:270px;height:2px;background:#4caf50;position:absolute;-webkit-transition:all 200ms linear;-moz-transition:all 200ms linear;transition:all 200ms linear;-webkit-animation:scanner 3s infinite linear;-moz-animation:scanner 3s infinite linear;-o-animation:scanner 3s infinite linear;animation:scanner 3s infinite linear;box-shadow:0 1px 0 0 rgba(0,0,0,0.4);display:none;left:-10px;right:0;margin:auto}#camera{opacity:0}.no-support{font-size:20px;text-align:center}.app__snackbar{position:fixed;bottom:15px;left:20px;pointer-events:none;z-index:9999}.app__snackbar-msg{width:250px;min-height:50px;background-color:#404040;color:#fff;border-radius:3px;box-shadow:0 0 2px rgba(0,0,0,.12),0 2px 4px rgba(0,0,0,.24);display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;font-size:14px;font-weight:500;padding-left:15px;padding-right:10px;word-break:break-all;-webkit-transition:opacity 3s cubic-bezier(0,0,0.30,1) 0;transition:opacity .30s cubic-bezier(0,0,0.30,1) 0;text-transform:initial;margin-bottom:10px;z-index:9999}.app__snackbar--hide{opacity:0}.app__infodialog,.app__dialog{z-index:12;background-color:#fff;width:290px;height:180px;border-radius:8px;display:flex;position:absolute;left:0;right:0;bottom:0;top:0;margin:auto;box-shadow:0 9px 46px 8px rgba(0,0,0,.14),0 11px 15px -7px rgba(0,0,0,.12),0 24px 38px 3px rgba(0,0,0,.2)}.app__infodialog{max-width:480px;width:95%;height:240px}.app__dialog-content,.app__infodialog-content{width:100%;padding:15px}.app__infodialog-subcontent{margin-top:18px}.app__infodialog-subcontent a{color:#1b1eb5}.app__infodialog-subcontent p:not(:first-child){margin-top:10px}.app__dialog-content h1,.app__infodialog h1{margin-top:5px;margin-bottom:15px;font-weight:600;font-size:19px}.app__dialog input{width:250px;height:30px;border:0;border-bottom:1px solid rgba(0,0,0,.24);outline:0;font-size:15px;color:#1b1eb5;font-weight:500}.app__dialog-actions,.app__infodialog-actions{display:block;position:absolute;bottom:13px;right:20px}.app__infodialog-open,.app__infodialog-close,.app__dialog-open,.app__dialog-close{border:0;height:35px;width:70px;font-size:16px;background:transparent;font-weight:500;outline:0;cursor:pointer;margin-right:-15px}.app__dialog-open{display:none}.app__infodialog-open:active,.app__infodialog-close:active,.app__dialog-open:active,.app__dialog-close:active{opacity:.9}.app__infodialog--hide,.app__dialog--hide{display:none}.app__overlay{position:fixed;top:0;bottom:0;right:0;left:0;transition:all 200ms ease-in;width:310px;height:310px;margin:auto}.app__overlay-left,.app__overlay-right{width:52px;height:340px;background:#7f7f7f}.app__overlay-left{margin-left:-57px;margin-top:-10px}.app__overlay-right{margin-right:-57px;margin-top:-340px;float:right}.app__overlay{border:0} /* This was .app__overlay{border:0} - likely meant to target .app__overlay specific border */ .app__help-text,.app__select-photos{color:#fff;position:absolute;bottom:-70px;font-size:18px;right:0;text-align:center;user-select:none}.app__help-text{display:none;left:0}.app__dialog-overlay,.app__infodialog-overlay{position:fixed;left:0;right:0;bottom:0;top:0;background:rgba(0,0,0,0.55);z-index:11}.camera__icon,.focus__icon{position:relative;left:10px;display:none}.app__select-photos{width:58px;height:58px;cursor:pointer;position:fixed;bottom:20px;right:20px;border-radius:50%;background-color:#3f51b5;display:flex;align-items:center;justify-content:center}.app__select-photos:active{opacity:.8}input[type='file']{display:none}#frame{width:auto;height:auto}.app__version{position:absolute;bottom:20px;font-size:12px;color:#737373;margin-top:15px;display:inline-block}.app__scanner-img{z-index:1;position:relative;display:none}@media screen and (max-width:480px){.app__infodialog{width:90%}.app__infodialog-content{padding:12px 13px}}
+/* --- END OF EXISTING bundle.css --- */
 
+/* --- START OF MATERIAL YOU EXPRESSIVE 2025 STYLES --- */
 :root {
-  /* Material You Expressive - Light Theme Palette (Defaults) */
-  --my-primary: #4A80F5; /* Vibrant Blue */
-  --my-on-primary: #FFFFFF;
-  --my-primary-container: #D8E2FF;
-  --my-on-primary-container: #001A7A;
+    --md-sys-font-family: 'Roboto', 'Noto Sans', sans-serif; /* Common Android fonts */
 
-  --my-secondary: #FF8A65; /* Warm Coral */
-  --my-on-secondary: #FFFFFF;
-  --my-secondary-container: #FFDCCF;
-  --my-on-secondary-container: #2D150C; /* Darkened for better contrast */
+    /* Expressive Palette (Example: Purple/Indigo based) */
+    --md-sys-color-primary: #654AFF; /* Vibrant Purple */
+    --md-sys-color-on-primary: #FFFFFF;
+    --md-sys-color-primary-container: #E6DEFF;
+    --md-sys-color-on-primary-container: #1F0060;
 
-  --my-tertiary: #26A69A; /* Playful Teal */
-  --my-on-tertiary: #FFFFFF;
-  --my-tertiary-container: #B2DFDB;
-  --my-on-tertiary-container: #00201D; /* Darkened */
+    --md-sys-color-secondary: #5E5A72;
+    --md-sys-color-on-secondary: #FFFFFF;
+    --md-sys-color-secondary-container: #E4DFF0;
+    --md-sys-color-on-secondary-container: #1A182C;
 
-  --my-surface: #FDFBFF;
-  --my-on-surface: #1B1C1E;
-  --my-surface-variant: #E1E2EC;
-  --my-on-surface-variant: #44474F;
-  
-  --my-surface-container-lowest: #FFFFFF;
-  --my-surface-container-low: #F7F2FA;
-  --my-surface-container: #F3EDF7;
-  --my-surface-container-high: #EDE8F4;
-  --my-surface-container-highest: #E6E0EC;
+    --md-sys-color-tertiary: #7A5261;
+    --md-sys-color-on-tertiary: #FFFFFF;
+    --md-sys-color-tertiary-container: #FFD8E5;
+    --md-sys-color-on-tertiary-container: #2E101E;
 
+    --md-sys-color-error: #BA1A1A;
+    --md-sys-color-on-error: #FFFFFF;
 
-  --my-outline: #74777F;
-  --my-outline-variant: #C4C6CF;
-  
-  --my-background: #F8F8FC; /* Slightly off-white, very light */
-  --my-on-background: #1B1C1E;
+    --md-sys-color-background: #FBF8FF; /* Light, slightly warm background */
+    --md-sys-color-on-background: #1C1B1F;
 
-  --my-scrim: rgba(0, 0, 0, 0.6);
-  --my-shadow-color: rgba(0, 0, 0, 0.1);
-  --my-shadow-umbra-opacity: 0.2;
-  --my-shadow-penumbra-opacity: 0.14;
-  --my-shadow-ambient-opacity: 0.12;
+    --md-sys-color-surface: #FBF8FF;
+    --md-sys-color-on-surface: #1C1B1F;
+    --md-sys-color-surface-variant: #E6E0EC;
+    --md-sys-color-on-surface-variant: #48454E; /* For icons, subtitles */
 
-  --my-radius-small: 8px;
-  --my-radius-medium: 12px;
-  --my-radius-large: 16px;
-  --my-radius-extra-large: 28px;
-  --my-radius-full: 999px; /* For pills */
+    --md-sys-color-outline: #79747E;
+    --md-sys-color-outline-variant: #C9C4CF;
 
-  --my-font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-  --my-font-size-body-large: 16px;
-  --my-font-size-body-medium: 14px;
-  --my-font-size-title-large: 22px;
-  --my-font-size-headline-small: 24px;
+    --md-sys-color-surface-container-lowest: #FFFFFF;
+    --md-sys-color-surface-container-low: #F5F2FA;
+    --md-sys-color-surface-container: #EFEDF4;
+    --md-sys-color-surface-container-high: #EAE7F0; /* Good for headers */
+    --md-sys-color-surface-container-highest: #E4E1EA; /* Good for dialogs */
+
+    --md-sys-color-inverse-surface: #313034;
+    --md-sys-color-inverse-on-surface: #F3EFF7;
+
+    --md-sys-color-scrim: rgba(0, 0, 0, 0.65); /* Darker scrim */
+
+    --md-sys-elevation-1: 0px 1px 3px 1px rgba(0,0,0,0.15), 0px 1px 2px 0px rgba(0,0,0,0.30);
+    --md-sys-elevation-2: 0px 2px 6px 2px rgba(0,0,0,0.15), 0px 1px 2px 0px rgba(0,0,0,0.30);
+    --md-sys-elevation-3: 0px 4px 8px 3px rgba(0,0,0,0.15), 0px 1px 3px 0px rgba(0,0,0,0.30);
+    --md-sys-elevation-4: 0px 6px 10px 4px rgba(0,0,0,0.15), 0px 2px 3px 0px rgba(0,0,0,0.30);
+    --md-sys-elevation-5: 0px 8px 12px 6px rgba(0,0,0,0.15), 0px 4px 4px 0px rgba(0,0,0,0.30);
+
+    --md-sys-shape-corner-extra-small: 4px;
+    --md-sys-shape-corner-small: 8px;
+    --md-sys-shape-corner-medium: 12px;
+    --md-sys-shape-corner-large: 16px;
+    --md-sys-shape-corner-extra-large: 28px;
+    --md-sys-shape-corner-full: 50%;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --my-primary: #B0C6FF;
-    --my-on-primary: #00258E;
-    --my-primary-container: #0038C8;
-    --my-on-primary-container: #D8E2FF;
-
-    --my-secondary: #FFB59F;
-    --my-on-secondary: #4A2518; /* Darkened */
-    --my-secondary-container: #643A2C; /* Darkened */
-    --my-on-secondary-container: #FFDCCF;
-
-    --my-tertiary: #80CBC4;
-    --my-on-tertiary: #003832;
-    --my-tertiary-container: #00504A;
-    --my-on-tertiary-container: #B2DFDB;
-
-    --my-surface: #1D1B20; /* Dark Surface */
-    --my-on-surface: #E6E1E5;
-    --my-surface-variant: #49454F;
-    --my-on-surface-variant: #CAC4D0;
-    
-    --my-surface-container-lowest: #0F0D13;
-    --my-surface-container-low: #1D1B20;
-    --my-surface-container: #211F26;
-    --my-surface-container-high: #2B2930;
-    --my-surface-container-highest: #36343B;
-
-    --my-outline: #8F8D93;
-    --my-outline-variant: #49454F;
-
-    --my-background: #141218; /* Very Dark Background */
-    --my-on-background: #E6E1E5;
-
-    --my-scrim: rgba(0, 0, 0, 0.7);
-    --my-shadow-color: rgba(0, 0, 0, 0.25);
-  }
-}
+/* Import Roboto font (ensure it's available or use a CDN link in HTML) */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
 body {
-  font-family: var(--my-font-family);
-  font-size: var(--my-font-size-body-large);
-  line-height: 1.5;
-  color: var(--my-on-background);
-  background-color: var(--my-background);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    font-family: var(--md-sys-font-family);
+    background-color: var(--md-sys-color-background);
+    color: var(--md-sys-color-on-background);
+    line-height: 1.5;
 }
 
-/* App Layout & Header */
+/* App Layout and Header */
 .app__layout {
-  position: absolute; /* Kept from original for full screen video behavior */
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background-color: var(--my-background); /* Fallback if video fails */
+    /* The original rgba(0,0,0,0.5) is for the camera view darkening. Keep it. */
+    /* Consider a subtle gradient for the "Expressive" feel if not showing camera */
+    /* background-image: linear-gradient(135deg, var(--md-sys-color-primary-container), var(--md-sys-color-tertiary-container)); */
 }
 
 .app__header {
-  width: 100%;
-  height: 64px; /* Slightly taller for Material feel */
-  color: var(--my-on-surface); /* Icons/text on surface if header is surface color */
-  background-color: var(--my-surface-container-high); /* Elevated surface */
-  display: flex;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100; /* Higher z-index */
-  padding: 0 16px;
-  box-shadow: 0 1px 2px 0 var(--my-shadow-color);
-  transition: background-color 0.3s ease, color 0.3s ease;
+    height: 64px; /* Slightly taller Material header */
+    background-color: var(--md-sys-color-surface-container-high);
+    color: var(--md-sys-color-on-surface);
+    box-shadow: var(--md-sys-elevation-2);
+    padding: 0 16px;
 }
 
 .app__header-icon {
-  width: 40px; /* Touch target size */
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  border-radius: var(--my-radius-full);
-  position: absolute; /* Kept original */
-  right: 16px; /* Adjusted spacing */
-  top: 50%;
-  transform: translateY(-50%);
-  transition: background-color 0.2s ease;
+    /* Position adjusted slightly for taller header */
+    top: 50%;
+    transform: translateY(-50%);
+    right: 16px; 
+    width: 40px; /* Standard touch target */
+    height: 40px;
 }
 .app__header-icon svg {
-  fill: var(--my-on-surface-variant); /* Themed icon color */
+    fill: var(--md-sys-color-on-surface-variant);
+    width: 24px;
+    height: 24px;
 }
-.app__header-icon:hover {
-  background-color: rgba(var(--my-on-surface-rgb, 27,28,30), 0.08); /* Using RGB for opacity */
-}
-.app__header-icon:active {
-  background-color: rgba(var(--my-on-surface-rgb, 27,28,30), 0.12);
-  opacity: 1; /* Remove old opacity */
-}
-:root { /* Define RGB versions for RGBA usage */
-  --my-on-surface-rgb: 27,28,30; 
-}
-@media (prefers-color-scheme: dark) {
-  :root { --my-on-surface-rgb: 230,225,229; }
+.app__header-icon:active svg {
+    fill: var(--md-sys-color-primary);
 }
 
 
-.app__header-title { /* Not used in current HTML but good to have */
-  margin-left: 16px;
-  font-size: var(--my-font-size-title-large);
-  font-weight: 500;
-  color: var(--my-on-surface);
-  user-select: none;
+.app__header-title {
+    margin-left: 16px; /* Standard Material title inset */
+    font-size: 22px; /* Material "Title Large" */
+    font-weight: 500;
+    color: var(--md-sys-color-on-surface);
 }
 
-.app__layout-content {
-  height: 100%; /* inherit changed to 100% */
-  padding-top: 64px; /* Account for fixed header */
-  overflow-y: auto; /* If content ever overflows */
+/* FAB (Floating Action Button) - Styling .app__select-photos as the main FAB */
+.custom-btn { /* This is the old FAB, style it similarly or ensure it's hidden if .app__select-photos is primary */
+    background-color: var(--md-sys-color-secondary-container);
+    box-shadow: var(--md-sys-elevation-3);
+    border-radius: var(--md-sys-shape-corner-large); /* Squircle FAB */
+    width: 56px;
+    height: 56px;
+}
+.custom-btn:active {
+    box-shadow: var(--md-sys-elevation-1);
+    background-color: color-mix(in srgb, var(--md-sys-color-secondary-container) 90%, black);
+}
+.custom-fab-icon {
+    color: var(--md-sys-color-on-secondary-container);
+    font-size: 24px;
 }
 
-/* Custom Menu Icon (if used elsewhere, e.g. title in header) */
-.custom-menu-icon { /* This was for a title-like element, not an icon specifically */
-  font-size: var(--my-font-size-headline-small);
-  line-height: 1.2; /* Adjust line height */
-  color: var(--my-on-primary-container); /* Example: if it's on a primary container bg */
-}
-.custom-title {
-  color: var(--my-on-surface);
-}
-
-/* FAB - Floating Action Button (app__select-photos) */
-.app__select-photos { /* This is the FAB */
-  width: 56px;
-  height: 56px;
-  border-radius: var(--my-radius-large); /* Squircle shape */
-  background-color: var(--my-primary-container);
-  color: var(--my-on-primary-container); /* Icon color */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  position: fixed;
-  bottom: 24px; /* Adjusted spacing */
-  right: 24px;
-  border: none; /* Remove border if any */
-  outline: 0;
-  box-shadow: 0 4px 8px 0px var(--my-shadow-color), 0 6px 10px 0px var(--my-shadow-color); /* M3 Elevation */
-  z-index: 1000;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+.app__select-photos { /* This seems to be the active FAB */
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container); /* For text if any, SVG fill is separate */
+    border-radius: var(--md-sys-shape-corner-large); /* Squircle FAB for 56x56 */
+    width: 56px; 
+    height: 56px;
+    box-shadow: var(--md-sys-elevation-3);
+    bottom: 24px; /* More spacing */
+    right: 24px;
+    transition: background-color 0.2s ease-out, box-shadow 0.2s ease-out;
 }
 .app__select-photos svg {
-  fill: var(--my-on-primary-container); /* Ensure icon color is themed */
-}
-.app__select-photos:hover {
-  background-color: var(--my-primary);
-  color: var(--my-on-primary);
-  box-shadow: 0 6px 12px 0px var(--my-shadow-color), 0 8px 15px 0px var(--my-shadow-color);
+    fill: var(--md-sys-color-on-primary-container);
+    width: 24px;
+    height: 24px;
 }
 .app__select-photos:active {
-  background-color: var(--my-primary);
-  color: var(--my-on-primary);
-  box-shadow: 0 2px 4px -1px var(--my-shadow-color); /* Pressed state */
-  transform: scale(0.95);
-  opacity: 1; /* Remove old opacity */
-}
-input[type='file']{display:none} /* Keep this */
-
-
-/* Custom Button (old .custom-btn, not used in current HTML for FAB anymore) */
-.custom-btn{ 
-  /* This class was defined but maybe not used prominently. If it is, it should be styled as a Material button */
-  position:fixed;right:26px;bottom:26px; /* Original positioning */
-  background:var(--my-secondary); color: var(--my-on-secondary);
-  border-radius:var(--my-radius-large); border:0;
-  width:auto; min-width: 56px; height:56px; padding: 0 24px;
-  outline:0;
-  box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
-  z-index:9999;
-  font-weight: 500;
-  text-transform: uppercase;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
-}
-.custom-btn:active{box-shadow:none}
-.custom-fab-icon{ /* Inside custom-btn, if used */
-  color:var(--my-on-secondary);font-size:24px; /* Adjusted */
-  user-select:none;
+    box-shadow: var(--md-sys-elevation-1);
+    background-color: color-mix(in srgb, var(--md-sys-color-primary-container) 85%, black);
+    opacity: 1; /* Override original opacity change */
 }
 
 
-/* Message Centering (old .custom-msg) */
-.custom-msg{
-  text-align:center;width:90%;max-width: 400px; /* Max width */
-  height:auto; /* Auto height */
-  overflow:auto;margin:auto;position:absolute;top:50%;left:50%;
-  transform: translate(-50%, -50%); /* Centering */
-  font-size: var(--my-font-size-body-large);
-  color: var(--my-on-surface-variant);
-  padding: 20px;
+/* Dialogs */
+.app__dialog, .app__infodialog {
+    background-color: var(--md-sys-color-surface-container-highest);
+    border-radius: var(--md-sys-shape-corner-extra-large);
+    box-shadow: var(--md-sys-elevation-5);
+    color: var(--md-sys-color-on-surface);
+    /* Adjust height to be more dynamic if possible, or increase default */
+    min-height: 200px; /* Make space for content */
+    height: auto; /* Let content define height */
+    max-height: 90vh; /* Prevent overflow */
+    overflow: hidden; /* content will scroll */
+    display: flex;
+    flex-direction: column;
+}
+.app__infodialog { /* Specifics for info dialog */
+    padding-bottom: 60px; /* Ensure space for fixed action buttons */
 }
 
-/* Video Styling */
-video {
-  transform: translateX(-50%) translateY(-50%); /* Original centering */
-  top: 50%;
-  left: 50%;
-  min-width: 100%;
-  min-height: 100%;
-  width: auto;
-  height: auto;
-  position: absolute;
-  background-color: var(--my-background); /* Background for video area */
-  z-index: -1; /* Ensure it's behind UI elements */
+.app__dialog-content, .app__infodialog-content {
+    padding: 24px; /* Material Dialog padding */
+    flex-grow: 1;
+    overflow-y: auto; /* Scroll content if too long */
 }
 
-/* List Styling (if used) */
-#list li {
-  list-style-type: none;
-  text-decoration: none; /* Remove underline */
-  color: var(--my-primary); /* Link-like color */
-  padding: 8px 0;
-  cursor: pointer;
+.app__dialog-content h1, .app__infodialog h1 { /* Assuming .app__infodialog h1 is the title */
+    font-size: 24px; /* Material "Headline Small" */
+    font-weight: 500;
+    color: var(--md-sys-color-on-surface);
+    margin-top: 0;
+    margin-bottom: 16px;
 }
-#list li:hover {
-  text-decoration: underline;
-}
-
-.custom-copy-btn{opacity:0} /* Keep hidden if not used or style if used */
-.hide{display:none} /* Utility class */
-
-/* Scanner Animation */
-@keyframes scanner-expressive {
-  0% {
-    bottom: 90%;
-    opacity: 0.7;
-    height: 3px;
-    box-shadow: 0 0 10px 2px var(--my-tertiary), 0 0 20px 5px var(--my-tertiary-container);
-  }
-  50% {
-    bottom: 10%;
-    opacity: 1;
-    height: 4px; /* Thicker mid-scan */
-    box-shadow: 0 0 15px 3px var(--my-tertiary), 0 0 30px 7px var(--my-tertiary-container);
-  }
-  100% {
-    bottom: 90%;
-    opacity: 0.7;
-    height: 3px;
-    box-shadow: 0 0 10px 2px var(--my-tertiary), 0 0 20px 5px var(--my-tertiary-container);
-  }
+.app__infodialog-content > p { /* Direct P children of infodialog content */
+    font-size: 14px; /* Material "Body Medium" */
+    line-height: 1.6;
+    color: var(--md-sys-color-on-surface-variant);
 }
 
-.custom-scanner { /* The animated line */
-  width: calc(100% - 20px); /* Slightly inset */
-  height: 3px;
-  background: var(--my-tertiary);
-  position: absolute;
-  transition: all 200ms linear; /* Original transition */
-  animation: scanner-expressive 2.5s infinite ease-in-out; /* New animation */
-  display: none; /* Initial state */
-  left: 10px; /* Centered */
-  right: 10px;
-  margin: auto;
-  border-radius: var(--my-radius-full);
-  z-index: 3; /* Above scanner image, below text */
+.app__infodialog-subcontent {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--md-sys-color-outline-variant);
+}
+.app__infodialog-subcontent p {
+    font-size: 14px;
+    color: var(--md-sys-color-on-surface-variant);
+}
+.app__infodialog-subcontent a {
+    color: var(--md-sys-color-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+.app__infodialog-subcontent a:hover {
+    text-decoration: underline;
 }
 
-/* Camera View (placeholder for actual camera, if used) */
-#camera{opacity:0} /* Original, seems unused visually */
+/* Dialog Input */
+.app__dialog input[type="text"] {
+    width: 100%; /* Full width */
+    font-size: 16px; /* Material "Body Large" */
+    color: var(--md-sys-color-on-surface);
+    background-color: var(--md-sys-color-surface-container-low);
+    border: 1px solid var(--md-sys-color-outline);
+    border-radius: var(--md-sys-shape-corner-extra-small);
+    padding: 12px 16px;
+    height: auto; /* remove fixed height */
+    box-sizing: border-box;
+    margin-bottom: 16px; /* Space below input */
+}
+.app__dialog input[type="text"]:focus {
+    border-color: var(--md-sys-color-primary);
+    box-shadow: 0 0 0 2px var(--md-sys-color-primary-container);
+    outline: none;
+}
 
-.no-support{
-  font-size: var(--my-font-size-title-large);
-  text-align:center;
-  color: var(--my-on-surface-variant);
-  padding: 40px 20px;
+/* Dialog Actions */
+.app__dialog-actions, .app__infodialog-actions {
+    padding: 8px 24px 16px; /* Spacing around actions */
+    display: flex; /* Use flex for button alignment */
+    justify-content: flex-end;
+    gap: 8px;
+    position: relative; /* Override absolute to flow naturally */
+    bottom: auto; right: auto; /* Reset absolute positioning */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.app__infodialog-open, .app__infodialog-close,
+.app__dialog-open, .app__dialog-close {
+    font-size: 14px; /* Material "Label Large" */
+    font-weight: 500;
+    color: var(--md-sys-color-primary);
+    background-color: transparent;
+    border-radius: var(--md-sys-shape-corner-full); /* Pill shape */
+    padding: 10px 12px; /* Standard button padding */
+    min-width: auto; /* Remove fixed width */
+    height: auto; /* Remove fixed height */
+    text-transform: none; /* Modern Material often avoids uppercase */
+    margin-right: 0; /* Remove original margin */
+    transition: background-color 0.15s ease-out;
+}
+.app__dialog-open { /* If this is a "filled" button */
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+    padding: 10px 24px; /* More padding for filled */
+}
+.app__dialog-open:hover {
+    background-color: color-mix(in srgb, var(--md-sys-color-primary) 90%, black);
+}
+.app__dialog-open:active {
+    background-color: color-mix(in srgb, var(--md-sys-color-primary) 80%, black);
+}
+
+.app__infodialog-open:hover, .app__infodialog-close:hover,
+.app__dialog-close:hover { /* Text/Outlined button hover */
+    background-color: color-mix(in srgb, var(--md-sys-color-primary) 10%, transparent);
+}
+.app__infodialog-open:active, .app__infodialog-close:active,
+.app__dialog-close:active { /* Text/Outlined button active */
+    background-color: color-mix(in srgb, var(--md-sys-color-primary) 20%, transparent);
+    opacity: 1; /* Override original */
+}
+
+
+/* Dialog Overlay */
+.app__dialog-overlay, .app__infodialog-overlay {
+    background-color: var(--md-sys-color-scrim);
 }
 
 /* Snackbar */
 .app__snackbar {
-  position: fixed;
-  bottom: 24px; /* More spacing from bottom */
-  left: 50%;
-  transform: translateX(-50%); /* Centered */
-  pointer-events: none;
-  z-index: 9999;
-  width: calc(100% - 32px); /* Responsive width */
-  max-width: 500px; /* Max width */
-  display: flex; /* Allow multiple snackbars to stack */
-  flex-direction: column-reverse; /* Newest on top */
-  align-items: center;
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%);
+    width: auto; /* Let content define width */
+    max-width: calc(100% - 32px); /* Max width with padding */
+    bottom: 24px; /* More spacing from bottom */
 }
-
 .app__snackbar-msg {
-  width: 100%;
-  min-height: 48px;
-  background-color: var(--my-surface-container-highest); /* Darker surface */
-  color: var(--my-on-surface);
-  border-radius: var(--my-radius-medium); /* Increased radius */
-  box-shadow: 0 3px 5px -1px rgba(0,0,0,var(--my-shadow-umbra-opacity)),
-              0 6px 10px 0 rgba(0,0,0,var(--my-shadow-penumbra-opacity)),
-              0 1px 18px 0 rgba(0,0,0,var(--my-shadow-ambient-opacity));
-  display: flex;
-  align-items: center;
-  justify-content: space-between; /* Original */
-  font-size: var(--my-font-size-body-medium);
-  font-weight: 400; /* Normal weight */
-  padding: 14px 16px; /* Adjusted padding */
-  word-break: break-word; /* break-all is too aggressive */
-  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  text-transform: none; /* initial is fine */
-  margin-bottom: 8px; /* Spacing between snackbars */
-  pointer-events: auto; /* Individual snackbars are interactive */
-  opacity: 1;
-  transform: translateY(0);
+    background-color: var(--md-sys-color-inverse-surface);
+    color: var(--md-sys-color-inverse-on-surface);
+    border-radius: var(--md-sys-shape-corner-small); /* Softer corners */
+    box-shadow: var(--md-sys-elevation-3);
+    font-size: 14px; /* Material "Body Medium" */
+    padding: 14px 16px; /* Adjust padding */
+    min-height: 48px; /* Standard snackbar height */
+    width: auto; /* Let content define width */
+    min-width: 288px; /* Min width for snackbar */
+    max-width: 500px;
+    word-break: normal; /* Prevent aggressive break-all */
 }
 
-.app__snackbar--hide .app__snackbar-msg { /* For hiding animation */
-  opacity: 0;
-  transform: translateY(20px);
+/* Scanner Visuals */
+.app__overlay {
+    /* The transparent center with borders. The SVG handles the corners */
+    /* border-color: var(--md-sys-color-primary-container); This was on .app__overlay previously */
+    /* If .app__scanner-img is the primary visual, ensure .app__overlay-left/right are just for the cutout effect */
 }
-
-/* Dialogs */
-.app__dialog, .app__infodialog {
-  z-index: 1050; /* Above scrim */
-  background-color: var(--my-surface-container-high);
-  width: calc(100% - 48px); /* Responsive width */
-  max-width: 320px; /* Max width for phone dialogs */
-  min-height: 180px; /* Adjusted min-height */
-  height: auto; /* Auto height based on content */
-  border-radius: var(--my-radius-extra-large); /* Expressive radius */
-  display: flex; /* Kept flex for content alignment */
-  flex-direction: column;
-  position: fixed; /* fixed for centering */
-  left: 50%;
-  right: auto;
-  bottom: auto;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  margin: 0; /* Reset margin */
-  box-shadow: 0 8px 10px 1px rgba(0,0,0,var(--my-shadow-umbra-opacity)),
-              0 3px 14px 2px rgba(0,0,0,var(--my-shadow-penumbra-opacity)),
-              0 5px 5px -3px rgba(0,0,0,var(--my-shadow-ambient-opacity));
-  overflow: hidden; /* Clip content to rounded corners */
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.app__infodialog {
-  max-width: 480px; /* Wider for info */
-  min-height: 240px; /* Adjusted */
-}
-
-.app__dialog-content, .app__infodialog-content {
-  width: 100%;
-  padding: 24px; /* Generous padding */
-  flex-grow: 1;
-  overflow-y: auto;
-}
-
-.app__infodialog-subcontent {
-  margin-top: 16px;
-  font-size: var(--my-font-size-body-medium);
-  line-height: 1.6;
-}
-.app__infodialog-subcontent a {
-  color: var(--my-primary);
-  text-decoration: none;
-  font-weight: 500;
-}
-.app__infodialog-subcontent a:hover {
-  text-decoration: underline;
-}
-.app__infodialog-subcontent p:not(:first-child) {
-  margin-top: 12px;
-}
-
-.app__dialog-content h1, .app__infodialog h1 {
-  margin-top: 0; /* Remove top margin for h1 */
-  margin-bottom: 16px;
-  font-weight: 500; /* Semi-bold */
-  font-size: var(--my-font-size-headline-small);
-  color: var(--my-on-surface);
-  line-height: 1.2;
-}
-
-.app__dialog input[type="text"] {
-  width: 100%;
-  height: 56px; /* Material input height */
-  border: 1px solid var(--my-outline);
-  border-radius: var(--my-radius-small);
-  outline: 0;
-  font-size: var(--my-font-size-body-large);
-  color: var(--my-on-surface);
-  font-weight: 400;
-  padding: 0 16px;
-  background-color: var(--my-surface-container-lowest); /* Slightly different bg for input */
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-.app__dialog input[type="text"]:focus {
-  border-color: var(--my-primary);
-  box-shadow: 0 0 0 1px var(--my-primary);
-}
-
-.app__dialog-actions, .app__infodialog-actions {
-  display: flex; /* Use flex for button alignment */
-  justify-content: flex-end; /* Align buttons to the right */
-  padding: 8px 24px 16px; /* Padding around actions */
-  width: 100%;
-  position: relative; /* No longer absolute */
-  bottom: auto; right: auto; /* Reset */
-}
-
-.app__infodialog-open, .app__infodialog-close, .app__dialog-open, .app__dialog-close {
-  border: none;
-  min-width: 64px; /* Min width for text buttons */
-  height: 40px;
-  padding: 0 12px; /* Horizontal padding for text buttons */
-  font-size: var(--my-font-size-body-medium);
-  background: transparent;
-  color: var(--my-primary); /* Text button color */
-  font-weight: 500;
-  outline: 0;
-  cursor: pointer;
-  border-radius: var(--my-radius-full); /* Pill shape for text buttons */
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  transition: background-color 0.2s ease;
-  margin-left: 8px; /* Spacing between buttons */
-}
-.app__infodialog-open:first-child, .app__infodialog-close:first-child, 
-.app__dialog-open:first-child, .app__dialog-close:first-child {
-  margin-left: 0;
-}
-
-.app__dialog-open { /* This was display:none, style as a primary action button */
-  background-color: var(--my-primary);
-  color: var(--my-on-primary);
-}
-.app__dialog-open:hover {
-  background-color: var(--my-primary-container); /* Lighter shade on hover */
-  color: var(--my-on-primary-container);
-}
-.app__infodialog-open:hover, .app__infodialog-close:hover, 
-.app__dialog-close:hover { /* Hover for text buttons */
-  background-color: rgba(var(--my-primary-rgb, 74,128,245), 0.1); /* Use RGB for opacity */
-}
-:root { /* Define RGB versions for RGBA usage */
-  --my-primary-rgb: 74,128,245; 
-}
-@media (prefers-color-scheme: dark) {
-  :root { --my-primary-rgb: 176,198,255; }
-}
-
-
-.app__infodialog-open:active, .app__infodialog-close:active, 
-.app__dialog-open:active, .app__dialog-close:active {
-  opacity: 0.8; /* Simpler active state */
-}
-
-.app__infodialog--hide, .app__dialog--hide {
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(0.95);
-  pointer-events: none; /* Hide from interaction */
-  display: flex; /* Keep flex for transition, actual hiding by opacity/pointer-events */
-}
-
-
-/* Overlay for Dialogs (Scrim) */
-.app__dialog-overlay, .app__infodialog-overlay {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  top: 0;
-  background: var(--my-scrim);
-  z-index: 1040; /* Below dialog, above content */
-  opacity: 1;
-  transition: opacity 0.3s ease;
-}
-.app__dialog--hide ~ .app__dialog-overlay, /* Hide scrim when dialog is hidden */
-.app__infodialog--hide ~ .app__infodialog-overlay {
-  opacity: 0;
-  pointer-events: none;
-}
-
-
-/* Scanner Visual Overlay - Attempting "Expressive" on existing HTML */
-.app__overlay { /* This is the 310x310 box */
-  position: fixed; /* Kept from original */
-  top: 0;bottom: 0;right: 0;left: 0; /* Centering */
-  width: clamp(200px, 70vmin, 310px); /* Responsive size */
-  height: clamp(200px, 70vmin, 310px);
-  margin: auto;
-  border: none; /* Remove original border */
-  z-index: 5; /* Above video, below other UI */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* The app__overlay-frame, left, right are problematic for full rounded corners.
-     Instead, we style the main app__overlay and position the SVG corners and scanner line within it. */
-}
-
-.app__overlay-frame {
-  /* This div is inside app__overlay. We can make it the visual scanner window. */
-  width: 100%;
-  height: 100%;
-  border-radius: var(--my-radius-extra-large); /* Expressive rounded corners */
-  border: 2px solid var(--my-outline-variant); /* A subtle border */
-  position: relative; /* For positioning scanner line and SVG corners */
-  overflow: hidden; /* Clip scanner line if it goes outside */
-  box-shadow: 0 0 0 9999px rgba(0,0,0,0.3); /* Cutout effect */
-}
-
 .app__overlay-left, .app__overlay-right {
-  display: none; /* Hide these as they conflict with modern cutout */
+    /* These create the "window" effect. Make them match scrim or a darker overlay */
+    background: rgba(0,0,0,0.5); /* Match the app__layout dark overlay if video is behind */
 }
 
-.app__scanner-img { /* The SVG corners */
-  z-index: 2; /* Above frame border, below scanner line */
-  position: absolute;
-  top: 0; left: 0; /* Align with parent app__overlay-frame */
-  width: 100%; height: 100%;
-  display: block; /* Was none */
-  pointer-events: none; /* Don't intercept clicks */
+.app__scanner-img { /* The SVG border for scanner */
+    display: block !important; /* Override display:none */
+    /* The SVG already has fill #FFFFFF, which is good on dark background */
+    filter: drop-shadow(0px 0px 10px rgba(0, 191, 255, 0.5)); /* Expressive Glow */
 }
-.app__scanner-img svg {
-  width: 100%; height: 100%;
-}
-.app__scanner-img svg path {
-  fill: var(--my-tertiary); /* Themed color for corners */
-  opacity: 0.8;
-  /* Consider adding a stroke for definition */
-  /* stroke: var(--my-surface); stroke-width: 2px; */
+.app__scanner-img g path {
+    stroke: var(--md-sys-color-primary); /* Try to color the path */
+    stroke-width: 2px; /* Make it more visible */
+    fill: rgba(255,255,255,0.8); /* Keep the fill light */
 }
 
 
-.app__help-text, .app__select-photos-text { /* Assuming .app__select-photos might have text near it */
-  color: var(--my-on-background); /* Themed text color */
-  position: absolute;
-  bottom: 100px; /* Adjusted from -70px to be visible */
-  font-size: var(--my-font-size-body-medium);
-  left:0; right:0; /* Centered */
-  text-align:center;
-  user-select:none;
-  z-index: 6; /* Above overlay cutout */
-  padding: 0 20px;
+.custom-scanner { /* The animated line */
+    background: linear-gradient(90deg, transparent, var(--md-sys-color-primary), transparent);
+    height: 3px;
+    box-shadow: 0 0 8px var(--md-sys-color-primary), 0 0 12px var(--md-sys-color-primary);
+    border-radius: 2px;
+    display: block !important; /* Ensure it's visible */
 }
+
 .app__help-text {
-  display: block; /* Was none, make it visible by default or control with JS */
+    color: var(--md-sys-color-inverse-on-surface); /* For text on dark background */
+    background-color: var(--md-sys-color-inverse-surface);
+    padding: 8px 16px;
+    border-radius: var(--md-sys-shape-corner-medium);
+    box-shadow: var(--md-sys-elevation-2);
+    font-size: 14px;
+    bottom: -50px; /* Adjust if needed */
+    /* Center it if `left:0` is also present */
+    left: 50% !important; /* Override existing left:0 for true centering */
+    transform: translateX(-50%);
+    width: max-content; /* Fit content */
+    max-width: 80%;
 }
 
-/* Icons (generic, if used separately) */
-.camera__icon, .focus__icon {
-  position: relative; /* Original */
-  left: 10px; /* Original */
-  display: none; /* Original */
-  fill: var(--my-on-surface-variant); /* Themed */
-}
-
-/* Frame for image display (if #frame is used) */
-#frame {
-  width: auto;
-  height: auto;
-  border-radius: var(--my-radius-medium);
-  box-shadow: 0 2px 8px var(--my-shadow-color);
-  margin: 20px auto;
-  display: block;
-}
-
-/* App Version */
+/* Version Text */
 .app__version {
-  position: absolute;
-  bottom: 8px; /* Consistent spacing */
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 12px; /* Smaller text */
-  color: var(--my-on-surface-variant); /* Less prominent */
-  margin-top: 0; /* Reset */
-  display: inline-block; /* Original */
-  padding: 4px 8px;
-  background-color: rgba(var(--my-surface-rgb, 253,251,255), 0.5);
-  border-radius: var(--my-radius-small);
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: 12px;
+    margin-top: 8px;
+    padding: 0 24px; /* Align with dialog content padding */
+    text-align: center; /* Center if it's block */
+    width: 100%;
+    box-sizing: border-box;
 }
-@media (prefers-color-scheme: dark) {
-  :root { --my-surface-rgb: 29,27,32; }
+
+/* General list items if #list is used for results */
+#list li {
+    color: var(--md-sys-color-primary);
+    text-decoration: none;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+}
+#list li:hover {
+    background-color: var(--md-sys-color-surface-container-low);
+}
+
+/* Hide elements that might not fit the new design or are superseded */
+.custom-menu-icon, .custom-title { /* Original header elements, possibly not used if app__header-title is styled */
+    /* display: none; */ /* Uncomment if these are truly redundant */
+}
+
+/* Ensure video remains fullscreen background */
+video {
+    object-fit: cover; /* Ensures video covers the area */
+}
+
+/* Media query adjustments */
+@media screen and (max-width:480px){
+    .app__infodialog, .app__dialog {
+        width: calc(100% - 32px); /* Full width with margin */
+        margin-left: 16px;
+        margin-right: 16px;
+        border-radius: var(--md-sys-shape-corner-large); /* Slightly smaller radius on small screens */
+    }
+    .app__header-title {
+        font-size: 20px;
+    }
+    .app__select-photos {
+        bottom: 16px;
+        right: 16px;
+    }
+    .app__snackbar {
+        bottom: 16px;
+        max-width: calc(100% - 16px);
+    }
+}
+
+/* Final fine-tuning for "Expressive" feel */
+button, .app__header-icon, .app__select-photos {
+    transition: transform 0.1s ease-out, background-color 0.2s ease-out; /* Subtle press effect */
+}
+button:active, .app__header-icon:active, .app__select-photos:active {
+    transform: scale(0.95); /* Expressive press */
+}
+
+/* Scanner animation - keep existing, just ensure color is good */
+@keyframes scanner {
+  0% { bottom: 90%; opacity: 0.7; }
+  50% { bottom: 10%; opacity: 1; }
+  100% { bottom: 90%; opacity: 0.7; }
+}
+.custom-scanner {
+    animation: scanner 3.5s infinite linear; /* Slightly slower, more graceful */
 }
 
 
-/* Media Queries Adjustments */
-@media screen and (max-width: 480px) {
-  .app__infodialog {
-    width: calc(100% - 32px); /* Slightly more padding on small screens */
-    border-radius: var(--my-radius-large); /* Slightly smaller radius */
-  }
-  .app__infodialog-content {
-    padding: 20px; /* Adjusted padding */
-  }
-  .app__dialog, .app__infodialog {
-    max-width: calc(100% - 32px); /* Ensure dialogs don't exceed screen width */
-  }
-  .app__header {
-    height: 56px;
-  }
-  .app__layout-content {
-    padding-top: 56px;
-  }
-  .app__help-text {
-    bottom: 80px;
-  }
+/* Ensure the scanner SVG corners are properly positioned relative to the custom-scanner line bounds */
+/* The .app__overlay seems to define the 310x310 box. The SVG should align with this. */
+/* The .custom-scanner original width 270px, left -10px. Needs to align with the SVG frame. */
+.app__overlay { /* This sets the 310x310 area */
+    /* The SVG .app__scanner-img is 310x310. */
+    /* If .custom-scanner is used, it should span the inner width of the SVG frame */
+}
+.custom-scanner {
+    width: calc(100% - 40px); /* Adjust to fit within typical SVG path bounds */
+    left: 20px; /* Center it within the overlay box */
+    margin: auto; /* Remove auto margin if left is set */
 }
 
-/* Ensure custom scanner (line) is displayed when its parent is visible and scanning */
-/* This would typically be controlled by JS by adding a class to .app__overlay-frame */
-.app__overlay-frame.is-scanning .custom-scanner {
-  display: block;
+/* Remove the gray side bars if the SVG provides the full frame */
+.app__overlay-left, .app__overlay-right {
+    display: none; /* Assuming .app__scanner-img provides the visual frame */
 }
-.app__overlay-frame.is-scanning ~ .app__help-text { /* Example: hide help text when scanning */
-  display: none;
+.app__overlay { /* Remove border from the container if SVG is the border */
+    border: none;
 }
 
-/* Ensure the scanner SVG corners are visible */
-.app__overlay-frame .app__scanner-img {
-  display: block;
-}
+/* --- END OF MATERIAL YOU EXPRESSIVE 2025 STYLES --- */
