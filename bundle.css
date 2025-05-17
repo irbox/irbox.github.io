@@ -1,567 +1,602 @@
-/* --- START OF THEME DEFINITION --- */
+/* --- START OF ORIGINAL RESET (Minor changes for font and box-sizing might be done below) --- */
+html,body,p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,iframe,hr,h1,h2,h3,h4,h5,h6{margin:0;padding:0}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}ul{list-style:none}button,input,select,textarea{margin:0}html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}img,embed,object,audio{height:auto;max-width:100%}iframe{border:0}table{border-collapse:collapse;border-spacing:0}td,th{padding:0;text-align:left}
+/* --- END OF ORIGINAL RESET --- */
+
+/* --- MATERIAL YOU EXPRESSIVE STYLES --- */
+
 :root {
-  /* Expressive Palette (Example - would be dynamic in real Material You) */
-  /* Primary Tones (e.g., from a vibrant teal/blue wallpaper) */
-  --md-sys-color-primary: #69ddff; /* Bright, energetic primary */
-  --md-sys-color-on-primary: #003543; /* Text/icon on primary */
-  --md-sys-color-primary-container: #004d61; /* Container using primary */
-  --md-sys-color-on-primary-container: #bde9ff; /* Text/icon on primary container */
+  --md-sys-color-primary: #6750A4;
+  --md-sys-color-on-primary: #FFFFFF;
+  --md-sys-color-primary-container: #EADDFF;
+  --md-sys-color-on-primary-container: #21005D;
+  --md-sys-color-secondary: #625B71;
+  --md-sys-color-on-secondary: #FFFFFF;
+  --md-sys-color-secondary-container: #E8DEF8;
+  --md-sys-color-on-secondary-container: #1D192B;
+  --md-sys-color-tertiary: #7D5260;
+  --md-sys-color-on-tertiary: #FFFFFF;
+  --md-sys-color-tertiary-container: #FFD8E4;
+  --md-sys-color-on-tertiary-container: #31111D;
+  --md-sys-color-error: #B3261E;
+  --md-sys-color-on-error: #FFFFFF;
+  --md-sys-color-error-container: #F9DEDC;
+  --md-sys-color-on-error-container: #410E0B;
+  --md-sys-color-background: #FFFBFE; /* Overall app background */
+  --md-sys-color-on-background: #1C1B1F;
+  --md-sys-color-surface: #FFFBFE; /* Card/dialog backgrounds */
+  --md-sys-color-on-surface: #1C1B1F;
+  --md-sys-color-surface-variant: #E7E0EC; /* Slightly different surfaces, e.g., input fields */
+  --md-sys-color-on-surface-variant: #49454F;
+  --md-sys-color-outline: #79747E;
+  --md-sys-color-shadow: rgba(0, 0, 0, 0.15);
+  --md-sys-color-scrim: rgba(28, 27, 31, 0.5); /* Darker scrim for better contrast with light surfaces */
+  --md-sys-color-success: #4CAF50; /* Existing green */
 
-  /* Secondary Tones (e.g., a complementary or analogous color) */
-  --md-sys-color-secondary: #b3c9d6;
-  --md-sys-color-on-secondary: #1f333c;
-  --md-sys-color-secondary-container: #354953;
-  --md-sys-color-on-secondary-container: #cfe5f2;
+  --md-sys-typescale-headline-large-font: 'Roboto', 'Helvetica Neue', sans-serif;
+  --md-sys-typescale-headline-large-weight: 700;
+  --md-sys-typescale-headline-large-size: 32px;
+  --md-sys-typescale-title-large-font: 'Roboto', 'Helvetica Neue', sans-serif;
+  --md-sys-typescale-title-large-weight: 600;
+  --md-sys-typescale-title-large-size: 22px;
+  --md-sys-typescale-body-large-font: 'Roboto', 'Helvetica Neue', sans-serif;
+  --md-sys-typescale-body-large-weight: 400;
+  --md-sys-typescale-body-large-size: 16px;
+  --md-sys-typescale-label-large-font: 'Roboto', 'Helvetica Neue', sans-serif;
+  --md-sys-typescale-label-large-weight: 500;
+  --md-sys-typescale-label-large-size: 14px;
 
-  /* Tertiary Tones (Accent) */
-  --md-sys-color-tertiary: #c9bfff;
-  --md-sys-color-on-tertiary: #302b47;
-  --md-sys-color-tertiary-container: #47425f;
-  --md-sys-color-on-tertiary-container: #e6deff;
-
-  /* Neutral Tones (Backgrounds, Surfaces) */
-  --md-sys-color-background: #191c1e; /* Deep, calm background */
-  --md-sys-color-on-background: #e1e3e5; /* Text/icon on background */
-  --md-sys-color-surface: #1f2428; /* Slightly lighter surface for cards, dialogs */
-  --md-sys-color-on-surface: #e1e3e5; /* Text/icon on surface */
-  --md-sys-color-surface-variant: #3f484d; /* A different surface variant */
-  --md-sys-color-on-surface-variant: #bfc8ce; /* Text/icon on surface variant */
-  --md-sys-color-outline: #899297; /* Outlines, dividers */
-  --md-sys-color-shadow: #000000;
-
-  /* Utility */
-  --md-sys-color-scrim: rgba(0, 0, 0, 0.65); /* Scrim for overlays */
-  --md-sys-color-inverse-surface: #e1e3e5;
-  --md-sys-color-inverse-on-surface: #2e3133;
-
-  /* Typography */
-  --md-sys-font-family-brand: "Google Sans", "Roboto", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --md-sys-font-family-plain: "Roboto", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-
-  /* Shape */
-  --md-sys-shape-corner-none: 0px;
   --md-sys-shape-corner-extra-small: 4px;
   --md-sys-shape-corner-small: 8px;
   --md-sys-shape-corner-medium: 12px;
-  --md-sys-shape-corner-large: 16px; /* Or even 20px for more "expressive" */
-  --md-sys-shape-corner-extra-large: 28px; /* Key for expressive dialogs/cards */
-  --md-sys-shape-corner-full: 9999px; /* Pill shapes */
-
-  /* Elevation (Example Levels) */
-  --md-sys-elevation-level-0: none;
-  --md-sys-elevation-level-1: 0px 1px 3px 1px rgba(0,0,0,.15), 0px 1px 2px 0px rgba(0,0,0,.3);
-  --md-sys-elevation-level-2: 0px 2px 6px 2px rgba(0,0,0,.15), 0px 1px 2px 0px rgba(0,0,0,.3);
-  --md-sys-elevation-level-3: 0px 1px 3px 0px rgba(0,0,0,.3), 0px 4px 8px 3px rgba(0,0,0,.15);
-  --md-sys-elevation-level-4: 0px 2px 3px 0px rgba(0,0,0,.3), 0px 6px 10px 4px rgba(0,0,0,.15);
-  --md-sys-elevation-level-5: 0px 4px 4px 0px rgba(0,0,0,.3), 0px 8px 12px 6px rgba(0,0,0,.15);
+  --md-sys-shape-corner-large: 16px;
+  --md-sys-shape-corner-extra-large: 28px;
+  --md-sys-shape-corner-full: 50%; /* For FABs */
 }
-/* --- END OF THEME DEFINITION --- */
 
-
-/* --- RESET & BASE --- */
-html,body,p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,iframe,hr,h1,h2,h3,h4,h5,h6{margin:0;padding:0}
-h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}
-ul{list-style:none}
-button,input,select,textarea{margin:0; font-family: inherit;}
-html{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
-*,*:before,*:after{box-sizing:inherit}
-img,embed,object,audio{height:auto;max-width:100%} /* video handled separately */
-iframe{border:0}
-table{border-collapse:collapse;border-spacing:0}
-td,th{padding:0;text-align:left}
-
-body{
-  font-family: var(--md-sys-font-family-plain);
-  background-color: var(--md-sys-color-background);
+/* Apply a more modern font stack and base styling */
+body {
+  font-family: var(--md-sys-typescale-body-large-font);
+  font-size: var(--md-sys-typescale-body-large-size);
+  font-weight: var(--md-sys-typescale-body-large-weight);
   color: var(--md-sys-color-on-background);
-  -webkit-font-smoothing:antialiased;
+  background-color: var(--md-sys-color-background);
+  -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.5;
 }
 
-/* --- APP LAYOUT & HEADER --- */
-.app__layout{
-  position:absolute;
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  background-color: var(--md-sys-color-background); /* Ensure this matches body */
+.app__layout {
+  position: absolute; /* Kept for full screen */
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  /* Removed background-color, body now handles it. Or keep if specific layout needs a diff bg */
 }
 
-.app__header{
-  width:100%;
-  height: 64px; /* Taller app bar */
-  color: var(--md-sys-color-on-surface);
-  background-color: var(--md-sys-color-surface); /* Or transparent for more immersive feel */
-  display:flex;
-  align-items:center;
-  position:fixed;
-  top:0;left:0;right:0;
-  z-index:100; /* Increased z-index */
-  padding: 0 16px;
-  box-shadow: var(--md-sys-elevation-level-2);
+/* --- Header / App Bar --- */
+.app__header {
+  width: 100%;
+  height: 64px; /* M3 Top App Bar height */
+  color: var(--md-sys-color-on-surface); /* Icon color */
+  background-color: var(--md-sys-color-surface); /* Or transparent if video is full bleed */
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: 0 16px; /* Standard padding */
+  box-shadow: 0 2px 4px var(--md-sys-color-shadow); /* Subtle shadow for elevation */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .app__header-icon {
-  width: 48px; /* Larger touch target */
+  width: 48px; /* M3 icon button touch target */
   height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  border-radius: var(--md-sys-shape-corner-full); /* Pill shape */
-  position: absolute; /* Keep if design requires it, or integrate into flex flow */
-  right: 16px;
+  position: absolute; /* Keep positioning */
+  right: 16px; /* Adjusted for padding */
   top: 50%;
   transform: translateY(-50%);
+  border-radius: var(--md-sys-shape-corner-full);
   transition: background-color 0.2s ease-out;
 }
 .app__header-icon svg {
-  fill: var(--md-sys-color-primary); /* Accent color for icon */
-  width: 28px; /* Slightly larger icon */
-  height: 28px;
+    fill: var(--md-sys-color-on-surface-variant); /* More subtle icon color */
 }
 .app__header-icon:hover {
-  background-color: rgba(var(--md-sys-color-primary-rgb, 105, 221, 255), 0.08); /* Use RGB for alpha if available, else a fixed alpha */
+  background-color: rgba(0,0,0,0.08);
 }
-.app__header-icon:active{
-  background-color: rgba(var(--md-sys-color-primary-rgb, 105, 221, 255), 0.12);
-  opacity: 1; /* Remove default opacity dimming if using background feedback */
+.app__header-icon:active {
+  background-color: rgba(0,0,0,0.12);
+  opacity: 1; /* Remove default opacity dim */
 }
 
-.app__header-title{
-  margin-left: 16px; /* Or 72px if icon is not absolute and is first */
-  font-family: var(--md-sys-font-family-brand);
-  font-size: 22px; /* Material You Title Large */
-  font-weight: 500;
-  user-select:none;
+.app__header-title {
+  margin-left: 0; /* Typically app title is on left, but this design has it small */
+  font-family: var(--md-sys-typescale-title-large-font);
+  font-size: var(--md-sys-typescale-title-large-size);
+  font-weight: var(--md-sys-typescale-title-large-weight);
   color: var(--md-sys-color-on-surface);
+  user-select: none;
+  /* If there was a title, it'd be here. Currently, the HTML has no text for it.
+     If we were to add "QR Scanner" to the header:
+     margin-left: 16px; (if no leading nav icon)
+  */
 }
 
-.app__layout-content{
-  height:100%; /* Changed from inherit to ensure it takes full viewport */
-  position: relative; /* For positioning elements within */
-  overflow: hidden; /* If content scrolls, manage it here */
+.app__layout-content {
+  height: 100%; /* was inherit */
+  position: relative; /* For positioning video and scanner */
 }
 
-/* --- CAMERA & SCANNER VIEW --- */
-video{
-  transform:translateX(-50%) translateY(-50%); /* Keeps existing centering logic */
-  top:50%;
-  left:50%;
-  min-width:100%;
-  min-height:100%;
-  width:auto;
-  height:auto;
-  position:absolute;
-  object-fit: cover; /* Ensures video covers the area */
-  z-index: 1; /* Behind UI elements */
+/* --- Custom Elements (Not standard M3, but styled accordingly) --- */
+.custom-menu-icon { /* Not currently used in HTML but was in CSS */
+  font-size: 28px; /* Keep if re-introduced */
+  line-height: 47px;
+  color: var(--md-sys-color-on-primary); /* Assuming it's on a primary background */
 }
 
-#camera{opacity:0} /* Keep as is if it's a hidden helper */
-
-/* Redesigned Scanner Viewfinder */
-.app__overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: clamp(260px, 70vw, 380px); /* Responsive width */
-  height: clamp(260px, 70vw, 380px); /* Responsive height, make it square */
-  transform: translate(-50%, -50%);
-  z-index: 20; /* Above video, below dialogs */
-  /* No border or background on app__overlay itself */
-}
-
-.app__overlay-frame { /* This can be removed if app__scanner-img is styled as the frame */
-  display: none; /* We'll use the SVG for the frame */
-}
-
-.app__scanner-img { /* This SVG will be our main viewfinder frame */
-  display: block; /* Make it visible */
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 21;
-}
-.app__scanner-img g path {
-  fill: var(--md-sys-color-primary); /* Vibrant accent for scanner corners */
-  stroke: var(--md-sys-color-background); /* Thin stroke for definition against video */
-  stroke-width: 8px; /* Make stroke thicker for more visual separation, adjust as needed */
-  /* The original SVG is complex; for simplicity, this targets all paths.
-     A better SVG would have distinct elements for corners.
-     Let's assume the existing SVG structure's "Shape" ID is the one for corners. */
-}
-.app__scanner-img #Shape {
-  fill: var(--md-sys-color-primary);
-  /* Opacity can be added for a semi-transparent effect if desired */
-  /* filter: drop-shadow(0 0 8px var(--md-sys-color-primary)); /* Optional glow */
-}
-
-
-/* Animated Scanner Line */
-.custom-scanner{
-  width: 90%; /* Relative to .app__overlay */
-  height: 4px; /* Thicker line */
-  background: linear-gradient(90deg, transparent, var(--md-sys-color-primary), transparent); /* Softer edges */
-  position:absolute;
-  left: 5%; /* Centered */
-  margin: auto; /* Not needed with left:5% and width:90% */
-  box-shadow: 0 0 10px var(--md-sys-color-primary), 0 0 5px var(--md-sys-color-primary); /* Glow effect */
-  border-radius: var(--md-sys-shape-corner-full);
-  display: block; /* Make it visible */
-  z-index: 22; /* Above frame, below potential text */
-  animation: scanner 3s infinite ease-in-out; /* Smoother easing */
-}
-
-@-webkit-keyframes scanner{0%{bottom:90%; opacity: 0.7;} 50%{bottom:10%; opacity: 1;} 100%{bottom:90%; opacity: 0.7;}}
-@keyframes scanner{0%{bottom:90%; opacity: 0.7;} 50%{bottom:10%; opacity: 1;} 100%{bottom:90%; opacity: 0.7;}}
-
-.app__help-text{
-  color: var(--md-sys-color-on-primary-container); /* Readable on dark overlay/video */
-  background-color: rgba(var(--md-sys-color-primary-container-rgb, 0, 77, 97), 0.8); /* Use RGB for alpha */
-  position:absolute;
-  bottom: -60px; /* Position below the scanner overlay */
-  left:50%;
-  transform: translateX(-50%);
-  font-size: 16px;
-  padding: 8px 16px;
-  border-radius: var(--md-sys-shape-corner-medium);
-  text-align:center;
-  user-select:none;
-  display: block; /* Or flex if needed */
-  z-index: 22;
-  box-shadow: var(--md-sys-elevation-level-1);
-}
-
-
-/* --- DIALOGS (Common styles first) --- */
-.app__dialog-overlay, .app__infodialog-overlay {
-  position:fixed;
-  left:0;right:0;bottom:0;top:0;
-  background: var(--md-sys-color-scrim);
-  z-index:200; /* High z-index */
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0s 0.3s;
-}
-.app__dialog-overlay:not(.app__dialog--hide), /* When dialog is shown */
-.app__infodialog-overlay:not(.app__infodialog--hide) {
-  opacity: 1;
-  visibility: visible;
-  transition-delay: 0s;
-}
-
-
-.app__dialog, .app__infodialog {
-  background-color: var(--md-sys-color-surface);
-  color: var(--md-sys-color-on-surface);
-  width: clamp(320px, 90vw, 480px); /* Responsive width */
-  min-height: 180px; /* Let content define height mostly */
-  height: auto; /* Auto height */
-  border-radius: var(--md-sys-shape-corner-extra-large); /* Expressive rounding */
-  display:flex; /* Keep flex for content structure */
-  flex-direction: column;
-  position:fixed; /* Changed from absolute for easier centering */
-  left:50%;
-  top:50%;
-  transform: translate(-50%, -50%) scale(0.95);
-  margin:auto; /* Not needed with fixed and transform */
-  box-shadow: var(--md-sys-elevation-level-4);
-  z-index:201;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s 0.3s;
-}
-
-.app__dialog:not(.app__dialog--hide),
-.app__infodialog:not(.app__infodialog--hide) {
-  opacity: 1;
-  visibility: visible;
-  transform: translate(-50%, -50%) scale(1);
-  transition-delay: 0s;
-}
-
-
-.app__dialog-content, .app__infodialog-content {
-  width:100%;
-  padding: 24px; /* Generous padding */
-  flex-grow: 1;
-}
-
-.app__dialog-content h1, .app__infodialog h1 {
-  font-family: var(--md-sys-font-family-brand);
-  color: var(--md-sys-color-on-surface);
-  margin-top:0; /* No top margin if padding handles it */
-  margin-bottom: 16px;
-  font-weight:500;
-  font-size: 24px; /* Headline Small */
-}
-.app__infodialog p {
-  font-size: 16px; /* Body Large */
-  line-height: 1.6;
-  color: var(--md-sys-color-on-surface-variant);
-}
-
-.app__infodialog-subcontent{margin-top:24px;}
-.app__infodialog-subcontent a{
-  color: var(--md-sys-color-primary);
-  text-decoration: none;
-  font-weight: 500;
-}
-.app__infodialog-subcontent a:hover{ text-decoration: underline; }
-.app__infodialog-subcontent p:not(:first-child){margin-top:12px;}
-
-.app__dialog input[type="text"]{
-  width:100%;
-  height: 56px; /* Standard Material height */
-  border:0;
-  border-bottom: 2px solid var(--md-sys-color-outline);
-  outline:0;
-  font-size:16px; /* Input text */
-  color: var(--md-sys-color-on-surface);
-  background-color: transparent;
-  padding: 16px 0px 8px 0px; /* Adjust for label if it were present */
-  transition: border-color 0.2s ease;
-}
-.app__dialog input[type="text"]:focus{
-  border-bottom-color: var(--md-sys-color-primary);
-}
-
-.app__dialog-actions, .app__infodialog-actions {
-  display:flex; /* Use flex for button alignment */
-  justify-content: flex-end; /* Align buttons to the right */
-  padding: 8px 24px 24px 24px; /* Padding around actions */
-  gap: 8px; /* Space between buttons */
-  /* Removed absolute positioning, part of flex column now */
-}
-
-/* Button Styling (Material You Text Buttons) */
-.app__infodialog-open, .app__infodialog-close,
-.app__dialog-open, .app__dialog-close {
-  border:0;
-  height: 40px;
-  min-width: 64px; /* Minimum width for touch target */
-  padding: 0 16px; /* Horizontal padding */
-  font-size: 14px; /* Label Large */
-  background:transparent;
-  color: var(--md-sys-color-primary); /* Accent color for text buttons */
-  font-weight:500;
-  outline:0;
-  cursor:pointer;
-  border-radius: var(--md-sys-shape-corner-full); /* Pill shape */
-  text-transform: uppercase; /* Or none for softer look */
-  transition: background-color 0.2s ease;
-}
-.app__infodialog-open:hover, .app__infodialog-close:hover,
-.app__dialog-open:hover, .app__dialog-close:hover {
-  background-color: rgba(var(--md-sys-color-primary-rgb, 105, 221, 255), 0.08);
-}
-.app__infodialog-open:active, .app__infodialog-close:active,
-.app__dialog-open:active, .app__dialog-close:active{
-  background-color: rgba(var(--md-sys-color-primary-rgb, 105, 221, 255), 0.12);
-  opacity: 1;
-}
-.app__dialog-open{display:inline-flex;} /* Make Open button visible and flex for alignment */
-
-
-/* --- FAB (Floating Action Button for Select Photos) --- */
-.app__select-photos {
-  width: 56px;
-  height: 56px;
-  cursor: pointer;
+/* --- FAB (Floating Action Button) --- */
+/* Original .custom-btn renamed to .app__fab for clarity, but let's keep .custom-btn for now */
+.custom-btn, .app__select-photos { /* Merging styles for FAB */
   position: fixed;
-  bottom: 32px; /* More padding from edge */
-  right: 32px;
-  border-radius: var(--md-sys-shape-corner-large); /* Slightly less than full for "squircle" */
+  right: 24px; /* M3 standard spacing */
+  bottom: 24px;
   background-color: var(--md-sys-color-primary-container);
   color: var(--md-sys-color-on-primary-container);
+  border-radius: var(--md-sys-shape-corner-large); /* M3 FABs are often 16px rounded */
+  border: 0;
+  width: 56px;
+  height: 56px;
+  outline: 0;
+  box-shadow: 0 3px 6px var(--md-sys-color-shadow), 0 3px 6px var(--md-sys-color-shadow); /* M3 elevation 3 */
+  z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: var(--md-sys-elevation-level-3);
-  z-index: 90;
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease, background-color 0.2s ease;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease;
+}
+.custom-btn:hover, .app__select-photos:hover {
+  box-shadow: 0 6px 12px var(--md-sys-color-shadow), 0 4px 8px var(--md-sys-color-shadow); /* M3 elevation 4 on hover */
+  transform: translateY(-2px) scale(1.05); /* Subtle lift and spring */
+}
+.custom-btn:active, .app__select-photos:active {
+  box-shadow: 0 1px 3px var(--md-sys-color-shadow); /* M3 elevation 1 on press */
+  transform: translateY(0px) scale(0.98); /* Press down */
+  opacity: 1; /* Remove original opacity */
+}
+.custom-fab-icon, .app__select-photos svg { /* For icon inside FAB */
+  color: var(--md-sys-color-on-primary-container);
+  font-size: 28px; /* Adjust as needed */
+  user-select: none;
 }
 .app__select-photos svg {
-  fill: var(--md-sys-color-on-primary-container); /* Ensure icon color matches */
-  width: 28px;
-  height: 28px;
+  fill: var(--md-sys-color-on-primary-container); /* ensure SVG fill is correct */
 }
-.app__select-photos:hover {
-  box-shadow: var(--md-sys-elevation-level-4);
-  background-color: var(--md-sys-color-primary); /* Change to primary on hover for more pop */
-  color: var(--md-sys-color-on-primary);
-}
-.app__select-photos:hover svg {
-  fill: var(--md-sys-color-on-primary);
-}
-.app__select-photos:active {
-  transform: scale(0.95);
-  box-shadow: var(--md-sys-elevation-level-2);
-  opacity: 1;
-}
-input[type='file']{display:none} /* Keep as is */
 
-/* --- SNACKBAR --- */
-.app__snackbar{
-  position:fixed;
-  bottom: 24px; /* More spacing */
-  left: 50%; /* Centered */
+.custom-msg { /* This seems like placeholder text, style for better readability */
+  text-align: center;
+  width: 90%;
+  max-width: 400px; /* Limit width */
+  height: auto; /* Adjust height based on content */
+  overflow: auto;
+  margin: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: var(--md-sys-typescale-body-large-size);
+  color: var(--md-sys-color-on-surface-variant); /* Less prominent text */
+  padding: 20px;
+}
+
+/* --- Video Background --- */
+video {
+  transform: translateX(-50%) translateY(-50%); /* Keep centering */
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  position: absolute;
+  z-index: -1; /* Ensure it's behind UI elements */
+  object-fit: cover; /* Ensures video covers the area without distortion */
+}
+
+/* --- List (Not used in current UI, but styled if it were) --- */
+#list li {
+  list-style-type: none;
+  text-decoration: none; /* M3 links typically don't have underlines by default */
+  color: var(--md-sys-color-primary); /* Link color */
+  padding: 8px 0;
+  cursor: pointer;
+}
+#list li:hover {
+  text-decoration: underline;
+}
+
+.custom-copy-btn { /* Keep if used, opacity suggests it's revealed on demand */
+  opacity: 0;
+  /* Style it like a small icon button if it becomes visible */
+}
+
+.hide {
+  display: none !important; /* Stronger hide */
+}
+
+/* --- Scanner Animation & Overlay --- */
+/* Keyframes for scanner are fine, let's style the bar and the visual frame */
+
+.app__overlay { /* This is the main viewfinder frame container */
+  position: fixed; /* Was absolute, fixed might be better for viewport centering */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 280px; /* Slightly larger, more rounded target */
+  height: 280px;
+  /* border: 0; Removed, use SVG or pseudo-elements for frame */
+  z-index: 1; /* Above video, below dialogs */
+  display: flex; /* To center the SVG scanner image */
+  align-items: center;
+  justify-content: center;
+  pointer-events: none; /* Allow clicks to pass through to video if needed */
+}
+
+/* Hide the old overlay parts, we'll use the SVG and a pseudo-element */
+.app__overlay-left, .app__overlay-right {
+  display: none;
+}
+
+/* Style the SVG scanner frame */
+.app__scanner-img {
+  display: block !important; /* Override its display:none */
+  width: 100%; /* Fill the .app__overlay */
+  height: 100%;
+  z-index: 1; /* Ensure it's on top within its container */
+  position: relative; /* Keep as is */
+}
+.app__scanner-img g path { /* Target the path inside the SVG */
+  fill: none; /* No fill for the frame lines */
+  stroke: var(--md-sys-color-surface); /* White or light color for visibility on dark video */
+  stroke-width: 6; /* Thicker, more prominent lines */
+  stroke-linecap: round; /* Rounded ends for the corner dashes */
+  stroke-linejoin: round;
+  filter: drop-shadow(0px 0px 3px rgba(0,0,0,0.5)); /* Add a subtle shadow for better contrast */
+}
+
+
+.custom-scanner { /* The animated line */
+  width: calc(100% - 20px); /* Span across the inner part of the viewfinder */
+  height: 3px; /* Thicker line */
+  background: linear-gradient(90deg, transparent, var(--md-sys-color-success), transparent); /* Softer edges */
+  position: absolute;
+  /* transition: all 200ms linear; Kept */
+  /* animation: scanner 3s infinite linear; Kept */
+  box-shadow: 0 0 8px var(--md-sys-color-success), 0 0 12px var(--md-sys-color-success); /* Glow effect */
+  display: block !important; /* Override its display:none */
+  left: 50%;
   transform: translateX(-50%);
-  pointer-events:none;
-  z-index:300; /* Highest z-index */
+  margin: 0; /* Remove auto margin if using transform for centering */
+  border-radius: 2px;
+  /* Ensure it uses the existing keyframes */
+  -webkit-animation: scanner 3s infinite linear;
+  -moz-animation: scanner 3s infinite linear;
+  -o-animation: scanner 3s infinite linear;
+  animation: scanner 3s infinite linear;
+}
+
+/* Make sure keyframes are present */
+@-webkit-keyframes scanner{0{bottom:90%}50%{bottom:10%}100%{bottom:90%}}
+@-moz-keyframes scanner{0{bottom:90%}50%{bottom:10%}100%{bottom:90%}}
+@-o-keyframes scanner{0{bottom:90%}50%{bottom:10%}100%{bottom:90%}}
+@keyframes scanner{0{bottom:90%}50%{bottom:10%}100%{bottom:90%}}
+
+
+#camera { /* Hidden input, keep as is */
+  opacity: 0;
+}
+
+.no-support { /* Message for unsupported features */
+  font-size: var(--md-sys-typescale-title-large-size);
+  text-align: center;
+  color: var(--md-sys-color-error);
+  padding: 20px;
+}
+
+/* --- Snackbar / Toast --- */
+.app__snackbar {
+  position: fixed;
+  bottom: 24px; /* Consistent spacing */
+  left: 50%;
+  transform: translateX(-50%); /* Center snackbar */
+  width: calc(100% - 48px); /* Responsive width */
+  max-width: 400px; /* Max width for larger screens */
+  pointer-events: none;
+  z-index: 10000; /* Highest z-index */
   display: flex;
   flex-direction: column-reverse; /* New messages appear on top if multiple */
   align-items: center;
 }
 
-.app__snackbar-msg{
-  width: auto; /* Auto width based on content */
-  min-width: 280px; /* Minimum width */
-  max-width: 560px; /* Max width */
-  min-height: 48px;
-  background-color: var(--md-sys-color-inverse-surface); /* Material Snackbar color */
-  color: var(--md-sys-color-inverse-on-surface);
-  border-radius: var(--md-sys-shape-corner-small); /* Standard snackbar rounding */
-  box-shadow: var(--md-sys-elevation-level-3);
-  display:flex;
-  align-items:center;
-  justify-content:space-between; /* If actions were present */
-  font-size:14px; /* Body medium */
-  font-weight:400;
-  padding: 14px 16px;
-  word-break:break-word; /* Changed from break-all for better readability */
-  margin-bottom: 8px; /* Spacing between snackbars */
-  pointer-events: all; /* Allow interaction if needed */
-  opacity: 0;
-  transform: translateY(20px) scale(0.95);
-  transition: opacity .3s ease, transform .3s ease;
-}
-.app__snackbar-msg:not(.app__snackbar--hide) { /* For showing */
+.app__snackbar-msg {
+  width: 100%; /* Fill container */
+  min-height: 48px; /* M3 standard height */
+  background-color: var(--md-sys-color-on-surface); /* Inverse surface for contrast */
+  color: var(--md-sys-color-surface); /* Inverse on-surface */
+  border-radius: var(--md-sys-shape-corner-small);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2), 0 4px 10px rgba(0,0,0,0.1); /* Elevation */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--md-sys-typescale-label-large-size);
+  font-weight: var(--md-sys-typescale-label-large-weight);
+  padding: 14px 16px; /* M3 padding */
+  word-break: break-word; /* was break-all */
+  transition: opacity 0.3s cubic-bezier(0,0,0.30,1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: none; /* was initial */
+  margin-bottom: 8px; /* Spacing between multiple snackbars */
+  pointer-events: all; /* Allow interaction if there were action buttons */
   opacity: 1;
   transform: translateY(0) scale(1);
 }
-.app__snackbar--hide{ /* This class now controls individual message hiding if logic allows */
-  opacity:0 !important; /* Ensure it hides */
-  transform: translateY(20px) scale(0.95) !important;
-  transition-delay: 0s !important; /* Hide immediately */
-  margin-bottom: 0; /* Collapse margin when hidden */
-  height: 0; /* Collapse height */
-  padding-top: 0; padding-bottom: 0; /* Collapse padding */
-  overflow: hidden;
+
+.app__snackbar--hide .app__snackbar-msg { /* For hiding animation */
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
 }
 
-
-/* --- MISC & UTILITIES --- */
-.custom-menu-icon{ /* This was used for title color before, remove if not needed */
-  display: none; /* Example: if title color is handled by .app__header-title */
+/* --- Dialogs (InfoDialog and regular Dialog) --- */
+.app__dialog-overlay, .app__infodialog-overlay {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background: var(--md-sys-color-scrim);
+  z-index: 1000; /* Below dialog, above content */
+  opacity: 0; /* Start hidden */
+  pointer-events: none; /* Start non-interactive */
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(5px); /* Subtle blur for Expressive feel */
+  -webkit-backdrop-filter: blur(5px);
 }
-.custom-title{ color: var(--md-sys-color-on-surface); } /* Already handled by header */
+.app__dialog-overlay:not(.app__dialog--hide),
+.app__infodialog-overlay:not(.app__infodialog--hide) {
+  opacity: 1;
+  pointer-events: auto;
+}
 
-/* .custom-btn was a FAB-like button, now replaced by .app__select-photos, can remove if unused */
-.custom-btn { display: none; }
-.custom-fab-icon { display: none; }
+.app__infodialog, .app__dialog {
+  z-index: 1001; /* Above overlay */
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  width: calc(100% - 48px); /* Responsive width */
+  max-width: 320px; /* M3 dialog max width usually around this */
+  min-height: 180px; /* Keep min height or make it auto */
+  height: auto; /* Allow content to define height */
+  border-radius: var(--md-sys-shape-corner-extra-large); /* Prominent rounding */
+  display: flex; /* Keep flex */
+  flex-direction: column; /* Stack content vertically */
+  position: fixed; /* fixed for centering */
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0.95); /* Start slightly scaled down */
+  margin: 0; /* Remove auto margin */
+  box-shadow: 0 8px 12px var(--md-sys-color-shadow), 0 5px 22px var(--md-sys-color-shadow); /* M3 Elevation 3 for dialogs */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
+.app__infodialog:not(.app__infodialog--hide),
+.app__dialog:not(.app__dialog--hide) {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1); /* Animate to full size */
+}
 
-.custom-msg{ /* This seems like a general message area, style if used, or remove */
-  text-align:center;
-  width:90%;
-  max-width: 400px;
-  height:auto; /* Fit content */
-  overflow:auto;
-  margin:auto;
-  position:absolute; /* Center it if it's a fullscreen message */
-  top:50%;left:50%;bottom:auto;right:auto;
-  transform: translate(-50%, -50%);
-  font-size:18px;
+.app__infodialog { /* Specific to info dialog if needed */
+  /* max-width: 480px; was, now consistent with app__dialog */
+  /* width: 95%; was, now consistent */
+  /* height: 240px; was, now auto */
+}
+
+.app__dialog-content, .app__infodialog-content {
+  width: 100%;
+  padding: 24px; /* M3 standard padding */
+  box-sizing: border-box;
+  flex-grow: 1; /* Allow content to take up space */
+}
+
+.app__infodialog-subcontent {
+  margin-top: 16px; /* Spacing */
+  font-size: var(--md-sys-typescale-body-large-size);
   color: var(--md-sys-color-on-surface-variant);
-  padding: 24px;
-  background-color: var(--md-sys-color-surface-variant);
-  border-radius: var(--md-sys-shape-corner-large);
-  box-shadow: var(--md-sys-elevation-level-2);
 }
-
-#list li{ /* If used for displaying scanned results list */
-  list-style-type:none;
-  text-decoration:underline; /* Might want to change this */
-  color: var(--md-sys-color-primary); /* Link-like color */
-  padding: 8px 0;
-  cursor: pointer;
-}
-#list li:hover {
+.app__infodialog-subcontent a {
+  color: var(--md-sys-color-primary);
   text-decoration: none;
-  background-color: rgba(var(--md-sys-color-primary-rgb, 105, 221, 255), 0.08);
+  font-weight: 500;
+}
+.app__infodialog-subcontent a:hover {
+  text-decoration: underline;
+}
+.app__infodialog-subcontent p:not(:first-child) {
+  margin-top: 12px;
 }
 
-.custom-copy-btn{opacity:0} /* Keep if used, might need styling */
-.hide{display:none !important} /* Utility class */
-
-.no-support{
-  font-size:20px;
-  text-align:center;
-  color: var(--md-sys-color-on-background);
-  padding: 40px 20px;
+.app__dialog-content h1, .app__infodialog h1 {
+  margin-top: 0; /* Remove top margin as padding handles it */
+  margin-bottom: 16px;
+  font-family: var(--md-sys-typescale-headline-large-font);
+  font-weight: var(--md-sys-typescale-headline-large-weight);
+  font-size: var(--md-sys-typescale-headline-large-size);
+  line-height: 1.2;
+  color: var(--md-sys-color-on-surface);
+}
+.app__infodialog h1 { /* Adjust if info dialog title needs to be smaller */
+    font-size: var(--md-sys-typescale-title-large-size);
 }
 
-.camera__icon,.focus__icon{ /* Style if these become visible features */
-  position:relative;
-  left:10px;
-  display:none; /* Current state */
-  fill: var(--md-sys-color-primary);
+
+/* Dialog Input Field */
+.app__dialog input[type="text"] {
+  width: 100%; /* Fill available space */
+  height: 56px; /* M3 text field height */
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--md-sys-shape-corner-extra-small);
+  outline: 0;
+  font-size: var(--md-sys-typescale-body-large-size);
+  color: var(--md-sys-color-on-surface);
+  font-weight: 400;
+  padding: 0 16px; /* Horizontal padding */
+  box-sizing: border-box;
+  background-color: var(--md-sys-color-surface-variant); /* Slightly different background */
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.app__dialog input[type="text"]:focus {
+  border-color: var(--md-sys-color-primary);
+  box-shadow: 0 0 0 1px var(--md-sys-color-primary); /* Focus ring */
+  background-color: var(--md-sys-color-surface);
 }
 
-#frame{ /* If used for displaying image from file, ensure it's styled */
-  width:auto;height:auto;
-  max-width: 100%;
-  max-height: 80vh;
-  display: block;
-  margin: 20px auto;
-  border-radius: var(--md-sys-shape-corner-medium);
+/* Dialog Actions (Buttons) */
+.app__dialog-actions, .app__infodialog-actions {
+  display: flex; /* Use flex for button alignment */
+  justify-content: flex-end; /* Align buttons to the right */
+  padding: 8px 24px 24px 24px; /* Padding around actions */
+  /* Removed position absolute, now part of flex flow */
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.app__version{
-  position:fixed; /* Keep it out of the way */
-  bottom: 8px;
+.app__infodialog-open, .app__infodialog-close,
+.app__dialog-open, .app__dialog-close {
+  border: 0;
+  min-width: 64px; /* M3 button min width */
+  height: 40px; /* M3 button height */
+  padding: 0 12px; /* Text button padding */
+  font-size: var(--md-sys-typescale-label-large-size);
+  font-weight: var(--md-sys-typescale-label-large-weight);
+  background: transparent;
+  color: var(--md-sys-color-primary); /* Text button color */
+  outline: 0;
+  cursor: pointer;
+  border-radius: var(--md-sys-shape-corner-full); /* Fully rounded for pill shape */
+  margin-left: 8px; /* Spacing between buttons */
+  text-transform: uppercase;
+  transition: background-color 0.2s ease;
+}
+.app__infodialog-open:first-child, .app__infodialog-close:first-child,
+.app__dialog-open:first-child, .app__dialog-close:first-child {
+    margin-left: 0; /* No margin for the first button */
+}
+
+.app__infodialog-open:hover, .app__infodialog-close:hover,
+.app__dialog-open:hover, .app__dialog-close:hover {
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+}
+.app__infodialog-open:active, .app__infodialog-close:active,
+.app__dialog-open:active, .app__dialog-close:active {
+  background-color: var(--md-sys-color-secondary-container); /* Different color for active */
+  opacity: 1; /* Remove default opacity */
+}
+
+.app__dialog-open { /* This was display:none, keep if that logic is intended */
+  /* If it's a primary action, style as a filled button */
+  /* background-color: var(--md-sys-color-primary); */
+  /* color: var(--md-sys-color-on-primary); */
+}
+
+.app__infodialog--hide, .app__dialog--hide {
+  /* These are now handled by the opacity/transform on the base class */
+  /* display: none; Keep this as a fallback or if JS relies on it */
+}
+
+
+/* --- Helper texts and other small UI elements --- */
+.app__help-text, .app__select-photos /* .app__select-photos is styled as FAB already */ {
+  color: var(--md-sys-color-on-surface-variant); /* For text over non-primary backgrounds */
+  position: absolute;
+  bottom: 100px; /* Adjust position relative to FAB or scanning area */
+  font-size: var(--md-sys-typescale-body-large-size);
+  right: 0;
+  left:0; /* Make it span width for centering */
+  text-align: center;
+  user-select: none;
+  padding: 0 20px; /* Add some padding */
+  z-index: 5; /* Above video but below scanner frame if too close */
+}
+.app__help-text {
+  display: block; /* Was none, make it visible to guide user */
+  /* If it should only show sometimes, JS will toggle a class */
+}
+
+/* --- Camera/Focus icons (not used in current HTML, style if added) --- */
+.camera__icon, .focus__icon {
+  position: relative;
+  left: 10px;
+  display: none; /* Keep hidden */
+  /* Style as Material icons if used */
+  /* fill: var(--md-sys-color-primary); */
+}
+
+input[type='file'] { /* Keep hidden */
+  display: none;
+}
+
+#frame { /* Not used in current visible UI, style if it becomes relevant */
+  width: auto;
+  height: auto;
+}
+
+.app__version {
+  position: absolute;
+  bottom: 16px;
   left: 50%;
   transform: translateX(-50%);
-  font-size:12px;
-  color: var(--md-sys-color-outline); /* Muted color */
-  display:inline-block;
-  z-index: 5;
+  font-size: 12px;
+  color: var(--md-sys-color-on-surface-variant);
+  /* margin-top: 15px; (not needed with absolute positioning) */
+  display: inline-block; /* Keep if needed */
+  opacity: 0.7;
 }
 
-
-/* --- MEDIA QUERIES (Adjustments for smaller screens if needed) --- */
-@media screen and (max-width:480px){
+/* --- Media Queries --- */
+@media screen and (max-width: 480px) {
   .app__infodialog, .app__dialog {
-    width: calc(100% - 32px); /* Full width with some margin */
-    border-radius: var(--md-sys-shape-corner-large); /* Slightly smaller radius for edge-to-edge feel */
+    width: calc(100% - 32px); /* Slightly more margin on small screens */
+    max-width: none; /* Allow full width minus margins */
+    border-radius: var(--md-sys-shape-corner-large); /* Slightly less rounding on small full-width dialogs */
   }
   .app__infodialog-content, .app__dialog-content {
     padding: 20px; /* Slightly less padding */
   }
-  .app__header-title {
-    font-size: 20px;
+  .app__dialog-actions, .app__infodialog-actions {
+    padding: 8px 16px 16px 16px; /* Less padding for actions */
   }
-  .app__select-photos {
-    bottom: 24px;
-    right: 24px;
+  .app__header {
+    height: 56px; /* Smaller header on mobile */
   }
   .app__help-text {
-    bottom: -50px; /* Adjust if needed */
-    font-size: 14px;
+    bottom: 90px; /* Adjust if FAB is smaller or positioned differently */
+  }
+  .app__snackbar {
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    width: auto;
+    transform: none;
+    align-items: stretch; /* Snackbar messages fill width */
   }
 }
-
-/* Add placeholder RGB versions for colors used with opacity, if not available from a preprocessor */
-/* This is a manual step if you don't have JS or a build tool to generate these */
-/* Example:
-:root {
-  ...
-  --md-sys-color-primary-rgb: 105, 221, 255;
-  --md-sys-color-primary-container-rgb: 0, 77, 97;
-  ...
-}
-*/
