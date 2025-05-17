@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hindi OCR - Extract Text from PDF & Images</title>
+    <title>Devanagari OCR - Extract Text (Sanskrit/Hindi)</title>
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -70,7 +70,7 @@
 
         .container {
             width: 100%;
-            max-width: 850px; /* Wider for text area */
+            max-width: 850px; 
             background-color: var(--surface-color);
             background-image: linear-gradient(180deg, color-mix(in srgb, var(--surface-color) 105%, black) 0%, var(--surface-color) 100%);
             padding: 30px; 
@@ -147,7 +147,7 @@
         }
         .file-input-text .fas { color: var(--primary-color); font-size: 1.3em; }
         .selected-file-display {
-            display: none; /* Initially hidden */
+            display: none; 
             font-size: 0.95em; color: var(--primary-color);
             margin-top: 10px; font-weight: 500; word-break: break-all;
             position: relative; z-index: 1;
@@ -163,7 +163,7 @@
             .controls-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
         }
         
-        button#startOcrBtn { /* Renamed from processOcrBtn for clarity */
+        button#startOcrBtn { 
             display: flex; align-items: center; justify-content: center; gap: 10px;
             width: 100%; padding: 14px 20px; background-image: var(--gradient-primary);
             color: white; border: none; border-radius: var(--border-radius-md); cursor: pointer;
@@ -185,7 +185,7 @@
         button#startOcrBtn:disabled .fa-spin { display: inline-block; margin-left: 8px; }
         
         .status-area { margin-top: 15px; }
-        .status { /* Combined status message and progress bar styling for simplicity */
+        .status { 
             font-size: 0.9em; color: var(--text-muted-color); text-align: center;
             min-height: 1.5em; margin-bottom: 8px;
             padding: 8px;
@@ -197,8 +197,8 @@
         .status.error { background-color: rgba(var(--error-color, 218, 54, 51), 0.1); color: var(--error-color); }
 
 
-        .output-wrapper { margin-top: 30px; display: none; } /* Renamed from output-section */
-        textarea#ocrResultText { /* Renamed from ocrOutput */
+        .output-wrapper { margin-top: 30px; display: none; }
+        textarea#ocrResultText { 
             width: 100%; min-height: 250px; padding: 15px;
             border: 1px solid var(--border-color); border-radius: var(--border-radius-md);
             background-color: var(--input-background); color: var(--text-color);
@@ -211,13 +211,11 @@
             box-shadow: 0 0 0 3px var(--glow-color);
         }
         .download-buttons { display: flex; gap: 15px; justify-content: flex-end; }
-        .download-buttons button { width: auto; padding: 10px 20px; font-size: 0.9em; }
-        /* Apply action-button styles to download buttons as well */
         .download-buttons button {
             display: inline-flex; align-items: center; justify-content: center; gap: 8px;
             padding: 10px 18px; background-image: var(--gradient-primary);
             color: white; border: none; border-radius: var(--border-radius-md); cursor: pointer;
-            font-family: var(--font-body); font-weight: 500;
+            font-family: var(--font-body); font-weight: 500; font-size: 0.9em;
             text-shadow: 0 1px 1px rgba(0,0,0,0.1);
             transition: all 0.2s ease-out;
             box-shadow: 0 1px 2px rgba(0,0,0,0.1);
@@ -245,7 +243,7 @@
         .info-section ul { list-style-type: none; padding-left: 5px; }
         .info-section li { margin-bottom: 8px; padding-left: 20px; position: relative; }
         .info-section li::before {
-            content: "\f105"; /* FontAwesome Angle Right */
+            content: "\f105"; 
             font-family: "Font Awesome 6 Free"; font-weight: 900;
             color: var(--primary-color); position: absolute; left: 0; top: 1px;
         }
@@ -254,14 +252,13 @@
             text-align: center; margin-top: 40px; padding-bottom: 20px;
             color: var(--text-muted-color); font-size: 0.8em;
         }
-        /* Hidden canvas for PDF rendering */
         #pdfPreviewCanvas { display: none; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1 class="main-title">देवनागरी OCR <i class="fas fa-eye"></i></h1>
-        <p class="sub-title">PDF और छवियों से हिंदी पाठ निकालें (क्लाइंट-साइड)</p>
+        <p class="sub-title">PDF और छवियों से देवनागरी (संस्कृत/हिन्दी) पाठ निकालें</p>
 
         <h2><i class="fas fa-file-import"></i> अपनी फ़ाइल अपलोड करें</h2>
         <div class="file-input-wrapper" id="ocrFileWrapper">
@@ -271,14 +268,13 @@
         </div>
 
         <div class="controls-grid">
-             <!-- OCR Language select (kept for structure, but functionality is Hindi-focused) -->
             <div>
-                <label for="ocrLanguage" style="visibility:hidden;">OCR भाषा:</label> <!-- Hidden visually -->
-                <select id="ocrLanguage" disabled style="display:none;"> <!-- Hidden fully for now -->
-                    <option value="hin" selected>हिन्दी (Hindi)</option>
+                <label for="ocrLanguageUi" style="display: block; margin-bottom: 8px; font-weight: 500; font-size: 0.9em; color: var(--text-muted-color);">OCR भाषा (लक्ष्य):</label>
+                <select id="ocrLanguageUi" disabled style="width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: var(--border-radius-md); background-color: var(--input-background); color: var(--text-color); font-family: var(--font-body); font-size: 1em;">
+                    <option value="san" selected>संस्कृत (Sanskrit) - देवनागरी के लिए</option>
                 </select>
             </div>
-            <button id="startOcrBtn" disabled> <!-- Renamed from processOcrBtn -->
+            <button id="startOcrBtn" disabled>
                 <i class="fas fa-cogs"></i> पाठ निकालें
                 <i class="fas fa-spinner fa-spin"></i>
             </button>
@@ -288,9 +284,9 @@
             <div id="ocrStatus" class="status">Tesseract.js इंजन लोड हो रहा है...</div>
         </div>
 
-        <div class="output-wrapper"> <!-- Renamed from output-section -->
+        <div class="output-wrapper">
             <h2><i class="fas fa-paste"></i> निकाला गया पाठ</h2>
-            <textarea id="ocrResultText" rows="15" placeholder="निकाला गया हिंदी पाठ यहाँ दिखाई देगा..."></textarea> <!-- Renamed from ocrOutput -->
+            <textarea id="ocrResultText" rows="15" placeholder="निकाला गया देवनागरी पाठ यहाँ दिखाई देगा..."></textarea>
             <div class="download-buttons">
                 <button id="downloadTxtBtn">
                     <i class="fas fa-file-alt"></i> .txt डाउनलोड करें
@@ -301,17 +297,16 @@
             </div>
         </div>
     </div>
-    <canvas id="pdfPreviewCanvas"></canvas> <!-- Hidden canvas for PDF rendering -->
+    <canvas id="pdfPreviewCanvas"></canvas>
 
     <div class="info-section container" style="max-width: 850px;">
         <h3><i class="fas fa-info-circle"></i> महत्वपूर्ण जानकारी और सीमाएं:</h3>
         <ul>
-            <li><strong>क्लाइंट-साइड प्रोसेसिंग:</strong> सभी OCR आपके ब्राउज़र में स्थानीय रूप से किया जाता है। आपकी फाइलें सर्वर पर अपलोड नहीं होती हैं।</li>
+            <li><strong>क्लाइंट-साइड प्रोसेसिंग:</strong> सभी OCR आपके ब्राउज़र में स्थानीय रूप से किया जाता है।</li>
             <li><strong>प्रदर्शन:</strong> बड़ी PDF फाइलों या उच्च-रिज़ॉल्यूशन छवियों के लिए प्रोसेसिंग में समय लग सकता है।</li>
-            <li><strong>सटीकता:</strong> OCR की सटीकता छवि की गुणवत्ता पर बहुत निर्भर करती है। सर्वोत्तम परिणामों के लिए स्पष्ट, टाइप किए गए देवनागरी पाठ का उपयोग करें।</li>
-            <li><strong>भाषा डेटा:</strong> पहली बार हिंदी OCR का उपयोग करने पर, आवश्यक भाषा फ़ाइलें (~10-15MB) डाउनलोड होंगी।</li>
-            <li><strong>PDF से छवियां:</strong> PDF के लिए, प्रत्येक पृष्ठ को एक छवि के रूप में प्रस्तुत किया जाता है, फिर OCR किया जाता है।</li>
-            <li><strong>समर्थित प्रारूप:</strong> PDF, JPG, PNG, BMP, TIFF, WebP।</li>
+            <li><strong>सटीकता:</strong> OCR की सटीकता छवि की गुणवत्ता पर बहुत निर्भर करती है।</li>
+            <li><strong>भाषा डेटा:</strong> पहली बार OCR का उपयोग करने पर, आवश्यक भाषा फ़ाइलें (~10-15MB) डाउनलोड होंगी।</li>
+            <li><strong>यह संस्करण संस्कृत (san) मॉडल का उपयोग कर रहा है, जो देवनागरी लिपि के लिए है और हिन्दी के लिए भी काम कर सकता है।</strong></li>
         </ul>
     </div>
 
@@ -319,94 +314,75 @@
         शक्तिशाली क्लाइंट-साइड देवनागरी OCR | सुरक्षित और निजी
     </footer>
 
-    <!-- Tesseract.js -->
     <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
-    <!-- PDF.js (ensure version matches worker if specified manually, or let CDN handle it) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script> 
-    <!-- Note: If using a specific PDF.js version, workerSrc might need version too. 
-         For general CDN use, pdfjsLib.GlobalWorkerOptions.workerSrc is often enough if using a general path. -->
 
     <script>
-        // --- DOM Element References ---
         let ocrFileInput, ocrFileNameDisplay, ocrFileWrapper, startOcrBtn, ocrStatus,
             ocrOutputWrapper, ocrResultText, downloadTxtBtn, downloadMdBtn, pdfPreviewCanvas;
 
-        // --- Global Variables ---
         let tesseractWorker = null;
         let currentFile = null;
         let isTesseractInitialized = false;
-        let tesseractInitTimeoutId = null; // For managing the init timeout
+        let tesseractInitTimeoutId = null; 
+        const OCR_LANGUAGE_MODEL = 'san'; // Using Sanskrit model for Devanagari
 
-        // --- Initialize Tesseract.js ---
         async function initializeTesseract() {
-            console.log("[OCR] Attempting to initialize Tesseract.js...");
-            updateStatus('Tesseract.js इंजन लोड हो रहा है... कृपया प्रतीक्षा करें।', 'processing', true);
+            console.log(`[OCR] Attempting to initialize Tesseract.js for ${OCR_LANGUAGE_MODEL.toUpperCase()}...`);
+            updateStatus(`Tesseract.js इंजन (${OCR_LANGUAGE_MODEL.toUpperCase()}) लोड हो रहा है...`, 'processing', true);
             if (startOcrBtn) startOcrBtn.disabled = true;
 
-            const TESSERACT_VERSION = "5.0.4"; // Use a specific recent stable version from JSDelivr
+            const TESSERACT_VERSION = "5.0.4"; 
             const WORKER_PATH = `https://cdn.jsdelivr.net/npm/tesseract.js@${TESSERACT_VERSION}/dist/worker.min.js`;
             const CORE_PATH = `https://cdn.jsdelivr.net/npm/tesseract.js-core@${TESSERACT_VERSION}/tesseract-core.wasm.js`;
-            const LANG_PATH = `https://tessdata.projectnaptha.com/4.0.0`; // Common path for v4/v5 compatible data
+            const LANG_PATH = `https://tessdata.projectnaptha.com/4.0.0`; 
 
-            const INIT_TIMEOUT_MS = 60000; // Increased timeout to 60 seconds
+            const INIT_TIMEOUT_MS = 75000; // Increased to 75 seconds for potentially larger language models
 
-            // Clear any previous timeout
             if (tesseractInitTimeoutId) clearTimeout(tesseractInitTimeoutId);
-
             tesseractInitTimeoutId = setTimeout(() => {
-                console.error(`[OCR] FATAL: Tesseract.js initialization timed out after ${INIT_TIMEOUT_MS / 1000} seconds.`);
-                updateStatus('त्रुटि: Tesseract.js लोड होने में विफल (टाइमआउट)। नेटवर्क और CDN पहुँच की जाँच करें।', 'error');
+                console.error(`[OCR] FATAL: Tesseract.js initialization timed out after ${INIT_TIMEOUT_MS / 1000} seconds for ${OCR_LANGUAGE_MODEL.toUpperCase()}.`);
+                updateStatus(`त्रुटि: Tesseract.js (${OCR_LANGUAGE_MODEL.toUpperCase()}) लोड होने में विफल (टाइमआउट)।`, 'error');
                 isTesseractInitialized = false;
                 if (startOcrBtn) startOcrBtn.disabled = true;
             }, INIT_TIMEOUT_MS);
 
             try {
                 console.log("[OCR] Creating Tesseract worker with explicit paths...");
-                console.log(`[OCR] Worker path: ${WORKER_PATH}`);
-                console.log(`[OCR] Core path: ${CORE_PATH}`);
-                console.log(`[OCR] Language data path (base): ${LANG_PATH}`);
-                
-                tesseractWorker = await Tesseract.createWorker(
-                    // WORKER_PATH, // Tesseract v5 often infers this if not provided, but let's test without it first, then with it.
-                    // Forcing paths can sometimes conflict with how Tesseract.js internally resolves them from its main script location.
-                    // Let's rely on Tesseract.js v5's default loading mechanism first.
-                    // If it fails, we'll uncomment and specify the paths.
-                    {
-                        workerPath: WORKER_PATH, // Explicitly provide worker path
-                        corePath: CORE_PATH,     // Explicitly provide core path
-                        langPath: LANG_PATH,     // Base path for language files
-                        logger: m => {
-                            // console.log("[Tesseract Logger]", m); // Verbose
-                            if (m.status === 'recognizing text') {
-                                const progress = (m.progress * 100).toFixed(0);
-                                updateStatus(`पाठ पहचाना जा रहा है... ${progress}%`, 'processing', true);
-                            } else if (m.status && !['loaded tesseract core', 'initialized tesseract', 'loaded language model'].includes(m.status) && m.progress < 1) {
-                                updateStatus(capitalizeFirstLetter(m.status) + '...', 'processing', true);
-                            }
+                tesseractWorker = await Tesseract.createWorker({
+                    workerPath: WORKER_PATH, 
+                    corePath: CORE_PATH,     
+                    langPath: LANG_PATH,     
+                    logger: m => {
+                        if (m.status === 'recognizing text') {
+                            const progress = (m.progress * 100).toFixed(0);
+                            updateStatus(`पाठ पहचाना जा रहा है... ${progress}%`, 'processing', true);
+                        } else if (m.status && !['loaded tesseract core', 'initialized tesseract', 'loaded language model'].includes(m.status) && m.progress < 1) {
+                             updateStatus(capitalizeFirstLetter(m.status) + '...', 'processing', true);
                         }
                     }
-                );
+                });
                 
-                clearTimeout(tesseractInitTimeoutId); // Initialization succeeded before timeout
+                clearTimeout(tesseractInitTimeoutId);
                 console.log("[OCR] Tesseract worker created.");
 
-                updateStatus('हिंदी भाषा मॉडल लोड हो रहा है...', 'processing', true);
-                await tesseractWorker.loadLanguage('hin');
-                console.log("[OCR] Hindi language model loaded.");
+                updateStatus(`${OCR_LANGUAGE_MODEL.toUpperCase()} भाषा मॉडल लोड हो रहा है...`, 'processing', true);
+                await tesseractWorker.loadLanguage(OCR_LANGUAGE_MODEL);
+                console.log(`[OCR] ${OCR_LANGUAGE_MODEL.toUpperCase()} language model loaded.`);
 
-                await tesseractWorker.initialize('hin');
-                console.log("[OCR] Tesseract initialized for Hindi.");
+                await tesseractWorker.initialize(OCR_LANGUAGE_MODEL);
+                console.log(`[OCR] Tesseract initialized for ${OCR_LANGUAGE_MODEL.toUpperCase()}.`);
 
                 isTesseractInitialized = true;
-                updateStatus('हिंदी OCR तैयार है। एक फ़ाइल चुनें।', 'success');
+                updateStatus(`देवनागरी (${OCR_LANGUAGE_MODEL.toUpperCase()}) OCR तैयार है। एक फ़ाइल चुनें।`, 'success');
                 if (currentFile && startOcrBtn) startOcrBtn.disabled = false;
                 else if(startOcrBtn) startOcrBtn.disabled = true;
 
             } catch (error) {
-                clearTimeout(tesseractInitTimeoutId); // Clear timeout if an error occurred
-                console.error("[OCR] Tesseract initialization FAILED:", error);
-                const errorMessage = error.message || (typeof error === 'object' && Object.keys(error).length === 0 ? "Unknown error (empty error object)." : "An unknown error occurred.");
-                updateStatus(`त्रुटि: Tesseract.js प्रारंभ करने में विफल। ${errorMessage} कंसोल देखें।`, 'error');
+                clearTimeout(tesseractInitTimeoutId);
+                console.error(`[OCR] Tesseract initialization FAILED for ${OCR_LANGUAGE_MODEL.toUpperCase()}:`, error);
+                const errorMessage = error.message || (typeof error === 'object' && Object.keys(error).length === 0 ? "Unknown error." : "An unknown error occurred.");
+                updateStatus(`त्रुटि: Tesseract.js (${OCR_LANGUAGE_MODEL.toUpperCase()}) प्रारंभ करने में विफल। ${errorMessage}`, 'error');
                 if (startOcrBtn) startOcrBtn.disabled = true;
                 isTesseractInitialized = false;
             }
@@ -417,14 +393,12 @@
             return string.charAt(0).toUpperCase() + string.slice(1);
         }
 
-        // --- File Input Handling ---
         function setupFileInputListeners() {
             if (!ocrFileInput || !ocrFileWrapper || !ocrFileNameDisplay) {
                 console.error("[OCR] File input elements not found for event listeners.");
                 return;
             }
             console.log("[OCR] Setting up file input listeners.");
-
             ocrFileInput.addEventListener('change', (event) => {
                 console.log("[OCR] File input changed.");
                 currentFile = event.target.files[0];
@@ -451,7 +425,7 @@
         
             ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
                 ocrFileWrapper.addEventListener(eventName, preventDefaults, false);
-                document.body.addEventListener(eventName, preventDefaults, false); // Prevent browser default for drops outside wrapper
+                document.body.addEventListener(eventName, preventDefaults, false); 
             });
             ['dragenter', 'dragover'].forEach(eventName => {
                 ocrFileWrapper.addEventListener(eventName, () => ocrFileWrapper.classList.add('is-dragging'), false);
@@ -472,7 +446,6 @@
             e.stopPropagation();
         }
 
-        // --- Start OCR Process ---
         function setupOcrButtonListener() {
             if (!startOcrBtn) {
                 console.error("[OCR] Start OCR button not found.");
@@ -487,12 +460,11 @@
                 }
                 if (!isTesseractInitialized || !tesseractWorker) {
                     updateStatus('OCR इंजन तैयार नहीं है। कृपया प्रतीक्षा करें या रीफ़्रेश करने का प्रयास करें।', 'error');
-                    // Attempt re-initialization if it failed before
                     if (!isTesseractInitialized) {
                         console.log("[OCR] Attempting OCR re-initialization on button click...");
                         await initializeTesseract();
-                        if (!isTesseractInitialized) return; // Still not ready
-                    } else { // Worker exists but something is wrong
+                        if (!isTesseractInitialized) return; 
+                    } else { 
                         return;
                     }
                 }
@@ -508,74 +480,59 @@
                     if (currentFile.type === "application/pdf") {
                         fullText = await processPdf(currentFile);
                     } else if (currentFile.type.startsWith("image/")) {
-                        console.log("[OCR] Recognizing image with Tesseract...");
+                        console.log(`[OCR] Recognizing image with Tesseract (${OCR_LANGUAGE_MODEL.toUpperCase()})...`);
                         const result = await tesseractWorker.recognize(currentFile);
-                        console.log("[OCR] Tesseract image recognition result:", result);
+                        console.log(`[OCR] Tesseract image recognition result (${OCR_LANGUAGE_MODEL.toUpperCase()}):`, result);
                         fullText = result.data.text;
                     } else {
-                        throw new Error("असमर्थित फ़ाइल प्रकार। कृपया PDF या छवि (PNG, JPG, BMP, TIFF, WebP) फ़ाइलों का उपयोग करें।");
+                        throw new Error("असमर्थित फ़ाइल प्रकार।");
                     }
 
-                    if(ocrResultText) ocrResultText.value = fullText || "कोई पाठ नहीं निकाला जा सका या फ़ाइल खाली/क्षतिग्रस्त हो सकती है।";
+                    if(ocrResultText) ocrResultText.value = fullText || "कोई पाठ नहीं निकाला जा सका।";
                     if(ocrOutputWrapper) ocrOutputWrapper.style.display = 'block';
                     updateStatus('OCR पूर्ण!', 'success');
 
                 } catch (error) {
                     console.error("[OCR] Error during OCR process:", error);
                     updateStatus(`OCR के दौरान त्रुटि: ${error.message}`, 'error');
-                    if(ocrResultText) ocrResultText.value = `त्रुटि: ${error.message}\nअधिक विवरण के लिए कंसोल देखें।`;
-                    if(ocrOutputWrapper) ocrOutputWrapper.style.display = 'block'; // Show error in textarea
+                    if(ocrResultText) ocrResultText.value = `त्रुटि: ${error.message}`;
+                    if(ocrOutputWrapper) ocrOutputWrapper.style.display = 'block';
                 } finally {
                     if (isTesseractInitialized && startOcrBtn) startOcrBtn.disabled = false;
                 }
             });
         }
 
-        // --- PDF Processing ---
         async function processPdf(file) {
             console.log("[OCR] Starting PDF processing for:", file.name);
             if (!pdfPreviewCanvas) {
-                console.error("[OCR] PDF preview canvas not found!");
                 throw new Error("आंतरिक त्रुटि: PDF प्रसंस्करण कैनवास गायब है।");
             }
-            // pdfjsLib should be globally available from the CDN script
             if (typeof pdfjsLib === 'undefined' || !pdfjsLib.getDocument) {
-                console.error("[OCR] PDF.js library (pdfjsLib) is not loaded correctly!");
-                throw new Error("PDF लाइब्रेरी लोड होने में विफल। PDF को प्रोसेस नहीं किया जा सकता।");
+                throw new Error("PDF लाइब्रेरी लोड होने में विफल।");
             }
-
-            // Ensure PDF.js worker is set, do this once
             if (!pdfjsLib.GlobalWorkerOptions.workerSrc) {
-                 const pdfJsVersion = pdfjsLib.version || "3.11.174"; // Fallback version
+                 const pdfJsVersion = pdfjsLib.version || "3.11.174"; 
                  pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfJsVersion}/pdf.worker.min.js`;
                  console.log(`[OCR] PDF.js workerSrc set to: ${pdfjsLib.GlobalWorkerOptions.workerSrc}`);
             }
 
-
             const arrayBuffer = await file.arrayBuffer();
-            console.log("[OCR] PDF loaded into ArrayBuffer.");
-            
             let pdf;
             try {
                 pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
             } catch (pdfError) {
-                console.error("[OCR] PDF.js getDocument error:", pdfError);
-                throw new Error(`PDF लोड करने में विफल: ${pdfError.message}. यह क्षतिग्रस्त या पासवर्ड-सुरक्षित हो सकता है।`);
+                throw new Error(`PDF लोड करने में विफल: ${pdfError.message}.`);
             }
             
-            console.log(`[OCR] PDF has ${pdf.numPages} pages.`);
             let combinedText = '';
             const numPages = pdf.numPages;
-
             updateStatus(`PDF लोड हुआ (${numPages} पृष्ठ)। प्रति पृष्ठ OCR प्रारंभ हो रहा है...`, 'processing', true);
 
             for (let i = 1; i <= numPages; i++) {
                 updateStatus(`PDF पृष्ठ ${i} / ${numPages} प्रोसेस किया जा रहा है...`, 'processing', true);
-                console.log(`[OCR] Processing PDF page ${i}`);
                 const page = await pdf.getPage(i);
-                // Use a higher scale for better OCR results. Adjust as needed.
-                // Very high scales can consume a lot of memory and slow down rendering.
-                const desiredWidth = 1500; // Aim for a canvas width of 1500px for OCR
+                const desiredWidth = 1500; 
                 const viewportBase = page.getViewport({ scale: 1.0 });
                 const scale = desiredWidth / viewportBase.width;
                 const viewport = page.getViewport({ scale: scale });
@@ -584,56 +541,43 @@
                 pdfPreviewCanvas.height = viewport.height;
                 pdfPreviewCanvas.width = viewport.width;
 
-                console.log(`[OCR] Rendering page ${i} (scaled to ${viewport.width}x${viewport.height}) to canvas...`);
                 try {
                     await page.render({ canvasContext, viewport }).promise;
                 } catch (renderError) {
-                    console.error(`[OCR] Error rendering PDF page ${i}:`, renderError);
                     combinedText += `[पृष्ठ ${i} को प्रस्तुत करने में त्रुटि]\n\n`;
-                    page.cleanup(); // Important
+                    page.cleanup(); 
                     continue; 
                 }
-                console.log(`[OCR] Page ${i} rendered. Recognizing text...`);
                 
-                // Directly pass canvas to Tesseract
                 const result = await tesseractWorker.recognize(pdfPreviewCanvas);
-                console.log(`[OCR] Tesseract result for page ${i}:`, result.data.text.substring(0, 50) + "...");
                 combinedText += result.data.text + "\n\n-- पृष्ठ " + i + " समाप्त --\n\n";
                 if(ocrResultText) {
-                    ocrResultText.value = combinedText; // Update live
+                    ocrResultText.value = combinedText; 
                     ocrResultText.scrollTop = ocrResultText.scrollHeight;
                 }
-                page.cleanup(); // Crucial for memory management with multiple pages
-
-                // Small pause to allow UI updates and prevent browser from freezing on large PDFs
+                page.cleanup(); 
                 if (i % 2 === 0 && i < numPages) await new Promise(r => setTimeout(r, 100)); 
             }
-            console.log("[OCR] PDF processing finished.");
             return combinedText.trim();
         }
 
-        // --- Download Functionality ---
         function setupDownloadButtonListeners() {
             if (!downloadTxtBtn || !downloadMdBtn) {
-                console.error("[OCR] Download buttons not found.");
-                return;
+                console.error("[OCR] Download buttons not found."); return;
             }
             console.log("[OCR] Setting up download button listeners.");
-
             downloadTxtBtn.addEventListener('click', () => {
-                const baseName = currentFile ? currentFile.name.split('.').slice(0, -1).join('.') : 'hindi_ocr_result';
+                const baseName = currentFile ? currentFile.name.split('.').slice(0, -1).join('.') : `devanagari_ocr_result_(${OCR_LANGUAGE_MODEL})`;
                 downloadFile(`${baseName}.txt`, ocrResultText.value, 'text/plain;charset=utf-8');
             });
-
             downloadMdBtn.addEventListener('click', () => {
-                const baseName = currentFile ? currentFile.name.split('.').slice(0, -1).join('.') : 'hindi_ocr_result';
+                const baseName = currentFile ? currentFile.name.split('.').slice(0, -1).join('.') : `devanagari_ocr_result_(${OCR_LANGUAGE_MODEL})`;
                 const mdContent = `# ${baseName}\n\n` + "```text\n" + ocrResultText.value + "\n```";
                 downloadFile(`${baseName}.md`, mdContent, 'text/markdown;charset=utf-8');
             });
         }
 
         function downloadFile(filename, content, mimeType) {
-            console.log(`[OCR] Downloading file: ${filename}, Type: ${mimeType}`);
             const blob = new Blob([content], { type: mimeType });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -645,30 +589,26 @@
             URL.revokeObjectURL(url);
         }
 
-        // --- Utility Functions ---
         function updateStatus(message, type = 'info', showSpinner = false) {
             if (!ocrStatus) { 
                 console.warn("[OCR] Status element not found, cannot update status message:", message);
                 return;
             }
             let fullMessage = message;
-            ocrStatus.className = 'status'; // Reset classes
+            ocrStatus.className = 'status'; 
             if (showSpinner) {
                 fullMessage = `<i class="fas fa-spinner fa-spin"></i> ${message}`;
                 ocrStatus.innerHTML = fullMessage;
             } else {
                 ocrStatus.textContent = message;
             }
-            
             if (type === 'success') ocrStatus.classList.add('success');
             else if (type === 'error') ocrStatus.classList.add('error');
             else if (type === 'processing') ocrStatus.classList.add('processing');
         }
         
-        // --- Initialize on DOMContentLoaded ---
         document.addEventListener('DOMContentLoaded', () => {
             console.log("[OCR] DOMContentLoaded event fired. Initializing app elements and Tesseract.");
-
             ocrFileInput = document.getElementById('ocrFile');
             ocrFileNameDisplay = document.getElementById('ocrFileName');
             ocrFileWrapper = document.getElementById('ocrFileWrapper');
@@ -681,21 +621,17 @@
             pdfPreviewCanvas = document.getElementById('pdfPreviewCanvas');
 
             if (!ocrFileInput || !startOcrBtn || !ocrStatus || !pdfPreviewCanvas || !ocrOutputWrapper || !ocrResultText) {
-                console.error("[OCR] CRITICAL: One or more essential HTML elements are missing. OCR page will not function.");
-                if(ocrStatus) updateStatus("त्रुटि: पृष्ठ तत्व गायब हैं। कृपया रीफ़्रेश करें।", "error");
+                console.error("[OCR] CRITICAL: One or more essential HTML elements are missing.");
+                if(ocrStatus) updateStatus("त्रुटि: पृष्ठ तत्व गायब हैं।", "error");
                 if (startOcrBtn) startOcrBtn.disabled = true;
                 return; 
             }
-            
             if(startOcrBtn) startOcrBtn.disabled = true; 
-
             setupFileInputListeners();
             setupOcrButtonListener();
             setupDownloadButtonListeners();
-            
             initializeTesseract().catch(err => {
-                console.error("[OCR] Unhandled error during Tesseract initialization sequence from DOMContentLoaded:", err);
-                updateStatus("OCR प्रारंभ करने में गंभीर त्रुटि। कंसोल देखें।", "error");
+                console.error("[OCR] Unhandled error during Tesseract initialization from DOMContentLoaded:", err);
             });
         });
     </script>
