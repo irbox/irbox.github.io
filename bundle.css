@@ -1,55 +1,71 @@
-/* --- MINECRAFT INSPIRED THEME --- */
+/* --- START OF ORIGINAL RESET (Minor changes for font and box-sizing might be done below) --- */
+html,body,p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,iframe,hr,h1,h2,h3,h4,h5,h6{margin:0;padding:0}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}ul{list-style:none}button,input,select,textarea{margin:0}html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}img,embed,object,audio{height:auto;max-width:100%}iframe{border:0}table{border-collapse:collapse;border-spacing:0}td,th{padding:0;text-align:left}
+/* --- END OF ORIGINAL RESET --- */
 
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+/* --- AI APP AESTHETIC STYLES --- */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;600;700;800&display=swap');
 
 :root {
-  --mc-font-pixel: 'Press Start 2P', cursive;
+  --ai-font-primary: 'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --ai-font-secondary: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
-  /* Minecraft UI Palette */
-  --mc-color-bg-main: #3E3E3E; /* Dark Stone / Deepslate variant */
-  --mc-color-surface-elements: #C6C6C6; /* Light Stone (like buttons, dialogs) */
-  --mc-color-surface-darker: #5A5A5A; /* Darker Stone for some containers/borders */
-  --mc-color-border-outer: #282828; /* Very dark border */
-  --mc-color-border-inner-light: #FFFFFF; /* Inner highlight for 3D effect on light surfaces */
-  --mc-color-border-inner-medium: #8B8B8B; /* Inner shadow/medium highlight */
+  /* Core AI Palette - Dark with vibrant, gradient-ready accents */
+  --ai-color-bg-dark: #120F1A; /* Very dark purple-ish black */
+  --ai-color-bg-medium: #1A1625; /* Slightly lighter for base surfaces */
+  --ai-color-surface: #25213A; /* Cards, dialogs - a bit more purple */
+  --ai-color-surface-glass: rgba(37, 33, 58, 0.65); /* For glassmorphic elements */
 
-  --mc-color-text-on-dark: #E0E0E0;
-  --mc-color-text-on-light: #3A3A3A;
+  --ai-color-text-primary: #E0DFFF; /* Soft, slightly desaturated lavender white */
+  --ai-color-text-secondary: #A09BBD; /* For less prominent text */
+  --ai-color-text-interactive: #C5BFFF; /* For interactive text that isn't a primary accent */
 
-  --mc-color-accent-scanner: #55FF55; /* Emerald Green */
-  --mc-color-accent-action: #55CDFC; /* Diamond Blue */
-  --mc-color-accent-secondary: #FFAA00; /* Gold */
+  /* Accents - Chosen for gradient potential and "AI" feel */
+  --ai-color-accent-primary-start: #8A2BE2; /* Blue Violet */
+  --ai-color-accent-primary-end: #FF00FF;   /* Magenta */
+  --ai-color-accent-secondary-start: #00BFFF; /* Deep Sky Blue */
+  --ai-color-accent-secondary-end: #00F5FF;   /* Turquoise like */
 
-  --mc-pixel-size: 2px; /* Controls the "pixel" thickness of borders */
+  --ai-color-success: #00FF7F;      /* Spring Green - vibrant */
+  --ai-color-outline: #4A4466;      /* Muted outline for text fields */
 
-  /* Remove tap highlight globally */
+  --ai-color-scrim: rgba(5, 3, 10, 0.75); /* Very dark scrim for overlays */
+  --ai-color-shadow-soft: rgba(0, 0, 0, 0.25);
+  --ai-color-shadow-strong: rgba(0, 0, 0, 0.4);
+  --ai-color-glow-primary: color-mix(in srgb, var(--ai-color-accent-primary-end) 40%, transparent);
+  --ai-color-glow-secondary: color-mix(in srgb, var(--ai-color-accent-secondary-end) 40%, transparent);
+
+  /* Shapes - Keep the expressive rounding */
+  --ai-shape-corner-medium: 18px;
+  --ai-shape-corner-large: 28px;
+  --ai-shape-corner-xlarge: 36px;
+  --ai-shape-corner-dialog: 40px;
+  --ai-shape-corner-button: 30px;
+  --ai-shape-corner-full: 9999px;
+
+  --ai-transition-duration: 0.3s;
+  --ai-transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+  --ai-transition-springy: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Remove tap highlight color globally */
+* {
   -webkit-tap-highlight-color: transparent;
+  outline-color: var(--ai-color-accent-secondary-start); /* Consistent focus outline color */
 }
 
-/* Basic Reset (from original) - Keep this */
-html,body,p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,iframe,hr,h1,h2,h3,h4,h5,h6{margin:0;padding:0}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}ul{list-style:none}button,input,select,textarea{margin:0}html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}img,embed,object,audio{height:auto;max-width:100%}iframe{border:0}table{border-collapse:collapse;border-spacing:0}td,th{padding:0;text-align:left}
 
-/* General Styling */
 body {
-  font-family: var(--mc-font-pixel);
-  font-size: 10px; /* Pixel fonts work best at small base sizes */
-  line-height: 1.4;
-  color: var(--mc-color-text-on-dark);
-  background-color: var(--mc-color-bg-main);
-  image-rendering: pixelated; /* Crucial for sharp pixels */
-  -webkit-font-smoothing: none;
+  font-family: var(--ai-font-secondary);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--ai-color-text-primary);
+  /* Background gradient for AI feel */
+  background: linear-gradient(135deg, var(--ai-color-bg-dark) 0%, var(--ai-color-bg-medium) 100%);
+  -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
   overflow: hidden;
-}
-
-button, input, textarea, select {
-  font-family: var(--mc-font-pixel);
-  color: inherit;
-  image-rendering: pixelated;
-  -webkit-tap-highlight-color: transparent; /* Ensure on all interactive elements */
-}
-*:focus {
-  outline: none; /* Remove default browser outline, we'll add custom */
 }
 
 .app__layout {
@@ -59,212 +75,223 @@ button, input, textarea, select {
   overflow: hidden;
 }
 
-/* --- Common Button Style (Minecraft inventory slot style) --- */
-.mc-button {
-  background-color: var(--mc-color-surface-elements);
-  color: var(--mc-color-text-on-light);
-  border: none;
-  padding: calc(var(--mc-pixel-size) * 4) calc(var(--mc-pixel-size) * 5);
-  text-align: center;
-  text-decoration: none;
-  display: inline-flex; /* For aligning icon and text */
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
-  cursor: pointer;
-  image-rendering: pixelated;
-  -webkit-tap-highlight-color: transparent;
-  /* Minecraft button border effect */
-  box-shadow:
-    /* Outer dark border */
-    0 0 0 var(--mc-pixel-size) var(--mc-color-border-outer),
-    /* Inner lighter highlight */
-    inset 0 0 0 var(--mc-pixel-size) var(--mc-color-border-inner-light),
-    /* Inner darker shadow for depth */
-    inset calc(var(--mc-pixel-size) * 2) calc(var(--mc-pixel-size) * 2) 0 0 var(--mc-color-border-inner-medium),
-    inset calc(var(--mc-pixel-size) * -2) calc(var(--mc-pixel-size) * -2) 0 0 var(--mc-color-border-inner-medium);
-  transition: transform 0.05s linear, box-shadow 0.05s linear; /* Quick, not smooth */
-}
-.mc-button:active {
-  transform: translate(var(--mc-pixel-size), var(--mc-pixel-size)); /* "Pressed in" effect */
-  box-shadow:
-    0 0 0 var(--mc-pixel-size) var(--mc-color-border-outer),
-    inset 0 0 0 var(--mc-pixel-size) var(--mc-color-border-inner-medium); /* Darken inner highlight */
-}
-.mc-button:focus-visible { /* For keyboard navigation */
-    box-shadow:
-    0 0 0 var(--mc-pixel-size) var(--mc-color-border-outer),
-    0 0 0 calc(var(--mc-pixel-size) * 2) var(--mc-color-accent-action), /* Gold outline */
-    inset 0 0 0 var(--mc-pixel-size) var(--mc-color-border-inner-light),
-    inset calc(var(--mc-pixel-size) * 2) calc(var(--mc-pixel-size) * 2) 0 0 var(--mc-color-border-inner-medium),
-    inset calc(var(--mc-pixel-size) * -2) calc(var(--mc-pixel-size) * -2) 0 0 var(--mc-color-border-inner-medium);
-}
-
-
-/* --- Header --- */
+/* --- Header / App Bar --- */
 .app__header {
   width: 100%;
-  height: calc(var(--mc-pixel-size) * 20); /* ~40px */
-  background-color: var(--mc-color-surface-darker);
-  border-bottom: var(--mc-pixel-size) solid var(--mc-color-border-outer);
+  height: 72px;
+  color: var(--ai-color-text-primary);
+  background-color: transparent;
   display: flex;
   align-items: center;
   position: fixed;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 10;
-  padding: 0 calc(var(--mc-pixel-size) * 5);
+  padding: 0 20px;
   box-sizing: border-box;
 }
+
 .app__header-icon { /* "About" icon button */
-  /* Apply common button style */
-  composes: mc-button; /* This is a CSS Modules concept, manually apply styles */
-  background-color: var(--mc-color-surface-elements);
-  color: var(--mc-color-text-on-light);
-  border: none;
-  padding: 0; /* Control size with width/height */
-  width: calc(var(--mc-pixel-size) * 14); /* ~28px */
-  height: calc(var(--mc-pixel-size) * 14);
+  width: 52px; /* Slightly larger touch target */
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
   position: absolute;
-  right: calc(var(--mc-pixel-size) * 5);
+  right: 20px;
   top: 50%;
   transform: translateY(-50%);
-  /* Minecraft button border effect */
-  box-shadow:
-    0 0 0 var(--mc-pixel-size) var(--mc-color-border-outer),
-    inset 0 0 0 var(--mc-pixel-size) var(--mc-color-border-inner-light),
-    inset calc(var(--mc-pixel-size) * 1.5) calc(var(--mc-pixel-size) * 1.5) 0 0 var(--mc-color-border-inner-medium),
-    inset calc(var(--mc-pixel-size) * -1.5) calc(var(--mc-pixel-size) * -1.5) 0 0 var(--mc-color-border-inner-medium);
-}
-.app__header-icon:active {
-  transform: translateY(-50%) translate(var(--mc-pixel-size), var(--mc-pixel-size));
-  box-shadow:
-    0 0 0 var(--mc-pixel-size) var(--mc-color-border-outer),
-    inset 0 0 0 var(--mc-pixel-size) var(--mc-color-border-inner-medium);
+  border-radius: var(--ai-shape-corner-full);
+  transition: background-color var(--ai-transition-duration) var(--ai-transition-timing),
+              transform var(--ai-transition-duration) var(--ai-transition-springy);
 }
 .app__header-icon svg {
-  fill: var(--mc-color-text-on-light);
-  width: calc(var(--mc-pixel-size) * 8); /* ~16px */
-  height: calc(var(--mc-pixel-size) * 8);
+  fill: var(--ai-color-text-interactive);
+  width: 28px;
+  height: 28px;
+  transition: fill var(--ai-transition-duration) ease;
+}
+.app__header-icon:hover {
+  background-color: rgba(255,255,255,0.05);
+  transform: translateY(-50%) scale(1.15);
+}
+.app__header-icon:hover svg {
+    fill: var(--ai-color-text-primary);
+}
+.app__header-icon:active {
+  background-color: rgba(255,255,255,0.08);
+  transform: translateY(-50%) scale(1.05);
+  opacity: 1;
 }
 .app__header-title { display: none; }
 
-.app__layout-content { height: 100%; position: relative; }
+.app__layout-content {
+  height: 100%;
+  position: relative;
+}
 
-/* --- FAB (Select Image Button) --- */
-.app__select-photos {
-  /* Apply common button style */
-  composes: mc-button;
-  background-color: var(--mc-color-surface-elements);
-  color: var(--mc-color-text-on-light);
-  border: none;
-  padding: 0; /* Control size with width/height */
-  width: calc(var(--mc-pixel-size) * 22); /* ~44px */
-  height: calc(var(--mc-pixel-size) * 22);
+/* --- FAB (Floating Action Button) --- */
+.app__select-photos { /* "select image" FAB */
   position: fixed;
-  right: calc(var(--mc-pixel-size) * 8);
-  bottom: calc(var(--mc-pixel-size) * 8);
+  right: 28px;
+  bottom: 28px;
+  background: linear-gradient(135deg, var(--ai-color-accent-primary-start), var(--ai-color-accent-primary-end));
+  color: #FFF;
+  border-radius: var(--ai-shape-corner-button);
+  border: 0;
+  width: 68px;
+  height: 68px;
+  outline: 0;
+  box-shadow: 0 8px 20px var(--ai-color-shadow-strong), 0 0 30px var(--ai-color-glow-primary);
   z-index: 9999;
-  /* Minecraft button border effect - slightly larger */
-  box-shadow:
-    0 0 0 var(--mc-pixel-size) var(--mc-color-border-outer),
-    inset 0 0 0 var(--mc-pixel-size) var(--mc-color-border-inner-light),
-    inset calc(var(--mc-pixel-size) * 2) calc(var(--mc-pixel-size) * 2) 0 0 var(--mc-color-border-inner-medium),
-    inset calc(var(--mc-pixel-size) * -2) calc(var(--mc-pixel-size) * -2) 0 0 var(--mc-color-border-inner-medium);
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform var(--ai-transition-duration) var(--ai-transition-springy),
+              box-shadow var(--ai-transition-duration) var(--ai-transition-timing),
+              background-size var(--ai-transition-duration) ease;
+  background-size: 100% 100%; /* For gradient animation on hover */
+}
+.app__select-photos:hover {
+  transform: scale(1.12) translateY(-5px);
+  box-shadow: 0 12px 25px var(--ai-color-shadow-strong), 0 0 40px var(--ai-color-glow-primary);
+  background-size: 150% 150%; /* Subtle gradient shift */
 }
 .app__select-photos:active {
-  transform: translate(var(--mc-pixel-size), var(--mc-pixel-size));
-  box-shadow:
-    0 0 0 var(--mc-pixel-size) var(--mc-color-border-outer),
-    inset 0 0 0 var(--mc-pixel-size) var(--mc-color-border-inner-medium);
+  transform: scale(0.98);
+  box-shadow: 0 4px 10px var(--ai-color-shadow-soft), 0 0 15px var(--ai-color-glow-primary);
+  opacity: 1;
 }
 .app__select-photos svg {
-  fill: var(--mc-color-text-on-light);
-  width: calc(var(--mc-pixel-size) * 10); /* ~20px */
-  height: calc(var(--mc-pixel-size) * 10);
+  fill: #FFF;
+  width: 32px;
+  height: 32px;
 }
 .custom-btn, .custom-fab-icon { display: none; }
 
 /* --- Video Background --- */
 video {
-  transform: translateX(-50%) translateY(-50%); top: 50%; left: 50%;
-  min-width: 100%; min-height: 100%; width: auto; height: auto;
-  position: absolute; z-index: -1; object-fit: cover;
-  image-rendering: pixelated; /* If video itself should appear pixelated */
+  transform: translateX(-50%) translateY(-50%);
+  top: 50%; left: 50%;
+  min-width: 100%; min-height: 100%;
+  width: auto; height: auto;
+  position: absolute; z-index: -1;
+  object-fit: cover;
+  opacity: 0.8; /* Slightly dim video to let UI pop more */
 }
 
 .hide { display: none !important; }
 
 /* --- Scanner Viewfinder & Animation --- */
 .app__overlay {
-  position: fixed; top: 50%; left: 50%;
+  position: fixed;
+  top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  width: 220px; height: 220px; /* Pixel-friendly size */
+  width: 290px; height: 290px;
   z-index: 1; pointer-events: none;
+  display: flex; align-items: center; justify-content: center;
 }
-.app__overlay::before { /* The "cutout" overlay */
-  content: ''; position: absolute; inset: 0;
-  /* Dark, slightly transparent overlay around scanning area */
-  box-shadow: 0 0 0 9999px rgba(20, 20, 20, 0.85);
-  pointer-events: none;
-}
-.app__overlay::after { /* The frame border */
-  content: ''; position: absolute;
-  inset: calc(var(--mc-pixel-size) * -1); /* Border sits just outside cutout */
-  border: var(--mc-pixel-size) solid var(--mc-color-accent-scanner); /* Emerald border */
-  box-shadow: inset 0 0 0 var(--mc-pixel-size) var(--mc-color-border-outer); /* Inner dark line */
-  pointer-events: none;
-}
+
 .app__scanner-img, .app__overlay-left, .app__overlay-right { display: none !important; }
 
-.custom-scanner { /* Animated line */
-  width: calc(100% - var(--mc-pixel-size) * 6);
-  height: var(--mc-pixel-size); /* Thin pixel line */
-  background-color: var(--mc-color-accent-scanner);
+.app__overlay::before { /* The "cutout" overlay */
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--ai-shape-corner-xlarge);
+    box-shadow: 0 0 0 9999px var(--ai-color-scrim);
+    pointer-events: none;
+    z-index: 0;
+}
+.app__overlay::after { /* Futuristic glowing border for the scanner frame */
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: calc(var(--ai-shape-corner-xlarge) + 3px);
+    border: 2px solid transparent;
+    background: conic-gradient(from 90deg at 50% 50%, var(--ai-color-accent-secondary-start), var(--ai-color-accent-secondary-end), var(--ai-color-accent-secondary-start)) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+    animation: spinBorder 4s linear infinite;
+    box-shadow: 0 0 15px var(--ai-color-glow-secondary), 0 0 25px var(--ai-color-glow-secondary) inset;
+    pointer-events: none;
+    z-index: 1;
+}
+
+@keyframes spinBorder {
+  to { transform: rotate(360deg); }
+}
+
+.custom-scanner { /* The animated scanner line */
+  width: calc(100% - 40px);
+  height: 5px;
+  background: linear-gradient(90deg, transparent, var(--ai-color-success), transparent);
   position: absolute;
-  box-shadow: 0 0 calc(var(--mc-pixel-size) * 2) var(--mc-color-accent-scanner);
+  box-shadow: 0 0 15px var(--ai-color-success), 0 0 25px var(--ai-color-success);
   display: block !important;
   left: 50%; transform: translateX(-50%);
-  margin: 0; z-index: 2;
-  animation: scanner 1.8s infinite steps(12, end); /* Stepped animation */
-  image-rendering: pixelated;
+  margin: 0;
+  border-radius: var(--ai-shape-corner-full);
+  z-index: 2;
+  animation: scanner 2.5s infinite cubic-bezier(0.65, 0, 0.35, 1); /* Smoother, slightly faster */
 }
+
 @keyframes scanner {
-  0% { bottom: 90%; } 50% { bottom: 10%; } 100% { bottom: 90%; }
+  0% { bottom: 90%; opacity: 0.6; transform: translateX(-50%) scaleX(0.8); }
+  50% { bottom: 10%; opacity: 1; transform: translateX(-50%) scaleX(1); }
+  100% { bottom: 90%; opacity: 0.6; transform: translateX(-50%) scaleX(0.8); }
 }
-@-webkit-keyframes scanner { /* Safari */
-  0% { bottom: 90%; } 50% { bottom: 10%; } 100% { bottom: 90%; }
+@-webkit-keyframes scanner { /* Duplicate for webkit */
+  0% { bottom: 90%; opacity: 0.6; transform: translateX(-50%) scaleX(0.8); }
+  50% { bottom: 10%; opacity: 1; transform: translateX(-50%) scaleX(1); }
+  100% { bottom: 90%; opacity: 0.6; transform: translateX(-50%) scaleX(0.8); }
 }
+
 
 /* --- Snackbar / Toast --- */
 .app__snackbar {
-  position: fixed; bottom: calc(var(--mc-pixel-size) * 6); left: 50%;
+  position: fixed;
+  bottom: 30px; left: 50%;
   transform: translateX(-50%);
-  width: auto; max-width: calc(100% - var(--mc-pixel-size) * 10);
+  width: calc(100% - 40px); max-width: 400px;
   pointer-events: none; z-index: 10000;
+  display: flex; flex-direction: column-reverse; align-items: center;
 }
+
 .app__snackbar-msg {
-  background-color: var(--mc-color-surface-darker);
-  color: var(--mc-color-text-on-dark);
-  border: var(--mc-pixel-size) solid var(--mc-color-border-outer);
-  box-shadow: inset 0 0 0 var(--mc-pixel-size) var(--mc-color-border-inner-medium);
-  padding: calc(var(--mc-pixel-size) * 3) calc(var(--mc-pixel-size) * 5);
-  text-align: center; font-size: 10px;
-  margin-bottom: calc(var(--mc-pixel-size) * 3);
-  pointer-events: all; image-rendering: pixelated;
-  opacity: 0; transform: translateY(calc(var(--mc-pixel-size) * 8));
-  transition: opacity 0.1s linear, transform 0.1s linear;
+  width: auto; min-width: 220px; max-width: 100%;
+  min-height: 58px;
+  background-color: var(--ai-color-surface-glass); /* Glassmorphic snackbar */
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--ai-color-text-primary);
+  border-radius: var(--ai-shape-corner-large);
+  box-shadow: 0 6px 18px var(--ai-color-shadow-strong);
+  display: flex; align-items: center; justify-content: center;
+  text-align: center;
+  font-size: 15px; font-weight: 500;
+  padding: 14px 28px;
+  transition: opacity var(--ai-transition-duration) var(--ai-transition-timing),
+              transform var(--ai-transition-duration) var(--ai-transition-springy);
+  margin-bottom: 12px; pointer-events: all;
+  opacity: 0; transform: translateY(25px) scale(0.85);
 }
 .app__snackbar:not(.app__snackbar--hide) .app__snackbar-msg {
-  opacity: 1; transform: translateY(0);
+    opacity: 1; transform: translateY(0px) scale(1);
 }
+
 
 /* --- Dialogs --- */
 .app__dialog-overlay, .app__infodialog-overlay {
   position: fixed; inset: 0;
-  background: rgba(0, 0, 0, 0.7); /* Simple dark scrim */
+  background: var(--ai-color-scrim);
   z-index: 1000; opacity: 0; pointer-events: none;
-  transition: opacity 0.1s linear;
+  transition: opacity var(--ai-transition-duration) var(--ai-transition-timing);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); /* Stronger blur */
 }
 .app__dialog-overlay:not(.app__dialog--hide),
 .app__infodialog-overlay:not(.app__infodialog--hide) {
@@ -273,124 +300,180 @@ video {
 
 .app__infodialog, .app__dialog {
   z-index: 1001;
-  background-color: var(--mc-color-surface-elements);
-  color: var(--mc-color-text-on-light);
-  width: calc(100% - var(--mc-pixel-size) * 12);
-  max-width: 300px; /* Smaller max-width for dialogs */
-  height: auto;
-  border: none; /* Custom border with box-shadow */
-  box-shadow: /* Minecraft container/inventory style border */
-    0 0 0 var(--mc-pixel-size) var(--mc-color-border-outer), /* Outer dark */
-    inset 0 0 0 var(--mc-pixel-size) var(--mc-color-border-inner-light), /* Inner light */
-    inset calc(var(--mc-pixel-size) * 2) calc(var(--mc-pixel-size) * 2) 0 0 var(--mc-color-border-inner-medium), /* Inner shadow top-left */
-    inset calc(var(--mc-pixel-size) * -2) calc(var(--mc-pixel-size) * -2) 0 0 var(--mc-color-border-inner-medium); /* Inner shadow bottom-right */
+  background-color: var(--ai-color-surface-glass); /* Glassmorphic dialog */
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: var(--ai-color-text-primary);
+  width: calc(100% - 32px); max-width: 380px;
+  min-height: 180px; height: auto;
+  border-radius: var(--ai-shape-corner-dialog);
   display: flex; flex-direction: column;
   position: fixed; left: 50%; top: 50%;
-  transform: translate(-50%, -50%) scale(0.95);
-  margin: 0; opacity: 0; pointer-events: none;
-  transition: opacity 0.1s linear, transform 0.1s linear;
-  image-rendering: pixelated;
+  transform: translate(-50%, -45%) scale(0.85);
+  margin: 0;
+  box-shadow: 0 10px 30px var(--ai-color-shadow-strong);
+  opacity: 0; pointer-events: none;
+  transition: opacity var(--ai-transition-duration) var(--ai-transition-timing),
+              transform var(--ai-transition-duration) var(--ai-transition-springy);
+  overflow: hidden;
 }
+
 .app__infodialog:not(.app__infodialog--hide),
 .app__dialog:not(.app__dialog--hide) {
-  opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1);
+  opacity: 1; pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
 }
 
 .app__dialog-content, .app__infodialog-content {
-  width: 100%;
-  padding: calc(var(--mc-pixel-size) * 6);
+  width: 100%; padding: 32px;
   box-sizing: border-box; flex-grow: 1;
 }
+
 .app__infodialog-subcontent {
-  margin-top: calc(var(--mc-pixel-size) * 4); font-size: 10px;
-  color: var(--mc-color-text-on-light); line-height: 1.5;
+  margin-top: 18px; font-size: 15px;
+  color: var(--ai-color-text-secondary);
+  line-height: 1.7;
 }
 .app__infodialog-subcontent a {
-  color: var(--mc-color-accent-action); text-decoration: none;
+  background: linear-gradient(90deg, var(--ai-color-accent-secondary-start), var(--ai-color-accent-secondary-end));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-fill-color: transparent;
+  text-decoration: none; font-weight: 700;
+  transition: filter var(--ai-transition-duration) ease;
 }
-.app__infodialog-subcontent a:hover { color: var(--mc-color-accent-scanner); }
-.app__infodialog-subcontent p:not(:first-child) { margin-top: calc(var(--mc-pixel-size) * 3); }
+.app__infodialog-subcontent a:hover {
+  filter: brightness(1.3);
+}
+.app__infodialog-subcontent p:not(:first-child) { margin-top: 14px; }
 
 .app__dialog-content h1, .app__infodialog h1 {
-  margin-top: 0; margin-bottom: calc(var(--mc-pixel-size) * 5);
-  font-size: 12px; line-height: 1.2;
-  color: var(--mc-color-text-on-light); text-align: center;
+  margin-top: 0; margin-bottom: 24px;
+  font-family: var(--ai-font-primary);
+  font-weight: 800; font-size: 28px;
+  line-height: 1.3;
+  color: var(--ai-color-text-primary);
+  text-align: center;
+  /* text-shadow: 0 0 10px var(--ai-color-glow-primary); */ /* Optional title glow */
 }
 
 /* Dialog Input Field */
 .app__dialog input[type="text"] {
-  width: 100%;
-  height: calc(var(--mc-pixel-size) * 15);
-  border: var(--mc-pixel-size) solid var(--mc-color-border-outer);
-  outline: 0; font-size: 10px;
-  color: var(--mc-color-text-on-dark); /* Text on dark input background */
-  padding: 0 calc(var(--mc-pixel-size) * 3);
+  width: 100%; height: 60px;
+  border: 2px solid var(--ai-color-outline);
+  border-radius: var(--ai-shape-corner-medium);
+  outline: 0;
+  font-family: var(--ai-font-secondary);
+  font-size: 17px; color: var(--ai-color-text-primary);
+  font-weight: 500; padding: 0 22px;
   box-sizing: border-box;
-  background-color: #303030; /* Dark input field background */
-  box-shadow: inset 0 calc(var(--mc-pixel-size) * 0.5) 0 0 var(--mc-color-border-inner-medium); /* Inner top shadow */
-  image-rendering: pixelated;
-  -webkit-tap-highlight-color: transparent;
+  background-color: var(--ai-color-bg-medium); /* Darker input bg */
+  transition: border-color var(--ai-transition-duration) var(--ai-transition-timing),
+              box-shadow var(--ai-transition-duration) var(--ai-transition-timing),
+              background-color var(--ai-transition-duration) var(--ai-transition-timing);
 }
-.app__dialog input[type="text"]::placeholder { color: #787878; opacity: 1; }
+.app__dialog input[type="text"]::placeholder {
+    color: var(--ai-color-text-secondary); opacity: 0.7;
+}
 .app__dialog input[type="text"]:focus {
-  border-color: var(--mc-color-accent-action);
-  box-shadow: inset 0 calc(var(--mc-pixel-size) * 0.5) 0 0 var(--mc-color-border-inner-medium),
-              0 0 0 var(--mc-pixel-size) var(--mc-color-accent-action); /* Outer gold glow */
+  border-color: var(--ai-color-accent-secondary-start);
+  background-color: var(--ai-color-surface);
+  box-shadow: 0 0 0 3px var(--ai-color-glow-secondary), 0 0 15px var(--ai-color-glow-secondary) inset;
 }
 
 /* Dialog Actions (Buttons) */
 .app__dialog-actions, .app__infodialog-actions {
-  display: flex; justify-content: center;
-  gap: calc(var(--mc-pixel-size) * 3);
-  padding: 0 calc(var(--mc-pixel-size) * 6) calc(var(--mc-pixel-size) * 6);
+  display: flex; justify-content: center; gap: 16px;
+  padding: 0px 32px 32px 32px;
   width: 100%; box-sizing: border-box;
-  margin-top: calc(var(--mc-pixel-size) * 6);
+  margin-top: 28px;
 }
+
 .app__dialog-actions button, .app__infodialog-actions button {
-  /* Apply common button style */
-  composes: mc-button;
-  flex-grow: 1;
-  height: calc(var(--mc-pixel-size) * 16);
-  padding: 0 calc(var(--mc-pixel-size) * 3);
-  font-size: 10px;
-  text-transform: none; /* Or uppercase if preferred */
+  flex-grow: 1; max-width: 160px;
+  border: 0; height: 56px;
+  padding: 0 22px;
+  font-family: var(--ai-font-primary);
+  font-size: 16px; font-weight: 700;
+  outline: 0; cursor: pointer;
+  border-radius: var(--ai-shape-corner-button);
+  text-transform: capitalize;
+  transition: transform var(--ai-transition-duration) var(--ai-transition-springy),
+              background var(--ai-transition-duration) var(--ai-transition-timing), /* For gradient transition */
+              box-shadow var(--ai-transition-duration) var(--ai-transition-timing);
+  background-size: 200% 200%; /* For gradient hover effect */
 }
-/* Specific button styling if Open is different */
-.app__dialog-open {
-  /* background-color: var(--mc-color-accent-action); */
-  /* color: var(--mc-color-text-on-dark); */
+.app__dialog-actions button:hover, .app__infodialog-actions button:hover {
+    transform: scale(1.06) translateY(-2px);
+    box-shadow: 0 6px 12px var(--ai-color-shadow-soft);
+    background-position: right center; /* Shift gradient */
+}
+.app__dialog-actions button:active, .app__infodialog-actions button:active {
+    transform: scale(0.97); box-shadow: none;
+}
+
+.app__dialog-open { /* Primary action button */
+  background: linear-gradient(135deg, var(--ai-color-accent-primary-start), var(--ai-color-accent-primary-end));
+  color: #FFF;
+  box-shadow: 0 0 20px var(--ai-color-glow-primary);
+}
+
+.app__dialog-close, .app__infodialog-close { /* Secondary action */
+  background: var(--ai-color-surface);
+  color: var(--ai-color-text-interactive);
+  border: 1px solid var(--ai-color-outline);
 }
 .app__infodialog-close { max-width: 100%; }
+.app__dialog-close:hover, .app__infodialog-close:hover {
+  border-color: var(--ai-color-accent-secondary-start);
+  color: var(--ai-color-text-primary);
+}
 
 
 /* --- Helper texts and other small UI elements --- */
 .app__help-text {
-  color: var(--mc-color-text-on-dark);
+  color: var(--ai-color-text-secondary);
   position: absolute;
-  bottom: calc(var(--mc-pixel-size) * 8 + 44px + var(--mc-pixel-size) * 4); /* Above FAB */
-  font-size: 9px; /* Very small for pixel aesthetic */
+  bottom: calc(28px + 68px + 24px); /* Above FAB */
+  font-size: 15px; font-weight: 500;
   left: 50%; transform: translateX(-50%);
   text-align: center; user-select: none;
-  padding: calc(var(--mc-pixel-size) * 2) calc(var(--mc-pixel-size) * 4);
-  background-color: var(--mc-color-surface-darker);
-  border: var(--mc-pixel-size) solid var(--mc-color-border-outer);
-  box-shadow: inset 0 0 0 var(--mc-pixel-size) var(--mc-color-border-inner-medium);
+  padding: 10px 20px;
+  background-color: var(--ai-color-surface-glass);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: var(--ai-shape-corner-medium);
   z-index: 5; display: block;
-  max-width: 90%; line-height: 1.3;
+  box-shadow: 0 3px 8px var(--ai-color-shadow-soft);
 }
 
 input[type='file'] { display: none; }
 
 .app__version {
-  position: absolute; bottom: calc(var(--mc-pixel-size) * 2); left: 50%;
-  transform: translateX(-50%); font-size: 8px;
-  color: #7A7A7A; opacity: 0.8;
+  position: absolute; bottom: 12px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px; color: var(--ai-color-text-secondary);
+  opacity: 0.5;
 }
 
-/* --- Media Queries (Optional, pixel UIs often scale well) --- */
-@media screen and (max-width: 360px) { /* For very small screens */
-  .app__overlay { width: 180px; height: 180px; }
-  .app__help-text { font-size: 8px; padding: var(--mc-pixel-size) calc(var(--mc-pixel-size) * 3); }
-  .app__dialog-actions { flex-direction: column; }
-  .app__dialog-actions button { width: 100%; }
+/* --- Media Queries --- */
+@media screen and (max-width: 480px) {
+  .app__header { height: 68px; padding: 0 16px; }
+  .app__header-icon { right: 16px; }
+  .app__select-photos { right: 20px; bottom: 20px; width: 64px; height: 64px; }
+  
+  .app__overlay { width: 260px; height: 260px; }
+
+  .app__infodialog, .app__dialog {
+    width: calc(100% - 24px);
+    border-radius: var(--ai-shape-corner-xlarge);
+  }
+  .app__dialog-content, .app__infodialog-content { padding: 28px; }
+  .app__dialog-content h1, .app__infodialog h1 { font-size: 24px; }
+  .app__dialog-actions, .app__infodialog-actions { padding: 0px 28px 28px 28px; flex-direction: column; gap: 12px;}
+  .app__dialog-actions button, .app__infodialog-actions button { max-width: 100%; }
+
+  .app__snackbar { bottom: 20px; width: calc(100% - 24px); }
+  .app__help-text { bottom: calc(20px + 64px + 20px); font-size: 14px; }
 }
