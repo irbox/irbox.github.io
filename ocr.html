@@ -3,39 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hindi OCR Extractor</title>
+    <title>Hindi OCR - Extract Text from PDF & Images</title>
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Tesseract.js (load from CDN) -->
-    <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
-    <!-- PDF.js (load from CDN - ensure paths are correct if you host them) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <script>
-        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
-    </script>
-
     <style>
-        /* Reuse the same styles from your main app, with potential minor tweaks for this page */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        /* Re-using the established AI app style variables and base styles */
         :root {
-            --primary-color: #4A90E2;
+            --primary-color: #4A90E2; 
             --primary-color-rgb: 74, 144, 226;
             --secondary-color: #2868C7;
-            --background-color: #0D1117;
-            --surface-color: #161B22;
-            --text-color: #C9D1D9;
+            --background-color: #0D1117; 
+            --surface-color: #161B22;   
+            --text-color: #C9D1D9;      
             --text-muted-color: #8B949E;
-            --success-color: #238636;
+            --success-color: #238636;   
             --success-hover-color: #2EA043;
             --success-color-rgb: 35, 134, 54;
-            --error-color: #DA3633;
-            --error-color-rgb: 218, 54, 51;
-            --border-color: #30363D;
-            --input-background: #22272E;
+            --error-color: #DA3633;     
+            --border-color: #30363D;   
+            --input-background: #22272E; 
             --input-focus-border: var(--primary-color);
             --glow-color: rgba(var(--primary-color-rgb), 0.35);
-            --success-glow-color: rgba(var(--success-color-rgb), 0.35);
 
-            --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
             --font-display: var(--font-sans);
             --font-body: var(--font-sans);
 
@@ -43,30 +34,25 @@
             --border-radius-md: 10px;
             --border-radius-lg: 16px;
 
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.25), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.25);
-
+            
             --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            --gradient-success: linear-gradient(135deg, var(--success-hover-color) 0%, var(--success-color) 100%);
             --gradient-border-animated: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--primary-color));
         }
-
+        
         @keyframes backgroundPan {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-        
         @keyframes borderShine {
             0% { background-position: -100% 0; }
             100% { background-position: 100% 0; }
         }
 
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
-
         body {
             font-family: var(--font-body);
             line-height: 1.65;
@@ -79,35 +65,13 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            padding: 30px 15px; 
+            padding: 30px 15px;
             overflow-x: hidden;
         }
 
-        .app-header {
-            width: 100%;
-            max-width: 800px;
-            margin-bottom: 20px;
-            text-align: left;
-        }
-
-        .app-header a {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-size: 0.9em;
-            font-weight: 500;
-            transition: color 0.2s ease;
-        }
-        .app-header a:hover {
-            color: var(--secondary-color);
-        }
-        .app-header a .fas {
-            margin-right: 6px;
-        }
-
-
         .container {
             width: 100%;
-            max-width: 800px;
+            max-width: 850px; /* Wider for text area */
             background-color: var(--surface-color);
             background-image: linear-gradient(180deg, color-mix(in srgb, var(--surface-color) 105%, black) 0%, var(--surface-color) 100%);
             padding: 30px; 
@@ -115,23 +79,20 @@
             box-shadow: 0 0 0 1px var(--border-color), var(--shadow-lg);
             margin-bottom: 30px;
         }
-        
-        .main-title { /* For this page, used as a section title */
+
+        h1.main-title {
             font-family: var(--font-display);
-            font-size: 1.8rem; 
+            font-size: 2rem; 
             font-weight: 700;
             text-align: center;
-            color: var(--primary-color);
             margin-bottom: 8px;
-            letter-spacing: 0.5px;
             background: linear-gradient(45deg, var(--primary-color), color-mix(in srgb, var(--primary-color) 60%, #fff));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             text-fill-color: transparent;
-            padding-bottom: 5px;
         }
-        .sub-title {
+        p.sub-title {
             text-align: center;
             color: var(--text-muted-color);
             margin-bottom: 30px; 
@@ -139,13 +100,13 @@
             font-weight: 300;
         }
 
-        h2 { /* Main section title for OCR */
+        h2 {
             font-family: var(--font-display);
             font-weight: 600; 
             color: var(--text-color);
             margin-bottom: 25px;
             padding-bottom: 15px;
-            font-size: 1.6em;
+            font-size: 1.5em;
             border-bottom: 2px solid transparent;
             border-image-slice: 1;
             border-image-source: linear-gradient(to right, var(--primary-color), color-mix(in srgb, var(--primary-color) 30%, var(--border-color)));
@@ -153,280 +114,280 @@
             align-items: center;
             gap: 12px;
         }
-        h2 .fas { 
-            color: var(--primary-color);
-            font-size: 1.2em; 
-        }
-
-        .ocr-section { margin-bottom: 30px; }
-        
-        button.action-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            width: 100%;
-            padding: 14px 20px;
-            background-image: var(--gradient-primary);
-            background-size: 100% auto;
-            color: white;
-            border: none; 
-            border-radius: var(--border-radius-md);
-            cursor: pointer;
-            font-size: 1.05em; 
-            font-family: var(--font-body);
-            font-weight: 600;
-            text-shadow: 0 1px 1px rgba(0,0,0,0.2);
-            transition: all 0.25s ease-out;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.05) inset;
-        }
-        button.action-button:hover:not(:disabled) {
-            filter: brightness(1.1);
-            transform: translateY(-2px) scale(1.01);
-            box-shadow: 0 6px 12px rgba(var(--primary-color-rgb), 0.2), 0 0 15px var(--glow-color), 0 0 0 1px rgba(255,255,255,0.1) inset;
-        }
-        button.action-button:disabled {
-            background-image: none;
-            background-color: color-mix(in srgb, var(--surface-color) 70%, var(--text-muted-color));
-            color: var(--text-muted-color);
-            cursor: not-allowed;
-            transform: translateY(0) scale(1);
-            box-shadow: none; text-shadow: none;
-        }
-        button.action-button .fa-spin { display: none; }
-        button.action-button:disabled .fa-spin { display: inline-block; margin-left: 8px; }
+        h2 .fas { color: var(--primary-color); font-size: 1.1em; }
 
         .file-input-wrapper {
-            position: relative; width: 100%; padding: 35px;
+            position: relative; width: 100%; padding: 30px;
             border: 2px dashed var(--border-color); border-radius: var(--border-radius-md);
             text-align: center; cursor: pointer; margin-bottom: 25px;
             background-color: var(--input-background); 
-            transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
             overflow: hidden;
         }
         .file-input-wrapper::before {
             content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            border-radius: inherit; padding: 2px;
+            border-radius: inherit; padding: 2px; 
             background: var(--gradient-border-animated); background-size: 200% auto;
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: destination-out; mask-composite: exclude;
-            opacity: 0; transition: opacity 0.3s ease; animation: borderShine 3s linear infinite paused;
+            opacity: 0; transition: opacity 0.3s ease;
+            animation: borderShine 3s linear infinite paused;
         }
         .file-input-wrapper:hover { border-color: transparent; }
-        .file-input-wrapper:hover::before { opacity: 1; animation-play-state: running; }
+        .file-input-wrapper:hover::before, .file-input-wrapper.is-dragging::before { opacity: 1; animation-play-state: running; }
+        .file-input-wrapper.is-dragging { border-color: transparent; }
+
         .file-input-wrapper input[type="file"] {
             position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer;
         }
         .file-input-text { 
-            color: var(--text-muted-color); font-size: 1.1em; display: flex;
-            align-items: center; justify-content: center; gap: 12px; position: relative; z-index: 1;
+            color: var(--text-muted-color); font-size: 1.1em; 
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            position: relative; z-index: 1;
         }
-        .file-input-text .fas { color: var(--primary-color); font-size: 1.4em; transition: transform 0.3s ease; }
-        .file-input-wrapper:hover .file-input-text .fas { transform: scale(1.1) translateY(-2px); }
+        .file-input-text .fas { color: var(--primary-color); font-size: 1.3em; }
         .selected-file-display {
             display: block; font-size: 0.95em; color: var(--primary-color);
-            margin-top: 10px; font-weight: 500; word-break: break-all; position: relative; z-index: 1;
+            margin-top: 10px; font-weight: 500; word-break: break-all;
+            position: relative; z-index: 1;
         }
 
-        .status {
-            margin-top: 20px; font-weight: 500; color: var(--text-muted-color);
-            font-size: 0.9em; min-height: 1.5em; text-align: center;
-            transition: color 0.3s ease, text-shadow 0.3s ease;
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
         }
-        .status.success { color: var(--success-color); text-shadow: 0 0 8px var(--success-glow-color); }
-        .status.error { color: var(--error-color); text-shadow: 0 0 8px rgba(var(--error-color-rgb), 0.4); }
-        .status.processing { color: var(--primary-color); text-shadow: 0 0 8px var(--glow-color); }
-        .status .fas.fa-spinner { margin-right: 6px; }
+        @media (min-width: 600px) {
+            .controls-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+        }
+
+        label {
+            display: block; margin-bottom: 8px; font-weight: 500; 
+            font-size: 0.9em; color: var(--text-muted-color);
+        }
+        select {
+            width: 100%; padding: 12px 16px;
+            border: 1px solid var(--border-color); border-radius: var(--border-radius-md);
+            background-color: var(--input-background); color: var(--text-color);
+            font-family: var(--font-body); font-size: 1em;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%238B949E'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd' /%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.7rem center;
+            background-size: 1.5em 1.5em;
+        }
+        select:focus {
+            outline: none; border-color: var(--input-focus-border);
+            box-shadow: 0 0 0 3px var(--glow-color);
+        }
         
-        .ocr-output-area {
-            margin-top: 25px;
-            width: 100%;
+        button.action-button {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            width: 100%; padding: 14px 20px; background-image: var(--gradient-primary);
+            color: white; border: none; border-radius: var(--border-radius-md); cursor: pointer;
+            font-size: 1.05em; font-family: var(--font-body); font-weight: 600;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+            transition: all 0.25s ease-out;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
-        .ocr-output-area textarea {
-            width: 100%;
-            min-height: 200px;
-            padding: 15px;
+        button.action-button:hover:not(:disabled) {
+            filter: brightness(1.1); transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 6px 12px rgba(var(--primary-color-rgb), 0.2), 0 0 15px var(--glow-color);
+        }
+        button.action-button:disabled {
+            background-image: none;
+            background-color: color-mix(in srgb, var(--surface-color) 70%, var(--text-muted-color));
+            color: var(--text-muted-color); cursor: not-allowed;
+        }
+        button.action-button .fa-spin { display: none; }
+        button.action-button:disabled .fa-spin { display: inline-block; margin-left: 8px; }
+        
+        .progress-area { margin-top: 15px; }
+        .status-message {
+            font-size: 0.9em; color: var(--text-muted-color); text-align: center;
+            min-height: 1.5em; margin-bottom: 8px;
+        }
+        .progress-bar-container {
+            width: 100%; background-color: var(--input-background);
+            border-radius: var(--border-radius-sm); overflow: hidden; height: 10px;
             border: 1px solid var(--border-color);
-            border-radius: var(--border-radius-md);
-            background-color: var(--input-background);
-            color: var(--text-color);
-            font-family: var(--font-sans); /* Or a monospace font if preferred for text */
-            font-size: 0.95em;
-            resize: vertical;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
         }
-        .ocr-output-area textarea:focus {
-            outline: none;
-            border-color: var(--input-focus-border);
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 0 0 3px var(--glow-color);
+        .progress-bar {
+            width: 0%; height: 100%; background-image: var(--gradient-primary);
+            transition: width 0.3s ease-out;
+            border-radius: var(--border-radius-sm);
         }
 
-        .download-buttons {
-            margin-top: 20px;
-            display: flex;
-            gap: 15px;
-            justify-content: center;
+        .output-section { margin-top: 30px; }
+        textarea#ocrOutput {
+            width: 100%; min-height: 250px; padding: 15px;
+            border: 1px solid var(--border-color); border-radius: var(--border-radius-md);
+            background-color: var(--input-background); color: var(--text-color);
+            font-family: 'Menlo', 'Consolas', monospace; font-size: 0.95em;
+            line-height: 1.6; resize: vertical;
+            margin-bottom: 20px;
         }
-        .download-buttons button {
-            width: auto; /* Override full width from .action-button if class is reused */
-            padding: 10px 20px;
-            font-size: 0.95em;
-            background-image: var(--gradient-success); /* Success gradient for download */
+        textarea#ocrOutput:focus {
+            outline: none; border-color: var(--input-focus-border);
+            box-shadow: 0 0 0 3px var(--glow-color);
         }
-        .download-buttons button:hover:not(:disabled){
-            filter: brightness(1.1);
-            transform: translateY(-2px) scale(1.01);
-            box-shadow: 0 6px 12px rgba(var(--success-color-rgb), 0.2), 0 0 15px var(--success-glow-color);
-        }
+        .download-buttons { display: flex; gap: 15px; justify-content: flex-end; }
+        .download-buttons button { width: auto; padding: 10px 20px; }
 
-
-        .info-message { /* Similar to warning-message */
+        .info-section {
+            margin-top: 30px; padding: 20px;
             background-color: rgba(var(--primary-color-rgb), 0.05);
-            color: var(--primary-color);
-            padding: 15px 20px;
-            border: 1px solid rgba(var(--primary-color-rgb), 0.3);
-            border-left: 5px solid var(--primary-color);
+            border: 1px solid rgba(var(--primary-color-rgb), 0.2);
+            border-left: 4px solid var(--primary-color);
             border-radius: var(--border-radius-md);
-            margin: 30px auto 0 auto;
-            font-size: 0.9em;
-            max-width: 100%;
-            display: flex; align-items: flex-start; gap: 12px;
+            font-size: 0.85em;
         }
-        .info-message .fas { font-size: 1.2em; margin-top: 3px; }
-        .info-message strong { font-weight: 600; }
+        .info-section h3 { 
+            color: var(--primary-color); margin-top: 0; margin-bottom: 10px; 
+            display: flex; align-items: center; gap: 8px;
+        }
+        .info-section ul { list-style-type: none; padding-left: 5px; }
+        .info-section li { margin-bottom: 8px; padding-left: 20px; position: relative; }
+        .info-section li::before {
+            content: "\f105"; /* FontAwesome Angle Right */
+            font-family: "Font Awesome 6 Free"; font-weight: 900;
+            color: var(--primary-color); position: absolute; left: 0; top: 1px;
+        }
 
         footer {
             text-align: center; margin-top: 40px; padding-bottom: 20px;
-            color: var(--text-muted-color); font-size: 0.85em; font-weight: 300;
-        }
-
-        /* Preview canvas (hidden) */
-        #pdfPreviewCanvas { display: none; }
-
-        @media (max-width: 768px) {
-            body { padding: 20px 10px; }
-            .container { padding: 25px; }
-            h2 { font-size: 1.4em; }
-            .file-input-wrapper { padding: 25px; }
-            .download-buttons { flex-direction: column; }
-            .download-buttons button { width: 100%; }
+            color: var(--text-muted-color); font-size: 0.8em;
         }
     </style>
 </head>
 <body>
-    <div class="app-header">
-        <a href="/"><i class="fas fa-arrow-left"></i> Back to Converters</a>
-    </div>
-
     <div class="container">
-        <h1 class="main-title">Hindi OCR</h1>
-        <p class="sub-title">Extract Text from PDFs & Images (हिंदी)</p>
+        <h1 class="main-title">देवनागरी OCR <i class="fas fa-eye"></i></h1>
+        <p class="sub-title">PDF और छवियों से हिंदी पाठ निकालें (क्लाइंट-साइड)</p>
 
-        <div class="ocr-section">
-            <h2><i class="fas fa-language"></i> Text Extractor</h2>
-            
-            <div class="file-input-wrapper" id="ocrFileWrapper">
-                <span class="file-input-text"><i class="fas fa-file-import"></i> Click or Drag PDF/Image Here</span>
-                <input type="file" id="ocrFile" accept=".pdf,.png,.jpg,.jpeg,.bmp,.tiff">
-                <span class="selected-file-display" id="ocrFileName"></span>
+        <h2><i class="fas fa-file-import"></i> अपनी फ़ाइल अपलोड करें</h2>
+        <div class="file-input-wrapper" id="ocrFileWrapper">
+            <span class="file-input-text"><i class="fas fa-upload"></i> PDF या छवि (JPG, PNG, BMP) यहाँ खींचें या क्लिक करें</span>
+            <input type="file" id="ocrFile" accept=".pdf,image/jpeg,image/png,image/bmp,image/webp">
+            <span class="selected-file-display" id="ocrFileName">कोई फ़ाइल चयनित नहीं</span>
+        </div>
+
+        <div class="controls-grid">
+            <div>
+                <label for="ocrLanguage">OCR भाषा:</label>
+                <select id="ocrLanguage" disabled> <!-- Disabled as it's primarily for Hindi -->
+                    <option value="hin" selected>हिन्दी (Hindi)</option>
+                    <!-- Other languages could be added if Tesseract.js setup allows -->
+                </select>
             </div>
-            
-            <button id="startOcrBtn" class="action-button" disabled>
-                <i class="fas fa-microchip"></i> Start Hindi OCR
+            <button id="processOcrBtn" class="action-button" disabled>
+                <i class="fas fa-cogs"></i> पाठ निकालें
                 <i class="fas fa-spinner fa-spin"></i>
             </button>
-            <div id="ocrStatus" class="status">Initializing Tesseract.js... Please wait.</div>
+        </div>
+        
+        <div class="progress-area" style="display: none;">
+            <div id="ocrStatus" class="status-message">प्रारंभ हो रहा है...</div>
+            <div class="progress-bar-container">
+                <div id="ocrProgressBar" class="progress-bar"></div>
+            </div>
+        </div>
 
-            <div class="ocr-output-area" id="ocrOutputWrapper" style="display:none;">
-                <textarea id="ocrResultText" rows="10" readonly placeholder="Extracted Hindi text will appear here..."></textarea>
-                <div class="download-buttons">
-                    <button id="downloadTxtBtn" class="action-button"><i class="fas fa-file-alt"></i> Download .txt</button>
-                    <button id="downloadMdBtn" class="action-button"><i class="fab fa-markdown"></i> Download .md</button>
-                </div>
+        <div class="output-section" style="display: none;">
+            <h2><i class="fas fa-paste"></i> निकाला गया पाठ</h2>
+            <textarea id="ocrOutput" rows="15" placeholder="निकाला गया हिंदी पाठ यहाँ दिखाई देगा..."></textarea>
+            <div class="download-buttons">
+                <button id="downloadTxtBtn" class="action-button" style="background-image: linear-gradient(135deg, var(--success-color) 0%, var(--success-hover-color) 100%);">
+                    <i class="fas fa-file-alt"></i> .txt डाउनलोड करें
+                </button>
+                <button id="downloadMdBtn" class="action-button" style="background-image: linear-gradient(135deg, #555 0%, #333 100%);">
+                    <i class="fab fa-markdown"></i> .md डाउनलोड करें
+                </button>
             </div>
         </div>
     </div>
 
-    <canvas id="pdfPreviewCanvas"></canvas> <!-- Hidden canvas for PDF page rendering -->
-
-    <div class="info-message">
-        <i class="fas fa-info-circle"></i>
-        <div>
-            <strong>Client-Side Processing:</strong> OCR is performed in your browser. Performance depends on file size and your device. For best results with PDFs, ensure they contain scanned images or text that can be imaged, not just vector graphics.
-        </div>
+    <div class="info-section container" style="max-width: 850px;">
+        <h3><i class="fas fa-info-circle"></i> महत्वपूर्ण जानकारी और सीमाएं:</h3>
+        <ul>
+            <li><strong>क्लाइंट-साइड प्रोसेसिंग:</strong> सभी OCR आपके ब्राउज़र में स्थानीय रूप से किया जाता है। आपकी फाइलें सर्वर पर अपलोड नहीं होती हैं।</li>
+            <li><strong>प्रदर्शन:</strong> बड़ी PDF फाइलों या उच्च-रिज़ॉल्यूशन छवियों के लिए प्रोसेसिंग में समय लग सकता है। ब्राउज़र धीमा हो सकता है या अनुत्तरदायी हो सकता है।</li>
+            <li><strong>सटीकता:</strong> OCR की सटीकता छवि की गुणवत्ता (स्पष्टता, रिज़ॉल्यूशन, कंट्रास्ट, फ़ॉन्ट प्रकार) पर बहुत निर्भर करती है। सर्वोत्तम परिणामों के लिए स्पष्ट, टाइप किए गए देवनागरी पाठ का उपयोग करें।</li>
+            <li><strong>भाषा डेटा:</strong> पहली बार हिंदी OCR का उपयोग करने पर, आवश्यक भाषा फ़ाइलें (लगभग 10-15MB) डाउनलोड होंगी। इसमें कुछ समय लग सकता है।</li>
+            <li><strong>PDF से छवियां:</strong> PDF के लिए, प्रत्येक पृष्ठ को एक छवि के रूप में प्रस्तुत किया जाता है, फिर OCR किया जाता है। यह छवि-आधारित PDF के लिए सबसे अच्छा काम करता है। पाठ-आधारित PDF में सीधे पाठ निकालना अधिक कुशल हो सकता है (यह उपकरण उस पर ध्यान केंद्रित नहीं करता है)।</li>
+            <li><strong>समर्थित प्रारूप:</strong> PDF, JPG, PNG, BMP, WebP।</li>
+        </ul>
     </div>
 
     <footer>
-        Powered by Tesseract.js. Secure Client-Side Processing.
+        शक्तिशाली क्लाइंट-साइड देवनागरी OCR | सुरक्षित और निजी
     </footer>
 
-    <script>
+    <!-- Tesseract.js -->
+    <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
+    <!-- PDF.js (for PDF rendering to image) -->
+    <script src="//mozilla.github.io/pdf.js/build/pdf.mjs" type="module"></script>
+
+    <script type="module">
+        // PDF.js worker setup (if using a local version, adjust path)
+        // For CDN version, it often handles worker path itself or through global options
+        // import { GlobalWorkerOptions } from '//mozilla.github.io/pdf.js/build/pdf.mjs';
+        // GlobalWorkerOptions.workerSrc = '//mozilla.github.io/pdf.js/build/pdf.worker.mjs';
+
+        const ocrFileWrapper = document.getElementById('ocrFileWrapper');
         const ocrFileInput = document.getElementById('ocrFile');
         const ocrFileNameDisplay = document.getElementById('ocrFileName');
-        const ocrFileWrapper = document.getElementById('ocrFileWrapper');
-        const startOcrBtn = document.getElementById('startOcrBtn');
-        const ocrStatus = document.getElementById('ocrStatus');
-        const ocrOutputWrapper = document.getElementById('ocrOutputWrapper');
-        const ocrResultText = document.getElementById('ocrResultText');
+        const processOcrBtn = document.getElementById('processOcrBtn');
+        const ocrStatusDisplay = document.getElementById('ocrStatus');
+        const ocrProgressBar = document.getElementById('ocrProgressBar');
+        const progressArea = document.querySelector('.progress-area');
+        const outputSection = document.querySelector('.output-section');
+        const ocrOutputTextarea = document.getElementById('ocrOutput');
         const downloadTxtBtn = document.getElementById('downloadTxtBtn');
         const downloadMdBtn = document.getElementById('downloadMdBtn');
-        const pdfPreviewCanvas = document.getElementById('pdfPreviewCanvas');
 
-        let tesseractWorker = null;
         let currentFile = null;
+        let tesseractWorker = null;
+        let totalPages = 0;
+        let processedPages = 0;
 
-        // --- Initialize Tesseract.js ---
-        async function initializeTesseract() {
-            updateStatus('Initializing Tesseract.js engine...', 'processing', true);
-            try {
-                tesseractWorker = await Tesseract.createWorker({
-                    logger: m => {
-                        if (m.status === 'recognizing text') {
-                            const progress = (m.progress * 100).toFixed(0);
-                            updateStatus(`Recognizing text... ${progress}%`, 'processing', true);
-                        } else if (m.status && m.status !== 'loaded tesseract core') {
-                             updateStatus(capitalizeFirstLetter(m.status) + '...', 'processing', true);
-                        }
-                    }
+        async function initializeTesseractWorker() {
+            if (!tesseractWorker) {
+                updateStatus('टेसरैक्ट वर्कर प्रारंभ हो रहा है...', 0);
+                tesseractWorker = await Tesseract.createWorker('hin', 1, { // 1 for default OEM, 'hin' for Hindi
+                    logger: m => updateProgress(m),
+                    // workerPath: 'path/to/tesseract.js/worker.min.js', // If hosting tesseract.js locally
+                    // langPath: 'path/to/traineddata/', // If hosting language data locally
+                    // corePath: 'path/to/tesseract-core.wasm.js', // If hosting tesseract core locally
                 });
-                updateStatus('Loading Hindi language data...', 'processing', true);
-                await tesseractWorker.loadLanguage('hin');
-                await tesseractWorker.initialize('hin');
-                updateStatus('Hindi OCR ready. Select a file.', 'success');
-                startOcrBtn.disabled = false;
-            } catch (error) {
-                console.error("Tesseract initialization failed:", error);
-                updateStatus('Error: Tesseract.js failed to initialize. Check console.', 'error');
-                startOcrBtn.disabled = true;
+                updateStatus('टेसरैक्ट वर्कर तैयार है।', 0);
             }
+            return tesseractWorker;
         }
         
-        function capitalizeFirstLetter(string) {
-            return string.charAt(0).toUpperCase() + string.slice(1);
-        }
-
-        // --- File Input Handling ---
         ocrFileInput.addEventListener('change', (event) => {
             currentFile = event.target.files[0];
             if (currentFile) {
                 ocrFileNameDisplay.textContent = currentFile.name;
-                ocrFileWrapper.querySelector('.file-input-text').style.display = 'none';
-                ocrFileNameDisplay.style.display = 'block';
-                ocrOutputWrapper.style.display = 'none'; // Hide previous results
-                ocrResultText.value = '';
+                processOcrBtn.disabled = false;
+                outputSection.style.display = 'none';
+                ocrOutputTextarea.value = '';
             } else {
-                ocrFileNameDisplay.textContent = '';
-                ocrFileWrapper.querySelector('.file-input-text').style.display = 'flex';
-                ocrFileNameDisplay.style.display = 'none';
+                ocrFileNameDisplay.textContent = 'कोई फ़ाइल चयनित नहीं';
+                processOcrBtn.disabled = true;
             }
         });
-        
-        // Drag and Drop for file input
+
+        // Drag & Drop
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
             ocrFileWrapper.addEventListener(eventName, preventDefaults, false);
-            document.body.addEventListener(eventName, preventDefaults, false); // Prevent browser from opening file
         });
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
         ['dragenter', 'dragover'].forEach(eventName => {
             ocrFileWrapper.addEventListener(eventName, () => ocrFileWrapper.classList.add('is-dragging'), false);
         });
@@ -434,129 +395,173 @@
             ocrFileWrapper.addEventListener(eventName, () => ocrFileWrapper.classList.remove('is-dragging'), false);
         });
         ocrFileWrapper.addEventListener('drop', (e) => {
-            ocrFileInput.files = e.dataTransfer.files;
-            const event = new Event('change');
-            ocrFileInput.dispatchEvent(event);
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            if (files.length > 0) {
+                ocrFileInput.files = files; // Assign to input
+                ocrFileInput.dispatchEvent(new Event('change')); // Trigger change event
+            }
         }, false);
 
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
 
-
-        // --- Start OCR Process ---
-        startOcrBtn.addEventListener('click', async () => {
-            if (!currentFile || !tesseractWorker) {
-                updateStatus('Please select a file first or wait for OCR engine.', 'error');
+        processOcrBtn.addEventListener('click', async () => {
+            if (!currentFile) {
+                alert('कृपया पहले एक फ़ाइल चुनें।');
                 return;
             }
 
-            startOcrBtn.disabled = true;
-            ocrOutputWrapper.style.display = 'none';
-            ocrResultText.value = '';
-            updateStatus('Processing file...', 'processing', true);
+            processOcrBtn.disabled = true;
+            progressArea.style.display = 'block';
+            outputSection.style.display = 'none';
+            ocrOutputTextarea.value = '';
+            totalPages = 0;
+            processedPages = 0;
 
             try {
-                let fullText = '';
+                await initializeTesseractWorker(); // Ensure worker is ready
+
                 if (currentFile.type === "application/pdf") {
-                    fullText = await processPdf(currentFile);
+                    await processPdf(currentFile);
                 } else if (currentFile.type.startsWith("image/")) {
+                    totalPages = 1;
+                    processedPages = 0;
+                    updateStatus(`छवि ${currentFile.name} को प्रोसेस किया जा रहा है...`, 0);
                     const { data: { text } } = await tesseractWorker.recognize(currentFile);
-                    fullText = text;
+                    ocrOutputTextarea.value = text;
+                    processedPages = 1;
+                    updatePageProgress();
+                    updateStatus('छवि सफलतापूर्वक प्रोसेस की गयी!', 100);
                 } else {
-                    throw new Error("Unsupported file type. Please use PDF or image files.");
+                    throw new Error("असमर्थित फ़ाइल प्रकार। कृपया PDF या छवि अपलोड करें।");
                 }
-
-                ocrResultText.value = fullText || "No text could be extracted.";
-                ocrOutputWrapper.style.display = 'block';
-                updateStatus('OCR complete!', 'success');
-
+                outputSection.style.display = 'block';
             } catch (error) {
                 console.error("OCR Error:", error);
-                updateStatus(`Error during OCR: ${error.message}`, 'error');
-                ocrResultText.value = `Error: ${error.message}`;
-                ocrOutputWrapper.style.display = 'block'; // Show error in textarea
+                updateStatus(`त्रुटि: ${error.message || 'अज्ञात त्रुटि हुई'}`, 0, true);
             } finally {
-                if(tesseractWorker) startOcrBtn.disabled = false; // Re-enable only if worker is still valid
+                processOcrBtn.disabled = false;
+                if (totalPages === 0 || processedPages < totalPages) { // If PDF processing was cut short or only image
+                     // progressArea.style.display = 'none'; // Keep progress visible if error
+                }
             }
         });
 
-        // --- PDF Processing ---
         async function processPdf(file) {
-            const arrayBuffer = await file.arrayBuffer();
-            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-            let combinedText = '';
-            const numPages = pdf.numPages;
-
-            updateStatus(`Loaded PDF with ${numPages} pages. Starting OCR...`, 'processing', true);
-
-            for (let i = 1; i <= numPages; i++) {
-                updateStatus(`Processing PDF page ${i} of ${numPages}...`, 'processing', true);
-                const page = await pdf.getPage(i);
-                const viewport = page.getViewport({ scale: 2.0 }); // Higher scale for better OCR
-                
-                const canvasContext = pdfPreviewCanvas.getContext('2d');
-                pdfPreviewCanvas.height = viewport.height;
-                pdfPreviewCanvas.width = viewport.width;
-
-                await page.render({ canvasContext, viewport }).promise;
-                
-                // Convert canvas to image for Tesseract
-                const imageDataUrl = pdfPreviewCanvas.toDataURL('image/png');
-                const { data: { text } } = await tesseractWorker.recognize(imageDataUrl);
-                combinedText += text + "\n\n"; // Add space between pages
-
-                // Brief pause to allow UI to update, especially for many pages
-                if (i % 3 === 0 && i < numPages) await new Promise(r => setTimeout(r, 50));
+            const pdfJS = window['pdfjs-dist/build/pdf']; // Access PDF.js from global scope for CDN
+            if(!pdfJS) {
+                updateStatus('PDF लाइब्रेरी लोड करने में विफल।', 0, true);
+                throw new Error('PDF.js library not found.');
             }
-            return combinedText.trim();
+            // It's good practice to set workerSrc if PDF.js doesn't find it automatically.
+            // For the CDN version, this might be:
+            pdfJS.GlobalWorkerOptions.workerSrc = `//mozilla.github.io/pdf.js/build/pdf.worker.mjs`;
+
+
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await pdfJS.getDocument({ data: arrayBuffer }).promise;
+            totalPages = pdf.numPages;
+            processedPages = 0;
+            let fullText = "";
+
+            updateStatus(`PDF लोड हो गया (${totalPages} पृष्ठ)। पृष्ठों को प्रोसेस किया जा रहा है...`, 0);
+
+            for (let i = 1; i <= totalPages; i++) {
+                updatePageProgress();
+                const page = await pdf.getPage(i);
+                const viewport = page.getViewport({ scale: 2.0 }); // Higher scale can improve OCR
+                
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                await page.render({ canvasContext: context, viewport: viewport }).promise;
+                
+                // Tesseract.js can take a canvas directly
+                const { data: { text } } = await tesseractWorker.recognize(canvas, {
+                    // rectangle: { top: 0, left: 0, width: canvas.width, height: canvas.height } // Optional: specify region
+                });
+                
+                fullText += text + "\n\n-- पृष्ठ " + i + " समाप्त --\n\n";
+                ocrOutputTextarea.value = fullText; // Update live
+                ocrOutputTextarea.scrollTop = ocrOutputTextarea.scrollHeight; // Scroll to bottom
+                processedPages++;
+                page.cleanup(); // Important for memory management
+            }
+            updatePageProgress(); // Final progress update
+            updateStatus('सभी PDF पृष्ठ सफलतापूर्वक प्रोसेस किये गए!', 100);
+            return fullText;
         }
 
-        // --- Download Functionality ---
-        function downloadFile(filename, content, mimeType) {
-            const blob = new Blob([content], { type: mimeType });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+        function updateProgress(m) {
+            // console.log(m);
+            if (m.status === "recognizing text" || m.status === "loading language model") {
+                const progress = Math.max(0, Math.min(1, m.progress || 0)); // Ensure 0-1 range
+                let overallProgress = 0;
+                if (totalPages > 0) {
+                    overallProgress = ((processedPages / totalPages) + (progress / totalPages)) * 100;
+                } else { // For single image
+                    overallProgress = progress * 100;
+                }
+                ocrProgressBar.style.width = `${Math.min(100, overallProgress.toFixed(2))}%`;
+                
+                let statusText = m.status.charAt(0).toUpperCase() + m.status.slice(1);
+                if (totalPages > 1) {
+                     statusText = `पृष्ठ ${processedPages + 1}/${totalPages}: ${statusText} (${(progress * 100).toFixed(0)}%)`;
+                } else {
+                     statusText = `${statusText} (${(progress * 100).toFixed(0)}%)`;
+                }
+                ocrStatusDisplay.textContent = statusText;
+            } else if (m.status) {
+                 ocrStatusDisplay.textContent = m.status.charAt(0).toUpperCase() + m.status.slice(1);
+            }
+        }
+        
+        function updatePageProgress() {
+            if (totalPages > 0) {
+                const progress = (processedPages / totalPages) * 100;
+                ocrProgressBar.style.width = `${progress.toFixed(2)}%`;
+                ocrStatusDisplay.textContent = `पृष्ठ ${processedPages}/${totalPages} प्रोसेस किये गए।`;
+            }
+        }
+
+        function updateStatus(message, progressPercent = null, isError = false) {
+            ocrStatusDisplay.textContent = message;
+            if (progressPercent !== null) {
+                ocrProgressBar.style.width = `${progressPercent}%`;
+            }
+            ocrStatusDisplay.style.color = isError ? 'var(--error-color)' : 'var(--text-muted-color)';
+        }
+
+        function downloadFile(filename, content, type) {
+            const element = document.createElement('a');
+            const file = new Blob([content], {type: type});
+            element.href = URL.createObjectURL(file);
+            element.download = filename;
+            document.body.appendChild(element); // Required for this to work in FireFox
+            element.click();
+            document.body.removeChild(element);
+            URL.revokeObjectURL(element.href);
         }
 
         downloadTxtBtn.addEventListener('click', () => {
-            const baseName = currentFile ? currentFile.name.split('.').slice(0, -1).join('.') : 'hindi_ocr_result';
-            downloadFile(`${baseName}.txt`, ocrResultText.value, 'text/plain;charset=utf-8');
+            const text = ocrOutputTextarea.value;
+            const filename = (currentFile?.name.replace(/\.[^/.]+$/, "") || "hindi_ocr_output") + ".txt";
+            downloadFile(filename, text, 'text/plain;charset=utf-8');
         });
 
         downloadMdBtn.addEventListener('click', () => {
-            const baseName = currentFile ? currentFile.name.split('.').slice(0, -1).join('.') : 'hindi_ocr_result';
-            // For Markdown, we might wrap it in a code block if it's purely text,
-            // or just save as is. For simplicity, saving as is.
-            const mdContent = "```text\n" + ocrResultText.value + "\n```"; // Simple wrapping
-            downloadFile(`${baseName}.md`, mdContent, 'text/markdown;charset=utf-8');
+            let mdContent = `# Hindi OCR Result for ${currentFile?.name || 'Document'}\n\n`;
+            mdContent += "```text\n";
+            mdContent += ocrOutputTextarea.value;
+            mdContent += "\n```\n";
+            const filename = (currentFile?.name.replace(/\.[^/.]+$/, "") || "hindi_ocr_output") + ".md";
+            downloadFile(filename, mdContent, 'text/markdown;charset=utf-8');
         });
 
-        // --- Utility Functions ---
-        function updateStatus(message, type = 'info', showSpinner = false) {
-            if (!ocrStatus) return;
-            let fullMessage = message;
-            if (showSpinner) {
-                fullMessage = `<i class="fas fa-spinner fa-spin"></i> ${message}`;
-                ocrStatus.innerHTML = fullMessage;
-            } else {
-                ocrStatus.textContent = message;
-            }
-            ocrStatus.className = 'status';
-            if (type === 'success') ocrStatus.classList.add('success');
-            else if (type === 'error') ocrStatus.classList.add('error');
-            else if (type === 'processing') ocrStatus.classList.add('processing');
-        }
-        
-        // --- Initialize on Load ---
-        document.addEventListener('DOMContentLoaded', initializeTesseract);
+        // Initialize worker on page load to speed up first OCR click (optional)
+        // initializeTesseractWorker().catch(err => console.error("Failed to pre-initialize Tesseract:", err));
+
     </script>
 </body>
 </html>
