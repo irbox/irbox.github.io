@@ -1,565 +1,689 @@
-/* bundle.css - Material You Expressive (2025 Concept) */
-
-/* 0. Foundational Resets & Imports (Keep existing resets, add font) */
+/* Reset and Basic Setup */
 html,body,p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,iframe,hr,h1,h2,h3,h4,h5,h6{margin:0;padding:0}
 h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}
 ul{list-style:none}
-button,input,select,textarea{margin:0; font-family: inherit;}
-html{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+button,input,select,textarea{margin:0;font-family:inherit;font-size:inherit;color:inherit;}
+html{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 *,*:before,*:after{box-sizing:inherit}
-img,embed,object,audio,video{height:auto;max-width:100%} /* video handled specifically */
+img,embed,object,audio,video{height:auto;max-width:100%} /* video added */
 iframe{border:0}
 table{border-collapse:collapse;border-spacing:0}
 td,th{padding:0;text-align:left}
 
-/* 1. Material You Expressive - Color System (Hypothetical Palette) */
-/* These would be dynamically generated based on user's theme/wallpaper */
 :root {
-    /* Example Expressive Palette: "Cosmic Bloom" */
-    --md-sys-color-primary-light: #7B5AFF;
-    --md-sys-color-on-primary-light: #FFFFFF;
-    --md-sys-color-primary-container-light: #EADDFF;
-    --md-sys-color-on-primary-container-light: #2A0099;
-    --md-sys-color-secondary-light: #625B71;
-    --md-sys-color-on-secondary-light: #FFFFFF;
-    --md-sys-color-secondary-container-light: #E8DEF8;
-    --md-sys-color-on-secondary-container-light: #1E192B;
-    --md-sys-color-tertiary-light: #7D5260;
-    --md-sys-color-on-tertiary-light: #FFFFFF;
-    --md-sys-color-tertiary-container-light: #FFD8E4;
-    --md-sys-color-on-tertiary-container-light: #31111D;
-    --md-sys-color-error-light: #B3261E;
-    --md-sys-color-on-error-light: #FFFFFF;
-    --md-sys-color-error-container-light: #F9DEDC;
-    --md-sys-color-on-error-container-light: #410E0B;
-    --md-sys-color-background-light: #FFFBFE;
-    --md-sys-color-on-background-light: #1C1B1F;
-    --md-sys-color-surface-light: #FFFBFE; /* Main app background */
-    --md-sys-color-on-surface-light: #1C1B1F;
-    --md-sys-color-surface-variant-light: #E7E0EC;
-    --md-sys-color-on-surface-variant-light: #49454F;
-    --md-sys-color-outline-light: #79747E;
-    --md-sys-color-outline-variant-light: #CAC4D0;
-    --md-sys-color-shadow-light: #000000;
-    --md-sys-color-scrim-light: #000000;
-    --md-sys-color-inverse-surface-light: #313033;
-    --md-sys-color-inverse-on-surface-light: #F4EFF4;
-    --md-sys-color-inverse-primary-light: #D0BCFF;
+  /* Material You Expressive - Light Theme Palette (Defaults) */
+  --my-primary: #4A80F5; /* Vibrant Blue */
+  --my-on-primary: #FFFFFF;
+  --my-primary-container: #D8E2FF;
+  --my-on-primary-container: #001A7A;
 
-    /* Dark Theme Equivalents (Illustrative) */
-    --md-sys-color-primary-dark: #D0BCFF;
-    --md-sys-color-on-primary-dark: #4A25CB;
-    --md-sys-color-primary-container-dark: #633FCF;
-    --md-sys-color-on-primary-container-dark: #EADDFF;
-    --md-sys-color-secondary-dark: #CCC2DC;
-    --md-sys-color-on-secondary-dark: #332D41;
-    --md-sys-color-secondary-container-dark: #4A4458;
-    --md-sys-color-on-secondary-container-dark: #E8DEF8;
-    --md-sys-color-tertiary-dark: #EFB8C8;
-    --md-sys-color-on-tertiary-dark: #492532;
-    --md-sys-color-tertiary-container-dark: #633B48;
-    --md-sys-color-on-tertiary-container-dark: #FFD8E4;
-    --md-sys-color-error-dark: #F2B8B5;
-    --md-sys-color-on-error-dark: #601410;
-    --md-sys-color-error-container-dark: #8C1D18;
-    --md-sys-color-on-error-container-dark: #F9DEDC;
-    --md-sys-color-background-dark: #1C1B1F;
-    --md-sys-color-on-background-dark: #E6E1E5;
-    --md-sys-color-surface-dark: #141218; /* Main app background for dark */
-    --md-sys-color-on-surface-dark: #E6E1E5;
-    --md-sys-color-surface-variant-dark: #49454F;
-    --md-sys-color-on-surface-variant-dark: #CAC4D0;
-    --md-sys-color-outline-dark: #938F99;
-    --md-sys-color-outline-variant-dark: #49454F;
-    --md-sys-color-shadow-dark: #000000;
-    --md-sys-color-scrim-dark: #000000;
-    --md-sys-color-inverse-surface-dark: #E6E1E5;
-    --md-sys-color-inverse-on-surface-dark: #313033;
-    --md-sys-color-inverse-primary-dark: #6750A4;
+  --my-secondary: #FF8A65; /* Warm Coral */
+  --my-on-secondary: #FFFFFF;
+  --my-secondary-container: #FFDCCF;
+  --my-on-secondary-container: #2D150C; /* Darkened for better contrast */
 
-    /* Shape System - Expressive: More rounded, organic */
-    --md-sys-shape-corner-none: 0px;
-    --md-sys-shape-corner-extra-small: 4px;
-    --md-sys-shape-corner-small: 8px;
-    --md-sys-shape-corner-medium: 16px; /* Increased from M3's 12px */
-    --md-sys-shape-corner-large: 24px; /* Increased from M3's 16px */
-    --md-sys-shape-corner-extra-large: 32px; /* Increased from M3's 28px */
-    --md-sys-shape-corner-full: 999px; /* Pill shape */
+  --my-tertiary: #26A69A; /* Playful Teal */
+  --my-on-tertiary: #FFFFFF;
+  --my-tertiary-container: #B2DFDB;
+  --my-on-tertiary-container: #00201D; /* Darkened */
 
-    /* Typography - Using Manrope as an example */
-    --md-sys-typescale-font-family: 'Manrope', sans-serif;
-    --md-sys-typescale-display-large-font-size: 57px;
-    --md-sys-typescale-display-large-line-height: 64px;
-    --md-sys-typescale-display-large-font-weight: 700; /* Bolder */
-    --md-sys-typescale-headline-medium-font-size: 28px;
-    --md-sys-typescale-headline-medium-line-height: 36px;
-    --md-sys-typescale-headline-medium-font-weight: 600;
-    --md-sys-typescale-title-large-font-size: 22px;
-    --md-sys-typescale-title-large-line-height: 28px;
-    --md-sys-typescale-title-large-font-weight: 600;
-    --md-sys-typescale-body-large-font-size: 16px;
-    --md-sys-typescale-body-large-line-height: 24px;
-    --md-sys-typescale-body-large-font-weight: 400;
-    --md-sys-typescale-label-large-font-size: 14px;
-    --md-sys-typescale-label-large-line-height: 20px;
-    --md-sys-typescale-label-large-font-weight: 500;
+  --my-surface: #FDFBFF;
+  --my-on-surface: #1B1C1E;
+  --my-surface-variant: #E1E2EC;
+  --my-on-surface-variant: #44474F;
+  
+  --my-surface-container-lowest: #FFFFFF;
+  --my-surface-container-low: #F7F2FA;
+  --my-surface-container: #F3EDF7;
+  --my-surface-container-high: #EDE8F4;
+  --my-surface-container-highest: #E6E0EC;
 
-    /* Default to light theme */
-    --md-sys-color-primary: var(--md-sys-color-primary-light);
-    --md-sys-color-on-primary: var(--md-sys-color-on-primary-light);
-    --md-sys-color-primary-container: var(--md-sys-color-primary-container-light);
-    --md-sys-color-on-primary-container: var(--md-sys-color-on-primary-container-light);
-    --md-sys-color-secondary: var(--md-sys-color-secondary-light);
-    --md-sys-color-on-secondary: var(--md-sys-color-on-secondary-light);
-    --md-sys-color-secondary-container: var(--md-sys-color-secondary-container-light);
-    --md-sys-color-on-secondary-container: var(--md-sys-color-on-secondary-container-light);
-    --md-sys-color-tertiary: var(--md-sys-color-tertiary-light);
-    --md-sys-color-on-tertiary: var(--md-sys-color-on-tertiary-light);
-    --md-sys-color-tertiary-container: var(--md-sys-color-tertiary-container-light);
-    --md-sys-color-on-tertiary-container: var(--md-sys-color-on-tertiary-container-light);
-    --md-sys-color-error: var(--md-sys-color-error-light);
-    --md-sys-color-on-error: var(--md-sys-color-on-error-light);
-    --md-sys-color-error-container: var(--md-sys-color-error-container-light);
-    --md-sys-color-on-error-container: var(--md-sys-color-on-error-container-light);
-    --md-sys-color-background: var(--md-sys-color-background-light);
-    --md-sys-color-on-background: var(--md-sys-color-on-background-light);
-    --md-sys-color-surface: var(--md-sys-color-surface-light);
-    --md-sys-color-on-surface: var(--md-sys-color-on-surface-light);
-    --md-sys-color-surface-variant: var(--md-sys-color-surface-variant-light);
-    --md-sys-color-on-surface-variant: var(--md-sys-color-on-surface-variant-light);
-    --md-sys-color-outline: var(--md-sys-color-outline-light);
-    --md-sys-color-outline-variant: var(--md-sys-color-outline-variant-light);
-    --md-sys-color-shadow: var(--md-sys-color-shadow-light);
-    --md-sys-color-scrim: var(--md-sys-color-scrim-light);
-    --md-sys-color-inverse-surface: var(--md-sys-color-inverse-surface-light);
-    --md-sys-color-inverse-on-surface: var(--md-sys-color-inverse-on-surface-light);
-    --md-sys-color-inverse-primary: var(--md-sys-color-inverse-primary-light);
+
+  --my-outline: #74777F;
+  --my-outline-variant: #C4C6CF;
+  
+  --my-background: #F8F8FC; /* Slightly off-white, very light */
+  --my-on-background: #1B1C1E;
+
+  --my-scrim: rgba(0, 0, 0, 0.6);
+  --my-shadow-color: rgba(0, 0, 0, 0.1);
+  --my-shadow-umbra-opacity: 0.2;
+  --my-shadow-penumbra-opacity: 0.14;
+  --my-shadow-ambient-opacity: 0.12;
+
+  --my-radius-small: 8px;
+  --my-radius-medium: 12px;
+  --my-radius-large: 16px;
+  --my-radius-extra-large: 28px;
+  --my-radius-full: 999px; /* For pills */
+
+  --my-font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --my-font-size-body-large: 16px;
+  --my-font-size-body-medium: 14px;
+  --my-font-size-title-large: 22px;
+  --my-font-size-headline-small: 24px;
 }
 
 @media (prefers-color-scheme: dark) {
-    :root {
-        --md-sys-color-primary: var(--md-sys-color-primary-dark);
-        --md-sys-color-on-primary: var(--md-sys-color-on-primary-dark);
-        --md-sys-color-primary-container: var(--md-sys-color-primary-container-dark);
-        --md-sys-color-on-primary-container: var(--md-sys-color-on-primary-container-dark);
-        --md-sys-color-secondary: var(--md-sys-color-secondary-dark);
-        --md-sys-color-on-secondary: var(--md-sys-color-on-secondary-dark);
-        --md-sys-color-secondary-container: var(--md-sys-color-secondary-container-dark);
-        --md-sys-color-on-secondary-container: var(--md-sys-color-on-secondary-container-dark);
-        --md-sys-color-tertiary: var(--md-sys-color-tertiary-dark);
-        --md-sys-color-on-tertiary: var(--md-sys-color-on-tertiary-dark);
-        --md-sys-color-tertiary-container: var(--md-sys-color-tertiary-container-dark);
-        --md-sys-color-on-tertiary-container: var(--md-sys-color-on-tertiary-container-dark);
-        --md-sys-color-error: var(--md-sys-color-error-dark);
-        --md-sys-color-on-error: var(--md-sys-color-on-error-dark);
-        --md-sys-color-error-container: var(--md-sys-color-error-container-dark);
-        --md-sys-color-on-error-container: var(--md-sys-color-on-error-container-dark);
-        --md-sys-color-background: var(--md-sys-color-background-dark);
-        --md-sys-color-on-background: var(--md-sys-color-on-background-dark);
-        --md-sys-color-surface: var(--md-sys-color-surface-dark);
-        --md-sys-color-on-surface: var(--md-sys-color-on-surface-dark);
-        --md-sys-color-surface-variant: var(--md-sys-color-surface-variant-dark);
-        --md-sys-color-on-surface-variant: var(--md-sys-color-on-surface-variant-dark);
-        --md-sys-color-outline: var(--md-sys-color-outline-dark);
-        --md-sys-color-outline-variant: var(--md-sys-color-outline-variant-dark);
-        --md-sys-color-shadow: var(--md-sys-color-shadow-dark);
-        --md-sys-color-scrim: var(--md-sys-color-scrim-dark);
-        --md-sys-color-inverse-surface: var(--md-sys-color-inverse-surface-dark);
-        --md-sys-color-inverse-on-surface: var(--md-sys-color-inverse-on-surface-dark);
-        --md-sys-color-inverse-primary: var(--md-sys-color-inverse-primary-dark);
-    }
+  :root {
+    --my-primary: #B0C6FF;
+    --my-on-primary: #00258E;
+    --my-primary-container: #0038C8;
+    --my-on-primary-container: #D8E2FF;
+
+    --my-secondary: #FFB59F;
+    --my-on-secondary: #4A2518; /* Darkened */
+    --my-secondary-container: #643A2C; /* Darkened */
+    --my-on-secondary-container: #FFDCCF;
+
+    --my-tertiary: #80CBC4;
+    --my-on-tertiary: #003832;
+    --my-tertiary-container: #00504A;
+    --my-on-tertiary-container: #B2DFDB;
+
+    --my-surface: #1D1B20; /* Dark Surface */
+    --my-on-surface: #E6E1E5;
+    --my-surface-variant: #49454F;
+    --my-on-surface-variant: #CAC4D0;
+    
+    --my-surface-container-lowest: #0F0D13;
+    --my-surface-container-low: #1D1B20;
+    --my-surface-container: #211F26;
+    --my-surface-container-high: #2B2930;
+    --my-surface-container-highest: #36343B;
+
+    --my-outline: #8F8D93;
+    --my-outline-variant: #49454F;
+
+    --my-background: #141218; /* Very Dark Background */
+    --my-on-background: #E6E1E5;
+
+    --my-scrim: rgba(0, 0, 0, 0.7);
+    --my-shadow-color: rgba(0, 0, 0, 0.25);
+  }
 }
 
-/* 2. Base App Styles */
 body {
-    font-family: var(--md-sys-typescale-font-family);
-    font-weight: var(--md-sys-typescale-body-large-font-weight);
-    font-size: var(--md-sys-typescale-body-large-font-size);
-    line-height: var(--md-sys-typescale-body-large-line-height);
-    background-color: var(--md-sys-color-background);
-    color: var(--md-sys-color-on-background);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    overflow: hidden; /* Prevent scrollbars on body */
-    overscroll-behavior: none; /* Prevent pull-to-refresh */
+  font-family: var(--my-font-family);
+  font-size: var(--my-font-size-body-large);
+  line-height: 1.5;
+  color: var(--my-on-background);
+  background-color: var(--my-background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* App Layout & Header */
 .app__layout {
-    position: fixed; /* Use fixed to cover viewport */
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden; /* Ensure no accidental scroll on layout */
+  position: absolute; /* Kept from original for full screen video behavior */
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--my-background); /* Fallback if video fails */
 }
 
-.app__content {
-    flex-grow: 1;
-    position: relative; /* For positioning camera view and FAB */
-    overflow: hidden; /* Camera view will handle its own overflow if necessary */
-    display: flex; /* To center camera view container */
-    align-items: center;
-    justify-content: center;
+.app__header {
+  width: 100%;
+  height: 64px; /* Slightly taller for Material feel */
+  color: var(--my-on-surface); /* Icons/text on surface if header is surface color */
+  background-color: var(--my-surface-container-high); /* Elevated surface */
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100; /* Higher z-index */
+  padding: 0 16px;
+  box-shadow: 0 1px 2px 0 var(--my-shadow-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* 3. Top App Bar */
-.top-app-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 4px 8px 16px; /* M3 spec for small top app bar */
-    height: 64px; /* M3 spec */
-    background-color: var(--md-sys-color-surface); /* Or surface-container for more elevation */
-    color: var(--md-sys-color-on-surface);
-    box-shadow: 0 1px 2px 0 rgba(var(--md-sys-color-shadow), 0.3),
-                0 1px 3px 1px rgba(var(--md-sys-color-shadow), 0.15);
-    position: relative; /* For z-index stacking if needed */
-    z-index: 100;
-    flex-shrink: 0; /* Prevent shrinking */
+.app__header-icon {
+  width: 40px; /* Touch target size */
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: var(--my-radius-full);
+  position: absolute; /* Kept original */
+  right: 16px; /* Adjusted spacing */
+  top: 50%;
+  transform: translateY(-50%);
+  transition: background-color 0.2s ease;
 }
-
-.top-app-bar__title {
-    font-size: var(--md-sys-typescale-title-large-font-size);
-    font-weight: var(--md-sys-typescale-title-large-font-weight);
-    line-height: var(--md-sys-typescale-title-large-line-height);
-    margin-left: 8px; /* Space from potential nav icon */
+.app__header-icon svg {
+  fill: var(--my-on-surface-variant); /* Themed icon color */
 }
-
-.top-app-bar__action-item {
-    margin-right: 12px; /* Space for last action item */
+.app__header-icon:hover {
+  background-color: rgba(var(--my-on-surface-rgb, 27,28,30), 0.08); /* Using RGB for opacity */
 }
-
-/* 4. Icon Button (used in Top App Bar) */
-.icon-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    padding: 12px;
-    border: none;
-    background-color: transparent;
-    color: var(--md-sys-color-on-surface-variant);
-    border-radius: var(--md-sys-shape-corner-full);
-    cursor: pointer;
-    outline: none;
-    position: relative;
-    overflow: hidden; /* For ripple */
-    transition: background-color 0.2s ease-out;
+.app__header-icon:active {
+  background-color: rgba(var(--my-on-surface-rgb, 27,28,30), 0.12);
+  opacity: 1; /* Remove old opacity */
 }
-.icon-button .material-symbols-outlined {
-    font-size: 24px;
+:root { /* Define RGB versions for RGBA usage */
+  --my-on-surface-rgb: 27,28,30; 
 }
-.icon-button:hover {
-    background-color: rgba(var(--md-sys-color-on-surface-variant-rgb, 0,0,0), 0.08); /* Use RGB version if available */
-}
-.icon-button:active {
-    background-color: rgba(var(--md-sys-color-on-surface-variant-rgb, 0,0,0), 0.12);
-}
-
-/* 5. Camera View & Scanner Overlay */
-.camera-view-container {
-    position: absolute;
-    inset: 0; /* Take full space of app__content */
-    background-color: #000; /* Fallback if video doesn't load */
-    overflow: hidden;
-}
-.camera-feed {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    min-width: 100%;
-    min-height: 100%;
-    width: auto;
-    height: auto;
-    transform: translate(-50%, -50%);
-    object-fit: cover; /* Ensure it covers the area */
-}
-
-.scanner-overlay {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none; /* Allow interaction with video for focus */
-}
-
-.scanner-overlay__cutout {
-    width: clamp(200px, 70vmin, 320px); /* Responsive size */
-    height: clamp(200px, 70vmin, 320px);
-    border-radius: var(--md-sys-shape-corner-extra-large); /* Expressive shape */
-    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.65); /* "Cutout" effect */
-    position: relative; /* For the line */
-    border: 3px solid rgba(255,255,255,0.3); /* Softer border */
-}
-
-.scanner-overlay__line {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: calc(clamp(200px, 70vmin, 320px) - 30px); /* Inside the cutout */
-    height: 4px;
-    background: linear-gradient(90deg, transparent, var(--md-sys-color-primary), transparent);
-    border-radius: var(--md-sys-shape-corner-full);
-    opacity: 0.8;
-    box-shadow: 0 0 10px var(--md-sys-color-primary), 0 0 20px var(--md-sys-color-primary);
-    animation: scanner-animation 3s infinite ease-in-out;
-    /* Removed display:none and left/right/margin:auto from original */
-}
-
-@keyframes scanner-animation {
-    0% { top: 15%; opacity: 0.5; }
-    50% { top: 85%; opacity: 1; }
-    100% { top: 15%; opacity: 0.5; }
-}
-
-.scanner-overlay__prompt-text {
-    position: absolute;
-    bottom: 10%; /* Position below the cutout */
-    left: 50%;
-    transform: translateX(-50%);
-    color: #FFFFFF;
-    background-color: rgba(0,0,0,0.5);
-    padding: 8px 16px;
-    border-radius: var(--md-sys-shape-corner-medium);
-    font-size: var(--md-sys-typescale-label-large-font-size);
-    text-align: center;
-    max-width: 80%;
-    user-select: none;
+@media (prefers-color-scheme: dark) {
+  :root { --my-on-surface-rgb: 230,225,229; }
 }
 
 
-/* 6. Dialogs (Result & Info) */
-.dialog-scrim {
-    position: fixed;
-    inset: 0;
-    background-color: rgba(var(--md-sys-color-scrim-rgb, 0,0,0), 0.4); /* Use RGB var if available */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s 0.25s linear;
+.app__header-title { /* Not used in current HTML but good to have */
+  margin-left: 16px;
+  font-size: var(--my-font-size-title-large);
+  font-weight: 500;
+  color: var(--my-on-surface);
+  user-select: none;
 }
-.dialog-scrim:not(.dialog--hide) {
+
+.app__layout-content {
+  height: 100%; /* inherit changed to 100% */
+  padding-top: 64px; /* Account for fixed header */
+  overflow-y: auto; /* If content ever overflows */
+}
+
+/* Custom Menu Icon (if used elsewhere, e.g. title in header) */
+.custom-menu-icon { /* This was for a title-like element, not an icon specifically */
+  font-size: var(--my-font-size-headline-small);
+  line-height: 1.2; /* Adjust line height */
+  color: var(--my-on-primary-container); /* Example: if it's on a primary container bg */
+}
+.custom-title {
+  color: var(--my-on-surface);
+}
+
+/* FAB - Floating Action Button (app__select-photos) */
+.app__select-photos { /* This is the FAB */
+  width: 56px;
+  height: 56px;
+  border-radius: var(--my-radius-large); /* Squircle shape */
+  background-color: var(--my-primary-container);
+  color: var(--my-on-primary-container); /* Icon color */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: fixed;
+  bottom: 24px; /* Adjusted spacing */
+  right: 24px;
+  border: none; /* Remove border if any */
+  outline: 0;
+  box-shadow: 0 4px 8px 0px var(--my-shadow-color), 0 6px 10px 0px var(--my-shadow-color); /* M3 Elevation */
+  z-index: 1000;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+.app__select-photos svg {
+  fill: var(--my-on-primary-container); /* Ensure icon color is themed */
+}
+.app__select-photos:hover {
+  background-color: var(--my-primary);
+  color: var(--my-on-primary);
+  box-shadow: 0 6px 12px 0px var(--my-shadow-color), 0 8px 15px 0px var(--my-shadow-color);
+}
+.app__select-photos:active {
+  background-color: var(--my-primary);
+  color: var(--my-on-primary);
+  box-shadow: 0 2px 4px -1px var(--my-shadow-color); /* Pressed state */
+  transform: scale(0.95);
+  opacity: 1; /* Remove old opacity */
+}
+input[type='file']{display:none} /* Keep this */
+
+
+/* Custom Button (old .custom-btn, not used in current HTML for FAB anymore) */
+.custom-btn{ 
+  /* This class was defined but maybe not used prominently. If it is, it should be styled as a Material button */
+  position:fixed;right:26px;bottom:26px; /* Original positioning */
+  background:var(--my-secondary); color: var(--my-on-secondary);
+  border-radius:var(--my-radius-large); border:0;
+  width:auto; min-width: 56px; height:56px; padding: 0 24px;
+  outline:0;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
+  z-index:9999;
+  font-weight: 500;
+  text-transform: uppercase;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+.custom-btn:active{box-shadow:none}
+.custom-fab-icon{ /* Inside custom-btn, if used */
+  color:var(--my-on-secondary);font-size:24px; /* Adjusted */
+  user-select:none;
+}
+
+
+/* Message Centering (old .custom-msg) */
+.custom-msg{
+  text-align:center;width:90%;max-width: 400px; /* Max width */
+  height:auto; /* Auto height */
+  overflow:auto;margin:auto;position:absolute;top:50%;left:50%;
+  transform: translate(-50%, -50%); /* Centering */
+  font-size: var(--my-font-size-body-large);
+  color: var(--my-on-surface-variant);
+  padding: 20px;
+}
+
+/* Video Styling */
+video {
+  transform: translateX(-50%) translateY(-50%); /* Original centering */
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  position: absolute;
+  background-color: var(--my-background); /* Background for video area */
+  z-index: -1; /* Ensure it's behind UI elements */
+}
+
+/* List Styling (if used) */
+#list li {
+  list-style-type: none;
+  text-decoration: none; /* Remove underline */
+  color: var(--my-primary); /* Link-like color */
+  padding: 8px 0;
+  cursor: pointer;
+}
+#list li:hover {
+  text-decoration: underline;
+}
+
+.custom-copy-btn{opacity:0} /* Keep hidden if not used or style if used */
+.hide{display:none} /* Utility class */
+
+/* Scanner Animation */
+@keyframes scanner-expressive {
+  0% {
+    bottom: 90%;
+    opacity: 0.7;
+    height: 3px;
+    box-shadow: 0 0 10px 2px var(--my-tertiary), 0 0 20px 5px var(--my-tertiary-container);
+  }
+  50% {
+    bottom: 10%;
     opacity: 1;
-    visibility: visible;
-    transition-delay: 0s, 0s;
+    height: 4px; /* Thicker mid-scan */
+    box-shadow: 0 0 15px 3px var(--my-tertiary), 0 0 30px 7px var(--my-tertiary-container);
+  }
+  100% {
+    bottom: 90%;
+    opacity: 0.7;
+    height: 3px;
+    box-shadow: 0 0 10px 2px var(--my-tertiary), 0 0 20px 5px var(--my-tertiary-container);
+  }
 }
 
-.dialog {
-    background-color: var(--md-sys-color-surface-variant); /* Elevated surface */
-    color: var(--md-sys-color-on-surface-variant);
-    border-radius: var(--md-sys-shape-corner-extra-large); /* Expressive shape */
-    padding: 24px;
-    width: clamp(280px, calc(100vw - 64px), 560px); /* M3 spec */
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0px 8px 12px 6px rgba(var(--md-sys-color-shadow-rgb), 0.15),
-                0px 4px 4px 0px rgba(var(--md-sys-color-shadow-rgb), 0.3);
-    display: flex;
-    flex-direction: column;
-    gap: 16px; /* Spacing between elements */
-    transform: scale(0.9);
-    opacity: 0;
-    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease-out;
-}
-.dialog-scrim:not(.dialog--hide) .dialog {
-    transform: scale(1);
-    opacity: 1;
+.custom-scanner { /* The animated line */
+  width: calc(100% - 20px); /* Slightly inset */
+  height: 3px;
+  background: var(--my-tertiary);
+  position: absolute;
+  transition: all 200ms linear; /* Original transition */
+  animation: scanner-expressive 2.5s infinite ease-in-out; /* New animation */
+  display: none; /* Initial state */
+  left: 10px; /* Centered */
+  right: 10px;
+  margin: auto;
+  border-radius: var(--my-radius-full);
+  z-index: 3; /* Above scanner image, below text */
 }
 
-.dialog__header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    text-align: center;
-}
-.dialog__icon {
-    font-size: 32px; /* Larger icon */
-    color: var(--md-sys-color-secondary);
+/* Camera View (placeholder for actual camera, if used) */
+#camera{opacity:0} /* Original, seems unused visually */
+
+.no-support{
+  font-size: var(--my-font-size-title-large);
+  text-align:center;
+  color: var(--my-on-surface-variant);
+  padding: 40px 20px;
 }
 
-.dialog__headline {
-    font-size: var(--md-sys-typescale-headline-medium-font-size);
-    font-weight: var(--md-sys-typescale-headline-medium-font-weight);
-    line-height: var(--md-sys-typescale-headline-medium-line-height);
-    color: var(--md-sys-color-on-surface); /* Higher emphasis */
+/* Snackbar */
+.app__snackbar {
+  position: fixed;
+  bottom: 24px; /* More spacing from bottom */
+  left: 50%;
+  transform: translateX(-50%); /* Centered */
+  pointer-events: none;
+  z-index: 9999;
+  width: calc(100% - 32px); /* Responsive width */
+  max-width: 500px; /* Max width */
+  display: flex; /* Allow multiple snackbars to stack */
+  flex-direction: column-reverse; /* Newest on top */
+  align-items: center;
 }
 
-.dialog__content {
-    font-size: var(--md-sys-typescale-body-large-font-size);
-    line-height: var(--md-sys-typescale-body-large-line-height);
-    /* Input field specific styling would go here */
+.app__snackbar-msg {
+  width: 100%;
+  min-height: 48px;
+  background-color: var(--my-surface-container-highest); /* Darker surface */
+  color: var(--my-on-surface);
+  border-radius: var(--my-radius-medium); /* Increased radius */
+  box-shadow: 0 3px 5px -1px rgba(0,0,0,var(--my-shadow-umbra-opacity)),
+              0 6px 10px 0 rgba(0,0,0,var(--my-shadow-penumbra-opacity)),
+              0 1px 18px 0 rgba(0,0,0,var(--my-shadow-ambient-opacity));
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Original */
+  font-size: var(--my-font-size-body-medium);
+  font-weight: 400; /* Normal weight */
+  padding: 14px 16px; /* Adjusted padding */
+  word-break: break-word; /* break-all is too aggressive */
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: none; /* initial is fine */
+  margin-bottom: 8px; /* Spacing between snackbars */
+  pointer-events: auto; /* Individual snackbars are interactive */
+  opacity: 1;
+  transform: translateY(0);
 }
-.dialog__content p:not(:first-child) {
-    margin-top: 12px;
+
+.app__snackbar--hide .app__snackbar-msg { /* For hiding animation */
+  opacity: 0;
+  transform: translateY(20px);
 }
-.text-field { /* Basic styling for the input, make it more M3-like */
-    width: 100%;
-    padding: 12px 16px;
-    font-size: var(--md-sys-typescale-body-large-font-size);
-    border: 1px solid var(--md-sys-color-outline);
-    border-radius: var(--md-sys-shape-corner-extra-small);
-    background-color: var(--md-sys-color-surface);
-    color: var(--md-sys-color-on-surface);
-    outline-color: var(--md-sys-color-primary);
+
+/* Dialogs */
+.app__dialog, .app__infodialog {
+  z-index: 1050; /* Above scrim */
+  background-color: var(--my-surface-container-high);
+  width: calc(100% - 48px); /* Responsive width */
+  max-width: 320px; /* Max width for phone dialogs */
+  min-height: 180px; /* Adjusted min-height */
+  height: auto; /* Auto height based on content */
+  border-radius: var(--my-radius-extra-large); /* Expressive radius */
+  display: flex; /* Kept flex for content alignment */
+  flex-direction: column;
+  position: fixed; /* fixed for centering */
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0; /* Reset margin */
+  box-shadow: 0 8px 10px 1px rgba(0,0,0,var(--my-shadow-umbra-opacity)),
+              0 3px 14px 2px rgba(0,0,0,var(--my-shadow-penumbra-opacity)),
+              0 5px 5px -3px rgba(0,0,0,var(--my-shadow-ambient-opacity));
+  overflow: hidden; /* Clip content to rounded corners */
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
-.link-style {
-    color: var(--md-sys-color-primary);
-    text-decoration: none;
-    font-weight: 500;
+
+.app__infodialog {
+  max-width: 480px; /* Wider for info */
+  min-height: 240px; /* Adjusted */
 }
-.link-style:hover {
-    text-decoration: underline;
+
+.app__dialog-content, .app__infodialog-content {
+  width: 100%;
+  padding: 24px; /* Generous padding */
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.app__infodialog-subcontent {
+  margin-top: 16px;
+  font-size: var(--my-font-size-body-medium);
+  line-height: 1.6;
+}
+.app__infodialog-subcontent a {
+  color: var(--my-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+.app__infodialog-subcontent a:hover {
+  text-decoration: underline;
+}
+.app__infodialog-subcontent p:not(:first-child) {
+  margin-top: 12px;
+}
+
+.app__dialog-content h1, .app__infodialog h1 {
+  margin-top: 0; /* Remove top margin for h1 */
+  margin-bottom: 16px;
+  font-weight: 500; /* Semi-bold */
+  font-size: var(--my-font-size-headline-small);
+  color: var(--my-on-surface);
+  line-height: 1.2;
+}
+
+.app__dialog input[type="text"] {
+  width: 100%;
+  height: 56px; /* Material input height */
+  border: 1px solid var(--my-outline);
+  border-radius: var(--my-radius-small);
+  outline: 0;
+  font-size: var(--my-font-size-body-large);
+  color: var(--my-on-surface);
+  font-weight: 400;
+  padding: 0 16px;
+  background-color: var(--my-surface-container-lowest); /* Slightly different bg for input */
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.app__dialog input[type="text"]:focus {
+  border-color: var(--my-primary);
+  box-shadow: 0 0 0 1px var(--my-primary);
+}
+
+.app__dialog-actions, .app__infodialog-actions {
+  display: flex; /* Use flex for button alignment */
+  justify-content: flex-end; /* Align buttons to the right */
+  padding: 8px 24px 16px; /* Padding around actions */
+  width: 100%;
+  position: relative; /* No longer absolute */
+  bottom: auto; right: auto; /* Reset */
+}
+
+.app__infodialog-open, .app__infodialog-close, .app__dialog-open, .app__dialog-close {
+  border: none;
+  min-width: 64px; /* Min width for text buttons */
+  height: 40px;
+  padding: 0 12px; /* Horizontal padding for text buttons */
+  font-size: var(--my-font-size-body-medium);
+  background: transparent;
+  color: var(--my-primary); /* Text button color */
+  font-weight: 500;
+  outline: 0;
+  cursor: pointer;
+  border-radius: var(--my-radius-full); /* Pill shape for text buttons */
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: background-color 0.2s ease;
+  margin-left: 8px; /* Spacing between buttons */
+}
+.app__infodialog-open:first-child, .app__infodialog-close:first-child, 
+.app__dialog-open:first-child, .app__dialog-close:first-child {
+  margin-left: 0;
+}
+
+.app__dialog-open { /* This was display:none, style as a primary action button */
+  background-color: var(--my-primary);
+  color: var(--my-on-primary);
+}
+.app__dialog-open:hover {
+  background-color: var(--my-primary-container); /* Lighter shade on hover */
+  color: var(--my-on-primary-container);
+}
+.app__infodialog-open:hover, .app__infodialog-close:hover, 
+.app__dialog-close:hover { /* Hover for text buttons */
+  background-color: rgba(var(--my-primary-rgb, 74,128,245), 0.1); /* Use RGB for opacity */
+}
+:root { /* Define RGB versions for RGBA usage */
+  --my-primary-rgb: 74,128,245; 
+}
+@media (prefers-color-scheme: dark) {
+  :root { --my-primary-rgb: 176,198,255; }
 }
 
 
-.dialog__actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-    padding-top: 8px; /* Space from content */
+.app__infodialog-open:active, .app__infodialog-close:active, 
+.app__dialog-open:active, .app__dialog-close:active {
+  opacity: 0.8; /* Simpler active state */
 }
 
-/* 7. Buttons (General Material Styles) */
-.button {
-    padding: 10px 24px;
-    border-radius: var(--md-sys-shape-corner-full); /* Pill shape for all buttons */
-    font-family: var(--md-sys-typescale-font-family);
-    font-size: var(--md-sys-typescale-label-large-font-size);
-    font-weight: var(--md-sys-typescale-label-large-font-weight);
-    line-height: var(--md-sys-typescale-label-large-line-height);
-    border: none;
-    cursor: pointer;
-    text-transform: none; /* M3 doesn't typically uppercase */
-    outline: none;
-    transition: background-color 0.15s ease-out, box-shadow 0.15s ease-out;
-    position: relative;
-    overflow: hidden; /* Ripple effect */
-    min-width: 64px;
-    text-align: center;
-    letter-spacing: 0.1px;
-}
-.button--filled {
-    background-color: var(--md-sys-color-primary);
-    color: var(--md-sys-color-on-primary);
-}
-.button--filled:hover {
-    background-color: color-mix(in srgb, var(--md-sys-color-primary) 92%, black 8%); /* Darken on hover */
-    box-shadow: 0 1px 2px 0 rgba(var(--md-sys-color-shadow-rgb), 0.3),
-                0 1px 3px 1px rgba(var(--md-sys-color-shadow-rgb), 0.15);
-}
-.button--filled:active {
-    background-color: color-mix(in srgb, var(--md-sys-color-primary) 88%, black 12%);
-}
-
-.button--text {
-    background-color: transparent;
-    color: var(--md-sys-color-primary);
-    padding: 10px 12px; /* Less padding for text buttons */
-}
-.button--text:hover {
-    background-color: rgba(var(--md-sys-color-primary-rgb), 0.08);
-}
-.button--text:active {
-    background-color: rgba(var(--md-sys-color-primary-rgb), 0.12);
+.app__infodialog--hide, .app__dialog--hide {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.95);
+  pointer-events: none; /* Hide from interaction */
+  display: flex; /* Keep flex for transition, actual hiding by opacity/pointer-events */
 }
 
 
-/* 8. Floating Action Button (FAB) */
-.fab-container {
-    position: absolute;
-    bottom: calc(16px + env(safe-area-inset-bottom)); /* Respect safe areas */
-    right: calc(16px + env(safe-area-inset-right));
-    z-index: 500;
+/* Overlay for Dialogs (Scrim) */
+.app__dialog-overlay, .app__infodialog-overlay {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background: var(--my-scrim);
+  z-index: 1040; /* Below dialog, above content */
+  opacity: 1;
+  transition: opacity 0.3s ease;
 }
-.fab {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 56px; /* Standard FAB size */
-    height: 56px;
-    background-color: var(--md-sys-color-primary-container);
-    color: var(--md-sys-color-on-primary-container);
-    border-radius: var(--md-sys-shape-corner-large); /* Slightly less than full for distinct FAB shape */
-    border: none;
-    box-shadow: 0px 4px 8px 3px rgba(var(--md-sys-color-shadow-rgb), 0.15),
-                0px 1px 3px 0px rgba(var(--md-sys-color-shadow-rgb), 0.3);
-    cursor: pointer;
-    outline: none;
-    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease-out;
-}
-.fab .material-symbols-outlined {
-    font-size: 24px;
-}
-.fab:hover {
-    transform: scale(1.05);
-    box-shadow: 0px 6px 10px 4px rgba(var(--md-sys-color-shadow-rgb), 0.15),
-                0px 2px 3px 0px rgba(var(--md-sys-color-shadow-rgb), 0.3);
-    background-color: color-mix(in srgb, var(--md-sys-color-primary-container) 90%, var(--md-sys-color-on-primary-container) 10%);
-}
-.fab:active {
-    transform: scale(0.95);
-    box-shadow: 0px 2px 4px 1px rgba(var(--md-sys-color-shadow-rgb), 0.15),
-                0px 1px 2px 0px rgba(var(--md-sys-color-shadow-rgb), 0.3);
-}
-
-/* 9. Snackbar */
-.snackbar {
-    position: fixed;
-    bottom: calc(16px + env(safe-area-inset-bottom));
-    left: 50%;
-    transform: translateX(-50%) translateY(150%); /* Start off-screen */
-    background-color: var(--md-sys-color-inverse-surface);
-    color: var(--md-sys-color-inverse-on-surface);
-    padding: 14px 16px;
-    border-radius: var(--md-sys-shape-corner-small);
-    box-shadow: 0px 4px 4px 0px rgba(var(--md-sys-color-shadow-rgb), 0.3),
-                0px 8px 12px 6px rgba(var(--md-sys-color-shadow-rgb), 0.15);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-width: 288px;
-    max-width: 560px; /* Or calc(100vw - 32px) */
-    z-index: 2000;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: none; /* Initially */
-}
-.snackbar:not(.snackbar--hide) {
-    transform: translateX(-50%) translateY(0);
-    pointer-events: auto;
-}
-.snackbar__text {
-    font-size: var(--md-sys-typescale-body-medium-font-size); /* Assuming body-medium is defined */
-    line-height: var(--md-sys-typescale-body-medium-line-height);
-    margin-right: 16px;
-}
-.snackbar__action { /* Text button style for snackbar action */
-    color: var(--md-sys-color-inverse-primary);
-    padding: 8px;
-    margin-left: auto; /* Push to the right */
-}
-.snackbar__action:hover {
-    background-color: rgba(var(--md-sys-color-inverse-primary-rgb), 0.08);
+.app__dialog--hide ~ .app__dialog-overlay, /* Hide scrim when dialog is hidden */
+.app__infodialog--hide ~ .app__infodialog-overlay {
+  opacity: 0;
+  pointer-events: none;
 }
 
 
-/* Utility */
-.dialog--hide, .snackbar--hide {
-    /* These are handled by their specific transition rules but can be used as initial state */
-}
-.hide { /* Generic hide, less preferred than component-specific states */
-    display: none !important;
+/* Scanner Visual Overlay - Attempting "Expressive" on existing HTML */
+.app__overlay { /* This is the 310x310 box */
+  position: fixed; /* Kept from original */
+  top: 0;bottom: 0;right: 0;left: 0; /* Centering */
+  width: clamp(200px, 70vmin, 310px); /* Responsive size */
+  height: clamp(200px, 70vmin, 310px);
+  margin: auto;
+  border: none; /* Remove original border */
+  z-index: 5; /* Above video, below other UI */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* The app__overlay-frame, left, right are problematic for full rounded corners.
+     Instead, we style the main app__overlay and position the SVG corners and scanner line within it. */
 }
 
+.app__overlay-frame {
+  /* This div is inside app__overlay. We can make it the visual scanner window. */
+  width: 100%;
+  height: 100%;
+  border-radius: var(--my-radius-extra-large); /* Expressive rounded corners */
+  border: 2px solid var(--my-outline-variant); /* A subtle border */
+  position: relative; /* For positioning scanner line and SVG corners */
+  overflow: hidden; /* Clip scanner line if it goes outside */
+  box-shadow: 0 0 0 9999px rgba(0,0,0,0.3); /* Cutout effect */
+}
+
+.app__overlay-left, .app__overlay-right {
+  display: none; /* Hide these as they conflict with modern cutout */
+}
+
+.app__scanner-img { /* The SVG corners */
+  z-index: 2; /* Above frame border, below scanner line */
+  position: absolute;
+  top: 0; left: 0; /* Align with parent app__overlay-frame */
+  width: 100%; height: 100%;
+  display: block; /* Was none */
+  pointer-events: none; /* Don't intercept clicks */
+}
+.app__scanner-img svg {
+  width: 100%; height: 100%;
+}
+.app__scanner-img svg path {
+  fill: var(--my-tertiary); /* Themed color for corners */
+  opacity: 0.8;
+  /* Consider adding a stroke for definition */
+  /* stroke: var(--my-surface); stroke-width: 2px; */
+}
+
+
+.app__help-text, .app__select-photos-text { /* Assuming .app__select-photos might have text near it */
+  color: var(--my-on-background); /* Themed text color */
+  position: absolute;
+  bottom: 100px; /* Adjusted from -70px to be visible */
+  font-size: var(--my-font-size-body-medium);
+  left:0; right:0; /* Centered */
+  text-align:center;
+  user-select:none;
+  z-index: 6; /* Above overlay cutout */
+  padding: 0 20px;
+}
+.app__help-text {
+  display: block; /* Was none, make it visible by default or control with JS */
+}
+
+/* Icons (generic, if used separately) */
+.camera__icon, .focus__icon {
+  position: relative; /* Original */
+  left: 10px; /* Original */
+  display: none; /* Original */
+  fill: var(--my-on-surface-variant); /* Themed */
+}
+
+/* Frame for image display (if #frame is used) */
+#frame {
+  width: auto;
+  height: auto;
+  border-radius: var(--my-radius-medium);
+  box-shadow: 0 2px 8px var(--my-shadow-color);
+  margin: 20px auto;
+  display: block;
+}
+
+/* App Version */
 .app__version {
-    font-size: 12px;
-    color: var(--md-sys-color-on-surface-variant);
-    margin-top: 15px;
-    display: inline-block;
-    text-align: center;
-    width: 100%;
+  position: absolute;
+  bottom: 8px; /* Consistent spacing */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px; /* Smaller text */
+  color: var(--my-on-surface-variant); /* Less prominent */
+  margin-top: 0; /* Reset */
+  display: inline-block; /* Original */
+  padding: 4px 8px;
+  background-color: rgba(var(--my-surface-rgb, 253,251,255), 0.5);
+  border-radius: var(--my-radius-small);
+}
+@media (prefers-color-scheme: dark) {
+  :root { --my-surface-rgb: 29,27,32; }
+}
+
+
+/* Media Queries Adjustments */
+@media screen and (max-width: 480px) {
+  .app__infodialog {
+    width: calc(100% - 32px); /* Slightly more padding on small screens */
+    border-radius: var(--my-radius-large); /* Slightly smaller radius */
+  }
+  .app__infodialog-content {
+    padding: 20px; /* Adjusted padding */
+  }
+  .app__dialog, .app__infodialog {
+    max-width: calc(100% - 32px); /* Ensure dialogs don't exceed screen width */
+  }
+  .app__header {
+    height: 56px;
+  }
+  .app__layout-content {
+    padding-top: 56px;
+  }
+  .app__help-text {
+    bottom: 80px;
+  }
+}
+
+/* Ensure custom scanner (line) is displayed when its parent is visible and scanning */
+/* This would typically be controlled by JS by adding a class to .app__overlay-frame */
+.app__overlay-frame.is-scanning .custom-scanner {
+  display: block;
+}
+.app__overlay-frame.is-scanning ~ .app__help-text { /* Example: hide help text when scanning */
+  display: none;
+}
+
+/* Ensure the scanner SVG corners are visible */
+.app__overlay-frame .app__scanner-img {
+  display: block;
 }
