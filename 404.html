@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oops! Something Went Wrong</title>
+    <!-- Font Awesome for the home icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --primary-color: #4A90E2; /* Brighter, modern Blue from main app */
+            --primary-color-rgb: 74, 144, 226;
+            --secondary-color: #2868C7; /* Companion blue for gradients */
+            --background-color: #0D1117; /* Very dark, almost black */
+            --surface-color: #161B22;   /* Slightly lighter for cards */
+            --text-color: #C9D1D9;      /* Light Gray for text */
+            --text-muted-color: #8B949E;/* Muted Gray */
+            
+            --error-accent-color: #FF6B6B; /* A distinct error/warning color */
+            --error-accent-color-rgb: 255, 107, 107;
+            --error-glow-color: rgba(var(--error-accent-color-rgb), 0.3);
+
+            --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            
+            --border-radius-md: 10px;
+            --border-radius-lg: 16px;
+
+            --gradient-error-accent: linear-gradient(135deg, var(--error-accent-color) 0%, color-mix(in srgb, var(--error-accent-color) 70%, var(--primary-color)) 100%);
+        }
+
+        @keyframes backgroundPan {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulseNode {
+            0%, 100% { transform: scale(0.8); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 1; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes shimmerText {
+            0% { text-shadow: 0 0 5px var(--error-glow-color), 0 0 10px var(--error-glow-color); }
+            50% { text-shadow: 0 0 10px var(--error-glow-color), 0 0 20px var(--error-accent-color); }
+            100% { text-shadow: 0 0 5px var(--error-glow-color), 0 0 10px var(--error-glow-color); }
+        }
+
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            height: 100%;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            line-height: 1.65;
+            background-color: var(--background-color);
+            background-image: linear-gradient(135deg, var(--background-color) 0%, color-mix(in srgb, var(--background-color) 80%, var(--primary-color)) 70%, var(--background-color) 100%);
+            background-size: 300% 300%;
+            animation: backgroundPan 30s ease infinite;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            text-align: center;
+            overflow: hidden; /* Prevents scrollbars from animations */
+        }
+
+        .error-container {
+            background-color: var(--surface-color);
+            background-image: linear-gradient(180deg, color-mix(in srgb, var(--surface-color) 105%, black) 0%, var(--surface-color) 100%);
+            padding: 40px 30px;
+            border-radius: var(--border-radius-lg);
+            box-shadow: 0 0 0 1px var(--border-color, #30363D), 
+                        0 10px 30px rgba(0,0,0,0.3),
+                        0 0 50px rgba(var(--primary-color-rgb), 0.1) inset;
+            max-width: 550px;
+            width: 100%;
+            animation: fadeInUp 0.8s 0.2s ease-out forwards;
+            opacity: 0;
+            position: relative; /* For potential decorative elements */
+        }
+        
+        .error-animation-area {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px auto;
+            position: relative;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .node {
+            position: absolute;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            box-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
+            animation: pulseNode 2s infinite ease-in-out;
+        }
+
+        .node1 {
+            width: 20px; height: 20px;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            animation-delay: 0s;
+        }
+        .node2 {
+            width: 15px; height: 15px;
+            top: 20%; left: 30%;
+            opacity: 0.6;
+            animation-delay: 0.3s;
+            background-color: var(--error-accent-color);
+            box-shadow: 0 0 8px var(--error-accent-color), 0 0 15px var(--error-accent-color);
+        }
+        .node3 {
+            width: 10px; height: 10px;
+            top: 70%; left: 80%;
+            opacity: 0.5;
+            animation-delay: 0.6s;
+        }
+         .node4 { /* Faint background pulse */
+            width: 100%; height: 100%;
+            top: 0; left: 0;
+            background-color: rgba(var(--primary-color-rgb), 0.1);
+            box-shadow: none;
+            transform-origin: center;
+            animation: pulseNode 4s infinite ease-in-out, fadeIn 1s ease forwards;
+            animation-delay: 0.1s;
+            z-index: -1;
+        }
+
+
+        .error-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--error-accent-color);
+            margin-bottom: 15px;
+            animation: shimmerText 3s infinite, fadeInUp 0.6s 0.5s ease-out forwards;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        
+        .error-message {
+            font-size: 1.25rem;
+            color: var(--text-color);
+            margin-bottom: 10px;
+            animation: fadeInUp 0.6s 0.7s ease-out forwards;
+            opacity: 0;
+            transform: translateY(10px);
+            font-weight: 500;
+        }
+
+        .error-submessage {
+            font-size: 0.95rem;
+            color: var(--text-muted-color);
+            margin-bottom: 30px;
+            animation: fadeInUp 0.6s 0.9s ease-out forwards;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        .error-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 25px;
+            background-image: var(--gradient-error-accent);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--border-radius-md);
+            font-size: 1rem;
+            font-weight: 600;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+            transition: all 0.25s ease-out;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.05) inset;
+            animation: fadeInUp 0.6s 1.1s ease-out forwards;
+            opacity: 0;
+            transform: translateY(10px) scale(0.95);
+        }
+
+        .error-button:hover {
+            filter: brightness(1.15);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 12px rgba(var(--error-accent-color-rgb), 0.25), 0 0 15px var(--error-glow-color), 0 0 0 1px rgba(255,255,255,0.1) inset;
+        }
+        .error-button:active {
+            transform: translateY(0px) scale(1);
+            filter: brightness(0.95);
+        }
+        .error-button:focus-visible { 
+            outline: none;
+            box-shadow: 0 0 0 3px var(--background-color), 0 0 0 5px var(--error-accent-color);
+        }
+        .error-button .fas {
+            margin-right: 5px;
+        }
+
+        .redirect-timer {
+            margin-top: 20px;
+            font-size: 0.85em;
+            color: var(--text-muted-color);
+            animation: fadeIn 1s 1.3s ease-out forwards;
+            opacity: 0;
+        }
+        .redirect-timer span {
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        @media (max-width: 600px) {
+            .error-container {
+                padding: 30px 20px;
+                margin: 0 15px;
+            }
+            .error-title {
+                font-size: 2.5rem;
+            }
+            .error-message {
+                font-size: 1.1rem;
+            }
+            .error-animation-area {
+                width: 100px;
+                height: 100px;
+                margin-bottom: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-animation-area">
+            <div class="node node1"></div>
+            <div class="node node2"></div>
+            <div class="node node3"></div>
+            <div class="node node4"></div>
+        </div>
+        <h1 class="error-title">Oops!</h1>
+        <p class="error-message">It seems our advanced systems hit an unexpected turbulence.</p>
+        <p class="error-submessage">Our AI engineers are probably already scrambling. We'll get you back on track shortly.</p>
+        <a href="/" class="error-button">
+            <i class="fas fa-home"></i> Go to Homepage
+        </a>
+        <div class="redirect-timer">
+            Redirecting in <span id="countdown">7</span> seconds...
+        </div>
+    </div>
+
+    <script>
+        const countdownElement = document.getElementById('countdown');
+        let timeLeft = 7; // seconds
+
+        const timerInterval = setInterval(() => {
+            timeLeft--;
+            if (countdownElement) {
+                countdownElement.textContent = timeLeft;
+            }
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                window.location.href = "/";
+            }
+        }, 1000);
+
+        // Fallback redirect if JS is somehow very slow or countdown element not found
+        setTimeout(function() {
+            if (timeLeft > 0) { // Only if interval hasn't redirected yet
+                 window.location.href = "/";
+            }
+        }, (timeLeft + 1) * 1000); // Give an extra second margin
+    </script>
+</body>
+</html>
