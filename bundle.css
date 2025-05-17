@@ -1,443 +1,567 @@
-/* --- START OF EXISTING bundle.css --- */
-html,body,p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,iframe,hr,h1,h2,h3,h4,h5,h6{margin:0;padding:0}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}ul{list-style:none}button,input,select,textarea{margin:0}html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}img,embed,object,audio{height:auto;max-width:100%}iframe{border:0}table{border-collapse:collapse;border-spacing:0}td,th{padding:0;text-align:left}body{font-family:monospace,sans-serif,serif;-webkit-font-smoothing:antialiased}.app__layout{position:absolute;width:100%;height:100%;overflow:hidden;background-color:rgba(0,0,0,0.5)}.app__header{width:100%;height:56px;color:#fff;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;position:fixed;top:0;left:0;right:0;z-index:10}.app__header-icon{width:35px;height:35px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;cursor:pointer;position:absolute;right:20px;top:20px}.app__header-icon:active{opacity:.8}.app__header-title{margin-left:5px;font-size:19px;user-select:none}.app__layout-content{height:inherit}.custom-menu-icon{font-size:28px;line-height:47px}.custom-title,.custom-menu-icon{color:#fff}.custom-btn{position:fixed;right:26px;bottom:26px;background:#448aff;border-radius:50%;border:0;width:56px;height:56px;outline:0;box-shadow:0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);z-index:9999}.custom-btn:active{box-shadow:none}.custom-msg{text-align:center;width:90%;height:50%;overflow:auto;margin:auto;position:absolute;top:0;left:0;bottom:0;right:0;font-size:16px}.custom-fab-icon{color:#fff;font-size:30px;margin-top:2px;user-select:none}video{transform:translateX(-50%) translateY(-50%);top:50%;left:50%;min-width:100%;min-height:100%;width:auto;height:auto;position:absolute}#list li{list-style-type:none;text-decoration:underline;color:#00F}.custom-copy-btn{opacity:0}.hide{display:none}@-webkit-keyframes scanner{0{bottom:90%}50%{bottom:10%}100%{bottom:90%}}@-moz-keyframes scanner{0{bottom:90%}50%{bottom:10%}100%{bottom:90%}}@-o-keyframes scanner{0{bottom:90%}50%{bottom:10%}100%{bottom:90%}}@keyframes scanner{0{bottom:90%}50%{bottom:10%}100%{bottom:90%}}.custom-scanner{width:270px;height:2px;background:#4caf50;position:absolute;-webkit-transition:all 200ms linear;-moz-transition:all 200ms linear;transition:all 200ms linear;-webkit-animation:scanner 3s infinite linear;-moz-animation:scanner 3s infinite linear;-o-animation:scanner 3s infinite linear;animation:scanner 3s infinite linear;box-shadow:0 1px 0 0 rgba(0,0,0,0.4);display:none;left:-10px;right:0;margin:auto}#camera{opacity:0}.no-support{font-size:20px;text-align:center}.app__snackbar{position:fixed;bottom:15px;left:20px;pointer-events:none;z-index:9999}.app__snackbar-msg{width:250px;min-height:50px;background-color:#404040;color:#fff;border-radius:3px;box-shadow:0 0 2px rgba(0,0,0,.12),0 2px 4px rgba(0,0,0,.24);display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;font-size:14px;font-weight:500;padding-left:15px;padding-right:10px;word-break:break-all;-webkit-transition:opacity 3s cubic-bezier(0,0,0.30,1) 0;transition:opacity .30s cubic-bezier(0,0,0.30,1) 0;text-transform:initial;margin-bottom:10px;z-index:9999}.app__snackbar--hide{opacity:0}.app__infodialog,.app__dialog{z-index:12;background-color:#fff;width:290px;height:180px;border-radius:8px;display:flex;position:absolute;left:0;right:0;bottom:0;top:0;margin:auto;box-shadow:0 9px 46px 8px rgba(0,0,0,.14),0 11px 15px -7px rgba(0,0,0,.12),0 24px 38px 3px rgba(0,0,0,.2)}.app__infodialog{max-width:480px;width:95%;height:240px}.app__dialog-content,.app__infodialog-content{width:100%;padding:15px}.app__infodialog-subcontent{margin-top:18px}.app__infodialog-subcontent a{color:#1b1eb5}.app__infodialog-subcontent p:not(:first-child){margin-top:10px}.app__dialog-content h1,.app__infodialog h1{margin-top:5px;margin-bottom:15px;font-weight:600;font-size:19px}.app__dialog input{width:250px;height:30px;border:0;border-bottom:1px solid rgba(0,0,0,.24);outline:0;font-size:15px;color:#1b1eb5;font-weight:500}.app__dialog-actions,.app__infodialog-actions{display:block;position:absolute;bottom:13px;right:20px}.app__infodialog-open,.app__infodialog-close,.app__dialog-open,.app__dialog-close{border:0;height:35px;width:70px;font-size:16px;background:transparent;font-weight:500;outline:0;cursor:pointer;margin-right:-15px}.app__dialog-open{display:none}.app__infodialog-open:active,.app__infodialog-close:active,.app__dialog-open:active,.app__dialog-close:active{opacity:.9}.app__infodialog--hide,.app__dialog--hide{display:none}.app__overlay{position:fixed;top:0;bottom:0;right:0;left:0;transition:all 200ms ease-in;width:310px;height:310px;margin:auto}.app__overlay-left,.app__overlay-right{width:52px;height:340px;background:#7f7f7f}.app__overlay-left{margin-left:-57px;margin-top:-10px}.app__overlay-right{margin-right:-57px;margin-top:-340px;float:right}.app__overlay{border:0} /* This was .app__overlay{border:0} - likely meant to target .app__overlay specific border */ .app__help-text,.app__select-photos{color:#fff;position:absolute;bottom:-70px;font-size:18px;right:0;text-align:center;user-select:none}.app__help-text{display:none;left:0}.app__dialog-overlay,.app__infodialog-overlay{position:fixed;left:0;right:0;bottom:0;top:0;background:rgba(0,0,0,0.55);z-index:11}.camera__icon,.focus__icon{position:relative;left:10px;display:none}.app__select-photos{width:58px;height:58px;cursor:pointer;position:fixed;bottom:20px;right:20px;border-radius:50%;background-color:#3f51b5;display:flex;align-items:center;justify-content:center}.app__select-photos:active{opacity:.8}input[type='file']{display:none}#frame{width:auto;height:auto}.app__version{position:absolute;bottom:20px;font-size:12px;color:#737373;margin-top:15px;display:inline-block}.app__scanner-img{z-index:1;position:relative;display:none}@media screen and (max-width:480px){.app__infodialog{width:90%}.app__infodialog-content{padding:12px 13px}}
-/* --- END OF EXISTING bundle.css --- */
-
-/* --- START OF MATERIAL YOU EXPRESSIVE 2025 STYLES --- */
+/* --- START OF THEME DEFINITION --- */
 :root {
-    --md-sys-font-family: 'Roboto', 'Noto Sans', sans-serif; /* Common Android fonts */
+  /* Expressive Palette (Example - would be dynamic in real Material You) */
+  /* Primary Tones (e.g., from a vibrant teal/blue wallpaper) */
+  --md-sys-color-primary: #69ddff; /* Bright, energetic primary */
+  --md-sys-color-on-primary: #003543; /* Text/icon on primary */
+  --md-sys-color-primary-container: #004d61; /* Container using primary */
+  --md-sys-color-on-primary-container: #bde9ff; /* Text/icon on primary container */
 
-    /* Expressive Palette (Example: Purple/Indigo based) */
-    --md-sys-color-primary: #654AFF; /* Vibrant Purple */
-    --md-sys-color-on-primary: #FFFFFF;
-    --md-sys-color-primary-container: #E6DEFF;
-    --md-sys-color-on-primary-container: #1F0060;
+  /* Secondary Tones (e.g., a complementary or analogous color) */
+  --md-sys-color-secondary: #b3c9d6;
+  --md-sys-color-on-secondary: #1f333c;
+  --md-sys-color-secondary-container: #354953;
+  --md-sys-color-on-secondary-container: #cfe5f2;
 
-    --md-sys-color-secondary: #5E5A72;
-    --md-sys-color-on-secondary: #FFFFFF;
-    --md-sys-color-secondary-container: #E4DFF0;
-    --md-sys-color-on-secondary-container: #1A182C;
+  /* Tertiary Tones (Accent) */
+  --md-sys-color-tertiary: #c9bfff;
+  --md-sys-color-on-tertiary: #302b47;
+  --md-sys-color-tertiary-container: #47425f;
+  --md-sys-color-on-tertiary-container: #e6deff;
 
-    --md-sys-color-tertiary: #7A5261;
-    --md-sys-color-on-tertiary: #FFFFFF;
-    --md-sys-color-tertiary-container: #FFD8E5;
-    --md-sys-color-on-tertiary-container: #2E101E;
+  /* Neutral Tones (Backgrounds, Surfaces) */
+  --md-sys-color-background: #191c1e; /* Deep, calm background */
+  --md-sys-color-on-background: #e1e3e5; /* Text/icon on background */
+  --md-sys-color-surface: #1f2428; /* Slightly lighter surface for cards, dialogs */
+  --md-sys-color-on-surface: #e1e3e5; /* Text/icon on surface */
+  --md-sys-color-surface-variant: #3f484d; /* A different surface variant */
+  --md-sys-color-on-surface-variant: #bfc8ce; /* Text/icon on surface variant */
+  --md-sys-color-outline: #899297; /* Outlines, dividers */
+  --md-sys-color-shadow: #000000;
 
-    --md-sys-color-error: #BA1A1A;
-    --md-sys-color-on-error: #FFFFFF;
+  /* Utility */
+  --md-sys-color-scrim: rgba(0, 0, 0, 0.65); /* Scrim for overlays */
+  --md-sys-color-inverse-surface: #e1e3e5;
+  --md-sys-color-inverse-on-surface: #2e3133;
 
-    --md-sys-color-background: #FBF8FF; /* Light, slightly warm background */
-    --md-sys-color-on-background: #1C1B1F;
+  /* Typography */
+  --md-sys-font-family-brand: "Google Sans", "Roboto", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --md-sys-font-family-plain: "Roboto", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
-    --md-sys-color-surface: #FBF8FF;
-    --md-sys-color-on-surface: #1C1B1F;
-    --md-sys-color-surface-variant: #E6E0EC;
-    --md-sys-color-on-surface-variant: #48454E; /* For icons, subtitles */
+  /* Shape */
+  --md-sys-shape-corner-none: 0px;
+  --md-sys-shape-corner-extra-small: 4px;
+  --md-sys-shape-corner-small: 8px;
+  --md-sys-shape-corner-medium: 12px;
+  --md-sys-shape-corner-large: 16px; /* Or even 20px for more "expressive" */
+  --md-sys-shape-corner-extra-large: 28px; /* Key for expressive dialogs/cards */
+  --md-sys-shape-corner-full: 9999px; /* Pill shapes */
 
-    --md-sys-color-outline: #79747E;
-    --md-sys-color-outline-variant: #C9C4CF;
+  /* Elevation (Example Levels) */
+  --md-sys-elevation-level-0: none;
+  --md-sys-elevation-level-1: 0px 1px 3px 1px rgba(0,0,0,.15), 0px 1px 2px 0px rgba(0,0,0,.3);
+  --md-sys-elevation-level-2: 0px 2px 6px 2px rgba(0,0,0,.15), 0px 1px 2px 0px rgba(0,0,0,.3);
+  --md-sys-elevation-level-3: 0px 1px 3px 0px rgba(0,0,0,.3), 0px 4px 8px 3px rgba(0,0,0,.15);
+  --md-sys-elevation-level-4: 0px 2px 3px 0px rgba(0,0,0,.3), 0px 6px 10px 4px rgba(0,0,0,.15);
+  --md-sys-elevation-level-5: 0px 4px 4px 0px rgba(0,0,0,.3), 0px 8px 12px 6px rgba(0,0,0,.15);
+}
+/* --- END OF THEME DEFINITION --- */
 
-    --md-sys-color-surface-container-lowest: #FFFFFF;
-    --md-sys-color-surface-container-low: #F5F2FA;
-    --md-sys-color-surface-container: #EFEDF4;
-    --md-sys-color-surface-container-high: #EAE7F0; /* Good for headers */
-    --md-sys-color-surface-container-highest: #E4E1EA; /* Good for dialogs */
 
-    --md-sys-color-inverse-surface: #313034;
-    --md-sys-color-inverse-on-surface: #F3EFF7;
+/* --- RESET & BASE --- */
+html,body,p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,iframe,hr,h1,h2,h3,h4,h5,h6{margin:0;padding:0}
+h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}
+ul{list-style:none}
+button,input,select,textarea{margin:0; font-family: inherit;}
+html{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+*,*:before,*:after{box-sizing:inherit}
+img,embed,object,audio{height:auto;max-width:100%} /* video handled separately */
+iframe{border:0}
+table{border-collapse:collapse;border-spacing:0}
+td,th{padding:0;text-align:left}
 
-    --md-sys-color-scrim: rgba(0, 0, 0, 0.65); /* Darker scrim */
-
-    --md-sys-elevation-1: 0px 1px 3px 1px rgba(0,0,0,0.15), 0px 1px 2px 0px rgba(0,0,0,0.30);
-    --md-sys-elevation-2: 0px 2px 6px 2px rgba(0,0,0,0.15), 0px 1px 2px 0px rgba(0,0,0,0.30);
-    --md-sys-elevation-3: 0px 4px 8px 3px rgba(0,0,0,0.15), 0px 1px 3px 0px rgba(0,0,0,0.30);
-    --md-sys-elevation-4: 0px 6px 10px 4px rgba(0,0,0,0.15), 0px 2px 3px 0px rgba(0,0,0,0.30);
-    --md-sys-elevation-5: 0px 8px 12px 6px rgba(0,0,0,0.15), 0px 4px 4px 0px rgba(0,0,0,0.30);
-
-    --md-sys-shape-corner-extra-small: 4px;
-    --md-sys-shape-corner-small: 8px;
-    --md-sys-shape-corner-medium: 12px;
-    --md-sys-shape-corner-large: 16px;
-    --md-sys-shape-corner-extra-large: 28px;
-    --md-sys-shape-corner-full: 50%;
+body{
+  font-family: var(--md-sys-font-family-plain);
+  background-color: var(--md-sys-color-background);
+  color: var(--md-sys-color-on-background);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
 }
 
-/* Import Roboto font (ensure it's available or use a CDN link in HTML) */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-
-body {
-    font-family: var(--md-sys-font-family);
-    background-color: var(--md-sys-color-background);
-    color: var(--md-sys-color-on-background);
-    line-height: 1.5;
+/* --- APP LAYOUT & HEADER --- */
+.app__layout{
+  position:absolute;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background-color: var(--md-sys-color-background); /* Ensure this matches body */
 }
 
-/* App Layout and Header */
-.app__layout {
-    /* The original rgba(0,0,0,0.5) is for the camera view darkening. Keep it. */
-    /* Consider a subtle gradient for the "Expressive" feel if not showing camera */
-    /* background-image: linear-gradient(135deg, var(--md-sys-color-primary-container), var(--md-sys-color-tertiary-container)); */
-}
-
-.app__header {
-    height: 64px; /* Slightly taller Material header */
-    background-color: var(--md-sys-color-surface-container-high);
-    color: var(--md-sys-color-on-surface);
-    box-shadow: var(--md-sys-elevation-2);
-    padding: 0 16px;
+.app__header{
+  width:100%;
+  height: 64px; /* Taller app bar */
+  color: var(--md-sys-color-on-surface);
+  background-color: var(--md-sys-color-surface); /* Or transparent for more immersive feel */
+  display:flex;
+  align-items:center;
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:100; /* Increased z-index */
+  padding: 0 16px;
+  box-shadow: var(--md-sys-elevation-level-2);
 }
 
 .app__header-icon {
-    /* Position adjusted slightly for taller header */
-    top: 50%;
-    transform: translateY(-50%);
-    right: 16px; 
-    width: 40px; /* Standard touch target */
-    height: 40px;
+  width: 48px; /* Larger touch target */
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: var(--md-sys-shape-corner-full); /* Pill shape */
+  position: absolute; /* Keep if design requires it, or integrate into flex flow */
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: background-color 0.2s ease-out;
 }
 .app__header-icon svg {
-    fill: var(--md-sys-color-on-surface-variant);
-    width: 24px;
-    height: 24px;
+  fill: var(--md-sys-color-primary); /* Accent color for icon */
+  width: 28px; /* Slightly larger icon */
+  height: 28px;
 }
-.app__header-icon:active svg {
-    fill: var(--md-sys-color-primary);
+.app__header-icon:hover {
+  background-color: rgba(var(--md-sys-color-primary-rgb, 105, 221, 255), 0.08); /* Use RGB for alpha if available, else a fixed alpha */
 }
-
-
-.app__header-title {
-    margin-left: 16px; /* Standard Material title inset */
-    font-size: 22px; /* Material "Title Large" */
-    font-weight: 500;
-    color: var(--md-sys-color-on-surface);
+.app__header-icon:active{
+  background-color: rgba(var(--md-sys-color-primary-rgb, 105, 221, 255), 0.12);
+  opacity: 1; /* Remove default opacity dimming if using background feedback */
 }
 
-/* FAB (Floating Action Button) - Styling .app__select-photos as the main FAB */
-.custom-btn { /* This is the old FAB, style it similarly or ensure it's hidden if .app__select-photos is primary */
-    background-color: var(--md-sys-color-secondary-container);
-    box-shadow: var(--md-sys-elevation-3);
-    border-radius: var(--md-sys-shape-corner-large); /* Squircle FAB */
-    width: 56px;
-    height: 56px;
-}
-.custom-btn:active {
-    box-shadow: var(--md-sys-elevation-1);
-    background-color: color-mix(in srgb, var(--md-sys-color-secondary-container) 90%, black);
-}
-.custom-fab-icon {
-    color: var(--md-sys-color-on-secondary-container);
-    font-size: 24px;
+.app__header-title{
+  margin-left: 16px; /* Or 72px if icon is not absolute and is first */
+  font-family: var(--md-sys-font-family-brand);
+  font-size: 22px; /* Material You Title Large */
+  font-weight: 500;
+  user-select:none;
+  color: var(--md-sys-color-on-surface);
 }
 
-.app__select-photos { /* This seems to be the active FAB */
-    background-color: var(--md-sys-color-primary-container);
-    color: var(--md-sys-color-on-primary-container); /* For text if any, SVG fill is separate */
-    border-radius: var(--md-sys-shape-corner-large); /* Squircle FAB for 56x56 */
-    width: 56px; 
-    height: 56px;
-    box-shadow: var(--md-sys-elevation-3);
-    bottom: 24px; /* More spacing */
-    right: 24px;
-    transition: background-color 0.2s ease-out, box-shadow 0.2s ease-out;
-}
-.app__select-photos svg {
-    fill: var(--md-sys-color-on-primary-container);
-    width: 24px;
-    height: 24px;
-}
-.app__select-photos:active {
-    box-shadow: var(--md-sys-elevation-1);
-    background-color: color-mix(in srgb, var(--md-sys-color-primary-container) 85%, black);
-    opacity: 1; /* Override original opacity change */
+.app__layout-content{
+  height:100%; /* Changed from inherit to ensure it takes full viewport */
+  position: relative; /* For positioning elements within */
+  overflow: hidden; /* If content scrolls, manage it here */
 }
 
-
-/* Dialogs */
-.app__dialog, .app__infodialog {
-    background-color: var(--md-sys-color-surface-container-highest);
-    border-radius: var(--md-sys-shape-corner-extra-large);
-    box-shadow: var(--md-sys-elevation-5);
-    color: var(--md-sys-color-on-surface);
-    /* Adjust height to be more dynamic if possible, or increase default */
-    min-height: 200px; /* Make space for content */
-    height: auto; /* Let content define height */
-    max-height: 90vh; /* Prevent overflow */
-    overflow: hidden; /* content will scroll */
-    display: flex;
-    flex-direction: column;
-}
-.app__infodialog { /* Specifics for info dialog */
-    padding-bottom: 60px; /* Ensure space for fixed action buttons */
+/* --- CAMERA & SCANNER VIEW --- */
+video{
+  transform:translateX(-50%) translateY(-50%); /* Keeps existing centering logic */
+  top:50%;
+  left:50%;
+  min-width:100%;
+  min-height:100%;
+  width:auto;
+  height:auto;
+  position:absolute;
+  object-fit: cover; /* Ensures video covers the area */
+  z-index: 1; /* Behind UI elements */
 }
 
-.app__dialog-content, .app__infodialog-content {
-    padding: 24px; /* Material Dialog padding */
-    flex-grow: 1;
-    overflow-y: auto; /* Scroll content if too long */
-}
+#camera{opacity:0} /* Keep as is if it's a hidden helper */
 
-.app__dialog-content h1, .app__infodialog h1 { /* Assuming .app__infodialog h1 is the title */
-    font-size: 24px; /* Material "Headline Small" */
-    font-weight: 500;
-    color: var(--md-sys-color-on-surface);
-    margin-top: 0;
-    margin-bottom: 16px;
-}
-.app__infodialog-content > p { /* Direct P children of infodialog content */
-    font-size: 14px; /* Material "Body Medium" */
-    line-height: 1.6;
-    color: var(--md-sys-color-on-surface-variant);
-}
-
-.app__infodialog-subcontent {
-    margin-top: 24px;
-    padding-top: 16px;
-    border-top: 1px solid var(--md-sys-color-outline-variant);
-}
-.app__infodialog-subcontent p {
-    font-size: 14px;
-    color: var(--md-sys-color-on-surface-variant);
-}
-.app__infodialog-subcontent a {
-    color: var(--md-sys-color-primary);
-    text-decoration: none;
-    font-weight: 500;
-}
-.app__infodialog-subcontent a:hover {
-    text-decoration: underline;
-}
-
-/* Dialog Input */
-.app__dialog input[type="text"] {
-    width: 100%; /* Full width */
-    font-size: 16px; /* Material "Body Large" */
-    color: var(--md-sys-color-on-surface);
-    background-color: var(--md-sys-color-surface-container-low);
-    border: 1px solid var(--md-sys-color-outline);
-    border-radius: var(--md-sys-shape-corner-extra-small);
-    padding: 12px 16px;
-    height: auto; /* remove fixed height */
-    box-sizing: border-box;
-    margin-bottom: 16px; /* Space below input */
-}
-.app__dialog input[type="text"]:focus {
-    border-color: var(--md-sys-color-primary);
-    box-shadow: 0 0 0 2px var(--md-sys-color-primary-container);
-    outline: none;
-}
-
-/* Dialog Actions */
-.app__dialog-actions, .app__infodialog-actions {
-    padding: 8px 24px 16px; /* Spacing around actions */
-    display: flex; /* Use flex for button alignment */
-    justify-content: flex-end;
-    gap: 8px;
-    position: relative; /* Override absolute to flow naturally */
-    bottom: auto; right: auto; /* Reset absolute positioning */
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.app__infodialog-open, .app__infodialog-close,
-.app__dialog-open, .app__dialog-close {
-    font-size: 14px; /* Material "Label Large" */
-    font-weight: 500;
-    color: var(--md-sys-color-primary);
-    background-color: transparent;
-    border-radius: var(--md-sys-shape-corner-full); /* Pill shape */
-    padding: 10px 12px; /* Standard button padding */
-    min-width: auto; /* Remove fixed width */
-    height: auto; /* Remove fixed height */
-    text-transform: none; /* Modern Material often avoids uppercase */
-    margin-right: 0; /* Remove original margin */
-    transition: background-color 0.15s ease-out;
-}
-.app__dialog-open { /* If this is a "filled" button */
-    background-color: var(--md-sys-color-primary);
-    color: var(--md-sys-color-on-primary);
-    padding: 10px 24px; /* More padding for filled */
-}
-.app__dialog-open:hover {
-    background-color: color-mix(in srgb, var(--md-sys-color-primary) 90%, black);
-}
-.app__dialog-open:active {
-    background-color: color-mix(in srgb, var(--md-sys-color-primary) 80%, black);
-}
-
-.app__infodialog-open:hover, .app__infodialog-close:hover,
-.app__dialog-close:hover { /* Text/Outlined button hover */
-    background-color: color-mix(in srgb, var(--md-sys-color-primary) 10%, transparent);
-}
-.app__infodialog-open:active, .app__infodialog-close:active,
-.app__dialog-close:active { /* Text/Outlined button active */
-    background-color: color-mix(in srgb, var(--md-sys-color-primary) 20%, transparent);
-    opacity: 1; /* Override original */
-}
-
-
-/* Dialog Overlay */
-.app__dialog-overlay, .app__infodialog-overlay {
-    background-color: var(--md-sys-color-scrim);
-}
-
-/* Snackbar */
-.app__snackbar {
-    left: 50%; /* Center horizontally */
-    transform: translateX(-50%);
-    width: auto; /* Let content define width */
-    max-width: calc(100% - 32px); /* Max width with padding */
-    bottom: 24px; /* More spacing from bottom */
-}
-.app__snackbar-msg {
-    background-color: var(--md-sys-color-inverse-surface);
-    color: var(--md-sys-color-inverse-on-surface);
-    border-radius: var(--md-sys-shape-corner-small); /* Softer corners */
-    box-shadow: var(--md-sys-elevation-3);
-    font-size: 14px; /* Material "Body Medium" */
-    padding: 14px 16px; /* Adjust padding */
-    min-height: 48px; /* Standard snackbar height */
-    width: auto; /* Let content define width */
-    min-width: 288px; /* Min width for snackbar */
-    max-width: 500px;
-    word-break: normal; /* Prevent aggressive break-all */
-}
-
-/* Scanner Visuals */
+/* Redesigned Scanner Viewfinder */
 .app__overlay {
-    /* The transparent center with borders. The SVG handles the corners */
-    /* border-color: var(--md-sys-color-primary-container); This was on .app__overlay previously */
-    /* If .app__scanner-img is the primary visual, ensure .app__overlay-left/right are just for the cutout effect */
-}
-.app__overlay-left, .app__overlay-right {
-    /* These create the "window" effect. Make them match scrim or a darker overlay */
-    background: rgba(0,0,0,0.5); /* Match the app__layout dark overlay if video is behind */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: clamp(260px, 70vw, 380px); /* Responsive width */
+  height: clamp(260px, 70vw, 380px); /* Responsive height, make it square */
+  transform: translate(-50%, -50%);
+  z-index: 20; /* Above video, below dialogs */
+  /* No border or background on app__overlay itself */
 }
 
-.app__scanner-img { /* The SVG border for scanner */
-    display: block !important; /* Override display:none */
-    /* The SVG already has fill #FFFFFF, which is good on dark background */
-    filter: drop-shadow(0px 0px 10px rgba(0, 191, 255, 0.5)); /* Expressive Glow */
+.app__overlay-frame { /* This can be removed if app__scanner-img is styled as the frame */
+  display: none; /* We'll use the SVG for the frame */
+}
+
+.app__scanner-img { /* This SVG will be our main viewfinder frame */
+  display: block; /* Make it visible */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 21;
 }
 .app__scanner-img g path {
-    stroke: var(--md-sys-color-primary); /* Try to color the path */
-    stroke-width: 2px; /* Make it more visible */
-    fill: rgba(255,255,255,0.8); /* Keep the fill light */
+  fill: var(--md-sys-color-primary); /* Vibrant accent for scanner corners */
+  stroke: var(--md-sys-color-background); /* Thin stroke for definition against video */
+  stroke-width: 8px; /* Make stroke thicker for more visual separation, adjust as needed */
+  /* The original SVG is complex; for simplicity, this targets all paths.
+     A better SVG would have distinct elements for corners.
+     Let's assume the existing SVG structure's "Shape" ID is the one for corners. */
+}
+.app__scanner-img #Shape {
+  fill: var(--md-sys-color-primary);
+  /* Opacity can be added for a semi-transparent effect if desired */
+  /* filter: drop-shadow(0 0 8px var(--md-sys-color-primary)); /* Optional glow */
 }
 
 
-.custom-scanner { /* The animated line */
-    background: linear-gradient(90deg, transparent, var(--md-sys-color-primary), transparent);
-    height: 3px;
-    box-shadow: 0 0 8px var(--md-sys-color-primary), 0 0 12px var(--md-sys-color-primary);
-    border-radius: 2px;
-    display: block !important; /* Ensure it's visible */
+/* Animated Scanner Line */
+.custom-scanner{
+  width: 90%; /* Relative to .app__overlay */
+  height: 4px; /* Thicker line */
+  background: linear-gradient(90deg, transparent, var(--md-sys-color-primary), transparent); /* Softer edges */
+  position:absolute;
+  left: 5%; /* Centered */
+  margin: auto; /* Not needed with left:5% and width:90% */
+  box-shadow: 0 0 10px var(--md-sys-color-primary), 0 0 5px var(--md-sys-color-primary); /* Glow effect */
+  border-radius: var(--md-sys-shape-corner-full);
+  display: block; /* Make it visible */
+  z-index: 22; /* Above frame, below potential text */
+  animation: scanner 3s infinite ease-in-out; /* Smoother easing */
 }
 
-.app__help-text {
-    color: var(--md-sys-color-inverse-on-surface); /* For text on dark background */
-    background-color: var(--md-sys-color-inverse-surface);
-    padding: 8px 16px;
-    border-radius: var(--md-sys-shape-corner-medium);
-    box-shadow: var(--md-sys-elevation-2);
-    font-size: 14px;
-    bottom: -50px; /* Adjust if needed */
-    /* Center it if `left:0` is also present */
-    left: 50% !important; /* Override existing left:0 for true centering */
-    transform: translateX(-50%);
-    width: max-content; /* Fit content */
-    max-width: 80%;
+@-webkit-keyframes scanner{0%{bottom:90%; opacity: 0.7;} 50%{bottom:10%; opacity: 1;} 100%{bottom:90%; opacity: 0.7;}}
+@keyframes scanner{0%{bottom:90%; opacity: 0.7;} 50%{bottom:10%; opacity: 1;} 100%{bottom:90%; opacity: 0.7;}}
+
+.app__help-text{
+  color: var(--md-sys-color-on-primary-container); /* Readable on dark overlay/video */
+  background-color: rgba(var(--md-sys-color-primary-container-rgb, 0, 77, 97), 0.8); /* Use RGB for alpha */
+  position:absolute;
+  bottom: -60px; /* Position below the scanner overlay */
+  left:50%;
+  transform: translateX(-50%);
+  font-size: 16px;
+  padding: 8px 16px;
+  border-radius: var(--md-sys-shape-corner-medium);
+  text-align:center;
+  user-select:none;
+  display: block; /* Or flex if needed */
+  z-index: 22;
+  box-shadow: var(--md-sys-elevation-level-1);
 }
 
-/* Version Text */
-.app__version {
-    color: var(--md-sys-color-on-surface-variant);
-    font-size: 12px;
-    margin-top: 8px;
-    padding: 0 24px; /* Align with dialog content padding */
-    text-align: center; /* Center if it's block */
-    width: 100%;
-    box-sizing: border-box;
+
+/* --- DIALOGS (Common styles first) --- */
+.app__dialog-overlay, .app__infodialog-overlay {
+  position:fixed;
+  left:0;right:0;bottom:0;top:0;
+  background: var(--md-sys-color-scrim);
+  z-index:200; /* High z-index */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0s 0.3s;
+}
+.app__dialog-overlay:not(.app__dialog--hide), /* When dialog is shown */
+.app__infodialog-overlay:not(.app__infodialog--hide) {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
 }
 
-/* General list items if #list is used for results */
-#list li {
-    color: var(--md-sys-color-primary);
-    text-decoration: none;
-    padding: 8px 0;
-    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+
+.app__dialog, .app__infodialog {
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+  width: clamp(320px, 90vw, 480px); /* Responsive width */
+  min-height: 180px; /* Let content define height mostly */
+  height: auto; /* Auto height */
+  border-radius: var(--md-sys-shape-corner-extra-large); /* Expressive rounding */
+  display:flex; /* Keep flex for content structure */
+  flex-direction: column;
+  position:fixed; /* Changed from absolute for easier centering */
+  left:50%;
+  top:50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  margin:auto; /* Not needed with fixed and transform */
+  box-shadow: var(--md-sys-elevation-level-4);
+  z-index:201;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s 0.3s;
+}
+
+.app__dialog:not(.app__dialog--hide),
+.app__infodialog:not(.app__infodialog--hide) {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%) scale(1);
+  transition-delay: 0s;
+}
+
+
+.app__dialog-content, .app__infodialog-content {
+  width:100%;
+  padding: 24px; /* Generous padding */
+  flex-grow: 1;
+}
+
+.app__dialog-content h1, .app__infodialog h1 {
+  font-family: var(--md-sys-font-family-brand);
+  color: var(--md-sys-color-on-surface);
+  margin-top:0; /* No top margin if padding handles it */
+  margin-bottom: 16px;
+  font-weight:500;
+  font-size: 24px; /* Headline Small */
+}
+.app__infodialog p {
+  font-size: 16px; /* Body Large */
+  line-height: 1.6;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.app__infodialog-subcontent{margin-top:24px;}
+.app__infodialog-subcontent a{
+  color: var(--md-sys-color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+.app__infodialog-subcontent a:hover{ text-decoration: underline; }
+.app__infodialog-subcontent p:not(:first-child){margin-top:12px;}
+
+.app__dialog input[type="text"]{
+  width:100%;
+  height: 56px; /* Standard Material height */
+  border:0;
+  border-bottom: 2px solid var(--md-sys-color-outline);
+  outline:0;
+  font-size:16px; /* Input text */
+  color: var(--md-sys-color-on-surface);
+  background-color: transparent;
+  padding: 16px 0px 8px 0px; /* Adjust for label if it were present */
+  transition: border-color 0.2s ease;
+}
+.app__dialog input[type="text"]:focus{
+  border-bottom-color: var(--md-sys-color-primary);
+}
+
+.app__dialog-actions, .app__infodialog-actions {
+  display:flex; /* Use flex for button alignment */
+  justify-content: flex-end; /* Align buttons to the right */
+  padding: 8px 24px 24px 24px; /* Padding around actions */
+  gap: 8px; /* Space between buttons */
+  /* Removed absolute positioning, part of flex column now */
+}
+
+/* Button Styling (Material You Text Buttons) */
+.app__infodialog-open, .app__infodialog-close,
+.app__dialog-open, .app__dialog-close {
+  border:0;
+  height: 40px;
+  min-width: 64px; /* Minimum width for touch target */
+  padding: 0 16px; /* Horizontal padding */
+  font-size: 14px; /* Label Large */
+  background:transparent;
+  color: var(--md-sys-color-primary); /* Accent color for text buttons */
+  font-weight:500;
+  outline:0;
+  cursor:pointer;
+  border-radius: var(--md-sys-shape-corner-full); /* Pill shape */
+  text-transform: uppercase; /* Or none for softer look */
+  transition: background-color 0.2s ease;
+}
+.app__infodialog-open:hover, .app__infodialog-close:hover,
+.app__dialog-open:hover, .app__dialog-close:hover {
+  background-color: rgba(var(--md-sys-color-primary-rgb, 105, 221, 255), 0.08);
+}
+.app__infodialog-open:active, .app__infodialog-close:active,
+.app__dialog-open:active, .app__dialog-close:active{
+  background-color: rgba(var(--md-sys-color-primary-rgb, 105, 221, 255), 0.12);
+  opacity: 1;
+}
+.app__dialog-open{display:inline-flex;} /* Make Open button visible and flex for alignment */
+
+
+/* --- FAB (Floating Action Button for Select Photos) --- */
+.app__select-photos {
+  width: 56px;
+  height: 56px;
+  cursor: pointer;
+  position: fixed;
+  bottom: 32px; /* More padding from edge */
+  right: 32px;
+  border-radius: var(--md-sys-shape-corner-large); /* Slightly less than full for "squircle" */
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--md-sys-elevation-level-3);
+  z-index: 90;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease, background-color 0.2s ease;
+}
+.app__select-photos svg {
+  fill: var(--md-sys-color-on-primary-container); /* Ensure icon color matches */
+  width: 28px;
+  height: 28px;
+}
+.app__select-photos:hover {
+  box-shadow: var(--md-sys-elevation-level-4);
+  background-color: var(--md-sys-color-primary); /* Change to primary on hover for more pop */
+  color: var(--md-sys-color-on-primary);
+}
+.app__select-photos:hover svg {
+  fill: var(--md-sys-color-on-primary);
+}
+.app__select-photos:active {
+  transform: scale(0.95);
+  box-shadow: var(--md-sys-elevation-level-2);
+  opacity: 1;
+}
+input[type='file']{display:none} /* Keep as is */
+
+/* --- SNACKBAR --- */
+.app__snackbar{
+  position:fixed;
+  bottom: 24px; /* More spacing */
+  left: 50%; /* Centered */
+  transform: translateX(-50%);
+  pointer-events:none;
+  z-index:300; /* Highest z-index */
+  display: flex;
+  flex-direction: column-reverse; /* New messages appear on top if multiple */
+  align-items: center;
+}
+
+.app__snackbar-msg{
+  width: auto; /* Auto width based on content */
+  min-width: 280px; /* Minimum width */
+  max-width: 560px; /* Max width */
+  min-height: 48px;
+  background-color: var(--md-sys-color-inverse-surface); /* Material Snackbar color */
+  color: var(--md-sys-color-inverse-on-surface);
+  border-radius: var(--md-sys-shape-corner-small); /* Standard snackbar rounding */
+  box-shadow: var(--md-sys-elevation-level-3);
+  display:flex;
+  align-items:center;
+  justify-content:space-between; /* If actions were present */
+  font-size:14px; /* Body medium */
+  font-weight:400;
+  padding: 14px 16px;
+  word-break:break-word; /* Changed from break-all for better readability */
+  margin-bottom: 8px; /* Spacing between snackbars */
+  pointer-events: all; /* Allow interaction if needed */
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+  transition: opacity .3s ease, transform .3s ease;
+}
+.app__snackbar-msg:not(.app__snackbar--hide) { /* For showing */
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.app__snackbar--hide{ /* This class now controls individual message hiding if logic allows */
+  opacity:0 !important; /* Ensure it hides */
+  transform: translateY(20px) scale(0.95) !important;
+  transition-delay: 0s !important; /* Hide immediately */
+  margin-bottom: 0; /* Collapse margin when hidden */
+  height: 0; /* Collapse height */
+  padding-top: 0; padding-bottom: 0; /* Collapse padding */
+  overflow: hidden;
+}
+
+
+/* --- MISC & UTILITIES --- */
+.custom-menu-icon{ /* This was used for title color before, remove if not needed */
+  display: none; /* Example: if title color is handled by .app__header-title */
+}
+.custom-title{ color: var(--md-sys-color-on-surface); } /* Already handled by header */
+
+/* .custom-btn was a FAB-like button, now replaced by .app__select-photos, can remove if unused */
+.custom-btn { display: none; }
+.custom-fab-icon { display: none; }
+
+
+.custom-msg{ /* This seems like a general message area, style if used, or remove */
+  text-align:center;
+  width:90%;
+  max-width: 400px;
+  height:auto; /* Fit content */
+  overflow:auto;
+  margin:auto;
+  position:absolute; /* Center it if it's a fullscreen message */
+  top:50%;left:50%;bottom:auto;right:auto;
+  transform: translate(-50%, -50%);
+  font-size:18px;
+  color: var(--md-sys-color-on-surface-variant);
+  padding: 24px;
+  background-color: var(--md-sys-color-surface-variant);
+  border-radius: var(--md-sys-shape-corner-large);
+  box-shadow: var(--md-sys-elevation-level-2);
+}
+
+#list li{ /* If used for displaying scanned results list */
+  list-style-type:none;
+  text-decoration:underline; /* Might want to change this */
+  color: var(--md-sys-color-primary); /* Link-like color */
+  padding: 8px 0;
+  cursor: pointer;
 }
 #list li:hover {
-    background-color: var(--md-sys-color-surface-container-low);
+  text-decoration: none;
+  background-color: rgba(var(--md-sys-color-primary-rgb, 105, 221, 255), 0.08);
 }
 
-/* Hide elements that might not fit the new design or are superseded */
-.custom-menu-icon, .custom-title { /* Original header elements, possibly not used if app__header-title is styled */
-    /* display: none; */ /* Uncomment if these are truly redundant */
+.custom-copy-btn{opacity:0} /* Keep if used, might need styling */
+.hide{display:none !important} /* Utility class */
+
+.no-support{
+  font-size:20px;
+  text-align:center;
+  color: var(--md-sys-color-on-background);
+  padding: 40px 20px;
 }
 
-/* Ensure video remains fullscreen background */
-video {
-    object-fit: cover; /* Ensures video covers the area */
+.camera__icon,.focus__icon{ /* Style if these become visible features */
+  position:relative;
+  left:10px;
+  display:none; /* Current state */
+  fill: var(--md-sys-color-primary);
 }
 
-/* Media query adjustments */
+#frame{ /* If used for displaying image from file, ensure it's styled */
+  width:auto;height:auto;
+  max-width: 100%;
+  max-height: 80vh;
+  display: block;
+  margin: 20px auto;
+  border-radius: var(--md-sys-shape-corner-medium);
+}
+
+.app__version{
+  position:fixed; /* Keep it out of the way */
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size:12px;
+  color: var(--md-sys-color-outline); /* Muted color */
+  display:inline-block;
+  z-index: 5;
+}
+
+
+/* --- MEDIA QUERIES (Adjustments for smaller screens if needed) --- */
 @media screen and (max-width:480px){
-    .app__infodialog, .app__dialog {
-        width: calc(100% - 32px); /* Full width with margin */
-        margin-left: 16px;
-        margin-right: 16px;
-        border-radius: var(--md-sys-shape-corner-large); /* Slightly smaller radius on small screens */
-    }
-    .app__header-title {
-        font-size: 20px;
-    }
-    .app__select-photos {
-        bottom: 16px;
-        right: 16px;
-    }
-    .app__snackbar {
-        bottom: 16px;
-        max-width: calc(100% - 16px);
-    }
+  .app__infodialog, .app__dialog {
+    width: calc(100% - 32px); /* Full width with some margin */
+    border-radius: var(--md-sys-shape-corner-large); /* Slightly smaller radius for edge-to-edge feel */
+  }
+  .app__infodialog-content, .app__dialog-content {
+    padding: 20px; /* Slightly less padding */
+  }
+  .app__header-title {
+    font-size: 20px;
+  }
+  .app__select-photos {
+    bottom: 24px;
+    right: 24px;
+  }
+  .app__help-text {
+    bottom: -50px; /* Adjust if needed */
+    font-size: 14px;
+  }
 }
 
-/* Final fine-tuning for "Expressive" feel */
-button, .app__header-icon, .app__select-photos {
-    transition: transform 0.1s ease-out, background-color 0.2s ease-out; /* Subtle press effect */
+/* Add placeholder RGB versions for colors used with opacity, if not available from a preprocessor */
+/* This is a manual step if you don't have JS or a build tool to generate these */
+/* Example:
+:root {
+  ...
+  --md-sys-color-primary-rgb: 105, 221, 255;
+  --md-sys-color-primary-container-rgb: 0, 77, 97;
+  ...
 }
-button:active, .app__header-icon:active, .app__select-photos:active {
-    transform: scale(0.95); /* Expressive press */
-}
-
-/* Scanner animation - keep existing, just ensure color is good */
-@keyframes scanner {
-  0% { bottom: 90%; opacity: 0.7; }
-  50% { bottom: 10%; opacity: 1; }
-  100% { bottom: 90%; opacity: 0.7; }
-}
-.custom-scanner {
-    animation: scanner 3.5s infinite linear; /* Slightly slower, more graceful */
-}
-
-
-/* Ensure the scanner SVG corners are properly positioned relative to the custom-scanner line bounds */
-/* The .app__overlay seems to define the 310x310 box. The SVG should align with this. */
-/* The .custom-scanner original width 270px, left -10px. Needs to align with the SVG frame. */
-.app__overlay { /* This sets the 310x310 area */
-    /* The SVG .app__scanner-img is 310x310. */
-    /* If .custom-scanner is used, it should span the inner width of the SVG frame */
-}
-.custom-scanner {
-    width: calc(100% - 40px); /* Adjust to fit within typical SVG path bounds */
-    left: 20px; /* Center it within the overlay box */
-    margin: auto; /* Remove auto margin if left is set */
-}
-
-/* Remove the gray side bars if the SVG provides the full frame */
-.app__overlay-left, .app__overlay-right {
-    display: none; /* Assuming .app__scanner-img provides the visual frame */
-}
-.app__overlay { /* Remove border from the container if SVG is the border */
-    border: none;
-}
-
-/* --- END OF MATERIAL YOU EXPRESSIVE 2025 STYLES --- */
+*/
