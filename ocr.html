@@ -4,273 +4,188 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hindi OCR - Extract Text from PDF & Images</title>
-    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        /* Re-using the established AI app style variables and base styles */
         :root {
-            --primary-color: #4A90E2; 
-            --primary-color-rgb: 74, 144, 226;
-            --secondary-color: #2868C7;
-            --background-color: #0D1117; 
-            --surface-color: #161B22;   
-            --text-color: #C9D1D9;      
-            --text-muted-color: #8B949E;
-            --success-color: #238636;   
-            --success-hover-color: #2EA043;
-            --success-color-rgb: 35, 134, 54;
-            --error-color: #DA3633;     
-            --border-color: #30363D;   
-            --input-background: #22272E; 
+            --primary-color: #4A90E2; --primary-color-rgb: 74, 144, 226;
+            --secondary-color: #2868C7; --background-color: #0D1117; 
+            --surface-color: #161B22; --text-color: #C9D1D9;      
+            --text-muted-color: #8B949E; --success-color: #238636;   
+            --success-hover-color: #2EA043; --error-color: #DA3633;     
+            --border-color: #30363D; --input-background: #22272E; 
             --input-focus-border: var(--primary-color);
             --glow-color: rgba(var(--primary-color-rgb), 0.35);
-
-            --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-            --font-display: var(--font-sans);
-            --font-body: var(--font-sans);
-
-            --border-radius-sm: 6px;
-            --border-radius-md: 10px;
-            --border-radius-lg: 16px;
-
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.25), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.25);
-            
+            --font-sans: 'Inter', system-ui, sans-serif;
+            --border-radius-md: 10px; --border-radius-lg: 16px;
             --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             --gradient-border-animated: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--primary-color));
         }
-        
-        @keyframes backgroundPan {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        @keyframes borderShine {
-            0% { background-position: -100% 0; }
-            100% { background-position: 100% 0; }
-        }
-
+        @keyframes backgroundPan { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes borderShine { 0% { background-position: -100% 0; } 100% { background-position: 100% 0; } }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
         body {
-            font-family: var(--font-body);
-            line-height: 1.65;
+            font-family: var(--font-sans); line-height: 1.65;
             background-color: var(--background-color);
             background-image: linear-gradient(120deg, var(--background-color) 0%, #1a2330 50%, var(--background-color) 100%);
-            background-size: 200% 200%;
-            animation: backgroundPan 25s ease infinite;
-            color: var(--text-color);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            padding: 30px 15px;
+            background-size: 200% 200%; animation: backgroundPan 25s ease infinite;
+            color: var(--text-color); display: flex; flex-direction: column;
+            align-items: center; min-height: 100vh; padding: 30px 15px 150px 15px; /* More bottom padding for console */
             overflow-x: hidden;
         }
-
         .container {
-            width: 100%;
-            max-width: 850px; /* Wider for text area */
-            background-color: var(--surface-color);
+            width: 100%; max-width: 850px; background-color: var(--surface-color);
             background-image: linear-gradient(180deg, color-mix(in srgb, var(--surface-color) 105%, black) 0%, var(--surface-color) 100%);
-            padding: 30px; 
-            border-radius: var(--border-radius-lg);
-            box-shadow: 0 0 0 1px var(--border-color), var(--shadow-lg);
+            padding: 30px; border-radius: var(--border-radius-lg);
+            box-shadow: 0 0 0 1px var(--border-color), 0 10px 15px -3px rgba(0,0,0,0.3);
             margin-bottom: 30px;
         }
-
         h1.main-title {
-            font-family: var(--font-display);
-            font-size: 2rem; 
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 8px;
+            font-size: 2rem; font-weight: 700; text-align: center; margin-bottom: 8px;
             background: linear-gradient(45deg, var(--primary-color), color-mix(in srgb, var(--primary-color) 60%, #fff));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        p.sub-title {
-            text-align: center;
-            color: var(--text-muted-color);
-            margin-bottom: 30px; 
-            font-size: 0.95rem;
-            font-weight: 300;
-        }
-
+        p.sub-title { text-align: center; color: var(--text-muted-color); margin-bottom: 30px; font-size: 0.95rem; }
         h2 {
-            font-family: var(--font-display);
-            font-weight: 600; 
-            color: var(--text-color);
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            font-size: 1.5em;
-            border-bottom: 2px solid transparent;
-            border-image-slice: 1;
-            border-image-source: linear-gradient(to right, var(--primary-color), color-mix(in srgb, var(--primary-color) 30%, var(--border-color)));
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            font-weight: 600; color: var(--text-color); margin-bottom: 25px; padding-bottom: 15px;
+            font-size: 1.5em; border-bottom: 2px solid transparent;
+            border-image-slice: 1; border-image-source: linear-gradient(to right, var(--primary-color), color-mix(in srgb, var(--primary-color) 30%, var(--border-color)));
+            display: flex; align-items: center; gap: 12px;
         }
         h2 .fas { color: var(--primary-color); font-size: 1.1em; }
-
         .file-input-wrapper {
-            position: relative; width: 100%; padding: 30px;
-            border: 2px dashed var(--border-color); border-radius: var(--border-radius-md);
-            text-align: center; cursor: pointer; margin-bottom: 25px;
-            background-color: var(--input-background); 
+            position: relative; width: 100%; padding: 30px; border: 2px dashed var(--border-color);
+            border-radius: var(--border-radius-md); text-align: center; cursor: pointer;
+            margin-bottom: 25px; background-color: var(--input-background); overflow: hidden;
             transition: border-color 0.3s ease, background-color 0.3s ease;
-            overflow: hidden;
         }
         .file-input-wrapper::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            border-radius: inherit; padding: 2px; 
+            content: ''; position: absolute; top:0;left:0;right:0;bottom:0; border-radius:inherit; padding:2px;
             background: var(--gradient-border-animated); background-size: 200% auto;
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: destination-out; mask-composite: exclude;
-            opacity: 0; transition: opacity 0.3s ease;
-            animation: borderShine 3s linear infinite paused;
+            opacity:0; transition: opacity 0.3s ease; animation: borderShine 3s linear infinite paused;
         }
-        .file-input-wrapper:hover { border-color: transparent; }
-        .file-input-wrapper:hover::before, .file-input-wrapper.is-dragging::before { opacity: 1; animation-play-state: running; }
-        .file-input-wrapper.is-dragging { border-color: transparent; }
-
-        .file-input-wrapper input[type="file"] {
-            position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer;
-        }
-        .file-input-text { 
-            color: var(--text-muted-color); font-size: 1.1em; 
-            display: flex; align-items: center; justify-content: center; gap: 12px;
-            position: relative; z-index: 1;
-        }
-        .file-input-text .fas { color: var(--primary-color); font-size: 1.3em; }
-        .selected-file-display {
-            display: block; font-size: 0.95em; color: var(--primary-color);
-            margin-top: 10px; font-weight: 500; word-break: break-all;
-            position: relative; z-index: 1;
-        }
-
-        .controls-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            margin-bottom: 25px;
-        }
-        @media (min-width: 600px) {
-            .controls-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
-        }
-       
-        button#startOcrBtn { /* Specific ID for the main button */
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            width: 100%; padding: 14px 20px; background-image: var(--gradient-primary);
-            color: white; border: none; border-radius: var(--border-radius-md); cursor: pointer;
-            font-size: 1.05em; font-family: var(--font-body); font-weight: 600;
-            text-shadow: 0 1px 1px rgba(0,0,0,0.2);
-            transition: all 0.25s ease-out;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-        }
-        button#startOcrBtn:hover:not(:disabled) {
-            filter: brightness(1.1); transform: translateY(-2px) scale(1.01);
-            box-shadow: 0 6px 12px rgba(var(--primary-color-rgb), 0.2), 0 0 15px var(--glow-color);
-        }
-        button#startOcrBtn:disabled {
-            background-image: none;
-            background-color: color-mix(in srgb, var(--surface-color) 70%, var(--text-muted-color));
-            color: var(--text-muted-color); cursor: not-allowed;
-        }
-        button#startOcrBtn .fa-spin { display: none; }
-        button#startOcrBtn:disabled .fa-spin { display: inline-block; margin-left: 8px; }
+        .file-input-wrapper:hover{border-color:transparent;}
+        .file-input-wrapper:hover::before, .file-input-wrapper.is-dragging::before {opacity:1;animation-play-state:running;}
+        .file-input-wrapper.is-dragging {border-color:transparent;}
+        .file-input-wrapper input[type="file"]{position:absolute;left:0;top:0;opacity:0;width:100%;height:100%;cursor:pointer;}
+        .file-input-text{color:var(--text-muted-color);font-size:1.1em;display:flex;align-items:center;justify-content:center;gap:12px;position:relative;z-index:1;}
+        .file-input-text .fas{color:var(--primary-color);font-size:1.3em;}
+        .selected-file-display{display:block;font-size:0.95em;color:var(--primary-color);margin-top:10px;font-weight:500;word-break:break-all;position:relative;z-index:1;}
         
-        .status-area { margin-top: 15px; text-align: center;}
-        .status { /* General status message styling */
-            font-size: 0.9em; color: var(--text-muted-color);
-            min-height: 1.5em; margin-bottom: 8px;
-            transition: color 0.3s ease;
-        }
-        .status.success { color: var(--success-color); }
-        .status.error { color: var(--error-color); font-weight: 500; }
-        .status.processing { color: var(--primary-color); }
-        .status .fas.fa-spinner { margin-right: 6px; }
+        button#startOcrBtn{width:100%;padding:14px 20px;background-image:var(--gradient-primary);color:white;border:none;border-radius:var(--border-radius-md);cursor:pointer;font-size:1.05em;font-weight:600;text-shadow:0 1px 1px rgba(0,0,0,0.2);transition:all 0.25s ease-out;box-shadow:0 2px 4px rgba(0,0,0,0.15);display:flex;align-items:center;justify-content:center;gap:10px;}
+        button#startOcrBtn:hover:not(:disabled){filter:brightness(1.1);transform:translateY(-2px) scale(1.01);box-shadow:0 6px 12px rgba(var(--primary-color-rgb),0.2),0 0 15px var(--glow-color);}
+        button#startOcrBtn:disabled{background-image:none;background-color:color-mix(in srgb,var(--surface-color) 70%,var(--text-muted-color));color:var(--text-muted-color);cursor:not-allowed;}
+        button#startOcrBtn .fa-spin{display:none;}
+        button#startOcrBtn:disabled .fa-spin.show{display:inline-block;margin-left:8px;} /* Spinner shown when button disabled AND processing */
+        
+        .status-area{margin-top:20px;text-align:center;min-height:4em; /* Space for infographic text */}
+        .status-infographic { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .status-step { font-size: 0.9em; color: var(--text-muted-color); transition: color 0.3s, font-weight 0.3s; }
+        .status-step.active { color: var(--primary-color); font-weight: 600; }
+        .status-step.done { color: var(--success-color); text-decoration: line-through; opacity: 0.7;}
+        .status-step.error { color: var(--error-color); font-weight: 600; }
+        .status-step .fas { margin-right: 8px; }
+        .status-message { font-size: 0.85em; color: var(--text-muted-color); margin-top: 10px; }
 
+        .output-wrapper{margin-top:30px;display:none;}
+        textarea#ocrResultText{width:100%;min-height:250px;padding:15px;border:1px solid var(--border-color);border-radius:var(--border-radius-md);background-color:var(--input-background);color:var(--text-color);font-family:'Menlo','Consolas',monospace;font-size:0.95em;line-height:1.6;resize:vertical;margin-bottom:20px;}
+        textarea#ocrResultText:focus{outline:none;border-color:var(--input-focus-border);box-shadow:0 0 0 3px var(--glow-color);}
+        .download-buttons{display:flex;gap:15px;justify-content:flex-end;}
+        .download-buttons button{width:auto;padding:10px 20px;display:flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:var(--border-radius-md);cursor:pointer;font-size:0.95em;font-weight:600;text-shadow:0 1px 1px rgba(0,0,0,0.1);transition:all 0.2s ease-out;color:white;}
+        .download-buttons button:hover:not(:disabled){filter:brightness(1.1);transform:translateY(-1px);}
+        .download-buttons button#downloadTxtBtn{background-image:linear-gradient(135deg,var(--success-color) 0%,var(--success-hover-color) 100%);}
+        .download-buttons button#downloadMdBtn{background-image:linear-gradient(135deg,#667eea 0%,#764ba2 100%);}
+        .info-section{margin-top:30px;padding:20px;background-color:rgba(var(--primary-color-rgb),0.05);border:1px solid rgba(var(--primary-color-rgb),0.2);border-left:4px solid var(--primary-color);border-radius:var(--border-radius-md);font-size:0.85em;}
+        .info-section h3{color:var(--primary-color);margin-top:0;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+        .info-section ul{list-style-type:none;padding-left:5px;}
+        .info-section li{margin-bottom:8px;padding-left:20px;position:relative;}
+        .info-section li::before{content:"\f105";font-family:"Font Awesome 6 Free";font-weight:900;color:var(--primary-color);position:absolute;left:0;top:1px;}
+        footer{text-align:center;margin-top:40px;padding-bottom:20px;color:var(--text-muted-color);font-size:0.8em;}
 
-        .output-wrapper { margin-top: 30px; display:none; } /* Initially hidden */
-        textarea#ocrResultText {
-            width: 100%; min-height: 250px; padding: 15px;
-            border: 1px solid var(--border-color); border-radius: var(--border-radius-md);
-            background-color: var(--input-background); color: var(--text-color);
-            font-family: 'Menlo', 'Consolas', monospace; font-size: 0.95em;
-            line-height: 1.6; resize: vertical;
-            margin-bottom: 20px;
+        /* On-screen Console */
+        .on-screen-console-wrapper {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            max-height: 30vh; /* Max 30% of viewport height */
+            background-color: rgba(10, 15, 22, 0.95); /* Darker, slightly transparent */
+            border-top: 1px solid var(--border-color);
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease-in-out;
+            transform: translateY(100%); /* Start hidden */
         }
-        textarea#ocrResultText:focus {
-            outline: none; border-color: var(--input-focus-border);
-            box-shadow: 0 0 0 3px var(--glow-color);
+        .on-screen-console-wrapper.visible {
+            transform: translateY(0);
         }
-        .download-buttons { display: flex; gap: 15px; justify-content: flex-end; }
-        .download-buttons button { 
-            width: auto; padding: 10px 20px;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            border: none; border-radius: var(--border-radius-md); cursor: pointer;
-            font-size: 0.95em; font-family: var(--font-body); font-weight: 600;
-            text-shadow: 0 1px 1px rgba(0,0,0,0.1);
-            transition: all 0.2s ease-out;
+        .console-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 15px;
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            cursor: grab;
+        }
+        .console-header h4 { margin: 0; font-size: 0.9em; color: var(--text-muted-color); }
+        .console-actions button {
+            background: none; border: 1px solid var(--border-color); color: var(--text-muted-color);
+            padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 0.8em; margin-left: 5px;
+        }
+        .console-actions button:hover { background-color: var(--input-background); color: var(--text-color); }
+        .console-output {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 10px;
+            font-family: 'Menlo', 'Consolas', monospace;
+            font-size: 0.8em;
+            line-height: 1.5;
+            color: var(--text-color);
+        }
+        .console-output div { padding: 2px 0; border-bottom: 1px dashed rgba(var(--primary-color-rgb), 0.1); }
+        .console-output div:last-child { border-bottom: none; }
+        .console-output .log-error { color: var(--error-color); }
+        .console-output .log-warn { color: #f5c518; /* Yellow for warning */ }
+        .console-output .log-info { color: var(--primary-color); }
+        .console-toggle-button {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background-color: var(--primary-color);
             color: white;
-        }
-        .download-buttons button:hover:not(:disabled) {
-            filter: brightness(1.1); transform: translateY(-1px);
-        }
-        .download-buttons button#downloadTxtBtn {
-            background-image: linear-gradient(135deg, var(--success-color) 0%, var(--success-hover-color) 100%);
-        }
-        .download-buttons button#downloadMdBtn {
-             background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* A purple gradient for MD */
-        }
-
-
-        .info-section {
-            margin-top: 30px; padding: 20px;
-            background-color: rgba(var(--primary-color-rgb), 0.05);
-            border: 1px solid rgba(var(--primary-color-rgb), 0.2);
-            border-left: 4px solid var(--primary-color);
-            border-radius: var(--border-radius-md);
-            font-size: 0.85em;
-        }
-        .info-section h3 { 
-            color: var(--primary-color); margin-top: 0; margin-bottom: 10px; 
-            display: flex; align-items: center; gap: 8px;
-        }
-        .info-section ul { list-style-type: none; padding-left: 5px; }
-        .info-section li { margin-bottom: 8px; padding-left: 20px; position: relative; }
-        .info-section li::before {
-            content: "\f105"; /* FontAwesome Angle Right */
-            font-family: "Font Awesome 6 Free"; font-weight: 900;
-            color: var(--primary-color); position: absolute; left: 0; top: 1px;
-        }
-
-        footer {
-            text-align: center; margin-top: 40px; padding-bottom: 20px;
-            color: var(--text-muted-color); font-size: 0.8em;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5em;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            cursor: pointer;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 
     <!-- Tesseract.js -->
     <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
     
-    <!-- PDF.js from cdnjs (non-module version) -->
+    <!-- PDF.js from cdnjs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script>
-        // Set the worker source for PDF.js globally
         if (typeof pdfjsLib !== 'undefined') {
             pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-            console.log("[PDF.js] Worker SRC set to cdnjs.");
+            console.log("[PDF.js] Worker SRC set via cdnjs.");
         } else {
-            console.error("[PDF.js] pdfjsLib is not defined. PDF.js might not have loaded correctly.");
+            console.error("[PDF.js] pdfjsLib object not found. PDF.js might not have loaded.");
         }
     </script>
-
 </head>
 <body>
     <div class="container">
@@ -279,21 +194,25 @@
 
         <h2><i class="fas fa-file-import"></i> अपनी फ़ाइल अपलोड करें</h2>
         <div class="file-input-wrapper" id="ocrFileWrapper">
-            <span class="file-input-text"><i class="fas fa-upload"></i> PDF या छवि (JPG, PNG, BMP) यहाँ खींचें या क्लिक करें</span>
+            <span class="file-input-text"><i class="fas fa-upload"></i> PDF या छवि यहाँ खींचें या क्लिक करें</span>
             <input type="file" id="ocrFile" accept=".pdf,image/jpeg,image/png,image/bmp,image/webp,image/tiff">
             <span class="selected-file-display" id="ocrFileName" style="display:none;"></span>
         </div>
 
-        <div class="controls-grid">
-            <!-- Language select is not really needed for a Hindi-focused app -->
-            <button id="startOcrBtn" disabled> <!-- Initially disabled -->
-                <i class="fas fa-cogs"></i> पाठ निकालें
-                <i class="fas fa-spinner fa-spin" style="display: none;"></i>
-            </button>
-        </div>
+        <button id="startOcrBtn" disabled>
+            <i class="fas fa-cogs"></i> पाठ निकालें
+            <i class="fas fa-spinner fa-spin"></i> <!-- Spinner managed by JS -->
+        </button>
         
         <div class="status-area">
-            <div id="ocrStatus" class="status">अपनी फ़ाइल चुनें और "पाठ निकालें" पर क्लिक करें।</div>
+            <div class="status-infographic" id="statusInfographic">
+                <div class="status-step" id="stepPrepareEngine"><i class="fas fa-microchip"></i> Preparing Engine</div>
+                <div class="status-step" id="stepLoadLanguage"><i class="fas fa-language"></i> Loading Language Model</div>
+                <div class="status-step" id="stepInitCore"><i class="fas fa-brain"></i> Initializing AI Core</div>
+                <div class="status-step" id="stepReady"><i class="fas fa-check-circle"></i> Ready to Process</div>
+                <div class="status-step" id="stepProcessingFile" style="display:none;"><i class="fas fa-file-invoice"></i> Processing File</div>
+            </div>
+            <div class="status-message" id="statusMessageDetail">अपनी फ़ाइल चुनें और "पाठ निकालें" पर क्लिक करें।</div>
         </div>
 
         <div class="output-wrapper" id="ocrOutputWrapper">
@@ -309,7 +228,7 @@
     <div class="info-section container" style="max-width: 850px;">
         <h3><i class="fas fa-info-circle"></i> महत्वपूर्ण जानकारी और सीमाएं:</h3>
         <ul>
-            <li><strong>क्लाइंट-साइड प्रोसेसिंग:</strong> सभी OCR आपके ब्राउज़र में स्थानीय रूप से किया जाता है। आपकी फाइलें सर्वर पर अपलोड नहीं होती हैं।</li>
+             <li><strong>क्लाइंट-साइड प्रोसेसिंग:</strong> सभी OCR आपके ब्राउज़र में स्थानीय रूप से किया जाता है। आपकी फाइलें सर्वर पर अपलोड नहीं होती हैं।</li>
             <li><strong>प्रदर्शन:</strong> बड़ी PDF फाइलों या उच्च-रिज़ॉल्यूशन छवियों के लिए प्रोसेसिंग में समय लग सकता है। ब्राउज़र धीमा हो सकता है या अनुत्तरदायी हो सकता है।</li>
             <li><strong>सटीकता:</strong> OCR की सटीकता छवि की गुणवत्ता (स्पष्टता, रिज़ॉल्यूशन, कंट्रास्ट, फ़ॉन्ट प्रकार) पर बहुत निर्भर करती है। सर्वोत्तम परिणामों के लिए स्पष्ट, टाइप किए गए देवनागरी पाठ का उपयोग करें।</li>
             <li><strong>भाषा डेटा:</strong> पहली बार हिंदी OCR का उपयोग करने पर, आवश्यक भाषा फ़ाइलें (लगभग 10-15MB) डाउनलोड होंगी। इसमें कुछ समय लग सकता है।</li>
@@ -318,348 +237,346 @@
         </ul>
     </div>
 
-    <footer>
-        शक्तिशाली क्लाइंट-साइड देवनागरी OCR | सुरक्षित और निजी
-    </footer>
-
-    <!-- Hidden canvas for PDF rendering -->
+    <footer>शक्तिशाली क्लाइंट-साइड देवनागरी OCR | सुरक्षित और निजी</footer>
     <canvas id="pdfPreviewCanvas" style="display: none;"></canvas>
 
-    <script>
-        // --- DOM Element References ---
-        let ocrFileInput, ocrFileNameDisplay, ocrFileWrapper, startOcrBtn, ocrStatus,
-            ocrOutputWrapper, ocrResultText, downloadTxtBtn, downloadMdBtn, pdfPreviewCanvas;
+    <!-- On-screen Console -->
+    <div class="on-screen-console-wrapper" id="onScreenConsoleWrapper">
+        <div class="console-header" id="consoleHeader">
+            <h4><i class="fas fa-terminal"></i> Realtime Log</h4>
+            <div class="console-actions">
+                <button id="clearLogBtn"><i class="fas fa-ban"></i> Clear</button>
+                <button id="closeLogBtn"><i class="fas fa-times"></i> Close</button>
+            </div>
+        </div>
+        <div class="console-output" id="consoleOutput"></div>
+    </div>
+    <button class="console-toggle-button" id="consoleToggleBtn"><i class="fas fa-bug"></i></button>
 
-        // --- Global Variables ---
+    <script>
+        // --- On-screen Console Logic ---
+        const consoleOutput = document.getElementById('consoleOutput');
+        const onScreenConsoleWrapper = document.getElementById('onScreenConsoleWrapper');
+        const consoleToggleBtn = document.getElementById('consoleToggleBtn');
+        const clearLogBtn = document.getElementById('clearLogBtn');
+        const closeLogBtn = document.getElementById('closeLogBtn');
+
+        const originalConsoleLog = console.log;
+        const originalConsoleError = console.error;
+        const originalConsoleWarn = console.warn;
+        const originalConsoleInfo = console.info;
+
+        function appendToOnScreenConsole(message, type = 'log') {
+            if (!consoleOutput) return;
+            const div = document.createElement('div');
+            let prefix = '';
+            if (typeof message === 'object') {
+                try {
+                    message = JSON.stringify(message, null, 2);
+                } catch (e) {
+                    message = String(message);
+                }
+            } else {
+                message = String(message);
+            }
+
+            if (type === 'error') {
+                div.className = 'log-error'; prefix = '[ERR] ';
+            } else if (type === 'warn') {
+                div.className = 'log-warn'; prefix = '[WARN] ';
+            } else if (type === 'info') {
+                div.className = 'log-info'; prefix = '[INFO] ';
+            } else {
+                prefix = '[LOG] ';
+            }
+            div.textContent = prefix + message;
+            consoleOutput.appendChild(div);
+            consoleOutput.scrollTop = consoleOutput.scrollHeight; // Auto-scroll
+        }
+
+        console.log = function(...args) { originalConsoleLog.apply(console, args); args.forEach(arg => appendToOnScreenConsole(arg, 'log')); };
+        console.error = function(...args) { originalConsoleError.apply(console, args); args.forEach(arg => appendToOnScreenConsole(arg, 'error')); };
+        console.warn = function(...args) { originalConsoleWarn.apply(console, args); args.forEach(arg => appendToOnScreenConsole(arg, 'warn')); };
+        console.info = function(...args) { originalConsoleInfo.apply(console, args); args.forEach(arg => appendToOnScreenConsole(arg, 'info')); };
+        
+        if (consoleToggleBtn) {
+            consoleToggleBtn.addEventListener('click', () => {
+                onScreenConsoleWrapper.classList.toggle('visible');
+            });
+        }
+        if (clearLogBtn) {
+            clearLogBtn.addEventListener('click', () => {
+                if(consoleOutput) consoleOutput.innerHTML = '';
+                appendToOnScreenConsole("Log cleared.", "info");
+            });
+        }
+        if (closeLogBtn) {
+            closeLogBtn.addEventListener('click', () => {
+                if(onScreenConsoleWrapper) onScreenConsoleWrapper.classList.remove('visible');
+            });
+        }
+
+
+        // --- OCR App Logic ---
+        let ocrFileInput, ocrFileNameDisplay, ocrFileWrapper, startOcrBtn, 
+            ocrOutputWrapper, ocrResultText, downloadTxtBtn, downloadMdBtn, pdfPreviewCanvas,
+            statusInfographic, statusMessageDetail,
+            stepPrepareEngine, stepLoadLanguage, stepInitCore, stepReady, stepProcessingFile;
+
         let tesseractWorker = null;
         let currentFile = null;
         let isTesseractInitialized = false;
+        const TESSERACT_INIT_TIMEOUT = 30000; // 30 seconds timeout for Tesseract full initialization
 
-        // --- Initialize Tesseract.js ---
-        async function initializeTesseract() {
-            console.log("[OCR] Attempting to initialize Tesseract.js...");
-            updateStatus('Initializing Tesseract.js engine... Please wait.', 'processing', true);
-            if(startOcrBtn) startOcrBtn.disabled = true;
+
+        function updateInfographicStep(activeStepId, message = null, isError = false) {
+            const steps = [stepPrepareEngine, stepLoadLanguage, stepInitCore, stepReady, stepProcessingFile];
+            let activeFound = false;
+            steps.forEach(step => {
+                if (!step) return;
+                step.classList.remove('active', 'done', 'error');
+                if (step.id === activeStepId) {
+                    step.classList.add(isError ? 'error' : 'active');
+                    activeFound = true;
+                } else if (!activeFound) {
+                    step.classList.add('done');
+                }
+            });
+            if (message && statusMessageDetail) statusMessageDetail.textContent = message;
+            if (isError && statusMessageDetail) statusMessageDetail.style.color = 'var(--error-color)';
+            else if (statusMessageDetail) statusMessageDetail.style.color = 'var(--text-muted-color)';
+        }
+        
+        async function initializeTesseractWithTimeout() {
+            let timeoutId;
+            const timeoutPromise = new Promise((_, reject) => {
+                timeoutId = setTimeout(() => {
+                    reject(new Error(`Tesseract.js initialization timed out after ${TESSERACT_INIT_TIMEOUT / 1000} seconds. Check network and CDN access.`));
+                }, TESSERACT_INIT_TIMEOUT);
+            });
 
             try {
-                console.log("[OCR] Creating Tesseract worker...");
+                await Promise.race([initializeTesseract(), timeoutPromise]);
+            } finally {
+                clearTimeout(timeoutId);
+            }
+        }
+
+        async function initializeTesseract() {
+            console.info("[OCR] Stage 1: Preparing Tesseract Engine...");
+            updateInfographicStep('stepPrepareEngine', 'Engine preparation in progress...');
+            if(startOcrBtn) startOcrBtn.disabled = true;
+            const spinner = startOcrBtn ? startOcrBtn.querySelector('.fa-spin') : null;
+            if (spinner) spinner.classList.add('show');
+
+
+            try {
                 tesseractWorker = await Tesseract.createWorker({
                     logger: m => {
-                        // console.log("[Tesseract Logger]", m); // Uncomment for very verbose logging
                         if (m.status === 'recognizing text') {
-                            const progress = (m.progress * 100).toFixed(0);
-                            updateStatus(`Recognizing text... ${progress}%`, 'processing', true);
-                        } else if (m.status && m.status !== 'loaded tesseract core' && m.status !== 'initialized tesseract' && m.status !== 'loaded language model') {
-                             updateStatus(capitalizeFirstLetter(m.status) + '...', 'processing', true);
+                             updateInfographicStep('stepProcessingFile', `Extracting Text: ${ (m.progress * 100).toFixed(0)}%...`);
+                        } else if (m.status && m.status.includes('loading language model')) {
+                            updateInfographicStep('stepLoadLanguage', `Language Model: ${(m.progress * 100).toFixed(0)}%`);
+                        } else if (m.status && m.status.includes('initializing tesseract')) {
+                             updateInfographicStep('stepInitCore', `AI Core Init: ${(m.progress * 100).toFixed(0)}%`);
                         }
                     }
                 });
-                console.log("[OCR] Tesseract worker created.");
+                console.info("[OCR] Tesseract worker created successfully.");
+                updateInfographicStep('stepPrepareEngine', 'Engine Prepared.');
 
-                updateStatus('Loading Hindi language model...', 'processing', true);
+                console.info("[OCR] Stage 2: Loading Hindi Language Model...");
+                updateInfographicStep('stepLoadLanguage', 'Downloading Hindi language data...');
                 await tesseractWorker.loadLanguage('hin');
-                console.log("[OCR] Hindi language model loaded.");
+                console.info("[OCR] Hindi language model loaded.");
+                updateInfographicStep('stepLoadLanguage', 'Language Model Loaded.');
 
+                console.info("[OCR] Stage 3: Initializing AI Core for Hindi...");
+                updateInfographicStep('stepInitCore', 'Configuring AI core for Hindi...');
                 await tesseractWorker.initialize('hin');
-                console.log("[OCR] Tesseract initialized for Hindi.");
+                console.info("[OCR] Tesseract initialized for Hindi.");
+                 updateInfographicStep('stepInitCore', 'AI Core Initialized.');
 
                 isTesseractInitialized = true;
-                updateStatus('Hindi OCR ready. Select a file.', 'success');
-                if (currentFile && startOcrBtn) {
-                    startOcrBtn.disabled = false;
-                } else if (startOcrBtn) {
-                    startOcrBtn.disabled = true; 
+                updateInfographicStep('stepReady', 'Hindi OCR engine is ready. Please select your file.');
+                if (startOcrBtn) {
+                    startOcrBtn.disabled = !currentFile; // Enable if a file is already selected
                 }
 
             } catch (error) {
                 console.error("[OCR] Tesseract initialization FAILED:", error);
-                updateStatus('Error: Tesseract.js failed to initialize. Check console.', 'error');
-                if(startOcrBtn) startOcrBtn.disabled = true;
+                updateInfographicStep(null, `Initialization Error: ${error.message}. Check console & network.`, true);
                 isTesseractInitialized = false;
+            } finally {
+                 if (spinner) spinner.classList.remove('show');
             }
         }
         
-        function capitalizeFirstLetter(string) {
-            if (!string) return '';
-            return string.charAt(0).toUpperCase() + string.slice(1);
-        }
-
-        // --- File Input Handling ---
-        function setupFileInputListeners() {
-            if (!ocrFileInput || !ocrFileWrapper || !ocrFileNameDisplay) {
-                console.error("[OCR] File input elements not found for event listeners.");
-                return;
-            }
+        function setupFileInputListeners() { /* ... (same as before, ensure elements are checked) ... */ 
+            if (!ocrFileInput || !ocrFileWrapper || !ocrFileNameDisplay) {console.error("[OCR] File input elements not found."); return;}
             console.log("[OCR] Setting up file input listeners.");
-
             ocrFileInput.addEventListener('change', (event) => {
-                console.log("[OCR] File input changed.");
                 currentFile = event.target.files[0];
                 if (currentFile) {
                     ocrFileNameDisplay.textContent = currentFile.name;
-                    if (ocrFileWrapper.querySelector('.file-input-text')) {
-                        ocrFileWrapper.querySelector('.file-input-text').style.display = 'none';
-                    }
+                    if (ocrFileWrapper.querySelector('.file-input-text')) ocrFileWrapper.querySelector('.file-input-text').style.display = 'none';
                     ocrFileNameDisplay.style.display = 'block';
                     if(ocrOutputWrapper) ocrOutputWrapper.style.display = 'none';
                     if(ocrResultText) ocrResultText.value = '';
-                    if (isTesseractInitialized && startOcrBtn) { 
-                        startOcrBtn.disabled = false;
-                    }
+                    if (isTesseractInitialized && startOcrBtn) startOcrBtn.disabled = false;
+                    if (statusMessageDetail) statusMessageDetail.textContent = "File selected. Click 'पाठ निकालें' to start.";
                 } else {
                     ocrFileNameDisplay.textContent = '';
-                    if (ocrFileWrapper.querySelector('.file-input-text')) {
-                        ocrFileWrapper.querySelector('.file-input-text').style.display = 'flex';
-                    }
+                    if (ocrFileWrapper.querySelector('.file-input-text')) ocrFileWrapper.querySelector('.file-input-text').style.display = 'flex';
                     ocrFileNameDisplay.style.display = 'none';
-                    if(startOcrBtn) startOcrBtn.disabled = true; 
+                    if(startOcrBtn) startOcrBtn.disabled = true;
+                    if (statusMessageDetail) statusMessageDetail.textContent = 'Please select a file to begin OCR.';
                 }
             });
-        
-            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-                ocrFileWrapper.addEventListener(eventName, preventDefaults, false);
-                document.body.addEventListener(eventName, preventDefaults, false); // Prevent browser default for drag/drop
-            });
-            ['dragenter', 'dragover'].forEach(eventName => {
-                ocrFileWrapper.addEventListener(eventName, () => ocrFileWrapper.classList.add('is-dragging'), false);
-            });
-            ['dragleave', 'drop'].forEach(eventName => {
-                ocrFileWrapper.addEventListener(eventName, () => ocrFileWrapper.classList.remove('is-dragging'), false);
-            });
-            ocrFileWrapper.addEventListener('drop', (e) => {
-                console.log("[OCR] File dropped.");
-                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-                    ocrFileInput.files = e.dataTransfer.files;
-                    const changeEvent = new Event('change'); 
-                    ocrFileInput.dispatchEvent(changeEvent);
+            ['dragenter','dragover','dragleave','drop'].forEach(ev=>ocrFileWrapper.addEventListener(ev,preventDefaults,false));
+            document.body.addEventListener('dragenter', preventDefaults, false); // Global drag prevention
+            document.body.addEventListener('dragover', preventDefaults, false);
+            document.body.addEventListener('drop', preventDefaults, false);
+            ['dragenter','dragover'].forEach(ev=>ocrFileWrapper.addEventListener(ev,()=>ocrFileWrapper.classList.add('is-dragging'),false));
+            ['dragleave','drop'].forEach(ev=>ocrFileWrapper.addEventListener(ev,()=>ocrFileWrapper.classList.remove('is-dragging'),false));
+            ocrFileWrapper.addEventListener('drop',(e)=>{
+                if(e.dataTransfer.files&&e.dataTransfer.files.length>0){
+                    ocrFileInput.files=e.dataTransfer.files;
+                    ocrFileInput.dispatchEvent(new Event('change'));
                 }
-            }, false);
+            },false);
         }
+        function preventDefaults(e){e.preventDefault();e.stopPropagation();}
 
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-
-        // --- Start OCR Process ---
-        function setupOcrButtonListener() {
-            if (!startOcrBtn) {
-                console.error("[OCR] Start OCR button not found.");
-                return;
-            }
+        function setupOcrButtonListener() { /* ... (same as before, ensure elements are checked) ... */
+            if (!startOcrBtn) { console.error("[OCR] Start OCR button not found."); return; }
             console.log("[OCR] Setting up OCR button listener.");
             startOcrBtn.addEventListener('click', async () => {
-                console.log("[OCR] Start OCR button clicked.");
                 const spinner = startOcrBtn.querySelector('.fa-spin');
-                if (!currentFile) {
-                    updateStatus('Please select a file first.', 'error');
-                    return;
-                }
-                if (!isTesseractInitialized || !tesseractWorker) {
-                    updateStatus('OCR engine is not ready. Please wait or try refreshing.', 'error');
-                    return;
-                }
+                if (!currentFile) { updateInfographicStep(null, 'Please select a file first.', true); return; }
+                if (!isTesseractInitialized || !tesseractWorker) { updateInfographicStep(null, 'OCR engine not ready. Please wait or refresh.', true); return; }
 
                 startOcrBtn.disabled = true;
-                if(spinner) spinner.style.display = 'inline-block';
+                if(spinner) spinner.classList.add('show');
                 if(ocrOutputWrapper) ocrOutputWrapper.style.display = 'none';
                 if(ocrResultText) ocrResultText.value = '';
-                updateStatus('Processing file...', 'processing', true);
+                updateInfographicStep('stepProcessingFile', 'Preparing to process file...');
 
                 try {
                     let fullText = '';
-                    console.log("[OCR] Current file type:", currentFile.type);
+                    console.info("[OCR] Processing file:", currentFile.name, "Type:", currentFile.type);
                     if (currentFile.type === "application/pdf") {
                         fullText = await processPdf(currentFile);
                     } else if (currentFile.type.startsWith("image/")) {
-                        console.log("[OCR] Recognizing image with Tesseract...");
+                        updateInfographicStep('stepProcessingFile', `Analyzing image: ${currentFile.name}...`);
                         const result = await tesseractWorker.recognize(currentFile);
-                        console.log("[OCR] Tesseract image recognition result:", result ? result.data.text.substring(0,50) + "..." : "No result");
                         fullText = result ? result.data.text : "";
                     } else {
-                        throw new Error("Unsupported file type. Please use PDF or image (PNG, JPG, BMP, TIFF, WebP) files.");
+                        throw new Error("Unsupported file type.");
                     }
-
-                    if(ocrResultText) ocrResultText.value = fullText || "No text could be extracted or the file might be empty/corrupted.";
+                    if(ocrResultText) ocrResultText.value = fullText || "No text extracted or file might be empty/corrupted.";
                     if(ocrOutputWrapper) ocrOutputWrapper.style.display = 'block';
-                    updateStatus('OCR complete!', 'success');
+                    updateInfographicStep('stepReady', 'OCR complete! Results below.', false); // Go back to ready state
+                    stepProcessingFile.style.display = 'none'; // Hide processing step
 
                 } catch (error) {
-                    console.error("[OCR] Error during OCR process:", error);
-                    updateStatus(`Error during OCR: ${error.message}`, 'error');
-                    if(ocrResultText) ocrResultText.value = `Error: ${error.message}\nCheck console for more details.`;
+                    console.error("[OCR] Error during OCR:", error);
+                    updateInfographicStep('stepProcessingFile', `OCR Error: ${error.message}`, true);
+                    if(ocrResultText) ocrResultText.value = `Error: ${error.message}`;
                     if(ocrOutputWrapper) ocrOutputWrapper.style.display = 'block';
                 } finally {
                     if (isTesseractInitialized && startOcrBtn) startOcrBtn.disabled = false;
-                    if(spinner) spinner.style.display = 'none';
+                    if(spinner) spinner.classList.remove('show');
                 }
             });
         }
-
-        // --- PDF Processing ---
-        async function processPdf(file) {
-            console.log("[OCR] Starting PDF processing for:", file.name);
-            if (!pdfPreviewCanvas) {
-                console.error("[OCR] PDF preview canvas not found!");
-                throw new Error("Internal error: PDF processing canvas is missing.");
-            }
-            if (typeof pdfjsLib === 'undefined' || !pdfjsLib.getDocument) {
-                console.error("[OCR] PDF.js library (pdfjsLib) is not loaded correctly!");
-                throw new Error("PDF library failed to load. Cannot process PDFs.");
+        
+        async function processPdf(file) { /* ... (largely same, ensure pdfjsLib check and status updates) ... */ 
+            if (!pdfPreviewCanvas) throw new Error("PDF canvas missing.");
+            if (typeof pdfjsLib === 'undefined' || !pdfjsLib.getDocument) throw new Error("PDF.js library not loaded.");
+            if (!pdfjsLib.GlobalWorkerOptions.workerSrc && typeof pdfjsLib !== 'undefined') {
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+                console.warn("[PDF.js] Worker SRC set late in processPdf.");
             }
 
             const arrayBuffer = await file.arrayBuffer();
-            console.log("[OCR] PDF loaded into ArrayBuffer.");
-            
             let pdf;
             try {
-                // Ensure the workerSrc is set for pdfjsLib. It might have been missed if script loaded too fast.
-                if (!pdfjsLib.GlobalWorkerOptions.workerSrc && typeof pdfjsLib !== 'undefined') {
-                     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-                     console.warn("[PDF.js] Worker SRC was not set, setting it now.");
-                }
                 pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-            } catch (pdfError) {
-                console.error("[OCR] PDF.js getDocument error:", pdfError);
-                throw new Error(`Failed to load PDF: ${pdfError.message}. It might be corrupted or password-protected.`);
-            }
+            } catch (e) { throw new Error(`Failed to load PDF: ${e.message}. Corrupted or password-protected?`); }
             
-            console.log(`[OCR] PDF has ${pdf.numPages} pages.`);
             let combinedText = '';
             const numPages = pdf.numPages;
-
-            updateStatus(`Loaded PDF with ${numPages} pages. Starting OCR per page...`, 'processing', true);
+            stepProcessingFile.style.display = 'block'; // Show this step now
 
             for (let i = 1; i <= numPages; i++) {
-                updateStatus(`Processing PDF page ${i} of ${numPages}...`, 'processing', true);
-                console.log(`[OCR] Processing PDF page ${i}`);
+                updateInfographicStep('stepProcessingFile', `Rendering PDF Page ${i}/${numPages}...`);
                 let page;
-                try {
-                    page = await pdf.getPage(i);
-                } catch (pageError) {
-                    console.error(`[OCR] Error getting PDF page ${i}:`, pageError);
-                    combinedText += `[Error getting page ${i}]\n\n`;
-                    continue;
-                }
+                try { page = await pdf.getPage(i); } 
+                catch (e) { combinedText += `[Error getting page ${i}]\n`; console.error(`Error page ${i}`,e); continue; }
 
-                const viewport = page.getViewport({ scale: 2.0 }); 
-                
+                const viewport = page.getViewport({ scale: 2.0 });
                 const canvasContext = pdfPreviewCanvas.getContext('2d');
-                pdfPreviewCanvas.height = viewport.height;
-                pdfPreviewCanvas.width = viewport.width;
-
-                console.log(`[OCR] Rendering page ${i} to canvas...`);
-                try {
-                    await page.render({ canvasContext, viewport }).promise;
-                } catch (renderError) {
-                    console.error(`[OCR] Error rendering PDF page ${i}:`, renderError);
-                    combinedText += `[Error rendering page ${i}]\n\n`;
-                    page.cleanup(); // Clean up page resources
-                    continue; 
-                }
-                console.log(`[OCR] Page ${i} rendered. Recognizing with Tesseract...`);
+                pdfPreviewCanvas.height = viewport.height; pdfPreviewCanvas.width = viewport.width;
+                try { await page.render({ canvasContext, viewport }).promise; } 
+                catch (e) { combinedText += `[Error rendering page ${i}]\n`; console.error(`Error render ${i}`,e); page.cleanup(); continue; }
                 
-                // Tesseract.js can take a canvas element directly
+                updateInfographicStep('stepProcessingFile', `Extracting text from Page ${i}/${numPages}...`);
                 const result = await tesseractWorker.recognize(pdfPreviewCanvas);
-                console.log(`[OCR] Tesseract result for page ${i}:`, result ? result.data.text.substring(0, 50) + "..." : "No result");
-                combinedText += (result ? result.data.text : `[No text extracted from page ${i}]`) + "\n\n";
-                page.cleanup(); // Clean up page resources
-
-                if (i % 2 === 0 && i < numPages) await new Promise(r => setTimeout(r, 50)); 
+                combinedText += (result ? result.data.text : `[No text page ${i}]`) + "\n\n";
+                page.cleanup();
+                if(ocrResultText) ocrResultText.value = combinedText; // Live update
             }
-            console.log("[OCR] PDF processing finished.");
             return combinedText.trim();
         }
 
-        // --- Download Functionality ---
-        function setupDownloadButtonListeners() {
-            if (!downloadTxtBtn || !downloadMdBtn || !ocrResultText) {
-                console.error("[OCR] Download buttons or result textarea not found.");
-                return;
-            }
-            console.log("[OCR] Setting up download button listeners.");
-
-            downloadTxtBtn.addEventListener('click', () => {
-                const baseName = currentFile ? currentFile.name.split('.').slice(0, -1).join('.') : 'hindi_ocr_result';
-                downloadFile(`${baseName}.txt`, ocrResultText.value, 'text/plain;charset=utf-8');
+        function setupDownloadButtonListeners() { /* ... (same as before, ensure elements are checked) ... */ 
+            if(!downloadTxtBtn||!downloadMdBtn||!ocrResultText){console.error("Download elements missing");return;}
+            console.log("[OCR] Setting up download listeners.");
+            downloadTxtBtn.addEventListener('click',()=>{
+                const base=currentFile?currentFile.name.split('.').slice(0,-1).join('.'):'ocr_result';
+                downloadFile(`${base}.txt`,ocrResultText.value,'text/plain;charset=utf-8');
             });
-
-            downloadMdBtn.addEventListener('click', () => {
-                const baseName = currentFile ? currentFile.name.split('.').slice(0, -1).join('.') : 'hindi_ocr_result';
-                const mdContent = "# OCR Result for: " + (currentFile ? currentFile.name : "Document") + 
-                                  "\n\n```text\n" + ocrResultText.value + "\n```";
-                downloadFile(`${baseName}.md`, mdContent, 'text/markdown;charset=utf-8');
+            downloadMdBtn.addEventListener('click',()=>{
+                const base=currentFile?currentFile.name.split('.').slice(0,-1).join('.'):'ocr_result';
+                const md="## OCR Result: "+(currentFile?currentFile.name:"Doc")+"\n\n```text\n"+ocrResultText.value+"\n```";
+                downloadFile(`${base}.md`,md,'text/markdown;charset=utf-8');
             });
         }
-
-        function downloadFile(filename, content, mimeType) {
-            console.log(`[OCR] Downloading file: ${filename}, Type: ${mimeType}`);
-            const blob = new Blob([content], { type: mimeType });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
-        // --- Utility Functions ---
-        function updateStatus(message, type = 'info', showSpinnerIcon = false) {
-            if (!ocrStatus) { 
-                console.warn("[OCR] Status element not found, cannot update status message:", message);
-                return;
-            }
-            let fullMessage = message;
-            if (showSpinnerIcon) {
-                fullMessage = `<i class="fas fa-spinner fa-spin"></i> ${message}`;
-                ocrStatus.innerHTML = fullMessage;
-            } else {
-                ocrStatus.textContent = message;
-            }
-            ocrStatus.className = 'status'; // Reset classes
-            if (type === 'success') ocrStatus.classList.add('success');
-            else if (type === 'error') ocrStatus.classList.add('error');
-            else if (type === 'processing') ocrStatus.classList.add('processing');
+        function downloadFile(filename,content,mimeType){ /* ... (same as before) ... */ 
+            const blob=new Blob([content],{type:mimeType}); const url=URL.createObjectURL(blob);
+            const a=document.createElement('a'); a.href=url; a.download=filename;
+            document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
         }
         
-        // --- Initialize on DOMContentLoaded ---
         document.addEventListener('DOMContentLoaded', () => {
-            console.log("[OCR] DOMContentLoaded event fired. Initializing app elements and Tesseract.");
+            console.info("[OCR] DOM Content Loaded. Initializing...");
+            ocrFileInput=document.getElementById('ocrFile'); ocrFileNameDisplay=document.getElementById('ocrFileName');
+            ocrFileWrapper=document.getElementById('ocrFileWrapper'); startOcrBtn=document.getElementById('startOcrBtn');
+            ocrOutputWrapper=document.getElementById('ocrOutputWrapper'); ocrResultText=document.getElementById('ocrResultText');
+            downloadTxtBtn=document.getElementById('downloadTxtBtn'); downloadMdBtn=document.getElementById('downloadMdBtn');
+            pdfPreviewCanvas=document.getElementById('pdfPreviewCanvas');
+            statusInfographic=document.getElementById('statusInfographic'); statusMessageDetail=document.getElementById('statusMessageDetail');
+            stepPrepareEngine=document.getElementById('stepPrepareEngine'); stepLoadLanguage=document.getElementById('stepLoadLanguage');
+            stepInitCore=document.getElementById('stepInitCore'); stepReady=document.getElementById('stepReady');
+            stepProcessingFile=document.getElementById('stepProcessingFile');
 
-            // Assign DOM elements
-            ocrFileInput = document.getElementById('ocrFile');
-            ocrFileNameDisplay = document.getElementById('ocrFileName');
-            ocrFileWrapper = document.getElementById('ocrFileWrapper');
-            startOcrBtn = document.getElementById('startOcrBtn');
-            ocrStatus = document.getElementById('ocrStatus');
-            ocrOutputWrapper = document.getElementById('ocrOutputWrapper');
-            ocrResultText = document.getElementById('ocrResultText');
-            downloadTxtBtn = document.getElementById('downloadTxtBtn');
-            downloadMdBtn = document.getElementById('downloadMdBtn');
-            pdfPreviewCanvas = document.getElementById('pdfPreviewCanvas');
-
-            // Basic check if primary elements exist
-            const essentialElements = [ocrFileInput, startOcrBtn, ocrStatus, pdfPreviewCanvas, ocrFileWrapper, ocrFileNameDisplay, ocrOutputWrapper, ocrResultText, downloadTxtBtn, downloadMdBtn];
-            if (essentialElements.some(el => !el)) {
-                console.error("[OCR] CRITICAL: One or more essential HTML elements are missing. OCR page will not function correctly. Please check IDs.");
-                if (ocrStatus) updateStatus("Error: Page elements missing. Please refresh or contact support.", "error");
-                if (startOcrBtn) startOcrBtn.disabled = true;
-                return; 
+            const essential=[ocrFileInput,startOcrBtn,pdfPreviewCanvas,statusInfographic,statusMessageDetail];
+            if(essential.some(el=>!el)){
+                console.error("CRITICAL: Essential HTML elements missing. App cannot start.");
+                if(statusMessageDetail)statusMessageDetail.textContent="Page Error: Core elements missing.";
+                return;
             }
-            
-            if (startOcrBtn) startOcrBtn.disabled = true; 
-            if (ocrOutputWrapper) ocrOutputWrapper.style.display = 'none';
-
+            if(startOcrBtn) startOcrBtn.disabled = true;
+            if(ocrOutputWrapper) ocrOutputWrapper.style.display = 'none';
 
             setupFileInputListeners();
             setupOcrButtonListener();
             setupDownloadButtonListeners();
             
-            initializeTesseract().catch(err => {
-                console.error("[OCR] Unhandled error during Tesseract initialization sequence:", err);
-                updateStatus("Critical error initializing OCR. Check console.", "error");
+            initializeTesseractWithTimeout().catch(err => {
+                console.error("[OCR] Top-level Tesseract init error:", err);
+                updateInfographicStep(null, `Fatal OCR Init Error: ${err.message}. Check console.`, true);
             });
         });
     </script>
