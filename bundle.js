@@ -1,379 +1,243 @@
 "use strict";
-// Snackbar utility (e object)
+// Snackbar utility (existing)
 var e = {},
     t = document.querySelector(".app__snackbar"),
     a = null;
 e.show = (e, o = 4e3) => {
     e && (a && a.remove(), (a = document.createElement("div")).className = "app__snackbar-msg", a.textContent = e, t.appendChild(a), setTimeout((() => {
-        // Ensure 'a' (the snackbar message element) still exists before trying to remove
-        if (a && a.parentNode === t) {
-            a.remove();
-        }
-        // Check if snackbar container is empty, if so, hide it based on new CSS
-        if (t.children.length === 0) {
-            t.classList.add('app__snackbar--hide');
-        } else {
-            t.classList.remove('app__snackbar--hide');
-        }
-    }), o));
-    // If adding a new message, ensure container is visible
-    if (e && t.children.length > 0) {
-        t.classList.remove('app__snackbar--hide');
-    }
+        a && a.parentNode === t && a.remove(); // Check if still child before removing
+    }), o))
 };
 
-// Camera and scanning logic (o object)
+// QR Scanner Logic (existing)
 var o = {};
 
-function i(e) { // Renamed original 's' function to 'getCameraElement' for clarity
+function i(e) { // Renamed 's' to 'e' for clarity (isImageMode)
     !e && window.isMediaStreamAPISupported ? o.webcam = document.querySelector("video") : o.webcam = document.querySelector("img")
 }
 o.active = !1, o.webcam = null, o.canvas = null, o.ctx = null, o.decoder = null, o.setCanvas = () => {
-    o.canvas = document.createElement("canvas"), o.ctx = o.canvas.getContext("2d", { willReadFrequently: true }) // Added willReadFrequently
+    o.canvas = document.createElement("canvas"), o.ctx = o.canvas.getContext("2d")
 }, o.init = () => {
-    var t = !1; // hasBeenSetup
+    var t = !1; // Renamed 'e' to 't' for clarity (isCanvasDrawn)
 
-    function a() { // setupCanvasDimensions
-        // Adjust to use video dimensions if available, otherwise window dimensions
-        if (o.webcam && o.webcam.videoWidth && o.webcam.videoHeight) {
-            o.canvas.width = o.webcam.videoWidth;
-            o.canvas.height = o.webcam.videoHeight;
-        } else {
-            o.canvas.width = window.innerWidth; // Fallback, might not be ideal for image input
-            o.canvas.height = window.innerHeight;
-        }
+    function a() { // Renamed 's' to 'a' for clarity (setCanvasDimensions)
+        o.canvas.width = window.innerWidth, o.canvas.height = window.innerHeight
     }
 
-    function n(e) { // startStream
+    function n(e) { // Renamed 'i' to 'n' for clarity (startStream)
         navigator.mediaDevices.getUserMedia(e).then((function(e) {
             o.webcam.srcObject = e, o.webcam.setAttribute("playsinline", !0), o.webcam.setAttribute("controls", !0), setTimeout((() => {
-                // Ensure video element exists before trying to remove controls
-                const videoEl = document.querySelector("video");
-                if (videoEl) videoEl.removeAttribute("controls");
+                document.querySelector("video").removeAttribute("controls")
             }))
         })).catch((function(e) {
-            console.log("Error occurred while starting stream: ", e), d() // Call handleCameraError
+            console.log("Error occurred ", e), d() // Call noCamera
         }))
     }
 
-    function d() { // handleCameraError
-        window.noCameraPermission = !0;
-        const customScanner = document.querySelector(".custom-scanner");
-        if (customScanner) customScanner.style.display = "none";
-        // Optionally hide the main scanner frame too if camera fails critically
-        // const appOverlayAfter = document.querySelector(".app__overlay::after"); // This won't work for pseudo-elements
-        // Consider hiding window.appOverlay itself or a specific visual class
-        e.show("Unable to access the camera. Try selecting a photo.", 1e4)
+    function d() { // Renamed 'r' to 'd' for clarity (noCamera)
+        window.noCameraPermission = !0, document.querySelector(".custom-scanner").style.display = "none", e.show("Unable to access the camera", 1e4)
     }
-    i(); // Initialize o.webcam
-    o.setCanvas();
-    try {
-        o.decoder = new Worker("decoder.js"); // Ensure decoder.js is in the correct path
-    } catch (workerError) {
-        console.error("Failed to create Web Worker for decoder.js:", workerError);
-        e.show("QR Decoder could not be initialized.", 10000);
-        return; // Stop initialization if worker fails
-    }
-
-
-    if (window.isMediaStreamAPISupported) {
-        if (o.webcam && o.webcam.tagName === "VIDEO") { // Check if it's actually a video element
-             o.webcam.addEventListener("play", (function(e) {
-                if (!t) { // if !hasBeenSetup
-                    a(); // setupCanvasDimensions
-                    t = !0; // hasBeenSetup = true
-                }
-            }), !1);
-        } else { // Fallback if o.webcam is an img or not found
-            a(); // setupCanvasDimensions (will use window size)
-        }
-    } else {
-        a(); // setupCanvasDimensions (will use window size if not mediastream)
-    }
-
-
-    window.isMediaStreamAPISupported && navigator.mediaDevices.enumerateDevices().then((function(e) {
-        var t, a = e.filter((function(e) {
-            // if (e.label.split(",")[1], "videoinput" == e.kind) return e // Original label check might fail if label is empty
-            if ("videoinput" === e.kind) return e;
-            return false;
+    i(), o.setCanvas(), o.decoder = new Worker("decoder.js"), window.isMediaStreamAPISupported ? o.webcam.addEventListener("play", (function(e) { // 'e' here is event, fine
+        t || (a(), t = !0)
+    }), !1) : a(), window.isMediaStreamAPISupported && navigator.mediaDevices.enumerateDevices().then((function(e) { // 'e' here is devices, fine
+        var t, o = e.filter((function(e) { // 'e' here is device, fine
+            if (e.label.split(",")[1], "videoinput" == e.kind) return e
         }));
-        if (a.length > 1) { // Prefer rear camera
-            const rearCamera = a.find(device => device.label && device.label.toLowerCase().includes('back')) || a[a.length - 1];
-            t = {
-                video: {
-                    deviceId: { exact: rearCamera.deviceId }
-                },
-                audio: !1
-            };
-            if (window.iOS) t.video.facingMode = "environment";
-            n(t); // startStream
-        } else if (a.length) {
-            t = {
-                video: {
-                    deviceId: { exact: a[0].deviceId }
-                },
-                audio: !1
-            };
-            if (window.iOS) t.video.facingMode = "environment";
-            n(t); // startStream
-        } else {
-            n({ // Fallback to default video input
-                video: { facingMode: "environment" } // Try for environment first
-            });
-        }
-    })).catch((function(e) {
-        d(), console.error("Error enumerating devices: ", e) // Call handleCameraError
-    }))
-}, o.scan = function(scanCallback, isFromFile = false) { // Renamed 'e' to 'scanCallback', 't' to 'isFromFile'
-    function a() { // tick
-        if (o.active) try {
-            // Ensure webcam is ready and has dimensions before drawing
-            if ((o.webcam.videoWidth && o.webcam.videoHeight && o.webcam.tagName === "VIDEO") || (o.webcam.naturalWidth && o.webcam.naturalHeight && o.webcam.tagName === "IMG")){
-                // Adjust canvas size to match current source (video or image)
-                if (o.webcam.tagName === "VIDEO") {
-                    o.canvas.width = o.webcam.videoWidth;
-                    o.canvas.height = o.webcam.videoHeight;
-                } else if (o.webcam.tagName === "IMG") {
-                    o.canvas.width = o.webcam.naturalWidth;
-                    o.canvas.height = o.webcam.naturalHeight;
+        o.length > 1 ? (t = { // Renamed 'a' to 'o' for clarity (cameras)
+            video: {
+                mandatory: {
+                    sourceId: o[o.length - 1].deviceId ? o[o.length - 1].deviceId : null
                 }
-
-                o.ctx.drawImage(o.webcam, 0, 0, o.canvas.width, o.canvas.height);
-                var e = o.ctx.getImageData(0, 0, o.canvas.width, o.canvas.height);
-                e.data && o.decoder && o.decoder.postMessage(e) // Check if o.decoder exists
-            } else if (o.webcam.tagName === "VIDEO" && o.webcam.readyState < 2) {
-                 // Video not ready, try again shortly
-            } else {
-                // console.warn("Webcam not ready or dimensions unavailable for drawing.");
-            }
-            // Continue scanning only if active
-            if (o.active) {
-                requestAnimationFrame(a); // Use requestAnimationFrame for smoother looping
-            }
-
-        } catch (e) {
-            console.error("Error in scanning tick:", e);
-            if ("NS_ERROR_NOT_AVAILABLE" == e.name && o.active) { // Check o.active before retrying
-                // Do not call setTimeout(a,0) here directly, rely on requestAnimationFrame
-            } else if (o.active) {
-                // For other errors, perhaps stop scanning or log more, but still schedule next frame if active
-                // requestAnimationFrame(a);
-            }
+            },
+            audio: !1
+        }, window.iOS && (t.video.facingMode = "environment"), n(t)) : o.length ? (t = {
+            video: {
+                mandatory: {
+                    sourceId: o[0].deviceId ? o[0].deviceId : null
+                }
+            },
+            audio: !1
+        }, window.iOS && (t.video.facingMode = "environment"), t.video.mandatory.sourceId || window.iOS ? n(t) : n({
+            video: !0
+        })) : n({
+            video: !0
+        })
+    })).catch((function(t) { // 'e' to 't' for error
+        d(), console.error("Error occurred : ", t)
+    }))
+}, o.scan = function(e, t) { // 'e' is callback, 't' is isImageMode
+    function a() { // Renamed 's' to 'a' for clarity (tick)
+        if (o.active) try {
+            o.ctx.drawImage(o.webcam, 0, 0, o.canvas.width, o.canvas.height);
+            var e = o.ctx.getImageData(0, 0, o.canvas.width, o.canvas.height); // 'e' is imageData
+            e.data && o.decoder.postMessage(e)
+        } catch (e) { // 'e' is error
+            "NS_ERROR_NOT_AVAILABLE" == e.name && setTimeout(a, 0)
         }
     }
-    o.active = !0;
-    // o.setCanvas(); // Canvas is already set in init and potentially resized in tick if needed
-    i(isFromFile); // Set o.webcam to video or img based on context
-
-    if (o.decoder) { // Ensure decoder worker exists
-        o.decoder.onmessage = function(t) {
-            if (t.data && t.data.length > 0) { // Decoder.js seems to send an array of results
-                var i = t.data[0][2]; // Assuming data structure [detection, type, content]
-                o.active = !1; // Stop scanning loop
-                scanCallback(i);
-            }
-            // No need to call tick (a) here, it's handled by requestAnimationFrame
-            // if (o.active) requestAnimationFrame(a); // Only if you want to continue scanning after a non-match
-        };
-    } else {
-        console.error("Decoder worker not initialized.");
-        e.show("QR Decoder not available.", 5000);
-        return;
-    }
-
-    // Start the scanning loop
-    requestAnimationFrame(a);
+    o.active = !0, o.setCanvas(), o.decoder.onmessage = function(t) { // 't' is message event
+        if (t.data.length > 0) {
+            var i = t.data[0][2]; // 'i' is qrData
+            o.active = !1, e(i) // Call the success callback
+        }
+        setTimeout(a, 0) // Continue scanning OR prepare for next scan
+    }, setTimeout((() => {
+        i(t) // Setup webcam/img based on isImageMode
+    })), a() // Start the scanning loop
 };
 
-// Service Worker
+// Service Worker (existing)
 "serviceWorker" in navigator && window.addEventListener("load", (() => {
-    navigator.serviceWorker.register("/service-worker.js") // Ensure this path is correct
-        .then((t => {
-            localStorage.getItem("offline") || (localStorage.setItem("offline", !0), e.show("App is ready for offline usage.", 5e3))
-        })).catch((e => {
-            console.log("SW registration failed: ", e)
-        }))
+    navigator.serviceWorker.register("/service-worker.js").then((t => { // 't' is registration
+        localStorage.getItem("offline") || (localStorage.setItem("offline", !0), e.show("App is ready for offline usage.", 5e3))
+    })).catch((e => { // 'e' is error
+        console.log("SW registration failed: ", e)
+    }))
 }));
 
-// DOMContentLoaded - Main App Logic
+// DOMContentLoaded (Main app logic)
 window.addEventListener("DOMContentLoaded", (() => {
-    window.iOS = ["iPad", "iPhone", "iPod"].indexOf(navigator.platform) >= 0;
-    window.isMediaStreamAPISupported = navigator && navigator.mediaDevices && "enumerateDevices" in navigator.mediaDevices;
+    window.iOS = ["iPad", "iPhone", "iPod"].indexOf(navigator.platform) >= 0,
+    window.isMediaStreamAPISupported = navigator && navigator.mediaDevices && "enumerateDevices" in navigator.mediaDevices,
     window.noCameraPermission = !1;
 
-    var qrCodeValue = null; // Renamed 'e'
-    var imageElement = null; // Renamed 't' (used for file input image preview)
+    var scannedQrData = null, // Renamed 'e'
+        imgElementForFileScan = null, // Renamed 't'
+        selectPhotosButton = document.querySelector(".app__select-photos"), // Renamed 'a'
+        resultDialog = document.querySelector(".app__dialog"), // Renamed 'i'
+        resultDialogOverlay = document.querySelector(".app__dialog-overlay"), // Renamed 'n'
+        openLinkButton = document.querySelector(".app__dialog-open"), // Renamed 'd'
+        closeDialogButton = document.querySelector(".app__dialog-close"), // Renamed 'r'
+        scannerLine = document.querySelector(".custom-scanner"), // Renamed 'c'
+        scannerImgFrame = document.querySelector(".app__scanner-img"), // Renamed 'l' - Note: this is hidden by new CSS
+        resultInput = document.querySelector("#result"); // Renamed 's'
 
-    const selectPhotosButton = document.querySelector(".app__select-photos");
-    const resultDialog = document.querySelector(".app__dialog");
-    const resultDialogOverlay = document.querySelector(".app__dialog-overlay");
-    const openLinkButton = document.querySelector(".app__dialog-open");
-    const closeDialogButton = document.querySelector(".app__dialog-close");
-    const customScannerLine = document.querySelector(".custom-scanner");
-    // const scannerImgOverlay = document.querySelector(".app__scanner-img"); // This is hidden by new CSS
-    const resultInput = document.querySelector("#result");
-    const helpText = document.querySelector(".app__help-text"); // Grab help text element
-    // const infoIcon = document.querySelector(".app__header-icon svg"); // Not needed for info
-    const videoEl = document.querySelector("video"); // Explicitly get video
+    document.querySelector(".app__help-text"); // This element is used by new CSS, ensure it exists
+    // document.querySelector(".app__header-icon svg"); // SVG inside is styled, element itself is headerIconElement
+    document.querySelector("video"); // Used by o.webcam
 
-    const reloadButton = document.getElementById("reloadAppButton"); // Get the reload button
+    var headerIconElement = document.querySelector(".app__header-icon"); // Renamed 'u' - THIS IS NOW THE RELOAD BUTTON
 
-    // REMOVE Info Dialog elements and their listeners
-    // const infoDialog = document.querySelector(".app__infodialog");
-    // const infoDialogCloseButton = document.querySelector(".app__infodialog-close");
-    // const infoDialogOverlay = document.querySelector(".app__infodialog-overlay");
+    // Variables for "About" dialog - no longer used for showing/hiding, but keep if other parts of your code might reference them.
+    // If not, they can be safely removed. For now, just commenting out their usage.
+    // var infoDialog = document.querySelector(".app__infodialog"); // Renamed 'p'
+    // var infoDialogCloseButton = document.querySelector(".app__infodialog-close"); // Renamed 'm'
+    // var infoDialogOverlay = document.querySelector(".app__infodialog-overlay"); // Renamed 'v'
 
-    function updateHelpText(newText) {
-        if (helpText) helpText.textContent = newText;
-    }
-
-    function showScannerVisuals(show = true) {
-        if (customScannerLine) customScannerLine.style.display = show ? "block" : "none";
-        // scannerImgOverlay is hidden by CSS, so no need to manage its display here.
-        // The main .app__overlay::after provides the border now.
-    }
-
-
-    function startScanProcess(isFromFile = !1) {
-        if (window.isMediaStreamAPISupported && !window.noCameraPermission && !isFromFile) {
-            updateHelpText("Point camera at a QR Code");
-            showScannerVisuals(true);
-        } else if (isFromFile) {
-            updateHelpText("Processing image...");
-            showScannerVisuals(true); // Show scanner line while processing image
-        } else {
-            updateHelpText("Camera unavailable. Select a photo.");
-            showScannerVisuals(false);
+    function displayScannerUI(isImageMode = !1) { // Renamed 'y', 't' to 'isImageMode'
+        if (window.isMediaStreamAPISupported && !window.noCameraPermission) {
+            scannerLine.style.display = "block";
+            // scannerImgFrame.style.display = "block"; // This SVG frame is hidden by new CSS, scannerLine is sufficient
+        }
+        if (isImageMode) { // If it's image mode, ensure scanner line is visible
+             scannerLine.style.display = "block";
+            // scannerImgFrame.style.display = "block";
         }
 
-        o.scan(((scannedData) => { // Renamed 't' to 'scannedData'
-            qrCodeValue = scannedData;
-            resultInput.value = scannedData;
+        o.scan((qrData => { // Renamed 't' to 'qrData'
+            scannedQrData = qrData;
+            resultInput.value = qrData;
             resultInput.select();
-            showScannerVisuals(false);
+            scannerLine.style.display = "none";
+            // scannerImgFrame.style.display = "none";
 
-            // URL Check
-            if (((url = "") => !(!url || "string" != typeof url) && new RegExp("^(https?:\\/\\/)?((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|((\\d{1,3}\\.){3}\\d{1,3}))(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*(\\?[;&a-z\\d%_.~+=-]*)?(\\#[-a-z\\d_]*)?$", "i").test(url))(scannedData)) {
-                openLinkButton.style.display = "inline-flex"; // Or "flex"
-            } else {
-                openLinkButton.style.display = "none";
-            }
+            // URL Check (existing)
+            ((urlToCheck = "") => !(!urlToCheck || "string" != typeof urlToCheck) && new RegExp("^(https?:\\/\\/)?((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|((\\d{1,3}\\.){3}\\d{1,3}))(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*(\\?[;&a-z\\d%_.~+=-]*)?(\\#[-a-z\\d_]*)?$", "i").test(urlToCheck))(qrData) && (openLinkButton.style.display = "inline-flex"); // Use inline-flex from new CSS
+
             resultDialog.classList.remove("app__dialog--hide");
             resultDialogOverlay.classList.remove("app__dialog--hide");
-            updateHelpText("Scan complete!");
-        }), isFromFile);
+        }), isImageMode)
     }
 
-    function resetAppAfterDialog() {
-        qrCodeValue = null;
+    function resetAndPrepareForScan() { // Renamed 'w'
+        scannedQrData = null;
         resultInput.value = "";
-        openLinkButton.style.display = "none"; // Hide open button
-        if (!window.isMediaStreamAPISupported && imageElement) { // If it was an image scan
-            imageElement.src = "";
-            imageElement.className = ""; // Reset class if any was added
+        if (!window.isMediaStreamAPISupported && imgElementForFileScan) { // If not mediastream, clear the img
+            imgElementForFileScan.src = "";
+            imgElementForFileScan.className = "";
         }
+        openLinkButton.style.display = "none"; // Hide open button initially
         resultDialog.classList.add("app__dialog--hide");
         resultDialogOverlay.classList.add("app__dialog--hide");
-        startScanProcess(); // Restart scanning with camera if available
+        displayScannerUI(); // Restart scanning with camera
     }
 
-    window.appOverlay = document.querySelector(".app__overlay"); // Used for border style in original
+    window.appOverlay = document.querySelector(".app__overlay"); // Used for border style, new CSS handles this differently
 
-    window.addEventListener("load", (e => {
-        o.init(); // Initialize camera and decoder worker
+    window.addEventListener("load", (event => { // 'e' is event
+        o.init();
         setTimeout((() => {
-            if (window.appOverlay) window.appOverlay.style.borderStyle = "solid"; // Original style, CSS now handles visual frame
-            if (window.isMediaStreamAPISupported && !window.noCameraPermission) {
-                startScanProcess();
-            } else if (!window.isMediaStreamAPISupported) {
-                updateHelpText("Camera not supported. Select a photo.");
-                showScannerVisuals(false);
-            } else if (window.noCameraPermission) {
-                 updateHelpText("Camera permission denied. Select a photo.");
-                 showScannerVisuals(false);
+            // window.appOverlay.style.borderStyle = "solid"; // New CSS handles overlay visuals
+            if (window.isMediaStreamAPISupported) {
+                displayScannerUI();
             }
         }), 1e3); // Delay to allow camera init
 
-        // File input setup
+        // File input setup (existing logic)
         (function() {
-            var fileInput = document.createElement("input");
-            fileInput.setAttribute("type", "file");
-            fileInput.setAttribute("accept", "image/*"); // More specific for images
-            // fileInput.setAttribute("capture", "camera"); // 'capture' is more for direct camera launch, not always desired for "select photo"
-            fileInput.id = "camera"; // Retain original ID if other parts rely on it, though it's a bit misleading now
-            // window.appOverlay.style.borderStyle = ""; // Original, not strictly needed with new CSS
+            var e = document.createElement("input"); // 'e' is fileInput
+            e.setAttribute("type", "file");
+            e.setAttribute("capture", "camera"); // This is often for direct camera capture, not just gallery
+            e.id = "camera"; // Original ID, might not be strictly needed if not selected elsewhere
+            // window.appOverlay.style.borderStyle = ""; // New CSS handles this
 
-            if (selectPhotosButton) selectPhotosButton.style.display = "flex"; // Ensure FAB is visible
+            selectPhotosButton.style.display = "flex"; // Ensure FAB is visible
 
-            imageElement = document.createElement("img"); // This is 't' from original
-            imageElement.src = "";
-            imageElement.id = "frame"; // Retain original ID
-            imageElement.style.display = "none"; // Hide the preview img element itself, we use canvas
+            imgElementForFileScan = document.createElement("img"); // Assign to 't' (now imgElementForFileScan)
+            imgElementForFileScan.src = "";
+            imgElementForFileScan.id = "frame"; // Original ID
 
-            var layoutContent = document.querySelector(".app__layout-content");
-            if (layoutContent) {
-                layoutContent.appendChild(fileInput);
-                layoutContent.appendChild(imageElement);
-            }
+            var appLayoutContent = document.querySelector(".app__layout-content"); // Renamed 'o'
+            appLayoutContent.appendChild(e); // Append file input
+            appLayoutContent.appendChild(imgElementForFileScan); // Append img element
 
-
-            if (selectPhotosButton) {
-                selectPhotosButton.addEventListener("click", (() => {
-                    o.active = false; // Stop camera scanning if active
-                    // showScannerVisuals(false); // Hide camera scanner line
-                    fileInput.click(); // Open file dialog
-                }));
-            }
-
-            fileInput.addEventListener("change", (e => {
-                if (e.target && e.target.files && e.target.files.length > 0) {
-                    // o.webcam is now the img element for file scanning
-                    // The 'i(isFromFile)' call inside o.scan will handle setting o.webcam = imageElement
-                    imageElement.src = URL.createObjectURL(e.target.files[0]);
-                    imageElement.onload = () => { // Wait for image to load before scanning
-                        // window.appOverlay.style.borderColor = "rgb(62, 78, 184)"; // Original style
-                        startScanProcess(true); // True for isFromFile
-                        URL.revokeObjectURL(imageElement.src); // Clean up object URL after load
-                    };
-                    imageElement.onerror = () => {
-                        e.show("Failed to load image.", 4000);
-                        updateHelpText("Error loading image. Try again.");
-                    };
-                }
-                fileInput.value = ""; // Reset file input
+            selectPhotosButton.addEventListener("click", (() => {
+                scannerLine.style.display = "none"; // Hide scanner line when picking file
+                // scannerImgFrame.style.display = "none";
+                e.click(); // Trigger file input
             }));
+
+            e.addEventListener("change", (event => { // 'e' here is the change event
+                if (event.target && event.target.files.length > 0) {
+                    imgElementForFileScan.className = "app__overlay"; // This class might conflict or be unneeded with new CSS
+                    imgElementForFileScan.src = URL.createObjectURL(event.target.files[0]);
+
+                    if (!window.noCameraPermission) { // If camera permission exists, show scanner line
+                        scannerLine.style.display = "block";
+                        // scannerImgFrame.style.display = "block";
+                    }
+                    // window.appOverlay.style.borderColor = "rgb(62, 78, 184)"; // New CSS handles overlay visuals
+                    displayScannerUI(!0); // Scan in image mode
+                }
+            }))
         })() // IIFE for file input setup
     }));
 
-    if (closeDialogButton) closeDialogButton.addEventListener("click", resetAppAfterDialog, !1);
+    closeDialogButton.addEventListener("click", resetAndPrepareForScan, !1);
 
-    // REMOVE Info Dialog Listeners
-    // if (infoDialogCloseButton) infoDialogCloseButton.addEventListener("click", (function() {
-    //     if(infoDialog) infoDialog.classList.add("app__infodialog--hide");
-    //     if(infoDialogOverlay) infoDialogOverlay.classList.add("app__infodialog--hide");
+    // REMOVE "About" Dialog close button listener
+    // infoDialogCloseButton && infoDialogCloseButton.addEventListener("click", (function() {
+    //     infoDialog.classList.add("app__infodialog--hide");
+    //     infoDialogOverlay.classList.add("app__infodialog--hide");
     // }), !1);
 
-    if (openLinkButton) openLinkButton.addEventListener("click", (function() {
-        if (!qrCodeValue) return;
-        let urlToOpen = qrCodeValue;
-        if (!((u = "") => new RegExp("^(https?:\\/\\/)", "i").test(u))(urlToOpen)) {
-            urlToOpen = `//${urlToOpen}`; // Prepend // if no http/https
-        }
-        window.open(urlToOpen, "_blank", "noopener,noreferrer,toolbar=0,location=0,menubar=0");
-        qrCodeValue = null;
-        resetAppAfterDialog();
+    openLinkButton.addEventListener("click", (function() {
+        var urlToOpen = scannedQrData; // Renamed 'e' to 'urlToOpen'
+        // URL prefix check (existing)
+        ((e = "") => new RegExp("^(https?:\\/\\/)", "i").test(e))(urlToOpen) || (urlToOpen = `//${urlToOpen}`);
+
+        window.open(urlToOpen, "_blank", "toolbar=0,location=0,menubar=0");
+        scannedQrData = null;
+        resetAndPrepareForScan();
     }), !1);
 
-    // Modify header icon to be RELOAD button
-    if (reloadButton) { // Changed from 'u' (original info icon container)
-        reloadButton.addEventListener("click", (function() {
-            // REMOVE Info Dialog show logic
-            // if(infoDialog) infoDialog.classList.remove("app__infodialog--hide");
-            // if(infoDialogOverlay) infoDialogOverlay.classList.remove("app__infodialog--hide");
+    // CHANGE Header Icon listener to RELOAD
+    headerIconElement && headerIconElement.addEventListener("click", (function() {
+        // OLD "About" dialog logic:
+        // infoDialog.classList.remove("app__infodialog--hide");
+        // infoDialogOverlay.classList.remove("app__infodialog--hide");
+        // NEW Reload logic:
+        location.reload();
+    }), !1);
 
-            // ADD Reload logic
-            location.reload();
-        }), !1);
-    }
 }));
