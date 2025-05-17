@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced OCR Extractor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- Root Variables (same as before) --- */
+        :root {
+            --primary-color: #4A90E2; /* Brighter, modern Blue */
+            --primary-color-rgb: 74, 144, 226;
+            --secondary-color: #2868C7; /* Companion blue for gradients */
+            --background-color: #0D1117; /* Very dark, almost black (GitHub dark dim) */
+            --surface-color: #161B22;   /* Slightly lighter for cards (GitHub dark dim) */
+            --text-color: #C9D1D9;      /* Light Gray for text (GitHub dark dim) */
+            --text-muted-color: #8B949E;/* Muted Gray (GitHub dark dim) */
+            
+            --success-color: #238636;   /* GitHub Green */
+            --success-hover-color: #2EA043; /* Brighter GitHub Green */
+            --success-color-rgb: 35, 134, 54;
+
+            --error-color: #DA3633;     /* GitHub Red */
+            --error-color-rgb: 218, 54, 51;
+            --warning-color: #F5C518; /* Yellow for warnings/cancel */
+            --warning-color-rgb: 245, 197, 24;
+
+
+            --border-color: #30363D;   /* Subtle Border (GitHub dark dim) */
+            --input-background: #22272E; /* Slightly different from surface for depth */
+            --input-focus-border: var(--primary-color);
+            --glow-color: rgba(var(--primary-color-rgb), 0.35);
+            --success-glow-color: rgba(var(--success-color-rgb), 0.35);
+            --warning-glow-color: rgba(var(--warning-color-rgb), 0.35);
+
+
+            --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            --font-display: var(--font-sans);
+            --font-body: var(--font-sans);
+
+            --border-radius-sm: 6px;
+            --border-radius-md: 10px;
+            --border-radius-lg: 16px;
+
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.25), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.25);
+
+            --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            --gradient-success: linear-gradient(135deg, var(--success-hover-color) 0%, var(--success-color) 100%);
+            --gradient-warning: linear-gradient(135deg, var(--warning-color) 0%, color-mix(in srgb, var(--warning-color) 80%, black) 100%);
+            --gradient-border-animated: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--primary-color));
+        }
+
+        @keyframes backgroundPan { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes borderShine { 0% { background-position: -100% 0; } 100% { background-position: 100% 0; } }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-body); line-height: 1.65; background-color: var(--background-color);
+            background-image: linear-gradient(120deg, var(--background-color) 0%, #1a2330 50%, var(--background-color) 100%);
+            background-size: 200% 200%; animation: backgroundPan 25s ease infinite;
+            color: var(--text-color); display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh; padding: 30px 15px; overflow-x: hidden;
+        }
+        .app-header { width: 100%; max-width: 800px; margin-bottom: 20px; text-align: left; }
+        .app-header a { color: var(--primary-color); text-decoration: none; font-size: 0.9em; font-weight: 500; transition: color 0.2s ease; }
+        .app-header a:hover { color: var(--secondary-color); }
+        .app-header a .fas { margin-right: 6px; }
+
+        .container {
+            width: 100%; max-width: 800px; background-color: var(--surface-color);
+            background-image: linear-gradient(180deg, color-mix(in srgb, var(--surface-color) 105%, black) 0%, var(--surface-color) 100%);
+            padding: 30px; border-radius: var(--border-radius-lg);
+            box-shadow: 0 0 0 1px var(--border-color), var(--shadow-lg); margin-bottom: 30px;
+        }
+        .main-title {
+            font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; text-align: center;
+            color: var(--primary-color); margin-bottom: 8px; letter-spacing: 0.5px;
+            background: linear-gradient(45deg, var(--primary-color), color-mix(in srgb, var(--primary-color) 60%, #fff));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-fill-color: transparent;
+            padding-bottom: 5px;
+        }
+        .sub-title { text-align: center; color: var(--text-muted-color); margin-bottom: 30px; font-size: 0.95rem; font-weight: 300; }
+        h2 {
+            font-family: var(--font-display); font-weight: 600; color: var(--text-color); margin-bottom: 25px; padding-bottom: 15px;
+            font-size: 1.6em; border-bottom: 2px solid transparent; border-image-slice: 1;
+            border-image-source: linear-gradient(to right, var(--primary-color), color-mix(in srgb, var(--primary-color) 30%, var(--border-color)));
+            display: flex; align-items: center; gap: 12px;
+        }
+        h2 .fas { color: var(--primary-color); font-size: 1.2em; }
+
+        .ocr-section { margin-bottom: 30px; }
+        
+        .form-group { margin-bottom: 20px; }
+        .form-group label {
+            display: block; margin-bottom: 8px; font-weight: 500; font-size: 0.9em; color: var(--text-muted-color);
+        }
+        .form-group input[type="text"], .form-group select {
+            width: 100%; padding: 10px 14px; border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md); background-color: var(--input-background);
+            color: var(--text-color); font-family: var(--font-body); font-size: 0.95em;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .form-group input[type="text"]:focus, .form-group select:focus {
+            outline: none; border-color: var(--input-focus-border);
+            box-shadow: 0 0 0 3px var(--glow-color);
+        }
+        .form-group select {
+            appearance: none; -webkit-appearance: none; -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%238B949E'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd' /%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1.2em;
+            padding-right: 3rem; /* Make space for arrow */
+        }
+
+
+        button.action-button {
+            display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 14px 20px;
+            background-image: var(--gradient-primary); background-size: 100% auto; color: white;
+            border: none; border-radius: var(--border-radius-md); cursor: pointer; font-size: 1.05em; 
+            font-family: var(--font-body); font-weight: 600; text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+            transition: all 0.25s ease-out;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.05) inset;
+        }
+        button.action-button:hover:not(:disabled) {
+            filter: brightness(1.1); transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 6px 12px rgba(var(--primary-color-rgb), 0.2), 0 0 15px var(--glow-color), 0 0 0 1px rgba(255,255,255,0.1) inset;
+        }
+        button.action-button:disabled {
+            background-image: none; background-color: color-mix(in srgb, var(--surface-color) 70%, var(--text-muted-color));
+            color: var(--text-muted-color); cursor: not-allowed; transform: translateY(0) scale(1);
+            box-shadow: none; text-shadow: none;
+        }
+        button.action-button .fa-spin { display: none; }
+        button.action-button:disabled .fa-spin { display: inline-block; margin-left: 8px; }
+        
+        button.cancel-button {
+            background-image: var(--gradient-warning);
+            color: var(--background-color); /* Dark text on yellow */
+            margin-top: 15px;
+        }
+        button.cancel-button:hover:not(:disabled) {
+             box-shadow: 0 6px 12px rgba(var(--warning-color-rgb), 0.2), 0 0 15px var(--warning-glow-color);
+        }
+
+
+        .file-input-wrapper {
+            position: relative; width: 100%; padding: 35px; border: 2px dashed var(--border-color); border-radius: var(--border-radius-md);
+            text-align: center; cursor: pointer; margin-bottom: 25px; background-color: var(--input-background); 
+            transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease; overflow: hidden;
+        }
+        .file-input-wrapper::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: inherit; padding: 2px;
+            background: var(--gradient-border-animated); background-size: 200% auto;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: destination-out; mask-composite: exclude; opacity: 0; transition: opacity 0.3s ease; animation: borderShine 3s linear infinite paused;
+        }
+        .file-input-wrapper:hover { border-color: transparent; }
+        .file-input-wrapper:hover::before { opacity: 1; animation-play-state: running; }
+        .file-input-wrapper input[type="file"] { position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
+        .file-input-text { color: var(--text-muted-color); font-size: 1.1em; display: flex; align-items: center; justify-content: center; gap: 12px; position: relative; z-index: 1;}
+        .file-input-text .fas { color: var(--primary-color); font-size: 1.4em; transition: transform 0.3s ease; }
+        .file-input-wrapper:hover .file-input-text .fas { transform: scale(1.1) translateY(-2px); }
+        .selected-file-display { display: block; font-size: 0.95em; color: var(--primary-color); margin-top: 10px; font-weight: 500; word-break: break-all; position: relative; z-index: 1; }
+
+        .status {
+            margin-top: 20px; font-weight: 500; color: var(--text-muted-color); font-size: 0.9em;
+            min-height: 1.5em; text-align: center; transition: color 0.3s ease, text-shadow 0.3s ease;
+        }
+        .status.success { color: var(--success-color); text-shadow: 0 0 8px var(--success-glow-color); }
+        .status.error { color: var(--error-color); text-shadow: 0 0 8px rgba(var(--error-color-rgb), 0.4); }
+        .status.processing { color: var(--primary-color); text-shadow: 0 0 8px var(--glow-color); }
+        .status .fas.fa-spinner { margin-right: 6px; }
+        
+        .progress-bar-container {
+            width: 100%; background-color: var(--input-background); border-radius: var(--border-radius-sm);
+            padding: 3px; margin-top: 10px; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1); display: none;
+        }
+        .progress-bar {
+            width: 0%; height: 10px; background-image: var(--gradient-primary);
+            border-radius: var(--border-radius-sm); transition: width 0.3s ease-out;
+        }
+
+        .ocr-output-area { margin-top: 25px; width: 100%; }
+        .ocr-output-area textarea {
+            width: 100%; min-height: 200px; padding: 15px; border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md); background-color: var(--input-background);
+            color: var(--text-color); font-family: var(--font-sans); font-size: 0.95em; resize: vertical;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .ocr-output-area textarea:focus { outline: none; border-color: var(--input-focus-border); box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 0 0 3px var(--glow-color); }
+        .download-buttons { margin-top: 20px; display: flex; gap: 15px; justify-content: center; }
+        .download-buttons button { width: auto; padding: 10px 20px; font-size: 0.95em; background-image: var(--gradient-success); }
+        .download-buttons button:hover:not(:disabled){ filter: brightness(1.1); transform: translateY(-2px) scale(1.01); box-shadow: 0 6px 12px rgba(var(--success-color-rgb), 0.2), 0 0 15px var(--success-glow-color); }
+
+        .info-message {
+            background-color: rgba(var(--primary-color-rgb), 0.05); color: var(--primary-color); padding: 15px 20px;
+            border: 1px solid rgba(var(--primary-color-rgb), 0.3); border-left: 5px solid var(--primary-color);
+            border-radius: var(--border-radius-md); margin: 30px auto 0 auto; font-size: 0.9em;
+            max-width: 100%; display: flex; align-items: flex-start; gap: 12px;
+        }
+        .info-message .fas { font-size: 1.2em; margin-top: 3px; }
+        .info-message strong { font-weight: 600; }
+
+        footer { text-align: center; margin-top: 40px; padding-bottom: 20px; color: var(--text-muted-color); font-size: 0.85em; font-weight: 300; }
+        #pdfPreviewCanvas { display: none; }
+
+        @media (max-width: 768px) {
+            body { padding: 20px 10px; }
+            .container { padding: 25px; }
+            h2 { font-size: 1.4em; }
+            .file-input-wrapper { padding: 25px; }
+            .download-buttons { flex-direction: column; }
+            .download-buttons button { width: 100%; }
+            .form-group { flex-basis: 100%; } /* For language and page range on mobile */
+        }
+        .options-grid { display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 20px; }
+        .options-grid .form-group { flex: 1; min-width: 200px; }
+
+    </style>
+</head>
+<body>
+    <div class="app-header">
+        <a href="/"><i class="fas fa-arrow-left"></i> Back to Converters</a>
+    </div>
+
+    <div class="container">
+        <h1 class="main-title">Advanced OCR</h1>
+        <p class="sub-title">Extract Text from PDFs & Images</p>
+
+        <div class="ocr-section">
+            <h2><i class="fas fa-cogs"></i> OCR Configuration</h2>
+            
+            <div class="file-input-wrapper" id="ocrFileWrapper">
+                <span class="file-input-text"><i class="fas fa-file-import"></i> Click or Drag PDF/Image Here</span>
+                <input type="file" id="ocrFile" accept=".pdf,.png,.jpg,.jpeg,.bmp,.tiff">
+                <span class="selected-file-display" id="ocrFileName"></span>
+            </div>
+
+            <div class="options-grid">
+                <div class="form-group">
+                    <label for="languageSelect">OCR Language:</label>
+                    <select id="languageSelect">
+                        <option value="hin" selected>Hindi (हिन्दी)</option>
+                        <option value="eng">English</option>
+                        <option value="deu">German (Deutsch)</option>
+                        <option value="fra">French (Français)</option>
+                        <!-- Add more languages as needed -->
+                    </select>
+                </div>
+                <div class="form-group" id="pageRangeGroup" style="display:none;">
+                    <label for="pageRangeInput">Page Range (e.g., 1-3, 5, 8-10):</label>
+                    <input type="text" id="pageRangeInput" placeholder="All pages">
+                </div>
+            </div>
+            
+            <button id="startOcrBtn" class="action-button" disabled>
+                <i class="fas fa-microchip"></i> Start OCR
+                <i class="fas fa-spinner fa-spin"></i>
+            </button>
+            <button id="cancelOcrBtn" class="action-button cancel-button" style="display:none;">
+                <i class="fas fa-times-circle"></i> Cancel OCR
+            </button>
+
+            <div id="ocrStatus" class="status">Initializing OCR Engine... Please wait.</div>
+            <div class="progress-bar-container" id="progressBarContainer">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <div class="ocr-output-area" id="ocrOutputWrapper" style="display:none;">
+                <textarea id="ocrResultText" rows="10" readonly placeholder="Extracted text will appear here..."></textarea>
+                <div class="download-buttons">
+                    <button id="downloadTxtBtn" class="action-button"><i class="fas fa-file-alt"></i> Download .txt</button>
+                    <button id="downloadMdBtn" class="action-button"><i class="fab fa-markdown"></i> Download .md</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="pdfPreviewCanvas"></canvas> 
+
+    <div class="info-message">
+        <i class="fas fa-info-circle"></i>
+        <div>
+            <strong>Client-Side Processing:</strong> OCR is performed in your browser. Performance depends on file size, selected language, and your device. For PDFs, ensure they contain scanned images.
+        </div>
+    </div>
+
+    <footer>
+        Powered by Tesseract.js. Secure Client-Side Processing.
+    </footer>
+
+    <script>
+        const ocrFileInput = document.getElementById('ocrFile');
+        const ocrFileNameDisplay = document.getElementById('ocrFileName');
+        const ocrFileWrapper = document.getElementById('ocrFileWrapper');
+        const languageSelect = document.getElementById('languageSelect');
+        const pageRangeGroup = document.getElementById('pageRangeGroup');
+        const pageRangeInput = document.getElementById('pageRangeInput');
+        const startOcrBtn = document.getElementById('startOcrBtn');
+        const cancelOcrBtn = document.getElementById('cancelOcrBtn');
+        const ocrStatus = document.getElementById('ocrStatus');
+        const progressBarContainer = document.getElementById('progressBarContainer');
+        const progressBar = document.getElementById('progressBar');
+        const ocrOutputWrapper = document.getElementById('ocrOutputWrapper');
+        const ocrResultText = document.getElementById('ocrResultText');
+        const downloadTxtBtn = document.getElementById('downloadTxtBtn');
+        const downloadMdBtn = document.getElementById('downloadMdBtn');
+        const pdfPreviewCanvas = document.getElementById('pdfPreviewCanvas');
+
+        let tesseractWorker = null;
+        let currentFile = null;
+        let currentLanguage = 'hin';
+        let isProcessing = false;
+        let userCancelled = false;
+        let totalPdfPages = 0;
+
+        async function createNewWorker() {
+            if (tesseractWorker) {
+                await tesseractWorker.terminate(); // Terminate existing worker if any
+                tesseractWorker = null;
+            }
+            updateStatus('Initializing OCR Engine...', 'processing', true);
+            startOcrBtn.disabled = true;
+            cancelOcrBtn.style.display = 'none';
+            
+            tesseractWorker = await Tesseract.createWorker({
+                logger: m => {
+                    if (!isProcessing || userCancelled) return; // Ignore logs if not processing or cancelled
+                    if (m.status === 'recognizing text' && m.jobId) { // Check for jobId to ensure it's for the current job
+                        const progress = (m.progress * 100).toFixed(0);
+                        // For PDF, overall progress is handled by page iteration
+                        // For single image, this progress is more relevant
+                        if (currentFile && !currentFile.type.startsWith("application/pdf")) {
+                            updateStatus(`Recognizing text... ${progress}%`, 'processing', true);
+                            progressBar.style.width = `${progress}%`;
+                        }
+                    } else if (m.status && m.status !== 'loaded tesseract core' && m.status !== 'initialized tesseract' && m.jobId) {
+                         // updateStatus(capitalizeFirstLetter(m.status) + '...', 'processing', true);
+                    }
+                }
+            });
+            updateStatus(`Loading ${getSelectedLangName()} language data...`, 'processing', true);
+            await tesseractWorker.loadLanguage(currentLanguage);
+            await tesseractWorker.initialize(currentLanguage);
+            updateStatus(`${getSelectedLangName()} OCR ready. Select a file.`, 'success');
+            startOcrBtn.disabled = false;
+        }
+        
+        function getSelectedLangName() {
+            const selectedOption = languageSelect.options[languageSelect.selectedIndex];
+            return selectedOption ? selectedOption.text : currentLanguage;
+        }
+
+        languageSelect.addEventListener('change', async (event) => {
+            currentLanguage = event.target.value;
+            if (tesseractWorker) { // Re-initialize if worker exists
+                await createNewWorker();
+            }
+            // If no file selected, button stays disabled until worker is ready
+            startOcrBtn.disabled = !tesseractWorker || !currentFile;
+        });
+
+        ocrFileInput.addEventListener('change', (event) => {
+            currentFile = event.target.files[0];
+            if (currentFile) {
+                ocrFileNameDisplay.textContent = currentFile.name;
+                ocrFileWrapper.querySelector('.file-input-text').style.display = 'none';
+                ocrFileNameDisplay.style.display = 'block';
+                ocrOutputWrapper.style.display = 'none';
+                ocrResultText.value = '';
+                pageRangeInput.value = ''; // Reset page range
+                if (currentFile.type === "application/pdf") {
+                    pageRangeGroup.style.display = 'block';
+                } else {
+                    pageRangeGroup.style.display = 'none';
+                }
+                startOcrBtn.disabled = !tesseractWorker; // Enable if worker is ready
+            } else {
+                ocrFileNameDisplay.textContent = '';
+                ocrFileWrapper.querySelector('.file-input-text').style.display = 'flex';
+                ocrFileNameDisplay.style.display = 'none';
+                pageRangeGroup.style.display = 'none';
+                startOcrBtn.disabled = true;
+            }
+        });
+        
+        // Drag & Drop (same as before)
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eName => {
+            ocrFileWrapper.addEventListener(eName, preventDefaults, false);
+            document.body.addEventListener(eName, preventDefaults, false);
+        });
+        ['dragenter', 'dragover'].forEach(eName => ocrFileWrapper.addEventListener(eName, () => ocrFileWrapper.classList.add('is-dragging'), false));
+        ['dragleave', 'drop'].forEach(eName => ocrFileWrapper.addEventListener(eName, () => ocrFileWrapper.classList.remove('is-dragging'), false));
+        ocrFileWrapper.addEventListener('drop', (e) => {
+            ocrFileInput.files = e.dataTransfer.files;
+            const event = new Event('change');
+            ocrFileInput.dispatchEvent(event);
+        }, false);
+        function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
+
+
+        startOcrBtn.addEventListener('click', async () => {
+            if (!currentFile || !tesseractWorker) {
+                updateStatus('Please select a file and wait for OCR engine initialization.', 'error');
+                return;
+            }
+
+            isProcessing = true;
+            userCancelled = false;
+            startOcrBtn.style.display = 'none'; // Hide start, show cancel
+            cancelOcrBtn.style.display = 'flex';
+            ocrOutputWrapper.style.display = 'none';
+            ocrResultText.value = '';
+            progressBarContainer.style.display = 'block';
+            progressBar.style.width = '0%';
+            updateStatus('Preparing file for OCR...', 'processing', true);
+
+            try {
+                let fullText = '';
+                if (currentFile.type === "application/pdf") {
+                    fullText = await processPdfWithPageSelection(currentFile);
+                } else if (currentFile.type.startsWith("image/")) {
+                    progressBar.style.width = '5%'; // Initial small progress
+                    const { data: { text } } = await tesseractWorker.recognize(currentFile);
+                    if (userCancelled) throw new Error("OCR process was cancelled by user.");
+                    fullText = text;
+                    progressBar.style.width = '100%';
+                } else {
+                    throw new Error("Unsupported file type. Please use PDF or image files.");
+                }
+
+                if (userCancelled) { // Check again after async operations
+                     updateStatus('OCR process cancelled by user.', 'warning');
+                } else {
+                    ocrResultText.value = fullText || "No text could be extracted or process was incomplete.";
+                    ocrOutputWrapper.style.display = 'block';
+                    updateStatus('OCR complete!', 'success');
+                }
+
+            } catch (error) {
+                console.error("OCR Error:", error);
+                if (userCancelled && error.message.includes("cancelled")) {
+                    updateStatus('OCR process cancelled by user.', 'warning');
+                } else {
+                    updateStatus(`Error: ${error.message || 'An unknown OCR error occurred.'}`, 'error');
+                    ocrResultText.value = `Error: ${error.message || 'Unknown error'}`;
+                    ocrOutputWrapper.style.display = 'block';
+                }
+            } finally {
+                isProcessing = false;
+                startOcrBtn.style.display = 'flex';
+                cancelOcrBtn.style.display = 'none';
+                if (!tesseractWorker) { // If worker was terminated due to error/cancel
+                    await createNewWorker(); // Re-initialize for next use
+                } else {
+                   startOcrBtn.disabled = false; // Re-enable if worker is fine
+                }
+                // Keep progress bar at 100% on success, or hide on error/cancel
+                if (ocrStatus.classList.contains('success')) {
+                    progressBar.style.width = '100%';
+                } else {
+                    setTimeout(() => { progressBarContainer.style.display = 'none'; }, 2000); // Hide after a delay
+                }
+            }
+        });
+
+        cancelOcrBtn.addEventListener('click', async () => {
+            userCancelled = true;
+            isProcessing = false; // Stop further processing in loops
+            updateStatus('Cancelling OCR process...', 'warning', true);
+            if (tesseractWorker) {
+                await tesseractWorker.terminate(); // Terminate the current Tesseract job
+                tesseractWorker = null; // Nullify to force re-creation
+                console.log("Tesseract worker terminated by user.");
+            }
+            // UI updates are handled in the finally block of startOcrBtn
+        });
+
+        function parsePageRange(rangeStr, maxPages) {
+            if (!rangeStr.trim()) return Array.from({ length: maxPages }, (_, i) => i + 1); // All pages
+
+            const pages = new Set();
+            const parts = rangeStr.split(',');
+            for (const part of parts) {
+                if (part.includes('-')) {
+                    const [start, end] = part.split('-').map(Number);
+                    if (isNaN(start) || isNaN(end) || start < 1 || end > maxPages || start > end) {
+                        throw new Error(`Invalid page range format or value in "${part}". Max pages: ${maxPages}.`);
+                    }
+                    for (let i = start; i <= end; i++) pages.add(i);
+                } else {
+                    const page = Number(part);
+                    if (isNaN(page) || page < 1 || page > maxPages) {
+                        throw new Error(`Invalid page number "${part}". Max pages: ${maxPages}.`);
+                    }
+                    pages.add(page);
+                }
+            }
+            if (pages.size === 0) throw new Error("No valid pages selected in range.");
+            return Array.from(pages).sort((a, b) => a - b);
+        }
+
+        async function processPdfWithPageSelection(file) {
+            const arrayBuffer = await file.arrayBuffer();
+            updateStatus('Loading PDF structure...', 'processing', true);
+            const pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            totalPdfPages = pdfDoc.numPages;
+            
+            let selectedPages;
+            try {
+                selectedPages = parsePageRange(pageRangeInput.value, totalPdfPages);
+            } catch (e) {
+                throw e; // Propagate parsing error
+            }
+
+            let combinedText = '';
+            const numSelectedPages = selectedPages.length;
+
+            updateStatus(`Loaded PDF (${totalPdfPages} pages). Processing ${numSelectedPages} selected pages...`, 'processing', true);
+
+            for (let i = 0; i < numSelectedPages; i++) {
+                if (userCancelled || !isProcessing) break; 
+                const pageNum = selectedPages[i];
+                const currentProgress = ((i + 1) / numSelectedPages) * 100;
+                progressBar.style.width = `${currentProgress.toFixed(0)}%`;
+                updateStatus(`Processing PDF page ${pageNum} (${i + 1} of ${numSelectedPages})...`, 'processing', true);
+                
+                const page = await pdfDoc.getPage(pageNum);
+                const viewport = page.getViewport({ scale: 2.0 });
+                const canvasContext = pdfPreviewCanvas.getContext('2d');
+                pdfPreviewCanvas.height = viewport.height;
+                pdfPreviewCanvas.width = viewport.width;
+
+                await page.render({ canvasContext, viewport }).promise;
+                if (userCancelled || !isProcessing) break;
+
+                const imageDataUrl = pdfPreviewCanvas.toDataURL('image/png');
+                const { data: { text } } = await tesseractWorker.recognize(imageDataUrl);
+                if (userCancelled || !isProcessing) break;
+                
+                combinedText += text + "\n\n";
+                // Brief pause for UI update, less frequent for fewer pages
+                if (numSelectedPages > 10 && i % Math.floor(numSelectedPages / 10) === 0 && i < numSelectedPages -1) {
+                   await new Promise(r => setTimeout(r, 30));
+                } else if (numSelectedPages <= 10 && i < numSelectedPages -1) {
+                    await new Promise(r => setTimeout(r, 50));
+                }
+            }
+            if (userCancelled) throw new Error("PDF processing cancelled by user.");
+            return combinedText.trim();
+        }
+
+        // Download Functionality (same as before)
+        function downloadFile(filename, content, mimeType) {
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = filename;
+            document.body.appendChild(a); a.click();
+            document.body.removeChild(a); URL.revokeObjectURL(url);
+        }
+        downloadTxtBtn.addEventListener('click', () => {
+            const baseName = currentFile ? currentFile.name.split('.').slice(0, -1).join('.') : `${currentLanguage}_ocr_result`;
+            downloadFile(`${baseName}.txt`, ocrResultText.value, 'text/plain;charset=utf-8');
+        });
+        downloadMdBtn.addEventListener('click', () => {
+            const baseName = currentFile ? currentFile.name.split('.').slice(0, -1).join('.') : `${currentLanguage}_ocr_result`;
+            const mdContent = "```text\n" + ocrResultText.value + "\n```";
+            downloadFile(`${baseName}.md`, mdContent, 'text/markdown;charset=utf-8');
+        });
+
+        // Utility: Update Status (same as before, but used more carefully)
+        function updateStatus(message, type = 'info', showSpinner = false) {
+            if (!ocrStatus) return;
+            let fullMessage = message;
+            if (showSpinner) {
+                fullMessage = `<i class="fas fa-spinner fa-spin"></i> ${message}`;
+                ocrStatus.innerHTML = fullMessage;
+            } else {
+                ocrStatus.textContent = message;
+            }
+            ocrStatus.className = 'status';
+            if (type === 'success') ocrStatus.classList.add('success');
+            else if (type === 'error') ocrStatus.classList.add('error');
+            else if (type === 'processing') ocrStatus.classList.add('processing');
+            else if (type === 'warning') ocrStatus.classList.add('warning'); // Added warning type
+        }
+        
+        // Initialize Tesseract on Load
+        document.addEventListener('DOMContentLoaded', createNewWorker);
+    </script>
+</body>
+</html>
