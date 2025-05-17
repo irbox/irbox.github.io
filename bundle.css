@@ -2,170 +2,168 @@
 html,body,p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,iframe,hr,h1,h2,h3,h4,h5,h6{margin:0;padding:0}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}ul{list-style:none}button,input,select,textarea{margin:0}html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}img,embed,object,audio{height:auto;max-width:100%}iframe{border:0}table{border-collapse:collapse;border-spacing:0}td,th{padding:0;text-align:left}
 /* --- END OF ORIGINAL RESET --- */
 
-/* --- MATERIAL YOU EXPRESSIVE (Visual-Reference-Inspired) STYLES --- */
+/* --- GOOGLE LENS INSPIRED STYLES --- */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
 :root {
-  /* Inspired by dark themes with vibrant accents from your examples */
-  --mye-font-primary: 'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --mye-font-secondary: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --gl-font-family: 'Roboto', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
 
-  --mye-color-background: #2C2A3A; /* Deep, slightly desaturated purple/indigo */
-  --mye-color-surface: #3E3B52;    /* Slightly lighter for cards/dialogs */
-  --mye-color-surface-light: #504D68; /* Even lighter for interactive elements */
+  /* Dark Theme Palette - Google Lens Inspired */
+  --gl-color-background: #121212; /* Very dark grey, almost black */
+  --gl-color-surface: #1E1E1E;    /* Surface for modals, slightly lighter */
+  --gl-color-surface-variant: #2C2C2C; /* For subtle interactive backgrounds */
 
-  --mye-color-on-background: #EAE6FF; /* Light, slightly warm off-white */
-  --mye-color-on-surface: #EAE6FF;
-  --mye-color-on-surface-variant: #C0B9D9; /* For less prominent text */
+  --gl-color-on-background: #E8EAED; /* Light grey for text */
+  --gl-color-on-surface: #E8EAED;
+  --gl-color-on-surface-variant: #B0B3B8; /* Dimmer text */
 
-  --mye-color-primary-accent: #FF4081;  /* Vibrant Pink - like "Plank" Pause button */
-  --mye-color-on-primary-accent: #FFFFFF;
+  --gl-color-primary-accent: #89B4F8;  /* Google Blue for links, focus rings */
+  --gl-color-secondary-accent: #00D974; /* Scanner green, vibrant */
 
-  --mye-color-secondary-accent: #7C4DFF; /* Vibrant Purple/Blue */
-  --mye-color-on-secondary-accent: #FFFFFF;
+  --gl-color-scrim: rgba(0, 0, 0, 0.6);
+  --gl-color-shadow: rgba(0, 0, 0, 0.3);
+  --gl-color-outline-focused: rgba(137, 180, 248, 0.5); /* For custom focus rings */
 
-  --mye-color-success: #00E676;      /* Bright green for scanner line */
-  --mye-color-outline: #6A6782;      /* Muted outline for text fields */
 
-  --mye-color-scrim: rgba(10, 8, 15, 0.65); /* Darker scrim for depth */
-  --mye-color-shadow-soft: rgba(0, 0, 0, 0.2);
-  --mye-color-shadow-strong: rgba(0, 0, 0, 0.3);
+  /* Shapes - Clean, standard Material rounding */
+  --gl-shape-corner-small: 4px;
+  --gl-shape-corner-medium: 8px;
+  --gl-shape-corner-large: 16px; /* For FABs, larger elements */
+  --gl-shape-corner-bottom-sheet: 20px 20px 0 0; /* Top corners for bottom sheet style */
+  --gl-shape-corner-dialog: 12px; /* Standard dialog rounding */
+  --gl-shape-corner-full: 50%; /* Circular */
 
-  /* Shapes - Aiming for super-rounded, "squishy" feel */
-  --mye-shape-corner-medium: 16px;
-  --mye-shape-corner-large: 24px;
-  --mye-shape-corner-xlarge: 32px;
-  --mye-shape-corner-dialog: 36px; /* Very rounded for dialogs */
-  --mye-shape-corner-button: 28px; /* For pill-like buttons */
-  --mye-shape-corner-full: 9999px; /* For fully pill/circular shapes */
-
-  --mye-transition-duration: 0.25s;
-  --mye-transition-timing: cubic-bezier(0.4, 0, 0.2, 1); /* Material standard curve */
-  --mye-transition-springy: cubic-bezier(0.34, 1.56, 0.64, 1); /* For bouncy effects */
+  --gl-transition-duration: 0.2s;
+  --gl-transition-timing: ease-out;
 }
 
+/* Base styles */
 body {
-  font-family: var(--mye-font-secondary);
+  font-family: var(--gl-font-family);
   font-size: 16px;
   font-weight: 400;
-  color: var(--mye-color-on-background);
-  background-color: var(--mye-color-background);
+  color: var(--gl-color-on-background);
+  background-color: var(--gl-color-background);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  line-height: 1.6;
-  overflow: hidden; /* Prevent scrollbars on body due to absolute elements */
+  line-height: 1.5;
+  overflow: hidden;
 }
 
 .app__layout {
   position: absolute;
   width: 100%;
   height: 100%;
-  overflow: hidden; /* Keep this */
+  overflow: hidden;
 }
 
-/* --- Header / App Bar --- */
+/* Remove default focus outline for all interactive elements */
+button, a, input, textarea, select {
+  outline: none;
+}
+/* Add custom focus-visible styles */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  box-shadow: 0 0 0 2.5px var(--gl-color-outline-focused);
+}
+/* Specific overrides if needed below */
+
+
+/* --- Header / App Bar (Very Minimal) --- */
 .app__header {
   width: 100%;
-  height: 72px; /* Slightly taller for a more spacious feel */
-  color: var(--mye-color-on-background);
-  background-color: transparent; /* Blends with body or video */
+  height: 60px;
+  color: var(--gl-color-on-background);
+  background-color: transparent;
   display: flex;
   align-items: center;
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 0; left: 0; right: 0;
   z-index: 10;
-  padding: 0 20px;
+  padding: 0 16px;
   box-sizing: border-box;
-  /* No shadow by default, assuming video underneath or flat design */
 }
 
 .app__header-icon { /* "About" icon button */
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   position: absolute;
-  right: 20px;
+  right: 16px;
   top: 50%;
   transform: translateY(-50%);
-  border-radius: var(--mye-shape-corner-full);
-  transition: background-color var(--mye-transition-duration) var(--mye-transition-timing), transform var(--mye-transition-duration) var(--mye-transition-springy);
+  border-radius: var(--gl-shape-corner-full);
+  transition: background-color var(--gl-transition-duration) var(--gl-transition-timing);
 }
 .app__header-icon svg {
-  fill: var(--mye-color-on-background);
-  width: 28px;
-  height: 28px;
+  fill: var(--gl-color-on-background);
+  width: 24px; height: 24px;
 }
 .app__header-icon:hover {
-  background-color: rgba(255,255,255,0.1);
-  transform: translateY(-50%) scale(1.1);
+  background-color: rgba(255,255,255,0.08);
 }
 .app__header-icon:active {
-  background-color: rgba(255,255,255,0.15);
-  transform: translateY(-50%) scale(1.0);
-  opacity: 1;
+  background-color: rgba(255,255,255,0.12);
 }
-.app__header-title { display: none; } /* Not used in this simple UI */
+.app__header-icon:focus-visible { /* Custom focus for this specific icon button */
+    background-color: rgba(255,255,255,0.1);
+    box-shadow: 0 0 0 2.5px var(--gl-color-outline-focused);
+}
+.app__header-title { display: none; }
 
 .app__layout-content {
   height: 100%;
   position: relative;
 }
 
-/* --- FAB (Floating Action Button) --- */
-.app__select-photos { /* This is the "select image" FAB */
+/* --- FAB (Floating Action Button for image selection) --- */
+.app__select-photos {
   position: fixed;
-  right: 24px;
-  bottom: 24px;
-  background-color: var(--mye-color-primary-accent);
-  color: var(--mye-color-on-primary-accent);
-  border-radius: var(--mye-shape-corner-button); /* Expressive rounded rectangle */
+  right: 20px;
+  bottom: 20px;
+  background-color: var(--gl-color-surface-variant); /* Subtle dark background */
+  color: var(--gl-color-on-surface);
+  border-radius: var(--gl-shape-corner-large); /* Google FABs are often squarcles or slightly rounded rects */
   border: 0;
-  width: 64px; /* Slightly larger */
-  height: 64px;
-  outline: 0;
-  box-shadow: 0 6px 12px var(--mye-color-shadow-strong);
-  z-index: 9999;
+  width: 56px;
+  height: 56px;
+  outline: 0; /* Already handled globally */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  z-index: 999;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform var(--mye-transition-duration) var(--mye-transition-springy),
-              box-shadow var(--mye-transition-duration) var(--mye-transition-timing),
-              background-color var(--mye-transition-duration) var(--mye-transition-timing);
+  transition: transform var(--gl-transition-duration) var(--gl-transition-timing),
+              background-color var(--gl-transition-duration) var(--gl-transition-timing);
 }
 .app__select-photos:hover {
-  transform: scale(1.1) translateY(-4px);
-  box-shadow: 0 8px 16px var(--mye-color-shadow-strong);
+  background-color: var(--gl-color-surface);
+  transform: translateY(-2px);
 }
 .app__select-photos:active {
-  transform: scale(0.95);
-  box-shadow: 0 3px 6px var(--mye-color-shadow-soft);
-  opacity: 1;
+  transform: translateY(0px) scale(0.95);
 }
 .app__select-photos svg {
-  fill: var(--mye-color-on-primary-accent);
-  width: 30px;
-  height: 30px;
+  fill: var(--gl-color-on-surface);
+  width: 26px; height: 26px;
 }
-/* Hide old .custom-btn if it's still in HTML, we're using .app__select-photos as the FAB */
-.custom-btn { display: none; }
-.custom-fab-icon { display: none; }
+.custom-btn, .custom-fab-icon { display: none; }
+
 
 /* --- Video Background --- */
 video {
   transform: translateX(-50%) translateY(-50%);
-  top: 50%;
-  left: 50%;
-  min-width: 100%;
-  min-height: 100%;
-  width: auto;
-  height: auto;
+  top: 50%; left: 50%;
+  min-width: 100%; min-height: 100%;
+  width: auto; height: auto;
   position: absolute;
   z-index: -1;
   object-fit: cover;
@@ -174,349 +172,329 @@ video {
 .hide { display: none !important; }
 
 /* --- Scanner Viewfinder & Animation --- */
-.app__overlay { /* Container for the scanner visual guides */
+.app__overlay { /* Container for scanner visual guides */
   position: fixed;
-  top: 50%;
-  left: 50%;
+  top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  width: 280px; /* Width of the scanning area */
-  height: 280px; /* Height of the scanning area */
+  width: 260px; /* Typical Google Lens reticle size */
+  height: 260px;
   z-index: 1;
   pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* The visual frame will be created by .app__overlay::before/after or by the SVG if restyled */
 }
+.app__scanner-img, .app__overlay-left, .app__overlay-right { display: none !important; }
 
-/* Hide old SVG path based scanner frame and its sidebars completely */
-.app__scanner-img, .app__overlay-left, .app__overlay-right {
-  display: none !important;
-}
-
-/* New CSS-based scanner frame */
+/* Scanner "cutout" effect */
 .app__overlay::before {
-    content: '';
-    position: absolute;
-    inset: 0; /* Covers the entire .app__overlay area */
-    border-radius: var(--mye-shape-corner-xlarge); /* Very rounded corners for the scanning area */
-    /* Create a "cutout" effect for the scanner area */
-    box-shadow: 0 0 0 9999px var(--mye-color-scrim); /* Large shadow creates the overlay */
-    pointer-events: none; /* Allows clicks through the overlay */
-    z-index: 0;
-}
-.app__overlay::after { /* Optional: Add an inner border glow if desired */
-    content: '';
-    position: absolute;
-    inset: -2px; /* Slightly outside */
-    border-radius: calc(var(--mye-shape-corner-xlarge) + 2px);
-    border: 2px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
-    pointer-events: none;
-    z-index: 1;
-}
-
-
-/* The animated scanner line */
-.custom-scanner {
-  width: calc(100% - 40px); /* Span across the inner part of the viewfinder */
-  height: 4px;
-  background: var(--mye-color-success);
+  content: '';
   position: absolute;
-  box-shadow: 0 0 12px var(--mye-color-success), 0 0 20px var(--mye-color-success);
-  display: block !important; /* Ensure it's visible */
+  inset: 0;
+  border-radius: var(--gl-shape-corner-medium); /* More subtle rounding */
+  box-shadow: 0 0 0 9999px var(--gl-color-scrim);
+  pointer-events: none;
+}
+/* Optional: subtle animated corner highlights for the scanner reticle */
+.app__overlay::after {
+    content: '';
+    position: absolute;
+    top: -2px; left: -2px;
+    width: 30px; height: 30px;
+    border-top: 3px solid var(--gl-color-secondary-accent);
+    border-left: 3px solid var(--gl-color-secondary-accent);
+    border-top-left-radius: var(--gl-shape-corner-medium);
+    animation: scanner-corners 2s infinite alternate ease-in-out;
+    opacity: 0.8;
+}
+/* More corners could be added with more pseudo-elements or child divs if needed */
+
+@keyframes scanner-corners {
+    0% { transform: scale(0.95); opacity: 0.7; }
+    100% { transform: scale(1.05); opacity: 1; }
+}
+
+/* Animated scanner line */
+.custom-scanner {
+  width: calc(100% - 20px);
+  height: 3px;
+  background: var(--gl-color-secondary-accent);
+  position: absolute;
+  box-shadow: 0 0 10px var(--gl-color-secondary-accent);
+  display: block !important;
   left: 50%;
   transform: translateX(-50%);
   margin: 0;
-  border-radius: var(--mye-shape-corner-full); /* Pill shaped line */
-  z-index: 2; /* Above the ::before cutout */
-  -webkit-animation: scanner 3s infinite ease-in-out; /* Smoother animation */
-  animation: scanner 3s infinite ease-in-out;
+  border-radius: 2px;
+  z-index: 2;
+  animation: scanner-line 2.5s infinite ease-in-out;
 }
 
-@keyframes scanner { /* Adjusted keyframes for smoother feel */
-  0% { bottom: 85%; opacity: 0.7; }
-  50% { bottom: 15%; opacity: 1; }
-  100% { bottom: 85%; opacity: 0.7; }
-}
-@-webkit-keyframes scanner {
-  0% { bottom: 85%; opacity: 0.7; }
-  50% { bottom: 15%; opacity: 1; }
-  100% { bottom: 85%; opacity: 0.7; }
+@keyframes scanner-line {
+  0% { bottom: 90%; opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { bottom: 10%; opacity: 0; }
 }
 
 
 /* --- Snackbar / Toast --- */
 .app__snackbar {
   position: fixed;
-  bottom: 30px;
+  bottom: 20px; /* Above FAB if it's tall */
   left: 50%;
   transform: translateX(-50%);
-  width: calc(100% - 48px);
-  max-width: 380px;
+  width: auto; /* Fit content */
+  max-width: calc(100% - 32px);
   pointer-events: none;
   z-index: 10000;
-  display: flex;
-  flex-direction: column-reverse;
-  align-items: center;
 }
 
 .app__snackbar-msg {
-  width: auto; /* Fit content, but with padding */
-  min-width: 200px;
-  max-width: 100%;
-  min-height: 56px;
-  background-color: var(--mye-color-surface-light);
-  color: var(--mye-color-on-surface);
-  border-radius: var(--mye-shape-corner-large); /* Very rounded */
-  box-shadow: 0 4px 12px var(--mye-color-shadow-strong);
-  display: flex;
-  align-items: center;
-  justify-content: center; /* Center text for short messages */
-  text-align: center;
-  font-size: 15px;
+  background-color: var(--gl-color-surface);
+  color: var(--gl-color-on-surface);
+  border-radius: var(--gl-shape-corner-small);
+  box-shadow: 0 3px 7px var(--gl-color-shadow);
+  padding: 12px 18px;
+  font-size: 14px;
   font-weight: 500;
-  padding: 12px 24px; /* Generous padding */
-  transition: opacity var(--mye-transition-duration) var(--mye-transition-timing),
-              transform var(--mye-transition-duration) var(--mye-transition-springy);
-  margin-bottom: 12px;
+  text-align: center;
+  min-width: 180px;
+  transition: opacity var(--gl-transition-duration) var(--gl-transition-timing),
+              transform var(--gl-transition-duration) var(--gl-transition-timing);
   pointer-events: all;
   opacity: 0;
-  transform: translateY(20px) scale(0.9);
+  transform: translateY(15px) scale(0.95);
 }
-/* JS will need to remove .app__snackbar--hide to show it */
 .app__snackbar:not(.app__snackbar--hide) .app__snackbar-msg {
-    opacity: 1;
-    transform: translateY(0px) scale(1);
+  opacity: 1;
+  transform: translateY(0px) scale(1);
 }
 
-
-/* --- Dialogs --- */
+/* --- Dialogs (Styled like Bottom Sheets / Modals) --- */
+/* Overlay for dialogs */
 .app__dialog-overlay, .app__infodialog-overlay {
   position: fixed;
   inset: 0;
-  background: var(--mye-color-scrim);
-  z-index: 1000;
+  background: var(--gl-color-scrim);
+  z-index: 100; /* Below dialog */
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--mye-transition-duration) var(--mye-transition-timing);
-  backdrop-filter: blur(8px); /* Expressive blur */
-  -webkit-backdrop-filter: blur(8px);
+  transition: opacity 0.3s var(--gl-transition-timing);
+  /* backdrop-filter: blur(3px); Optional, Lens is often clear */
 }
-.app__dialog-overlay:not(.app__dialog--hide), /* JS toggles .app__dialog--hide on overlay */
+.app__dialog-overlay:not(.app__dialog--hide),
 .app__infodialog-overlay:not(.app__infodialog--hide) {
   opacity: 1;
   pointer-events: auto;
 }
 
-.app__infodialog, .app__dialog {
-  z-index: 1001;
-  background-color: var(--mye-color-surface);
-  color: var(--mye-color-on-surface);
-  width: calc(100% - 40px); /* Responsive */
-  max-width: 360px;
-  min-height: 180px;
+/* Base Dialog Styling (for "About" dialog) */
+.app__infodialog {
+  z-index: 101;
+  background-color: var(--gl-color-surface);
+  color: var(--gl-color-on-surface);
+  width: calc(100% - 48px);
+  max-width: 340px;
   height: auto;
-  border-radius: var(--mye-shape-corner-dialog); /* Super rounded */
+  border-radius: var(--gl-shape-corner-dialog);
   display: flex;
   flex-direction: column;
   position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -45%) scale(0.9); /* Start slightly up and small */
-  margin: 0;
-  box-shadow: 0 8px 24px var(--mye-color-shadow-strong);
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  box-shadow: 0 5px 15px var(--gl-color-shadow);
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--mye-transition-duration) var(--mye-transition-timing),
-              transform var(--mye-transition-duration) var(--mye-transition-springy);
-  overflow: hidden; /* Clip content to rounded corners */
+  transition: opacity 0.25s var(--gl-transition-timing), transform 0.25s var(--gl-transition-timing);
 }
-
-.app__infodialog:not(.app__infodialog--hide), /* JS toggles this hide class */
-.app__dialog:not(.app__dialog--hide) {
+.app__infodialog:not(.app__infodialog--hide) {
   opacity: 1;
-  pointer-events: auto;
   transform: translate(-50%, -50%) scale(1);
 }
 
-.app__dialog-content, .app__infodialog-content {
+/* QR Code Result Dialog (Styled like a Bottom Sheet) */
+.app__dialog {
+  z-index: 101;
+  background-color: var(--gl-color-surface);
+  color: var(--gl-color-on-surface);
   width: 100%;
-  padding: 28px; /* Generous padding */
-  box-sizing: border-box;
-  flex-grow: 1;
+  max-width: 600px; /* Max width for larger screens */
+  height: auto;
+  min-height: 200px; /* Minimum height */
+  max-height: 75vh; /* Don't take full screen height */
+  border-radius: var(--gl-shape-corner-bottom-sheet);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 50%; bottom: 0;
+  transform: translate(-50%, 100%); /* Start off-screen */
+  margin: 0 auto; /* Center if max-width is applied */
+  box-shadow: 0 -5px 20px rgba(0,0,0,0.25);
+  opacity: 1; /* Start visible for transform animation */
+  pointer-events: none;
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smooth slide */
+  overflow-y: auto; /* Allow content to scroll if it exceeds max-height */
+}
+.app__dialog:not(.app__dialog--hide) {
+  pointer-events: auto;
+  transform: translate(-50%, 0%); /* Slide into view */
 }
 
+
+/* Dialog Content Styling */
+.app__dialog-content, .app__infodialog-content {
+  padding: 20px;
+  flex-grow: 1;
+}
+/* Optional: Add a "grabber" handle for bottom sheet styled dialogs */
+.app__dialog::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 4px;
+    background-color: var(--gl-color-on-surface-variant);
+    border-radius: 2px;
+    margin: 12px auto 0; /* Spacing for the grabber */
+    opacity: 0.5;
+}
+
+
 .app__infodialog-subcontent {
-  margin-top: 16px;
-  font-size: 15px;
-  color: var(--mye-color-on-surface-variant);
-  line-height: 1.7;
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--gl-color-on-surface-variant);
+  line-height: 1.6;
 }
 .app__infodialog-subcontent a {
-  color: var(--mye-color-secondary-accent);
+  color: var(--gl-color-primary-accent);
   text-decoration: none;
-  font-weight: 600;
+  font-weight: 500;
 }
 .app__infodialog-subcontent a:hover {
   text-decoration: underline;
-  color: var(--mye-color-primary-accent);
-}
-.app__infodialog-subcontent p:not(:first-child) {
-  margin-top: 12px;
 }
 
 .app__dialog-content h1, .app__infodialog h1 {
-  margin-top: 0;
-  margin-bottom: 20px;
-  font-family: var(--mye-font-primary);
-  font-weight: 700;
-  font-size: 26px; /* Larger, more expressive title */
-  line-height: 1.3;
-  color: var(--mye-color-on-surface);
-  text-align: center; /* Center align title */
+  margin: 0 0 16px 0;
+  font-weight: 500; /* Less bold than previous, common in Google UIs */
+  font-size: 20px;
+  color: var(--gl-color-on-surface);
 }
 
 /* Dialog Input Field */
 .app__dialog input[type="text"] {
   width: 100%;
-  height: 56px;
-  border: 2px solid var(--mye-color-outline);
-  border-radius: var(--mye-shape-corner-medium); /* Rounded input */
-  outline: 0;
-  font-family: var(--mye-font-secondary);
+  height: 48px;
+  border: 1px solid var(--gl-color-surface-variant);
+  border-radius: var(--gl-shape-corner-small);
+  outline: 0; /* Global reset handles this */
   font-size: 16px;
-  color: var(--mye-color-on-surface);
-  font-weight: 500;
-  padding: 0 20px;
+  color: var(--gl-color-on-surface);
+  padding: 0 14px;
   box-sizing: border-box;
-  background-color: var(--mye-color-surface-light);
-  transition: border-color var(--mye-transition-duration) var(--mye-transition-timing),
-              box-shadow var(--mye-transition-duration) var(--mye-transition-timing),
-              background-color var(--mye-transition-duration) var(--mye-transition-timing);
+  background-color: var(--gl-color-background); /* Match app background */
+  transition: border-color var(--gl-transition-duration) var(--gl-transition-timing);
 }
-.app__dialog input[type="text"]::placeholder {
-    color: var(--mye-color-on-surface-variant);
-    opacity: 0.8;
-}
-.app__dialog input[type="text"]:focus {
-  border-color: var(--mye-color-primary-accent);
-  background-color: var(--mye-color-surface);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--mye-color-primary-accent) 30%, transparent);
+.app__dialog input[type="text"]::placeholder { color: var(--gl-color-on-surface-variant); }
+.app__dialog input[type="text"]:focus, .app__dialog input[type="text"]:focus-visible {
+  border-color: var(--gl-color-primary-accent);
+  box-shadow: 0 0 0 2px var(--gl-color-outline-focused); /* Consistent custom focus */
 }
 
-/* Dialog Actions (Buttons) */
+/* Dialog Actions */
 .app__dialog-actions, .app__infodialog-actions {
   display: flex;
-  justify-content: center; /* Center buttons or flex-end for right alignment */
-  gap: 12px; /* Space between buttons */
-  padding: 0px 28px 28px 28px;
-  width: 100%;
-  box-sizing: border-box;
-  margin-top: 24px;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 0 20px 20px 20px; /* Padding at the bottom */
+  margin-top: 20px;
 }
 
 /* Base button style for dialogs */
 .app__dialog-actions button, .app__infodialog-actions button {
-  flex-grow: 1; /* Make buttons share space or set fixed width */
-  max-width: 150px; /* Limit button width if centered and flex-grow */
-  border: 0;
-  height: 52px;
-  padding: 0 20px;
-  font-family: var(--mye-font-primary);
-  font-size: 16px;
-  font-weight: 700;
-  outline: 0;
+  min-width: 80px;
+  height: 40px;
+  padding: 0 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: var(--gl-shape-corner-full); /* Pill shaped text buttons */
   cursor: pointer;
-  border-radius: var(--mye-shape-corner-button); /* Pill-like */
-  text-transform: capitalize; /* Softer than uppercase */
-  transition: transform var(--mye-transition-duration) var(--mye-transition-springy),
-              background-color var(--mye-transition-duration) var(--mye-transition-timing),
-              box-shadow var(--mye-transition-duration) var(--mye-transition-timing);
+  transition: background-color var(--gl-transition-duration) var(--gl-transition-timing);
+  border: none; /* Remove border */
 }
-.app__dialog-actions button:hover, .app__infodialog-actions button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 8px var(--mye-color-shadow-soft);
-}
-.app__dialog-actions button:active, .app__infodialog-actions button:active {
-    transform: scale(0.98);
-    box-shadow: none;
+.app__dialog-actions button:focus-visible,
+.app__infodialog-actions button:focus-visible { /* Specific focus for dialog buttons */
+    box-shadow: 0 0 0 2.5px var(--gl-color-outline-focused) inset; /* Inset shadow */
 }
 
 
 /* Primary action button (e.g., Open) */
 .app__dialog-open {
-  background-color: var(--mye-color-primary-accent);
-  color: var(--mye-color-on-primary-accent);
-  /* display: none; Keep this if needed for JS logic */
+  background-color: var(--gl-color-primary-accent);
+  color: var(--gl-color-background); /* Dark text on light blue */
+  /* display: none; Retain if JS depends on it */
 }
 .app__dialog-open:hover {
-  background-color: color-mix(in srgb, var(--mye-color-primary-accent) 90%, black);
+  background-color: color-mix(in srgb, var(--gl-color-primary-accent) 85%, #FFF);
 }
 
 /* Secondary/Close action button */
 .app__dialog-close, .app__infodialog-close {
-  background-color: var(--mye-color-surface-light);
-  color: var(--mye-color-on-surface);
-}
-.app__infodialog-close { /* Make info dialog close button full width if only one button */
-    max-width: 100%;
+  background-color: transparent;
+  color: var(--gl-color-primary-accent);
+  border: 1px solid var(--gl-color-surface-variant);
 }
 .app__dialog-close:hover, .app__infodialog-close:hover {
-  background-color: color-mix(in srgb, var(--mye-color-surface-light) 90%, white);
+  background-color: rgba(137, 180, 248, 0.1); /* Subtle blue hover */
 }
 
 
 /* --- Helper texts and other small UI elements --- */
-.app__help-text { /* "Point at QR Code or Take a photo" text */
-  color: var(--mye-color-on-surface-variant);
+.app__help-text {
+  color: var(--gl-color-on-background);
   position: absolute;
-  bottom: calc(24px + 64px + 20px); /* Above FAB + its bottom margin + extra space */
-  font-size: 15px;
-  font-weight: 500;
+  bottom: 90px; /* Above FAB */
+  font-size: 14px;
   left: 50%;
   transform: translateX(-50%);
   text-align: center;
   user-select: none;
-  padding: 8px 16px;
-  background-color: color-mix(in srgb, var(--mye-color-surface) 80%, transparent);
-  border-radius: var(--mye-shape-corner-medium);
+  padding: 6px 12px;
+  background-color: rgba(0,0,0,0.4); /* Semi-transparent black */
+  border-radius: var(--gl-shape-corner-medium);
   z-index: 5;
-  display: block; /* Make sure it's visible */
-  box-shadow: 0 2px 6px var(--mye-color-shadow-soft);
+  display: block;
 }
 
 input[type='file'] { display: none; }
 
 .app__version {
   position: absolute;
-  bottom: 10px;
+  bottom: 8px;
   left: 50%;
   transform: translateX(-50%);
   font-size: 12px;
-  color: var(--mye-color-on-surface-variant);
-  opacity: 0.6;
+  color: var(--gl-color-on-surface-variant);
+  opacity: 0.5;
 }
 
 /* --- Media Queries --- */
 @media screen and (max-width: 480px) {
-  .app__header { height: 64px; padding: 0 16px; }
-  .app__header-icon { right: 16px; }
-  .app__select-photos { right: 16px; bottom: 16px; width: 60px; height: 60px; }
-  .app__select-photos svg { width: 28px; height: 28px; }
-  
-  .app__overlay { width: 240px; height: 240px; }
-  .custom-scanner { width: calc(100% - 30px); }
+  .app__header { height: 56px; }
+  .app__select-photos { right: 16px; bottom: 16px; }
+  .app__overlay { width: 220px; height: 220px; } /* Smaller reticle on mobile */
+  .custom-scanner { width: calc(100% - 10px); }
 
-  .app__infodialog, .app__dialog {
-    width: calc(100% - 32px);
-    border-radius: var(--mye-shape-corner-xlarge); /* Slightly less extreme on small screens */
-  }
-  .app__dialog-content, .app__infodialog-content { padding: 24px; }
-  .app__dialog-content h1, .app__infodialog h1 { font-size: 22px; }
-  .app__dialog-actions, .app__infodialog-actions { padding: 0px 24px 24px 24px; flex-direction: column; gap: 10px;}
-  .app__dialog-actions button, .app__infodialog-actions button { max-width: 100%; } /* Full width buttons in column */
+  /* About Dialog */
+  .app__infodialog { width: calc(100% - 32px); border-radius: var(--gl-shape-corner-medium); }
+  .app__infodialog-content { padding: 16px; }
+  .app__infodialog-actions { padding: 0 16px 16px 16px; }
 
-  .app__snackbar { bottom: 20px; width: calc(100% - 32px); }
-  .app__help-text { bottom: calc(16px + 60px + 16px); font-size: 14px; }
+  /* QR Result Dialog (Bottom Sheet) */
+  .app__dialog { border-radius: 16px 16px 0 0; max-height: 85vh; }
+  .app__dialog-content { padding: 16px; }
+  .app__dialog-content h1 { font-size: 18px; }
+  .app__dialog-actions { padding: 0 16px 16px 16px; }
+  .app__dialog::before { margin-top: 10px; } /* Grabber margin */
+
+  .app__snackbar { bottom: 16px; }
+  .app__help-text { bottom: 80px; font-size: 13px; }
 }
