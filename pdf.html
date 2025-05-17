@@ -1,143 +1,871 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AI PDF/PNG Converter</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF & PNG Converter</title>
+    <!-- Consider adding Font Awesome if not already globally available -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> -->
+    
+    <!-- CSS Styles -->
+    <style>
+        :root {
+            --primary-color: #3B82F6; /* Modern Blue (e.g., Tailwind Blue 500) */
+            --secondary-color: #1D4ED8; /* Darker Blue for hover (e.g., Tailwind Blue 700) */
+            --background-color: #111827; /* Dark Gray (e.g., Tailwind Gray 900) */
+            --surface-color: #1F2937;   /* Slightly Lighter Gray for cards (e.g., Tailwind Gray 800) */
+            --text-color: #E5E7EB;      /* Light Gray for text (e.g., Tailwind Gray 200) */
+            --text-muted-color: #9CA3AF;/* Muted Gray (e.g., Tailwind Gray 400) */
+            --success-color: #10B981;   /* Modern Green (e.g., Tailwind Emerald 500) */
+            --success-hover-color: #059669; /* Darker Green */
+            --error-color: #EF4444;     /* Modern Red (e.g., Tailwind Red 500) */
+            --border-color: #374151;   /* Subtle Border (e.g., Tailwind Gray 700) */
+            --input-background: #374151;/* Input BG (e.g., Tailwind Gray 700) */
+            --input-focus-border: var(--primary-color);
 
-  <!-- Fonts and Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+            --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            --font-display: var(--font-sans);
+            --font-body: var(--font-sans);
 
-  <!-- Styling -->
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f9fafb;
-      color: #111827;
-    }
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 12px;
 
-    header {
-      background: #4f46e5;
-      color: white;
-      padding: 1rem 2rem;
-      text-align: center;
-      font-size: 1.5rem;
-      font-weight: 600;
-    }
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.15);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.25), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
+        }
 
-    .container {
-      max-width: 800px;
-      margin: 2rem auto;
-      background: white;
-      padding: 2rem;
-      border-radius: 0.75rem;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    textarea {
-      width: 100%;
-      min-height: 200px;
-      resize: vertical;
-      padding: 1rem;
-      font-size: 1rem;
-      border: 1px solid #d1d5db;
-      border-radius: 0.5rem;
-    }
+        html {
+            scroll-behavior: smooth;
+        }
 
-    .buttons {
-      margin-top: 1.5rem;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
+        body {
+            font-family: var(--font-body);
+            line-height: 1.6; /* Slightly adjusted for modern fonts */
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 30px 15px; /* More vertical padding */
+            overflow-x: hidden;
+        }
 
-    button {
-      flex: 1;
-      min-width: 120px;
-      padding: 0.75rem 1.25rem;
-      font-size: 1rem;
-      font-weight: 500;
-      color: white;
-      background: #4f46e5;
-      border: none;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
+        .container {
+            width: 100%;
+            max-width: 800px; /* Slightly adjusted */
+            background: var(--surface-color);
+            padding: 30px; /* Consistent padding */
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+            margin-bottom: 30px;
+        }
 
-    button:hover {
-      background: #4338ca;
-    }
+        /* Note: main-title and sub-title are structurally at the bottom of the body. */
+        /* Styling them as significant headers in their current position. */
+        .main-title {
+            font-family: var(--font-display);
+            font-size: 2rem; /* Adjusted for better hierarchy */
+            font-weight: 700;
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+        .sub-title {
+            text-align: center;
+            color: var(--text-muted-color);
+            margin-bottom: 30px; /* Space before footer */
+            font-size: 1rem;
+            font-weight: 300;
+        }
 
-    @media (max-width: 600px) {
-      .buttons {
-        flex-direction: column;
-      }
-    }
-  </style>
+        h2 {
+            font-family: var(--font-display);
+            font-weight: 600; 
+            color: var(--text-color);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            font-size: 1.5em; /* Slightly larger */
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 12px; /* Increased gap */
+        }
+        h2 .fas { 
+            color: var(--primary-color);
+            font-size: 1.2em; /* Icon slightly larger relative to text */
+        }
+
+        .converter-section {
+            margin-bottom: 40px; /* Increased spacing */
+            padding: 0; /* Remove padding here if inner elements handle it */
+            background-color: transparent;
+            border-radius: var(--border-radius-md);
+        }
+        .converter-section:last-of-type {
+            margin-bottom: 0;
+        }
+
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500; /* Slightly bolder */
+            font-size: 0.9em;
+            color: var(--text-muted-color);
+        }
+
+        input[type="number"] {
+            display: block;
+            width: 100%;
+            padding: 12px 16px; /* Increased padding */
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            background-color: var(--input-background);
+            color: var(--text-color);
+            font-family: var(--font-body);
+            font-size: 1em;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+            box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb, 59, 130, 246), 0.3); /* Use RGB for primary color if possible or a fixed color */
+        }
+        /* Helper for box-shadow with primary color RGB */
+        :root { --primary-color-rgb: 59, 130, 246; /* For #3B82F6 */ }
+
+
+        button.action-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 12px 18px; /* Adjusted padding */
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            font-size: 1em; /* Standardized font size */
+            font-family: var(--font-body);
+            font-weight: 600; /* Bolder */
+            transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+        }
+        button.action-button:hover:not(:disabled) {
+            background: var(--secondary-color);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+        button.action-button:active:not(:disabled) {
+            transform: translateY(0px);
+            box-shadow: none;
+        }
+        button.action-button:focus-visible { /* Modern focus outline */
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+        button.action-button:disabled {
+            background: #4B5563; /* Tailwind Gray 600 */
+            color: #9CA3AF; /* Tailwind Gray 400 */
+            cursor: not-allowed;
+            transform: translateY(0);
+        }
+        button.action-button .fa-spin { display: none; }
+        button.action-button:disabled .fa-spin { display: inline-block; margin-left: 8px; }
+
+
+        .output-area {
+            margin-top: 25px;
+            padding: 20px; /* Increased padding */
+            background-color: var(--background-color); 
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            min-height: 70px; /* Increased min-height */
+        }
+        .output-area p.placeholder {
+            color: var(--text-muted-color);
+            text-align: center;
+            font-style: normal; /* Less italic */
+            font-size: 0.95em;
+            padding: 20px 0;
+        }
+
+        .status {
+            margin-top: 20px; /* Increased margin */
+            font-weight: 500; /* Slightly bolder for clarity */
+            color: var(--text-muted-color);
+            font-size: 0.9em;
+            min-height: 1.5em; /* Ensure space even when empty */
+            text-align: center;
+            transition: color 0.3s ease;
+        }
+        .status.success { color: var(--success-color); }
+        .status.error { color: var(--error-color); }
+        .status.processing { color: var(--primary-color); }
+
+
+        .file-input-wrapper {
+            position: relative;
+            width: 100%;
+            padding: 30px; /* Increased padding */
+            border: 2px dashed var(--border-color);
+            border-radius: var(--border-radius-md);
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 25px;
+            background-color: var(--input-background); /* Slightly different from main surface */
+            transition: border-color 0.2s ease, background-color 0.2s ease;
+        }
+        .file-input-wrapper:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(var(--primary-color-rgb, 59, 130, 246), 0.05);
+        }
+        .file-input-wrapper input[type="file"] {
+            position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer;
+        }
+        .file-input-text { 
+            color: var(--text-muted-color); 
+            font-size: 1.05em; /* Slightly larger */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .file-input-text .fas { 
+            color: var(--primary-color); 
+            font-size: 1.3em; /* Larger icon */
+        }
+        .selected-files-display {
+            display: block;
+            font-size: 0.95em; /* Consistent size */
+            color: var(--primary-color);
+            margin-top: 10px;
+            font-weight: 500;
+            word-break: break-all; /* Prevent overflow for long file names */
+        }
+
+        .warning-message {
+            background-color: rgba(252, 211, 77, 0.1); /* Tailwind Yellow 300 with opacity */
+            color: #FACC15; /* Tailwind Yellow 400 */
+            padding: 15px 20px; /* More padding */
+            border: 1px solid #CA8A04; /* Tailwind Yellow 600 */
+            border-left: 5px solid #FACC15; /* Tailwind Yellow 400 */
+            border-radius: var(--border-radius-md);
+            text-align: left;
+            margin: 0 auto 30px auto; /* Adjusted margin */
+            font-size: 0.9em;
+            max-width: 100%; /* Ensure it stays within container on mobile */
+            display: flex; /* For icon alignment */
+            align-items: flex-start; /* Align icon to top if text wraps */
+            gap: 10px;
+        }
+        .warning-message .fas { 
+            margin-right: 0; /* Using gap now */
+            font-size: 1.2em; 
+            margin-top: 2px; /* Fine-tune alignment */
+        }
+        .warning-message strong {
+            font-weight: 600;
+        }
+
+        /* --- PDF to PNG Specific --- */
+        #zipDownloadContainer {
+            text-align: center;
+            margin: 25px 0 15px 0;
+        }
+        #downloadZipBtn { /* Specific button, could inherit action-button or have its own style */
+            width: auto; /* Keep auto width */
+            padding: 12px 28px; /* Generous padding for a special button */
+            background: var(--success-color);
+            font-size: 1em;
+        }
+        #downloadZipBtn:hover:not(:disabled) {
+            background: var(--success-hover-color);
+        }
+
+        .horizontal-scroll-container {
+            overflow-x: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
+            padding: 15px 5px 25px 5px; /* Bottom padding for scrollbar */
+            background-color: transparent; /* Inherits from output-area or blends */
+            border-radius: var(--border-radius-sm); /* Inner radius if different from output-area */
+        }
+        /* WebKit Scrollbar Styles */
+        .horizontal-scroll-container::-webkit-scrollbar {
+            height: 10px;
+        }
+        .horizontal-scroll-container::-webkit-scrollbar-track {
+            background: var(--input-background); 
+            border-radius: var(--border-radius-md);
+        }
+        .horizontal-scroll-container::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: var(--border-radius-md);
+            border: 2px solid var(--input-background); /* Creates padding around thumb */
+        }
+        .horizontal-scroll-container::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-color);
+        }
+        /* Firefox Scrollbar Styles */
+        .horizontal-scroll-container {
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-color) var(--input-background);
+        }
+
+        .horizontal-scroll-container .scroll-content {
+            display: flex;
+            flex-direction: row;
+            gap: 15px; /* Use gap for spacing */
+        }
+
+        .png-item {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            padding: 15px; /* Adjusted padding */
+            /* margin-right: 18px; -- Replaced by gap on .scroll-content */
+            min-width: 200px; /* Slightly narrower cards */
+            max-width: 200px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+        .png-item:hover {
+            transform: translateY(-4px); /* More pronounced hover */
+            box-shadow: var(--shadow-md);
+        }
+        /* .png-item:last-child { margin-right: 5px; } -- Not needed with gap and padding on scroll container */
+
+        .png-item img {
+            max-width: 100%;
+            height: 150px; /* Fixed height for consistency */
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            margin-bottom: 12px;
+            object-fit: contain; /* Ensure whole image is visible */
+            background-color: #fff; /* White background for transparent PNGs */
+        }
+        .png-item .page-number-label {
+            font-size: 0.8em;
+            color: var(--text-muted-color);
+            margin-bottom: 10px;
+            font-weight: 400;
+        }
+        .png-item .download-link-single {
+            font-size: 0.85em;
+            padding: 8px 14px; /* More clickable area */
+            background-color: var(--secondary-color);
+            color: #fff;
+            text-decoration: none;
+            border-radius: var(--border-radius-sm);
+            transition: background-color 0.2s ease;
+            display: inline-block;
+            font-weight: 500;
+        }
+        .png-item .download-link-single:hover {
+            background-color: var(--primary-color);
+        }
+
+        /* Download link for compiled PDF */
+        .pdf-download-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px; /* Increased gap */
+            padding: 12px 22px; /* Adjusted padding */
+            background-color: var(--success-color);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--border-radius-md);
+            font-size: 1em;
+            font-weight: 600; /* Bolder */
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        .pdf-download-link:hover {
+            background-color: var(--success-hover-color);
+            transform: translateY(-1px);
+        }
+         #pdfDownloadLinkContainer { 
+            text-align: center;
+            padding: 10px 0; /* Ensure button isn't flush with borders */
+        }
+
+
+        footer {
+            text-align: center;
+            margin-top: 40px; /* More space above footer */
+            padding-bottom: 20px; /* Space at the very bottom */
+            color: var(--text-muted-color);
+            font-size: 0.8em;
+            font-weight: 300;
+        }
+
+        /* Basic Mobile Responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+            .container {
+                padding: 20px;
+            }
+            .main-title {
+                font-size: 1.8rem;
+            }
+            .sub-title {
+                font-size: 0.9rem;
+            }
+            h2 {
+                font-size: 1.3em;
+            }
+            .file-input-wrapper {
+                padding: 20px;
+            }
+            .file-input-text {
+                font-size: 1em;
+            }
+            .png-item {
+                min-width: 180px;
+                max-width: 180px;
+            }
+        }
+        @media (max-width: 480px) {
+            .main-title {
+                font-size: 1.6rem;
+            }
+             h2 {
+                font-size: 1.2em;
+                gap: 8px;
+            }
+             button.action-button, .pdf-download-link, #downloadZipBtn {
+                padding-top: 10px;
+                padding-bottom: 10px;
+                font-size: 0.95em;
+            }
+            .png-item {
+                min-width: 150px; /* Further reduce for very small screens */
+                max-width: 150px;
+                padding: 10px;
+            }
+            .png-item img {
+                height: 120px;
+            }
+            .png-item .download-link-single {
+                padding: 6px 10px;
+                font-size: 0.8em;
+            }
+        }
+
+    </style>
+
+    <!-- PDF.js -->
+    <script src="/ajax/libs/pdf.js/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = '/ajax/libs/pdf.js/pdf.worker.min.js';
+    </script>
+    <!-- jsPDF -->
+    <script src="/ajax/libs/jspdf/jspdf.umd.min.js"></script>
+    <!-- JSZip -->
+    <script src="/ajax/libs/jszip/jszip.min.js"></script>
+
 </head>
 <body>
+    <div class="container">
+        <div class="converter-section" id="pdf-to-png-section">
+            <h2><i class="fas fa-file-pdf"></i> PDF to PNG Extractor</h2>
+            
+            <div class="file-input-wrapper" id="pdfFileWrapper">
+                <span class="file-input-text"><i class="fas fa-upload"></i> Click or Drag PDF Here</span>
+                <input type="file" id="pdfFile" accept=".pdf">
+                <span class="selected-files-display" id="pdfFileName"></span>
+            </div>
 
-  <header>
-    AI PDF/PNG Converter
-  </header>
+            <label for="pdfToPngScale">Output Image Scale (Quality):</label>
+            <input type="number" id="pdfToPngScale" value="1.5" step="0.1" min="0.5" title="Higher scale: better quality, larger files, slower. 1.0 = original.">
+            
+            <button id="convertToPngBtn" class="action-button">
+                <i class="fas fa-cogs"></i> Extract PNG Images
+                <i class="fas fa-spinner fa-spin"></i>
+            </button>
+            <div id="pdfToPngStatus" class="status"></div>
 
-  <main class="container">
-    <textarea id="textInput" placeholder="Type or paste your content here..."></textarea>
+            <div id="zipDownloadContainer" style="display:none;">
+                <button id="downloadZipBtn" class="action-button">
+                    <i class="fas fa-file-archive"></i> Download All Pages as ZIP
+                </button>
+            </div>
 
-    <div class="buttons">
-      <button onclick="exportAsPNG()">Download PNG</button>
-      <button onclick="exportAsPDF()">Download PDF</button>
+            <div id="pngOutputWrapper" class="output-area horizontal-scroll-container" style="display:none;">
+                <div class="scroll-content" id="pngOutputContent">
+                    {/* PNG items will be injected here by JS */}
+                </div>
+            </div>
+             <div id="pngOutputPlaceholder" class="output-area" style="display: block;">
+                <p class="placeholder">Extracted PNGs will appear here.</p>
+            </div>
+        </div>
+<br> <!-- This <br> is kept as per "don't change structure" but margin on .converter-section is preferred -->
+        <div class="converter-section" id="png-to-pdf-section">
+            <h2><i class="fas fa-file-image"></i> PNG(s) to PDF Compiler</h2>
+
+            <div class="file-input-wrapper" id="pngFilesWrapper">
+                 <span class="file-input-text"><i class="fas fa-images"></i> Click or Drag PNG(s) Here</span>
+                <input type="file" id="pngFiles" accept=".png" multiple>
+                <span class="selected-files-display" id="pngFilesCount"></span>
+            </div>
+             
+            <button id="convertToPdfBtn" class="action-button">
+                <i class="fas fa-file-export"></i> Compile to PDF
+                <i class="fas fa-spinner fa-spin"></i>
+            </button>
+            <div id="pngToPdfStatus" class="status"></div>
+            <div id="pdfDownloadLinkContainer" class="output-area" style="text-align:center; display:none;">
+                 {/* PDF download link will be injected here */}
+            </div>
+             <div id="pdfDownloadPlaceholder" class="output-area" style="display: block;">
+                <p class="placeholder">PDF download link will appear here.</p>
+            </div>
+        </div>
     </div>
-  </main>
+        <div class="warning-message">
+            <i class="fas fa-info-circle"></i>
+            <div> <!-- Added div for better text alignment with icon -->
+                <strong>Client-Side Processing:</strong> All conversions are performed directly in your browser for privacy and speed. For very large or complex files, performance may vary.
+            </div>
+        </div>
+        <!-- The main title and subtitle are structurally placed here, at the end of the body -->
+        <h1 class="main-title">Pdf2Png or Png2Pdf</h1>
+        <p class="sub-title">Advanced PDF <> PNG Conversion Suite</p>
+    <footer>
+        Completely offline once loaded. Secure Client-Side Processing.
+    </footer>
 
-  <!-- Libraries (Latest) -->
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <!-- JavaScript Logic (Unchanged) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- UI Enhancements for File Inputs ---
+            function setupFileInput(inputId, textDisplayId, wrapperId, isMultiple) {
+                const input = document.getElementById(inputId);
+                const textDisplay = document.getElementById(textDisplayId);
+                const wrapper = document.getElementById(wrapperId);
+                const defaultTextElement = wrapper.querySelector('.file-input-text');
+                const defaultText = defaultTextElement.innerHTML;
 
-  <!-- Logic -->
-  <script>
-    async function exportAsPNG() {
-      const text = document.getElementById("textInput").value;
-      const output = document.createElement("div");
-      output.style.padding = "20px";
-      output.style.font = "16px Inter, sans-serif";
-      output.style.width = "600px";
-      output.innerText = text;
 
-      document.body.appendChild(output);
-      const canvas = await html2canvas(output, { backgroundColor: null });
-      document.body.removeChild(output);
+                if (!input || !textDisplay || !wrapper) return;
 
-      const link = document.createElement("a");
-      link.download = "output.png";
-      link.href = canvas.toDataURL("image/png");
-      link.click();
-    }
+                input.addEventListener('change', () => {
+                    if (input.files.length > 0) {
+                        if (isMultiple) {
+                            textDisplay.textContent = `${input.files.length} image(s) selected`;
+                        } else {
+                            textDisplay.textContent = input.files[0].name;
+                        }
+                        defaultTextElement.style.display = 'none';
+                        textDisplay.style.display = 'block';
+                    } else {
+                        textDisplay.textContent = '';
+                        textDisplay.style.display = 'none';
+                        defaultTextElement.innerHTML = defaultText;
+                        defaultTextElement.style.display = 'flex'; // Changed to flex to match new styling
+                    }
+                });
+                 // Drag and drop visual cues
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    wrapper.addEventListener(eventName, (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        wrapper.style.borderColor = 'var(--primary-color)'; // Use variable
+                        wrapper.style.backgroundColor = 'rgba(var(--primary-color-rgb, 59, 130, 246), 0.1)';
+                    }, false);
+                });
 
-    async function exportAsPDF() {
-      const text = document.getElementById("textInput").value;
-      const pdfDoc = await PDFLib.PDFDocument.create();
-      const page = pdfDoc.addPage([595.28, 841.89]); // A4
+                ['dragleave', 'drop'].forEach(eventName => {
+                    wrapper.addEventListener(eventName, (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        wrapper.style.borderColor = 'var(--border-color)'; // Use variable
+                        wrapper.style.backgroundColor = 'var(--input-background)'; // Use variable
+                    }, false);
+                });
+                // Handle dropped files
+                wrapper.addEventListener('drop', (e) => {
+                    input.files = e.dataTransfer.files;
+                    // Manually trigger change event
+                    const event = new Event('change');
+                    input.dispatchEvent(event);
+                });
+            }
+            setupFileInput('pdfFile', 'pdfFileName', 'pdfFileWrapper', false);
+            setupFileInput('pngFiles', 'pngFilesCount', 'pngFilesWrapper', true);
 
-      const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
-      const lines = text.match(/.{1,90}/g); // split text into lines
 
-      let y = 800;
-      for (const line of lines) {
-        page.drawText(line, { x: 50, y, size: 12, font });
-        y -= 20;
-      }
+            // --- PDF to PNG ---
+            const pdfFileInput = document.getElementById('pdfFile');
+            const convertToPngBtn = document.getElementById('convertToPngBtn');
+            const pdfToPngStatus = document.getElementById('pdfToPngStatus');
+            const pdfToPngScaleInput = document.getElementById('pdfToPngScale');
+            
+            const zipDownloadContainer = document.getElementById('zipDownloadContainer');
+            const downloadZipBtn = document.getElementById('downloadZipBtn');
+            const pngOutputWrapper = document.getElementById('pngOutputWrapper');
+            const pngOutputContent = document.getElementById('pngOutputContent');
+            const pngOutputPlaceholder = document.getElementById('pngOutputPlaceholder');
 
-      const pdfBytes = await pdfDoc.save();
-      const blob = new Blob([pdfBytes], { type: "application/pdf" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = "output.pdf";
-      link.click();
-    }
-  </script>
+            let allPngBlobs = []; // To store blobs for zipping
+
+            convertToPngBtn.addEventListener('click', async () => {
+                const file = pdfFileInput.files[0];
+                const scale = parseFloat(pdfToPngScaleInput.value) || 1.5;
+
+                if (!file) {
+                    updateStatus(pdfToPngStatus, 'Please select a PDF file to analyze.', 'error');
+                    return;
+                }
+
+                updateStatus(pdfToPngStatus, 'Initializing PDF analysis...', 'processing');
+                convertToPngBtn.disabled = true;
+                zipDownloadContainer.style.display = 'none';
+                pngOutputWrapper.style.display = 'none';
+                pngOutputPlaceholder.style.display = 'block';
+                pngOutputContent.innerHTML = '';
+                allPngBlobs = [];
+
+                try {
+                    const arrayBuffer = await file.arrayBuffer();
+                    updateStatus(pdfToPngStatus, 'Loading PDF structure...', 'processing');
+                    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                    updateStatus(pdfToPngStatus, `PDF analyzed. Pages: ${pdf.numPages}. Extracting...`, 'processing');
+                    
+                    pngOutputPlaceholder.style.display = 'none';
+                    pngOutputWrapper.style.display = 'block';
+
+
+                    for (let i = 1; i <= pdf.numPages; i++) {
+                        updateStatus(pdfToPngStatus, `Extracting image from page ${i} of ${pdf.numPages}...`, 'processing', true);
+                        const page = await pdf.getPage(i);
+                        const viewport = page.getViewport({ scale: scale });
+
+                        const canvas = document.createElement('canvas');
+                        const context = canvas.getContext('2d');
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+
+                        await page.render({ canvasContext: context, viewport: viewport }).promise;
+
+                        const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+                        allPngBlobs.push({ name: `page_${i}_${file.name.replace(/\.pdf$/i, '')}.png`, blob: blob });
+
+                        const pngUrl = URL.createObjectURL(blob);
+                        
+                        const pngItemDiv = document.createElement('div');
+                        pngItemDiv.classList.add('png-item');
+                        
+                        const pageLabel = document.createElement('p');
+                        pageLabel.classList.add('page-number-label');
+                        pageLabel.textContent = `Page ${i}`;
+                        
+                        const img = document.createElement('img');
+                        img.src = pngUrl;
+                        img.alt = `Extracted Page ${i}`;
+                        img.title = `Page ${i} - ${canvas.width}x${canvas.height}`;
+                        
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = pngUrl;
+                        downloadLink.download = `page_${i}_${file.name.replace(/\.pdf$/i, '')}.png`;
+                        downloadLink.textContent = 'Download PNG';
+                        downloadLink.classList.add('download-link-single');
+
+                        pngItemDiv.appendChild(pageLabel);
+                        pngItemDiv.appendChild(img);
+                        pngItemDiv.appendChild(downloadLink);
+                        pngOutputContent.appendChild(pngItemDiv);
+                         // Allow UI to update
+                        if (i % 5 === 0) await new Promise(r => setTimeout(r, 0));
+                    }
+
+                    if (allPngBlobs.length > 0) {
+                        zipDownloadContainer.style.display = 'block';
+                    }
+                    updateStatus(pdfToPngStatus, 'All pages successfully extracted!', 'success');
+
+                } catch (error) {
+                    console.error('Error converting PDF to PNG:', error);
+                    updateStatus(pdfToPngStatus, `Extraction Error: ${error.message}`, 'error');
+                    pngOutputWrapper.style.display = 'none';
+                    pngOutputPlaceholder.style.display = 'block';
+                    pngOutputPlaceholder.innerHTML = '<p class="placeholder">Extraction failed. Check console.</p>';
+                } finally {
+                    convertToPngBtn.disabled = false;
+                }
+            });
+
+            downloadZipBtn.addEventListener('click', async () => {
+                if (allPngBlobs.length === 0) {
+                    updateStatus(pdfToPngStatus, 'No images to zip.', 'error');
+                    return;
+                }
+                updateStatus(pdfToPngStatus, 'Creating ZIP file...', 'processing', true);
+                downloadZipBtn.disabled = true;
+
+                try {
+                    const zip = new JSZip();
+                    allPngBlobs.forEach(item => {
+                        zip.file(item.name, item.blob);
+                    });
+
+                    const zipBlob = await zip.generateAsync({ type: "blob", compression: "DEFLATE", compressionOptions: { level: 6 }});
+                    const zipUrl = URL.createObjectURL(zipBlob);
+                    
+                    const a = document.createElement('a');
+                    a.href = zipUrl;
+                    const pdfFileName = pdfFileInput.files[0] ? pdfFileInput.files[0].name.replace(/\.pdf$/i, '') : 'document';
+                    a.download = `${pdfFileName}_all_pages.zip`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(zipUrl);
+                    updateStatus(pdfToPngStatus, 'ZIP file download initiated.', 'success');
+                } catch (error) {
+                    console.error("Error creating ZIP:", error);
+                    updateStatus(pdfToPngStatus, `ZIP creation failed: ${error.message}`, 'error');
+                } finally {
+                    downloadZipBtn.disabled = false;
+                }
+            });
+
+
+            // --- PNG to PDF ---
+            const pngFilesInput = document.getElementById('pngFiles');
+            const convertToPdfBtn = document.getElementById('convertToPdfBtn');
+            const pngToPdfStatus = document.getElementById('pngToPdfStatus');
+            const pdfDownloadLinkContainer = document.getElementById('pdfDownloadLinkContainer');
+            const pdfDownloadPlaceholder = document.getElementById('pdfDownloadPlaceholder');
+
+
+            convertToPdfBtn.addEventListener('click', async () => {
+                const files = pngFilesInput.files;
+                if (files.length === 0) {
+                    updateStatus(pngToPdfStatus, 'Please select PNG images for compilation.', 'error');
+                    return;
+                }
+
+                updateStatus(pngToPdfStatus, 'Initializing image processing...', 'processing');
+                convertToPdfBtn.disabled = true;
+                pdfDownloadLinkContainer.innerHTML = '';  
+                pdfDownloadLinkContainer.style.display = 'none';
+                pdfDownloadPlaceholder.style.display = 'block';
+
+
+                try {
+                    const { jsPDF } = window.jspdf;  
+                    const pdf = new jsPDF({ orientation: 'p', unit: 'pt', format: 'a4' });
+
+                    for (let i = 0; i < files.length; i++) {
+                        const file = files[i];
+                        updateStatus(pngToPdfStatus, `Processing image ${file.name} (${i + 1}/${files.length})...`, 'processing', true);
+
+                        const imgData = await readFileAsDataURL(file);
+                        const img = new Image();
+                        
+                        await new Promise((resolve, reject) => {
+                            img.onload = () => {
+                                const imgProps = pdf.getImageProperties(imgData);
+                                const pdfPageWidth = pdf.internal.pageSize.getWidth();
+                                const pdfPageHeight = pdf.internal.pageSize.getHeight();
+                                const margin = 40; // points
+                                const usableWidth = pdfPageWidth - 2 * margin;
+                                const usableHeight = pdfPageHeight - 2 * margin;
+                                let imgWidth = imgProps.width;
+                                let imgHeight = imgProps.height;
+                                const ratio = Math.min(usableWidth / imgWidth, usableHeight / imgHeight);
+                                imgWidth *= ratio;
+                                imgHeight *= ratio;
+                                const x = margin + (usableWidth - imgWidth) / 2;
+                                const y = margin + (usableHeight - imgHeight) / 2;
+
+                                if (i > 0) pdf.addPage();
+                                pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
+                                resolve();
+                            };
+                            img.onerror = (err) => reject(new Error(`Failed to load ${file.name}. Check if it's a valid PNG.`));
+                            img.src = imgData;  
+                        });
+                         // Allow UI to update
+                        if (i % 3 === 0) await new Promise(r => setTimeout(r, 0));
+                    }
+
+                    updateStatus(pngToPdfStatus, 'Compiling PDF document...', 'processing');
+                    const pdfBlob = pdf.output('blob');
+                    const pdfUrl = URL.createObjectURL(pdfBlob);
+                    
+                    pdfDownloadPlaceholder.style.display = 'none';
+                    pdfDownloadLinkContainer.style.display = 'block';
+
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = pdfUrl;
+                    downloadLink.download = 'IntelliConvert_Document.pdf';
+                    downloadLink.classList.add('pdf-download-link');
+                    downloadLink.innerHTML = '<i class="fas fa-file-download"></i> Download Compiled PDF';
+                    pdfDownloadLinkContainer.appendChild(downloadLink);
+
+                    updateStatus(pngToPdfStatus, 'PDF compilation successful!', 'success');
+
+                } catch (error) {
+                    console.error('Error converting PNG to PDF:', error);
+                    updateStatus(pngToPdfStatus, `Compilation Error: ${error.message}`, 'error');
+                    pdfDownloadLinkContainer.style.display = 'none';
+                    pdfDownloadPlaceholder.style.display = 'block';
+                    pdfDownloadPlaceholder.innerHTML = '<p class="placeholder">PDF compilation failed. Check console.</p>';
+                } finally {
+                    convertToPdfBtn.disabled = false;
+                }
+            });
+
+            function readFileAsDataURL(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = (error) => reject(error);
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            function updateStatus(element, message, type = 'info', isProcessingLoop = false) {  
+                if (!element) return;
+                
+                // Add spinner icon for processing messages
+                let fullMessage = message;
+                if (type === 'processing' && isProcessingLoop) {
+                    fullMessage = `<i class="fas fa-spinner fa-spin"></i> ${message}`;
+                    element.innerHTML = fullMessage;
+                } else {
+                     element.textContent = message;
+                }
+
+                element.className = 'status';  
+                if (type === 'success') element.classList.add('success');
+                else if (type === 'error') element.classList.add('error');
+                else if (type === 'processing') element.classList.add('processing');
+            }
+        });
+    </script>
 </body>
 </html>
