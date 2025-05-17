@@ -7,34 +7,57 @@
     <!-- Consider adding Font Awesome if not already globally available -->
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> -->
     
-    <!-- CSS Styles -->
     <style>
         :root {
-            --primary-color: #3B82F6; /* Modern Blue (e.g., Tailwind Blue 500) */
-            --secondary-color: #1D4ED8; /* Darker Blue for hover (e.g., Tailwind Blue 700) */
-            --background-color: #111827; /* Dark Gray (e.g., Tailwind Gray 900) */
-            --surface-color: #1F2937;   /* Slightly Lighter Gray for cards (e.g., Tailwind Gray 800) */
-            --text-color: #E5E7EB;      /* Light Gray for text (e.g., Tailwind Gray 200) */
-            --text-muted-color: #9CA3AF;/* Muted Gray (e.g., Tailwind Gray 400) */
-            --success-color: #10B981;   /* Modern Green (e.g., Tailwind Emerald 500) */
-            --success-hover-color: #059669; /* Darker Green */
-            --error-color: #EF4444;     /* Modern Red (e.g., Tailwind Red 500) */
-            --border-color: #374151;   /* Subtle Border (e.g., Tailwind Gray 700) */
-            --input-background: #374151;/* Input BG (e.g., Tailwind Gray 700) */
-            --input-focus-border: var(--primary-color);
+            --primary-color: #4A90E2; /* Brighter, modern Blue */
+            --primary-color-rgb: 74, 144, 226;
+            --secondary-color: #2868C7; /* Companion blue for gradients */
+            --background-color: #0D1117; /* Very dark, almost black (GitHub dark dim) */
+            --surface-color: #161B22;   /* Slightly lighter for cards (GitHub dark dim) */
+            --text-color: #C9D1D9;      /* Light Gray for text (GitHub dark dim) */
+            --text-muted-color: #8B949E;/* Muted Gray (GitHub dark dim) */
+            
+            --success-color: #238636;   /* GitHub Green */
+            --success-hover-color: #2EA043; /* Brighter GitHub Green */
+            --success-color-rgb: 35, 134, 54;
 
-            --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            --error-color: #DA3633;     /* GitHub Red */
+            --error-color-rgb: 218, 54, 51;
+
+            --border-color: #30363D;   /* Subtle Border (GitHub dark dim) */
+            --input-background: #22272E; /* Slightly different from surface for depth */
+            --input-focus-border: var(--primary-color);
+            --glow-color: rgba(var(--primary-color-rgb), 0.35);
+            --success-glow-color: rgba(var(--success-color-rgb), 0.35);
+
+            --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
             --font-display: var(--font-sans);
             --font-body: var(--font-sans);
 
-            --border-radius-sm: 4px;
-            --border-radius-md: 8px;
-            --border-radius-lg: 12px;
+            --border-radius-sm: 6px;
+            --border-radius-md: 10px;
+            --border-radius-lg: 16px;
 
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.15);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.15);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.25), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.25), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.25);
+
+            --gradient-primary: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            --gradient-success: linear-gradient(135deg, var(--success-hover-color) 0%, var(--success-color) 100%);
+            --gradient-border-animated: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--primary-color));
         }
+
+        @keyframes backgroundPan {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes borderShine {
+            0% { background-position: -100% 0; }
+            100% { background-position: 100% 0; }
+        }
+
 
         * {
             box-sizing: border-box;
@@ -48,43 +71,55 @@
 
         body {
             font-family: var(--font-body);
-            line-height: 1.6; /* Slightly adjusted for modern fonts */
+            line-height: 1.65;
             background-color: var(--background-color);
+            /* Subtle animated gradient background */
+            background-image: linear-gradient(120deg, var(--background-color) 0%, #1a2330 50%, var(--background-color) 100%);
+            background-size: 200% 200%;
+            animation: backgroundPan 25s ease infinite;
+
             color: var(--text-color);
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            padding: 30px 15px; /* More vertical padding */
+            padding: 40px 15px; 
             overflow-x: hidden;
         }
 
         .container {
             width: 100%;
-            max-width: 800px; /* Slightly adjusted */
-            background: var(--surface-color);
-            padding: 30px; /* Consistent padding */
+            max-width: 800px;
+            background-color: var(--surface-color);
+            /* Subtle gradient on container */
+            background-image: linear-gradient(180deg, color-mix(in srgb, var(--surface-color) 105%, black) 0%, var(--surface-color) 100%);
+            padding: 35px; 
             border-radius: var(--border-radius-lg);
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--border-color);
-            margin-bottom: 30px;
+            box-shadow: 0 0 0 1px var(--border-color), var(--shadow-lg); /* Thin border + shadow */
+            margin-bottom: 35px;
+            position: relative; /* For potential pseudo-elements if needed */
         }
-
-        /* Note: main-title and sub-title are structurally at the bottom of the body. */
-        /* Styling them as significant headers in their current position. */
+        
+        /* Main title (structurally at the bottom) */
         .main-title {
             font-family: var(--font-display);
-            font-size: 2rem; /* Adjusted for better hierarchy */
+            font-size: 2.2rem; 
             font-weight: 700;
             text-align: center;
-            color: var(--primary-color);
             margin-bottom: 10px;
             letter-spacing: 0.5px;
+            /* Text Gradient */
+            background: linear-gradient(45deg, var(--primary-color), color-mix(in srgb, var(--primary-color) 60%, #fff));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+            padding-bottom: 5px; /* Ensure gradient visibility */
         }
         .sub-title {
             text-align: center;
             color: var(--text-muted-color);
-            margin-bottom: 30px; /* Space before footer */
+            margin-bottom: 40px; 
             font-size: 1rem;
             font-weight: 300;
         }
@@ -93,34 +128,31 @@
             font-family: var(--font-display);
             font-weight: 600; 
             color: var(--text-color);
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             padding-bottom: 15px;
-            font-size: 1.5em; /* Slightly larger */
-            border-bottom: 1px solid var(--border-color);
+            font-size: 1.6em;
+            border-bottom: 2px solid transparent; /* Placeholder for gradient border */
+            border-image-slice: 1;
+            border-image-source: linear-gradient(to right, var(--primary-color), color-mix(in srgb, var(--primary-color) 30%, var(--border-color)));
             display: flex;
             align-items: center;
-            gap: 12px; /* Increased gap */
+            gap: 12px;
         }
         h2 .fas { 
             color: var(--primary-color);
-            font-size: 1.2em; /* Icon slightly larger relative to text */
+            font-size: 1.2em; 
         }
 
         .converter-section {
-            margin-bottom: 40px; /* Increased spacing */
-            padding: 0; /* Remove padding here if inner elements handle it */
+            margin-bottom: 40px;
             background-color: transparent;
-            border-radius: var(--border-radius-md);
         }
-        .converter-section:last-of-type {
-            margin-bottom: 0;
-        }
-
+        .converter-section:last-of-type { margin-bottom: 0; }
 
         label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: 500; /* Slightly bolder */
+            margin-bottom: 10px;
+            font-weight: 500; 
             font-size: 0.9em;
             color: var(--text-muted-color);
         }
@@ -128,8 +160,8 @@
         input[type="number"] {
             display: block;
             width: 100%;
-            padding: 12px 16px; /* Increased padding */
-            margin-bottom: 25px;
+            padding: 12px 16px;
+            margin-bottom: 30px; /* Increased spacing */
             border: 1px solid var(--border-color);
             border-radius: var(--border-radius-md);
             background-color: var(--input-background);
@@ -141,11 +173,8 @@
         input[type="number"]:focus {
             outline: none;
             border-color: var(--input-focus-border);
-            box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb, 59, 130, 246), 0.3); /* Use RGB for primary color if possible or a fixed color */
+            box-shadow: 0 0 0 3px var(--glow-color), 0 0 8px var(--glow-color);
         }
-        /* Helper for box-shadow with primary color RGB */
-        :root { --primary-color-rgb: 59, 130, 246; /* For #3B82F6 */ }
-
 
         button.action-button {
             display: flex;
@@ -153,183 +182,229 @@
             justify-content: center;
             gap: 10px;
             width: 100%;
-            padding: 12px 18px; /* Adjusted padding */
-            background: var(--primary-color);
+            padding: 14px 20px; /* Generous padding */
+            background-image: var(--gradient-primary);
+            background-size: 100% auto; /* For potential hover effects */
             color: white;
-            border: none;
+            border: none; 
             border-radius: var(--border-radius-md);
             cursor: pointer;
-            font-size: 1em; /* Standardized font size */
+            font-size: 1.05em; 
             font-family: var(--font-body);
-            font-weight: 600; /* Bolder */
-            transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+            font-weight: 600;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+            transition: all 0.25s ease-out; /* Smoother transition */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.05) inset; /* Subtle depth */
         }
         button.action-button:hover:not(:disabled) {
-            background: var(--secondary-color);
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-sm);
+            /* background-image: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%); */
+            filter: brightness(1.1);
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 6px 12px rgba(var(--primary-color-rgb), 0.2), 0 0 15px var(--glow-color), 0 0 0 1px rgba(255,255,255,0.1) inset;
         }
         button.action-button:active:not(:disabled) {
-            transform: translateY(0px);
-            box-shadow: none;
+            transform: translateY(0px) scale(1);
+            filter: brightness(0.95);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.1) inset;
         }
-        button.action-button:focus-visible { /* Modern focus outline */
-            outline: 2px solid var(--primary-color);
-            outline-offset: 2px;
+        button.action-button:focus-visible { 
+            outline: none;
+            box-shadow: 0 0 0 3px var(--background-color), 0 0 0 5px var(--primary-color), 0 6px 12px rgba(var(--primary-color-rgb),0.2);
         }
         button.action-button:disabled {
-            background: #4B5563; /* Tailwind Gray 600 */
-            color: #9CA3AF; /* Tailwind Gray 400 */
+            background-image: none;
+            background-color: color-mix(in srgb, var(--surface-color) 70%, var(--text-muted-color));
+            color: var(--text-muted-color);
             cursor: not-allowed;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
+            box-shadow: none;
+            text-shadow: none;
         }
         button.action-button .fa-spin { display: none; }
         button.action-button:disabled .fa-spin { display: inline-block; margin-left: 8px; }
 
 
         .output-area {
-            margin-top: 25px;
-            padding: 20px; /* Increased padding */
-            background-color: var(--background-color); 
+            margin-top: 30px;
+            padding: 20px; 
+            background-color: color-mix(in srgb, var(--background-color) 90%, black); /* Darker than surface */
             border: 1px solid var(--border-color);
             border-radius: var(--border-radius-md);
-            min-height: 70px; /* Increased min-height */
+            min-height: 80px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); /* Inner shadow for depth */
         }
         .output-area p.placeholder {
             color: var(--text-muted-color);
             text-align: center;
-            font-style: normal; /* Less italic */
+            font-style: normal;
             font-size: 0.95em;
             padding: 20px 0;
         }
 
         .status {
-            margin-top: 20px; /* Increased margin */
-            font-weight: 500; /* Slightly bolder for clarity */
+            margin-top: 20px;
+            font-weight: 500; 
             color: var(--text-muted-color);
             font-size: 0.9em;
-            min-height: 1.5em; /* Ensure space even when empty */
+            min-height: 1.5em;
             text-align: center;
-            transition: color 0.3s ease;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
         }
-        .status.success { color: var(--success-color); }
-        .status.error { color: var(--error-color); }
-        .status.processing { color: var(--primary-color); }
+        .status.success { color: var(--success-color); text-shadow: 0 0 8px var(--success-glow-color); }
+        .status.error { color: var(--error-color); text-shadow: 0 0 8px rgba(var(--error-color-rgb), 0.4); }
+        .status.processing { color: var(--primary-color); text-shadow: 0 0 8px var(--glow-color); }
+        .status .fas.fa-spinner { margin-right: 6px; }
 
 
         .file-input-wrapper {
             position: relative;
             width: 100%;
-            padding: 30px; /* Increased padding */
+            padding: 35px; /* Increased padding */
             border: 2px dashed var(--border-color);
             border-radius: var(--border-radius-md);
             text-align: center;
             cursor: pointer;
-            margin-bottom: 25px;
-            background-color: var(--input-background); /* Slightly different from main surface */
-            transition: border-color 0.2s ease, background-color 0.2s ease;
+            margin-bottom: 30px;
+            background-color: var(--input-background); 
+            transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden; /* For animated border */
         }
+        .file-input-wrapper::before { /* For animated gradient border */
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: inherit; /* Match parent's border-radius */
+            padding: 2px; /* Thickness of the gradient border */
+            background: var(--gradient-border-animated);
+            background-size: 200% auto;
+            -webkit-mask: 
+                linear-gradient(#fff 0 0) content-box, 
+                linear-gradient(#fff 0 0);
+            mask: 
+                linear-gradient(#fff 0 0) content-box, 
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: destination-out;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            animation: borderShine 3s linear infinite paused; /* Paused initially */
+        }
+
         .file-input-wrapper:hover {
-            border-color: var(--primary-color);
-            background-color: rgba(var(--primary-color-rgb, 59, 130, 246), 0.05);
+            border-color: transparent; /* Hide dashed border to show gradient */
+        }
+        .file-input-wrapper:hover::before {
+            opacity: 1;
+            animation-play-state: running; /* Start animation on hover */
         }
         .file-input-wrapper input[type="file"] {
             position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer;
         }
         .file-input-text { 
             color: var(--text-muted-color); 
-            font-size: 1.05em; /* Slightly larger */
+            font-size: 1.1em; 
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
+            position: relative; /* To stay above ::before pseudo-element */
+            z-index: 1;
         }
         .file-input-text .fas { 
             color: var(--primary-color); 
-            font-size: 1.3em; /* Larger icon */
+            font-size: 1.4em; 
+            transition: transform 0.3s ease;
+        }
+        .file-input-wrapper:hover .file-input-text .fas {
+            transform: scale(1.1) translateY(-2px);
         }
         .selected-files-display {
             display: block;
-            font-size: 0.95em; /* Consistent size */
+            font-size: 0.95em; 
             color: var(--primary-color);
             margin-top: 10px;
             font-weight: 500;
-            word-break: break-all; /* Prevent overflow for long file names */
+            word-break: break-all;
+            position: relative; /* To stay above ::before pseudo-element */
+            z-index: 1;
         }
 
         .warning-message {
-            background-color: rgba(252, 211, 77, 0.1); /* Tailwind Yellow 300 with opacity */
-            color: #FACC15; /* Tailwind Yellow 400 */
-            padding: 15px 20px; /* More padding */
-            border: 1px solid #CA8A04; /* Tailwind Yellow 600 */
-            border-left: 5px solid #FACC15; /* Tailwind Yellow 400 */
+            background-color: rgba(252, 211, 77, 0.05); /* Even more subtle */
+            color: #F5C518; /* IMDB yellow, good contrast */
+            padding: 15px 20px;
+            border: 1px solid rgba(245, 197, 24, 0.3);
+            border-left: 5px solid #F5C518;
             border-radius: var(--border-radius-md);
-            text-align: left;
-            margin: 0 auto 30px auto; /* Adjusted margin */
+            margin: 0 auto 35px auto;
             font-size: 0.9em;
-            max-width: 100%; /* Ensure it stays within container on mobile */
-            display: flex; /* For icon alignment */
-            align-items: flex-start; /* Align icon to top if text wraps */
-            gap: 10px;
+            max-width: 100%;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            box-shadow: 0 2px 10px rgba(245, 197, 24, 0.1);
         }
         .warning-message .fas { 
-            margin-right: 0; /* Using gap now */
             font-size: 1.2em; 
-            margin-top: 2px; /* Fine-tune alignment */
+            margin-top: 3px; 
         }
-        .warning-message strong {
-            font-weight: 600;
-        }
+        .warning-message strong { font-weight: 600; }
 
         /* --- PDF to PNG Specific --- */
         #zipDownloadContainer {
             text-align: center;
-            margin: 25px 0 15px 0;
+            margin: 30px 0 15px 0;
         }
-        #downloadZipBtn { /* Specific button, could inherit action-button or have its own style */
-            width: auto; /* Keep auto width */
-            padding: 12px 28px; /* Generous padding for a special button */
-            background: var(--success-color);
+        #downloadZipBtn { /* This button is for success, so use success gradient */
+            width: auto; 
+            padding: 12px 28px; 
+            background-image: var(--gradient-success);
             font-size: 1em;
         }
         #downloadZipBtn:hover:not(:disabled) {
-            background: var(--success-hover-color);
+            filter: brightness(1.1);
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 6px 12px rgba(var(--success-color-rgb), 0.2), 0 0 15px var(--success-glow-color);
         }
+        #downloadZipBtn:active:not(:disabled) {
+            transform: translateY(0px) scale(1);
+            filter: brightness(0.95);
+        }
+        #downloadZipBtn:focus-visible {
+             outline: none;
+            box-shadow: 0 0 0 3px var(--background-color), 0 0 0 5px var(--success-color), 0 6px 12px rgba(var(--success-color-rgb),0.2);
+        }
+
 
         .horizontal-scroll-container {
             overflow-x: auto;
             overflow-y: hidden;
             white-space: nowrap;
-            padding: 15px 5px 25px 5px; /* Bottom padding for scrollbar */
-            background-color: transparent; /* Inherits from output-area or blends */
-            border-radius: var(--border-radius-sm); /* Inner radius if different from output-area */
+            padding: 20px 10px 25px 10px; /* Increased padding for items and scrollbar */
+            border-radius: var(--border-radius-sm);
         }
-        /* WebKit Scrollbar Styles */
-        .horizontal-scroll-container::-webkit-scrollbar {
-            height: 10px;
-        }
+        .horizontal-scroll-container::-webkit-scrollbar { height: 12px; }
         .horizontal-scroll-container::-webkit-scrollbar-track {
-            background: var(--input-background); 
+            background: color-mix(in srgb, var(--input-background) 50%, transparent); 
             border-radius: var(--border-radius-md);
         }
         .horizontal-scroll-container::-webkit-scrollbar-thumb {
-            background: var(--primary-color);
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
             border-radius: var(--border-radius-md);
-            border: 2px solid var(--input-background); /* Creates padding around thumb */
+            border: 3px solid color-mix(in srgb, var(--input-background) 50%, transparent);
         }
         .horizontal-scroll-container::-webkit-scrollbar-thumb:hover {
-            background: var(--secondary-color);
+            background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
         }
-        /* Firefox Scrollbar Styles */
         .horizontal-scroll-container {
-            scrollbar-width: thin;
-            scrollbar-color: var(--primary-color) var(--input-background);
+            scrollbar-width: auto; /* Or thin */
+            scrollbar-color: var(--primary-color) color-mix(in srgb, var(--input-background) 50%, transparent);
         }
 
         .horizontal-scroll-container .scroll-content {
             display: flex;
             flex-direction: row;
-            gap: 15px; /* Use gap for spacing */
+            gap: 20px; /* Increased gap */
         }
 
         .png-item {
@@ -340,29 +415,51 @@
             background-color: var(--surface-color);
             border: 1px solid var(--border-color);
             border-radius: var(--border-radius-md);
-            padding: 15px; /* Adjusted padding */
-            /* margin-right: 18px; -- Replaced by gap on .scroll-content */
-            min-width: 200px; /* Slightly narrower cards */
+            padding: 18px; 
+            min-width: 200px; 
             max-width: 200px;
             text-align: center;
-            box-shadow: var(--shadow-sm);
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-            flex-shrink: 0; /* Prevent shrinking */
+            box-shadow: var(--shadow-md);
+            transition: transform 0.25s ease-out, box-shadow 0.25s ease-out, border-color 0.25s ease-out;
+            flex-shrink: 0; 
+            position: relative;
+            overflow: hidden; /* For hover effects */
+        }
+         .png-item::after { /* Subtle gradient border on hover */
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: inherit;
+            border: 2px solid transparent;
+            background: var(--gradient-primary) border-box;
+            -webkit-mask: 
+                linear-gradient(#fff 0 0) padding-box,
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: destination-out;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.25s ease-out;
+            pointer-events: none; /* So it doesn't interfere with clicks */
         }
         .png-item:hover {
-            transform: translateY(-4px); /* More pronounced hover */
-            box-shadow: var(--shadow-md);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: var(--shadow-lg), 0 0 20px var(--glow-color);
+            border-color: transparent; /* Hide original border to show gradient one */
         }
-        /* .png-item:last-child { margin-right: 5px; } -- Not needed with gap and padding on scroll container */
+        .png-item:hover::after {
+            opacity: 1;
+        }
+
 
         .png-item img {
-            max-width: 100%;
-            height: 150px; /* Fixed height for consistency */
+            width: 100%; /* Make image take full width of padding */
+            height: 150px; 
             border: 1px solid var(--border-color);
             border-radius: var(--border-radius-sm);
-            margin-bottom: 12px;
-            object-fit: contain; /* Ensure whole image is visible */
-            background-color: #fff; /* White background for transparent PNGs */
+            margin-bottom: 15px;
+            object-fit: contain; 
+            background-color: #fff; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         .png-item .page-number-label {
             font-size: 0.8em;
@@ -372,121 +469,100 @@
         }
         .png-item .download-link-single {
             font-size: 0.85em;
-            padding: 8px 14px; /* More clickable area */
-            background-color: var(--secondary-color);
+            padding: 8px 16px; 
+            background-image: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
             color: #fff;
             text-decoration: none;
             border-radius: var(--border-radius-sm);
-            transition: background-color 0.2s ease;
+            transition: background-image 0.2s ease, transform 0.2s ease, filter 0.2s ease;
             display: inline-block;
             font-weight: 500;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
         .png-item .download-link-single:hover {
-            background-color: var(--primary-color);
+            filter: brightness(1.15);
+            transform: scale(1.05);
         }
 
         /* Download link for compiled PDF */
         .pdf-download-link {
             display: inline-flex;
             align-items: center;
-            gap: 10px; /* Increased gap */
-            padding: 12px 22px; /* Adjusted padding */
-            background-color: var(--success-color);
+            gap: 10px; 
+            padding: 12px 25px; /* More padding */
+            background-image: var(--gradient-success);
             color: white;
             text-decoration: none;
             border-radius: var(--border-radius-md);
-            font-size: 1em;
-            font-weight: 600; /* Bolder */
-            transition: background-color 0.2s ease, transform 0.1s ease;
+            font-size: 1.05em; /* Match action button */
+            font-weight: 600;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+            transition: all 0.25s ease-out;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
         .pdf-download-link:hover {
-            background-color: var(--success-hover-color);
-            transform: translateY(-1px);
+            filter: brightness(1.1);
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 6px 12px rgba(var(--success-color-rgb), 0.2), 0 0 15px var(--success-glow-color);
         }
-         #pdfDownloadLinkContainer { 
+        .pdf-download-link:active {
+            transform: translateY(0px) scale(1);
+            filter: brightness(0.95);
+        }
+        #pdfDownloadLinkContainer { 
             text-align: center;
-            padding: 10px 0; /* Ensure button isn't flush with borders */
+            padding: 15px 0; 
         }
 
 
         footer {
             text-align: center;
-            margin-top: 40px; /* More space above footer */
-            padding-bottom: 20px; /* Space at the very bottom */
+            margin-top: 50px; 
+            padding-bottom: 30px; 
             color: var(--text-muted-color);
-            font-size: 0.8em;
+            font-size: 0.85em;
             font-weight: 300;
         }
 
-        /* Basic Mobile Responsiveness */
+        /* Mobile Responsiveness */
         @media (max-width: 768px) {
-            body {
-                padding: 20px 10px;
-            }
-            .container {
-                padding: 20px;
-            }
-            .main-title {
-                font-size: 1.8rem;
-            }
-            .sub-title {
-                font-size: 0.9rem;
-            }
-            h2 {
-                font-size: 1.3em;
-            }
-            .file-input-wrapper {
-                padding: 20px;
-            }
-            .file-input-text {
-                font-size: 1em;
-            }
-            .png-item {
-                min-width: 180px;
-                max-width: 180px;
-            }
+            body { padding: 25px 10px; }
+            .container { padding: 25px; }
+            .main-title { font-size: 2rem; }
+            .sub-title { font-size: 0.95rem; }
+            h2 { font-size: 1.4em; }
+            .file-input-wrapper { padding: 25px; }
+            .file-input-text { font-size: 1.05em; }
+            .png-item { min-width: 180px; max-width: 180px; }
         }
         @media (max-width: 480px) {
-            .main-title {
-                font-size: 1.6rem;
+            body { padding: 20px 10px; }
+            .container { padding: 20px; }
+            .main-title { font-size: 1.7rem; }
+            h2 { font-size: 1.25em; gap: 8px; }
+            button.action-button, .pdf-download-link, #downloadZipBtn {
+                padding: 12px 15px;
+                font-size: 1em;
             }
-             h2 {
-                font-size: 1.2em;
-                gap: 8px;
-            }
-             button.action-button, .pdf-download-link, #downloadZipBtn {
-                padding-top: 10px;
-                padding-bottom: 10px;
-                font-size: 0.95em;
-            }
-            .png-item {
-                min-width: 150px; /* Further reduce for very small screens */
-                max-width: 150px;
-                padding: 10px;
-            }
-            .png-item img {
-                height: 120px;
-            }
-            .png-item .download-link-single {
-                padding: 6px 10px;
-                font-size: 0.8em;
-            }
+            .file-input-wrapper { padding: 20px; }
+            .png-item { min-width: 160px; max-width: 160px; padding: 12px; }
+            .png-item img { height: 130px; }
+            .png-item .download-link-single { padding: 7px 12px; font-size: 0.8em; }
         }
 
     </style>
 
-    <!-- PDF.js -->
+    <!-- PDF.js, jsPDF, JSZip scripts (unchanged) -->
     <script src="/ajax/libs/pdf.js/pdf.min.js"></script>
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = '/ajax/libs/pdf.js/pdf.worker.min.js';
     </script>
-    <!-- jsPDF -->
     <script src="/ajax/libs/jspdf/jspdf.umd.min.js"></script>
-    <!-- JSZip -->
     <script src="/ajax/libs/jszip/jszip.min.js"></script>
 
 </head>
 <body>
+    <!-- HTML structure (unchanged) -->
     <div class="container">
         <div class="converter-section" id="pdf-to-png-section">
             <h2><i class="fas fa-file-pdf"></i> PDF to PNG Extractor</h2>
@@ -507,7 +583,7 @@
             <div id="pdfToPngStatus" class="status"></div>
 
             <div id="zipDownloadContainer" style="display:none;">
-                <button id="downloadZipBtn" class="action-button">
+                <button id="downloadZipBtn" class="action-button"> <!-- Will inherit base .action-button styles and get specific success gradient -->
                     <i class="fas fa-file-archive"></i> Download All Pages as ZIP
                 </button>
             </div>
@@ -521,7 +597,7 @@
                 <p class="placeholder">Extracted PNGs will appear here.</p>
             </div>
         </div>
-<br> <!-- This <br> is kept as per "don't change structure" but margin on .converter-section is preferred -->
+<br> 
         <div class="converter-section" id="png-to-pdf-section">
             <h2><i class="fas fa-file-image"></i> PNG(s) to PDF Compiler</h2>
 
@@ -546,18 +622,17 @@
     </div>
         <div class="warning-message">
             <i class="fas fa-info-circle"></i>
-            <div> <!-- Added div for better text alignment with icon -->
+            <div> 
                 <strong>Client-Side Processing:</strong> All conversions are performed directly in your browser for privacy and speed. For very large or complex files, performance may vary.
             </div>
         </div>
-        <!-- The main title and subtitle are structurally placed here, at the end of the body -->
         <h1 class="main-title">Pdf2Png or Png2Pdf</h1>
         <p class="sub-title">Advanced PDF <> PNG Conversion Suite</p>
     <footer>
         Completely offline once loaded. Secure Client-Side Processing.
     </footer>
 
-    <!-- JavaScript Logic (Unchanged) -->
+    <!-- JavaScript Logic (Unchanged, but with small additions for better UX) -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // --- UI Enhancements for File Inputs ---
@@ -584,16 +659,15 @@
                         textDisplay.textContent = '';
                         textDisplay.style.display = 'none';
                         defaultTextElement.innerHTML = defaultText;
-                        defaultTextElement.style.display = 'flex'; // Changed to flex to match new styling
+                        defaultTextElement.style.display = 'flex'; 
                     }
                 });
-                 // Drag and drop visual cues
+                
                 ['dragenter', 'dragover'].forEach(eventName => {
                     wrapper.addEventListener(eventName, (e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        wrapper.style.borderColor = 'var(--primary-color)'; // Use variable
-                        wrapper.style.backgroundColor = 'rgba(var(--primary-color-rgb, 59, 130, 246), 0.1)';
+                        wrapper.classList.add('is-dragging'); // Add class for visual feedback
                     }, false);
                 });
 
@@ -601,14 +675,12 @@
                     wrapper.addEventListener(eventName, (e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        wrapper.style.borderColor = 'var(--border-color)'; // Use variable
-                        wrapper.style.backgroundColor = 'var(--input-background)'; // Use variable
+                        wrapper.classList.remove('is-dragging');
                     }, false);
                 });
-                // Handle dropped files
+                
                 wrapper.addEventListener('drop', (e) => {
                     input.files = e.dataTransfer.files;
-                    // Manually trigger change event
                     const event = new Event('change');
                     input.dispatchEvent(event);
                 });
@@ -629,7 +701,7 @@
             const pngOutputContent = document.getElementById('pngOutputContent');
             const pngOutputPlaceholder = document.getElementById('pngOutputPlaceholder');
 
-            let allPngBlobs = []; // To store blobs for zipping
+            let allPngBlobs = []; 
 
             convertToPngBtn.addEventListener('click', async () => {
                 const file = pdfFileInput.files[0];
@@ -656,7 +728,6 @@
                     
                     pngOutputPlaceholder.style.display = 'none';
                     pngOutputWrapper.style.display = 'block';
-
 
                     for (let i = 1; i <= pdf.numPages; i++) {
                         updateStatus(pdfToPngStatus, `Extracting image from page ${i} of ${pdf.numPages}...`, 'processing', true);
@@ -697,7 +768,6 @@
                         pngItemDiv.appendChild(img);
                         pngItemDiv.appendChild(downloadLink);
                         pngOutputContent.appendChild(pngItemDiv);
-                         // Allow UI to update
                         if (i % 5 === 0) await new Promise(r => setTimeout(r, 0));
                     }
 
@@ -787,28 +857,36 @@
                         
                         await new Promise((resolve, reject) => {
                             img.onload = () => {
-                                const imgProps = pdf.getImageProperties(imgData);
-                                const pdfPageWidth = pdf.internal.pageSize.getWidth();
-                                const pdfPageHeight = pdf.internal.pageSize.getHeight();
-                                const margin = 40; // points
-                                const usableWidth = pdfPageWidth - 2 * margin;
-                                const usableHeight = pdfPageHeight - 2 * margin;
-                                let imgWidth = imgProps.width;
-                                let imgHeight = imgProps.height;
-                                const ratio = Math.min(usableWidth / imgWidth, usableHeight / imgHeight);
-                                imgWidth *= ratio;
-                                imgHeight *= ratio;
-                                const x = margin + (usableWidth - imgWidth) / 2;
-                                const y = margin + (usableHeight - imgHeight) / 2;
+                                try {
+                                    const imgProps = pdf.getImageProperties(imgData);
+                                    const pdfPageWidth = pdf.internal.pageSize.getWidth();
+                                    const pdfPageHeight = pdf.internal.pageSize.getHeight();
+                                    const margin = 40; 
+                                    const usableWidth = pdfPageWidth - 2 * margin;
+                                    const usableHeight = pdfPageHeight - 2 * margin;
+                                    let imgWidth = imgProps.width;
+                                    let imgHeight = imgProps.height;
 
-                                if (i > 0) pdf.addPage();
-                                pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
-                                resolve();
+                                    if(imgWidth <=0 || imgHeight <= 0) { // Basic check for invalid image dimensions
+                                        throw new Error(`Invalid dimensions for ${file.name}.`);
+                                    }
+
+                                    const ratio = Math.min(usableWidth / imgWidth, usableHeight / imgHeight);
+                                    imgWidth *= ratio;
+                                    imgHeight *= ratio;
+                                    const x = margin + (usableWidth - imgWidth) / 2;
+                                    const y = margin + (usableHeight - imgHeight) / 2;
+
+                                    if (i > 0) pdf.addPage();
+                                    pdf.addImage(imgData, 'PNG', x, y, imgWidth, imgHeight);
+                                    resolve();
+                                } catch (e) {
+                                    reject(e); // Catch errors from getImageProperties or calculations
+                                }
                             };
                             img.onerror = (err) => reject(new Error(`Failed to load ${file.name}. Check if it's a valid PNG.`));
                             img.src = imgData;  
                         });
-                         // Allow UI to update
                         if (i % 3 === 0) await new Promise(r => setTimeout(r, 0));
                     }
 
@@ -822,7 +900,7 @@
                     const downloadLink = document.createElement('a');
                     downloadLink.href = pdfUrl;
                     downloadLink.download = 'IntelliConvert_Document.pdf';
-                    downloadLink.classList.add('pdf-download-link');
+                    downloadLink.classList.add('pdf-download-link'); // Will use success gradient
                     downloadLink.innerHTML = '<i class="fas fa-file-download"></i> Download Compiled PDF';
                     pdfDownloadLinkContainer.appendChild(downloadLink);
 
@@ -851,11 +929,10 @@
             function updateStatus(element, message, type = 'info', isProcessingLoop = false) {  
                 if (!element) return;
                 
-                // Add spinner icon for processing messages
                 let fullMessage = message;
                 if (type === 'processing' && isProcessingLoop) {
                     fullMessage = `<i class="fas fa-spinner fa-spin"></i> ${message}`;
-                    element.innerHTML = fullMessage;
+                    element.innerHTML = fullMessage; 
                 } else {
                      element.textContent = message;
                 }
