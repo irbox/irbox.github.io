@@ -1,1 +1,565 @@
-html,body,p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,iframe,hr,h1,h2,h3,h4,h5,h6{margin:0;padding:0}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}ul{list-style:none}button,input,select,textarea{margin:0}html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}img,embed,object,audio{height:auto;max-width:100%}iframe{border:0}table{border-collapse:collapse;border-spacing:0}td,th{padding:0;text-align:left}body{font-family:monospace,sans-serif,serif;-webkit-font-smoothing:antialiased}.app__layout{position:absolute;width:100%;height:100%;overflow:hidden;background-color:rgba(0,0,0,0.5)}.app__header{width:100%;height:56px;color:#fff;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;position:fixed;top:0;left:0;right:0;z-index:10}.app__header-icon{width:35px;height:35px;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;cursor:pointer;position:absolute;right:20px;top:20px}.app__header-icon:active{opacity:.8}.app__header-title{margin-left:5px;font-size:19px;user-select:none}.app__layout-content{height:inherit}.custom-menu-icon{font-size:28px;line-height:47px}.custom-title,.custom-menu-icon{color:#fff}.custom-btn{position:fixed;right:26px;bottom:26px;background:#448aff;border-radius:50%;border:0;width:56px;height:56px;outline:0;box-shadow:0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);z-index:9999}.custom-btn:active{box-shadow:none}.custom-msg{text-align:center;width:90%;height:50%;overflow:auto;margin:auto;position:absolute;top:0;left:0;bottom:0;right:0;font-size:16px}.custom-fab-icon{color:#fff;font-size:30px;margin-top:2px;user-select:none}video{transform:translateX(-50%) translateY(-50%);top:50%;left:50%;min-width:100%;min-height:100%;width:auto;height:auto;position:absolute}#list li{list-style-type:none;text-decoration:underline;color:#00F}.custom-copy-btn{opacity:0}.hide{display:none}@-webkit-keyframes scanner{0{bottom:90%}50%{bottom:10%}100%{bottom:90%}}@-moz-keyframes scanner{0{bottom:90%}50%{bottom:10%}100%{bottom:90%}}@-o-keyframes scanner{0{bottom:90%}50%{bottom:10%}100%{bottom:90%}}@keyframes scanner{0{bottom:90%}50%{bottom:10%}100%{bottom:90%}}.custom-scanner{width:270px;height:2px;background:#4caf50;position:absolute;-webkit-transition:all 200ms linear;-moz-transition:all 200ms linear;transition:all 200ms linear;-webkit-animation:scanner 3s infinite linear;-moz-animation:scanner 3s infinite linear;-o-animation:scanner 3s infinite linear;animation:scanner 3s infinite linear;box-shadow:0 1px 0 0 rgba(0,0,0,0.4);display:none;left:-10px;right:0;margin:auto}#camera{opacity:0}.no-support{font-size:20px;text-align:center}.app__snackbar{position:fixed;bottom:15px;left:20px;pointer-events:none;z-index:9999}.app__snackbar-msg{width:250px;min-height:50px;background-color:#404040;color:#fff;border-radius:3px;box-shadow:0 0 2px rgba(0,0,0,.12),0 2px 4px rgba(0,0,0,.24);display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:justify;-ms-flex-pack:justify;justify-content:space-between;font-size:14px;font-weight:500;padding-left:15px;padding-right:10px;word-break:break-all;-webkit-transition:opacity 3s cubic-bezier(0,0,0.30,1) 0;transition:opacity .30s cubic-bezier(0,0,0.30,1) 0;text-transform:initial;margin-bottom:10px;z-index:9999}.app__snackbar--hide{opacity:0}.app__infodialog,.app__dialog{z-index:12;background-color:#fff;width:290px;height:180px;border-radius:8px;display:flex;position:absolute;left:0;right:0;bottom:0;top:0;margin:auto;box-shadow:0 9px 46px 8px rgba(0,0,0,.14),0 11px 15px -7px rgba(0,0,0,.12),0 24px 38px 3px rgba(0,0,0,.2)}.app__infodialog{max-width:480px;width:95%;height:240px}.app__dialog-content,.app__infodialog-content{width:100%;padding:15px}.app__infodialog-subcontent{margin-top:18px}.app__infodialog-subcontent a{color:#1b1eb5}.app__infodialog-subcontent p:not(:first-child){margin-top:10px}.app__dialog-content h1,.app__infodialog h1{margin-top:5px;margin-bottom:15px;font-weight:600;font-size:19px}.app__dialog input{width:250px;height:30px;border:0;border-bottom:1px solid rgba(0,0,0,.24);outline:0;font-size:15px;color:#1b1eb5;font-weight:500}.app__dialog-actions,.app__infodialog-actions{display:block;position:absolute;bottom:13px;right:20px}.app__infodialog-open,.app__infodialog-close,.app__dialog-open,.app__dialog-close{border:0;height:35px;width:70px;font-size:16px;background:transparent;font-weight:500;outline:0;cursor:pointer;margin-right:-15px}.app__dialog-open{display:none}.app__infodialog-open:active,.app__infodialog-close:active,.app__dialog-open:active,.app__dialog-close:active{opacity:.9}.app__infodialog--hide,.app__dialog--hide{display:none}.app__overlay{position:fixed;top:0;bottom:0;right:0;left:0;transition:all 200ms ease-in;width:310px;height:310px;margin:auto}.app__overlay-left,.app__overlay-right{width:52px;height:340px;background:#7f7f7f}.app__overlay-left{margin-left:-57px;margin-top:-10px}.app__overlay-right{margin-right:-57px;margin-top:-340px;float:right}.app__overlay{border:0}.app__help-text,.app__select-photos{color:#fff;position:absolute;bottom:-70px;font-size:18px;right:0;text-align:center;user-select:none}.app__help-text{display:none;left:0}.app__dialog-overlay,.app__infodialog-overlay{position:fixed;left:0;right:0;bottom:0;top:0;background:rgba(0,0,0,0.55);z-index:11}.camera__icon,.focus__icon{position:relative;left:10px;display:none}.app__select-photos{width:58px;height:58px;cursor:pointer;position:fixed;bottom:20px;right:20px;border-radius:50%;background-color:#3f51b5;display:flex;align-items:center;justify-content:center}.app__select-photos:active{opacity:.8}input[type='file']{display:none}#frame{width:auto;height:auto}.app__version{position:absolute;bottom:20px;font-size:12px;color:#737373;margin-top:15px;display:inline-block}.app__scanner-img{z-index:1;position:relative;display:none}@media screen and (max-width:480px){.app__infodialog{width:90%}.app__infodialog-content{padding:12px 13px}}
+/* bundle.css - Material You Expressive (2025 Concept) */
+
+/* 0. Foundational Resets & Imports (Keep existing resets, add font) */
+html,body,p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,iframe,hr,h1,h2,h3,h4,h5,h6{margin:0;padding:0}
+h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}
+ul{list-style:none}
+button,input,select,textarea{margin:0; font-family: inherit;}
+html{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+*,*:before,*:after{box-sizing:inherit}
+img,embed,object,audio,video{height:auto;max-width:100%} /* video handled specifically */
+iframe{border:0}
+table{border-collapse:collapse;border-spacing:0}
+td,th{padding:0;text-align:left}
+
+/* 1. Material You Expressive - Color System (Hypothetical Palette) */
+/* These would be dynamically generated based on user's theme/wallpaper */
+:root {
+    /* Example Expressive Palette: "Cosmic Bloom" */
+    --md-sys-color-primary-light: #7B5AFF;
+    --md-sys-color-on-primary-light: #FFFFFF;
+    --md-sys-color-primary-container-light: #EADDFF;
+    --md-sys-color-on-primary-container-light: #2A0099;
+    --md-sys-color-secondary-light: #625B71;
+    --md-sys-color-on-secondary-light: #FFFFFF;
+    --md-sys-color-secondary-container-light: #E8DEF8;
+    --md-sys-color-on-secondary-container-light: #1E192B;
+    --md-sys-color-tertiary-light: #7D5260;
+    --md-sys-color-on-tertiary-light: #FFFFFF;
+    --md-sys-color-tertiary-container-light: #FFD8E4;
+    --md-sys-color-on-tertiary-container-light: #31111D;
+    --md-sys-color-error-light: #B3261E;
+    --md-sys-color-on-error-light: #FFFFFF;
+    --md-sys-color-error-container-light: #F9DEDC;
+    --md-sys-color-on-error-container-light: #410E0B;
+    --md-sys-color-background-light: #FFFBFE;
+    --md-sys-color-on-background-light: #1C1B1F;
+    --md-sys-color-surface-light: #FFFBFE; /* Main app background */
+    --md-sys-color-on-surface-light: #1C1B1F;
+    --md-sys-color-surface-variant-light: #E7E0EC;
+    --md-sys-color-on-surface-variant-light: #49454F;
+    --md-sys-color-outline-light: #79747E;
+    --md-sys-color-outline-variant-light: #CAC4D0;
+    --md-sys-color-shadow-light: #000000;
+    --md-sys-color-scrim-light: #000000;
+    --md-sys-color-inverse-surface-light: #313033;
+    --md-sys-color-inverse-on-surface-light: #F4EFF4;
+    --md-sys-color-inverse-primary-light: #D0BCFF;
+
+    /* Dark Theme Equivalents (Illustrative) */
+    --md-sys-color-primary-dark: #D0BCFF;
+    --md-sys-color-on-primary-dark: #4A25CB;
+    --md-sys-color-primary-container-dark: #633FCF;
+    --md-sys-color-on-primary-container-dark: #EADDFF;
+    --md-sys-color-secondary-dark: #CCC2DC;
+    --md-sys-color-on-secondary-dark: #332D41;
+    --md-sys-color-secondary-container-dark: #4A4458;
+    --md-sys-color-on-secondary-container-dark: #E8DEF8;
+    --md-sys-color-tertiary-dark: #EFB8C8;
+    --md-sys-color-on-tertiary-dark: #492532;
+    --md-sys-color-tertiary-container-dark: #633B48;
+    --md-sys-color-on-tertiary-container-dark: #FFD8E4;
+    --md-sys-color-error-dark: #F2B8B5;
+    --md-sys-color-on-error-dark: #601410;
+    --md-sys-color-error-container-dark: #8C1D18;
+    --md-sys-color-on-error-container-dark: #F9DEDC;
+    --md-sys-color-background-dark: #1C1B1F;
+    --md-sys-color-on-background-dark: #E6E1E5;
+    --md-sys-color-surface-dark: #141218; /* Main app background for dark */
+    --md-sys-color-on-surface-dark: #E6E1E5;
+    --md-sys-color-surface-variant-dark: #49454F;
+    --md-sys-color-on-surface-variant-dark: #CAC4D0;
+    --md-sys-color-outline-dark: #938F99;
+    --md-sys-color-outline-variant-dark: #49454F;
+    --md-sys-color-shadow-dark: #000000;
+    --md-sys-color-scrim-dark: #000000;
+    --md-sys-color-inverse-surface-dark: #E6E1E5;
+    --md-sys-color-inverse-on-surface-dark: #313033;
+    --md-sys-color-inverse-primary-dark: #6750A4;
+
+    /* Shape System - Expressive: More rounded, organic */
+    --md-sys-shape-corner-none: 0px;
+    --md-sys-shape-corner-extra-small: 4px;
+    --md-sys-shape-corner-small: 8px;
+    --md-sys-shape-corner-medium: 16px; /* Increased from M3's 12px */
+    --md-sys-shape-corner-large: 24px; /* Increased from M3's 16px */
+    --md-sys-shape-corner-extra-large: 32px; /* Increased from M3's 28px */
+    --md-sys-shape-corner-full: 999px; /* Pill shape */
+
+    /* Typography - Using Manrope as an example */
+    --md-sys-typescale-font-family: 'Manrope', sans-serif;
+    --md-sys-typescale-display-large-font-size: 57px;
+    --md-sys-typescale-display-large-line-height: 64px;
+    --md-sys-typescale-display-large-font-weight: 700; /* Bolder */
+    --md-sys-typescale-headline-medium-font-size: 28px;
+    --md-sys-typescale-headline-medium-line-height: 36px;
+    --md-sys-typescale-headline-medium-font-weight: 600;
+    --md-sys-typescale-title-large-font-size: 22px;
+    --md-sys-typescale-title-large-line-height: 28px;
+    --md-sys-typescale-title-large-font-weight: 600;
+    --md-sys-typescale-body-large-font-size: 16px;
+    --md-sys-typescale-body-large-line-height: 24px;
+    --md-sys-typescale-body-large-font-weight: 400;
+    --md-sys-typescale-label-large-font-size: 14px;
+    --md-sys-typescale-label-large-line-height: 20px;
+    --md-sys-typescale-label-large-font-weight: 500;
+
+    /* Default to light theme */
+    --md-sys-color-primary: var(--md-sys-color-primary-light);
+    --md-sys-color-on-primary: var(--md-sys-color-on-primary-light);
+    --md-sys-color-primary-container: var(--md-sys-color-primary-container-light);
+    --md-sys-color-on-primary-container: var(--md-sys-color-on-primary-container-light);
+    --md-sys-color-secondary: var(--md-sys-color-secondary-light);
+    --md-sys-color-on-secondary: var(--md-sys-color-on-secondary-light);
+    --md-sys-color-secondary-container: var(--md-sys-color-secondary-container-light);
+    --md-sys-color-on-secondary-container: var(--md-sys-color-on-secondary-container-light);
+    --md-sys-color-tertiary: var(--md-sys-color-tertiary-light);
+    --md-sys-color-on-tertiary: var(--md-sys-color-on-tertiary-light);
+    --md-sys-color-tertiary-container: var(--md-sys-color-tertiary-container-light);
+    --md-sys-color-on-tertiary-container: var(--md-sys-color-on-tertiary-container-light);
+    --md-sys-color-error: var(--md-sys-color-error-light);
+    --md-sys-color-on-error: var(--md-sys-color-on-error-light);
+    --md-sys-color-error-container: var(--md-sys-color-error-container-light);
+    --md-sys-color-on-error-container: var(--md-sys-color-on-error-container-light);
+    --md-sys-color-background: var(--md-sys-color-background-light);
+    --md-sys-color-on-background: var(--md-sys-color-on-background-light);
+    --md-sys-color-surface: var(--md-sys-color-surface-light);
+    --md-sys-color-on-surface: var(--md-sys-color-on-surface-light);
+    --md-sys-color-surface-variant: var(--md-sys-color-surface-variant-light);
+    --md-sys-color-on-surface-variant: var(--md-sys-color-on-surface-variant-light);
+    --md-sys-color-outline: var(--md-sys-color-outline-light);
+    --md-sys-color-outline-variant: var(--md-sys-color-outline-variant-light);
+    --md-sys-color-shadow: var(--md-sys-color-shadow-light);
+    --md-sys-color-scrim: var(--md-sys-color-scrim-light);
+    --md-sys-color-inverse-surface: var(--md-sys-color-inverse-surface-light);
+    --md-sys-color-inverse-on-surface: var(--md-sys-color-inverse-on-surface-light);
+    --md-sys-color-inverse-primary: var(--md-sys-color-inverse-primary-light);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --md-sys-color-primary: var(--md-sys-color-primary-dark);
+        --md-sys-color-on-primary: var(--md-sys-color-on-primary-dark);
+        --md-sys-color-primary-container: var(--md-sys-color-primary-container-dark);
+        --md-sys-color-on-primary-container: var(--md-sys-color-on-primary-container-dark);
+        --md-sys-color-secondary: var(--md-sys-color-secondary-dark);
+        --md-sys-color-on-secondary: var(--md-sys-color-on-secondary-dark);
+        --md-sys-color-secondary-container: var(--md-sys-color-secondary-container-dark);
+        --md-sys-color-on-secondary-container: var(--md-sys-color-on-secondary-container-dark);
+        --md-sys-color-tertiary: var(--md-sys-color-tertiary-dark);
+        --md-sys-color-on-tertiary: var(--md-sys-color-on-tertiary-dark);
+        --md-sys-color-tertiary-container: var(--md-sys-color-tertiary-container-dark);
+        --md-sys-color-on-tertiary-container: var(--md-sys-color-on-tertiary-container-dark);
+        --md-sys-color-error: var(--md-sys-color-error-dark);
+        --md-sys-color-on-error: var(--md-sys-color-on-error-dark);
+        --md-sys-color-error-container: var(--md-sys-color-error-container-dark);
+        --md-sys-color-on-error-container: var(--md-sys-color-on-error-container-dark);
+        --md-sys-color-background: var(--md-sys-color-background-dark);
+        --md-sys-color-on-background: var(--md-sys-color-on-background-dark);
+        --md-sys-color-surface: var(--md-sys-color-surface-dark);
+        --md-sys-color-on-surface: var(--md-sys-color-on-surface-dark);
+        --md-sys-color-surface-variant: var(--md-sys-color-surface-variant-dark);
+        --md-sys-color-on-surface-variant: var(--md-sys-color-on-surface-variant-dark);
+        --md-sys-color-outline: var(--md-sys-color-outline-dark);
+        --md-sys-color-outline-variant: var(--md-sys-color-outline-variant-dark);
+        --md-sys-color-shadow: var(--md-sys-color-shadow-dark);
+        --md-sys-color-scrim: var(--md-sys-color-scrim-dark);
+        --md-sys-color-inverse-surface: var(--md-sys-color-inverse-surface-dark);
+        --md-sys-color-inverse-on-surface: var(--md-sys-color-inverse-on-surface-dark);
+        --md-sys-color-inverse-primary: var(--md-sys-color-inverse-primary-dark);
+    }
+}
+
+/* 2. Base App Styles */
+body {
+    font-family: var(--md-sys-typescale-font-family);
+    font-weight: var(--md-sys-typescale-body-large-font-weight);
+    font-size: var(--md-sys-typescale-body-large-font-size);
+    line-height: var(--md-sys-typescale-body-large-line-height);
+    background-color: var(--md-sys-color-background);
+    color: var(--md-sys-color-on-background);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow: hidden; /* Prevent scrollbars on body */
+    overscroll-behavior: none; /* Prevent pull-to-refresh */
+}
+
+.app__layout {
+    position: fixed; /* Use fixed to cover viewport */
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Ensure no accidental scroll on layout */
+}
+
+.app__content {
+    flex-grow: 1;
+    position: relative; /* For positioning camera view and FAB */
+    overflow: hidden; /* Camera view will handle its own overflow if necessary */
+    display: flex; /* To center camera view container */
+    align-items: center;
+    justify-content: center;
+}
+
+/* 3. Top App Bar */
+.top-app-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 4px 8px 16px; /* M3 spec for small top app bar */
+    height: 64px; /* M3 spec */
+    background-color: var(--md-sys-color-surface); /* Or surface-container for more elevation */
+    color: var(--md-sys-color-on-surface);
+    box-shadow: 0 1px 2px 0 rgba(var(--md-sys-color-shadow), 0.3),
+                0 1px 3px 1px rgba(var(--md-sys-color-shadow), 0.15);
+    position: relative; /* For z-index stacking if needed */
+    z-index: 100;
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+.top-app-bar__title {
+    font-size: var(--md-sys-typescale-title-large-font-size);
+    font-weight: var(--md-sys-typescale-title-large-font-weight);
+    line-height: var(--md-sys-typescale-title-large-line-height);
+    margin-left: 8px; /* Space from potential nav icon */
+}
+
+.top-app-bar__action-item {
+    margin-right: 12px; /* Space for last action item */
+}
+
+/* 4. Icon Button (used in Top App Bar) */
+.icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    padding: 12px;
+    border: none;
+    background-color: transparent;
+    color: var(--md-sys-color-on-surface-variant);
+    border-radius: var(--md-sys-shape-corner-full);
+    cursor: pointer;
+    outline: none;
+    position: relative;
+    overflow: hidden; /* For ripple */
+    transition: background-color 0.2s ease-out;
+}
+.icon-button .material-symbols-outlined {
+    font-size: 24px;
+}
+.icon-button:hover {
+    background-color: rgba(var(--md-sys-color-on-surface-variant-rgb, 0,0,0), 0.08); /* Use RGB version if available */
+}
+.icon-button:active {
+    background-color: rgba(var(--md-sys-color-on-surface-variant-rgb, 0,0,0), 0.12);
+}
+
+/* 5. Camera View & Scanner Overlay */
+.camera-view-container {
+    position: absolute;
+    inset: 0; /* Take full space of app__content */
+    background-color: #000; /* Fallback if video doesn't load */
+    overflow: hidden;
+}
+.camera-feed {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);
+    object-fit: cover; /* Ensure it covers the area */
+}
+
+.scanner-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none; /* Allow interaction with video for focus */
+}
+
+.scanner-overlay__cutout {
+    width: clamp(200px, 70vmin, 320px); /* Responsive size */
+    height: clamp(200px, 70vmin, 320px);
+    border-radius: var(--md-sys-shape-corner-extra-large); /* Expressive shape */
+    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.65); /* "Cutout" effect */
+    position: relative; /* For the line */
+    border: 3px solid rgba(255,255,255,0.3); /* Softer border */
+}
+
+.scanner-overlay__line {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(clamp(200px, 70vmin, 320px) - 30px); /* Inside the cutout */
+    height: 4px;
+    background: linear-gradient(90deg, transparent, var(--md-sys-color-primary), transparent);
+    border-radius: var(--md-sys-shape-corner-full);
+    opacity: 0.8;
+    box-shadow: 0 0 10px var(--md-sys-color-primary), 0 0 20px var(--md-sys-color-primary);
+    animation: scanner-animation 3s infinite ease-in-out;
+    /* Removed display:none and left/right/margin:auto from original */
+}
+
+@keyframes scanner-animation {
+    0% { top: 15%; opacity: 0.5; }
+    50% { top: 85%; opacity: 1; }
+    100% { top: 15%; opacity: 0.5; }
+}
+
+.scanner-overlay__prompt-text {
+    position: absolute;
+    bottom: 10%; /* Position below the cutout */
+    left: 50%;
+    transform: translateX(-50%);
+    color: #FFFFFF;
+    background-color: rgba(0,0,0,0.5);
+    padding: 8px 16px;
+    border-radius: var(--md-sys-shape-corner-medium);
+    font-size: var(--md-sys-typescale-label-large-font-size);
+    text-align: center;
+    max-width: 80%;
+    user-select: none;
+}
+
+
+/* 6. Dialogs (Result & Info) */
+.dialog-scrim {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(var(--md-sys-color-scrim-rgb, 0,0,0), 0.4); /* Use RGB var if available */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s 0.25s linear;
+}
+.dialog-scrim:not(.dialog--hide) {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s, 0s;
+}
+
+.dialog {
+    background-color: var(--md-sys-color-surface-variant); /* Elevated surface */
+    color: var(--md-sys-color-on-surface-variant);
+    border-radius: var(--md-sys-shape-corner-extra-large); /* Expressive shape */
+    padding: 24px;
+    width: clamp(280px, calc(100vw - 64px), 560px); /* M3 spec */
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0px 8px 12px 6px rgba(var(--md-sys-color-shadow-rgb), 0.15),
+                0px 4px 4px 0px rgba(var(--md-sys-color-shadow-rgb), 0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* Spacing between elements */
+    transform: scale(0.9);
+    opacity: 0;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease-out;
+}
+.dialog-scrim:not(.dialog--hide) .dialog {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.dialog__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+}
+.dialog__icon {
+    font-size: 32px; /* Larger icon */
+    color: var(--md-sys-color-secondary);
+}
+
+.dialog__headline {
+    font-size: var(--md-sys-typescale-headline-medium-font-size);
+    font-weight: var(--md-sys-typescale-headline-medium-font-weight);
+    line-height: var(--md-sys-typescale-headline-medium-line-height);
+    color: var(--md-sys-color-on-surface); /* Higher emphasis */
+}
+
+.dialog__content {
+    font-size: var(--md-sys-typescale-body-large-font-size);
+    line-height: var(--md-sys-typescale-body-large-line-height);
+    /* Input field specific styling would go here */
+}
+.dialog__content p:not(:first-child) {
+    margin-top: 12px;
+}
+.text-field { /* Basic styling for the input, make it more M3-like */
+    width: 100%;
+    padding: 12px 16px;
+    font-size: var(--md-sys-typescale-body-large-font-size);
+    border: 1px solid var(--md-sys-color-outline);
+    border-radius: var(--md-sys-shape-corner-extra-small);
+    background-color: var(--md-sys-color-surface);
+    color: var(--md-sys-color-on-surface);
+    outline-color: var(--md-sys-color-primary);
+}
+.link-style {
+    color: var(--md-sys-color-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+.link-style:hover {
+    text-decoration: underline;
+}
+
+
+.dialog__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding-top: 8px; /* Space from content */
+}
+
+/* 7. Buttons (General Material Styles) */
+.button {
+    padding: 10px 24px;
+    border-radius: var(--md-sys-shape-corner-full); /* Pill shape for all buttons */
+    font-family: var(--md-sys-typescale-font-family);
+    font-size: var(--md-sys-typescale-label-large-font-size);
+    font-weight: var(--md-sys-typescale-label-large-font-weight);
+    line-height: var(--md-sys-typescale-label-large-line-height);
+    border: none;
+    cursor: pointer;
+    text-transform: none; /* M3 doesn't typically uppercase */
+    outline: none;
+    transition: background-color 0.15s ease-out, box-shadow 0.15s ease-out;
+    position: relative;
+    overflow: hidden; /* Ripple effect */
+    min-width: 64px;
+    text-align: center;
+    letter-spacing: 0.1px;
+}
+.button--filled {
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+}
+.button--filled:hover {
+    background-color: color-mix(in srgb, var(--md-sys-color-primary) 92%, black 8%); /* Darken on hover */
+    box-shadow: 0 1px 2px 0 rgba(var(--md-sys-color-shadow-rgb), 0.3),
+                0 1px 3px 1px rgba(var(--md-sys-color-shadow-rgb), 0.15);
+}
+.button--filled:active {
+    background-color: color-mix(in srgb, var(--md-sys-color-primary) 88%, black 12%);
+}
+
+.button--text {
+    background-color: transparent;
+    color: var(--md-sys-color-primary);
+    padding: 10px 12px; /* Less padding for text buttons */
+}
+.button--text:hover {
+    background-color: rgba(var(--md-sys-color-primary-rgb), 0.08);
+}
+.button--text:active {
+    background-color: rgba(var(--md-sys-color-primary-rgb), 0.12);
+}
+
+
+/* 8. Floating Action Button (FAB) */
+.fab-container {
+    position: absolute;
+    bottom: calc(16px + env(safe-area-inset-bottom)); /* Respect safe areas */
+    right: calc(16px + env(safe-area-inset-right));
+    z-index: 500;
+}
+.fab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px; /* Standard FAB size */
+    height: 56px;
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+    border-radius: var(--md-sys-shape-corner-large); /* Slightly less than full for distinct FAB shape */
+    border: none;
+    box-shadow: 0px 4px 8px 3px rgba(var(--md-sys-color-shadow-rgb), 0.15),
+                0px 1px 3px 0px rgba(var(--md-sys-color-shadow-rgb), 0.3);
+    cursor: pointer;
+    outline: none;
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease-out;
+}
+.fab .material-symbols-outlined {
+    font-size: 24px;
+}
+.fab:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 6px 10px 4px rgba(var(--md-sys-color-shadow-rgb), 0.15),
+                0px 2px 3px 0px rgba(var(--md-sys-color-shadow-rgb), 0.3);
+    background-color: color-mix(in srgb, var(--md-sys-color-primary-container) 90%, var(--md-sys-color-on-primary-container) 10%);
+}
+.fab:active {
+    transform: scale(0.95);
+    box-shadow: 0px 2px 4px 1px rgba(var(--md-sys-color-shadow-rgb), 0.15),
+                0px 1px 2px 0px rgba(var(--md-sys-color-shadow-rgb), 0.3);
+}
+
+/* 9. Snackbar */
+.snackbar {
+    position: fixed;
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translateX(-50%) translateY(150%); /* Start off-screen */
+    background-color: var(--md-sys-color-inverse-surface);
+    color: var(--md-sys-color-inverse-on-surface);
+    padding: 14px 16px;
+    border-radius: var(--md-sys-shape-corner-small);
+    box-shadow: 0px 4px 4px 0px rgba(var(--md-sys-color-shadow-rgb), 0.3),
+                0px 8px 12px 6px rgba(var(--md-sys-color-shadow-rgb), 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 288px;
+    max-width: 560px; /* Or calc(100vw - 32px) */
+    z-index: 2000;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none; /* Initially */
+}
+.snackbar:not(.snackbar--hide) {
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+}
+.snackbar__text {
+    font-size: var(--md-sys-typescale-body-medium-font-size); /* Assuming body-medium is defined */
+    line-height: var(--md-sys-typescale-body-medium-line-height);
+    margin-right: 16px;
+}
+.snackbar__action { /* Text button style for snackbar action */
+    color: var(--md-sys-color-inverse-primary);
+    padding: 8px;
+    margin-left: auto; /* Push to the right */
+}
+.snackbar__action:hover {
+    background-color: rgba(var(--md-sys-color-inverse-primary-rgb), 0.08);
+}
+
+
+/* Utility */
+.dialog--hide, .snackbar--hide {
+    /* These are handled by their specific transition rules but can be used as initial state */
+}
+.hide { /* Generic hide, less preferred than component-specific states */
+    display: none !important;
+}
+
+.app__version {
+    font-size: 12px;
+    color: var(--md-sys-color-on-surface-variant);
+    margin-top: 15px;
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+}
