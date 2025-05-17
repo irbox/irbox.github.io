@@ -1,65 +1,55 @@
-/* --- START OF ORIGINAL RESET (Minor changes for font and box-sizing might be done below) --- */
-html,body,p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,iframe,hr,h1,h2,h3,h4,h5,h6{margin:0;padding:0}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}ul{list-style:none}button,input,select,textarea{margin:0}html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}img,embed,object,audio{height:auto;max-width:100%}iframe{border:0}table{border-collapse:collapse;border-spacing:0}td,th{padding:0;text-align:left}
-/* --- END OF ORIGINAL RESET --- */
+/* --- MINECRAFT INSPIRED THEME --- */
 
-/* --- NATIVE IOS INSPIRED STYLES --- */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 :root {
-  --ios-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --mc-font-pixel: 'Press Start 2P', cursive;
 
-  /* Light Theme Palette */
-  --ios-color-system-background: #F9F9F9; /* Off-white, common iOS background */
-  --ios-color-system-grouped-background: #FFFFFF; /* For elements like alerts, cards */
-  --ios-color-label: #000000;
-  --ios-color-secondary-label: rgba(60, 60, 67, 0.6);
-  --ios-color-tertiary-label: rgba(60, 60, 67, 0.3);
-  --ios-color-placeholder-text: rgba(60, 60, 67, 0.3);
+  /* Minecraft UI Palette */
+  --mc-color-bg-main: #3E3E3E; /* Dark Stone / Deepslate variant */
+  --mc-color-surface-elements: #C6C6C6; /* Light Stone (like buttons, dialogs) */
+  --mc-color-surface-darker: #5A5A5A; /* Darker Stone for some containers/borders */
+  --mc-color-border-outer: #282828; /* Very dark border */
+  --mc-color-border-inner-light: #FFFFFF; /* Inner highlight for 3D effect on light surfaces */
+  --mc-color-border-inner-medium: #8B8B8B; /* Inner shadow/medium highlight */
 
-  --ios-color-system-blue: #007AFF;
-  --ios-color-system-red: #FF3B30;
-  --ios-color-system-green: #34C759; /* Scanner line */
-  --ios-color-system-gray-2: #AEAEB2;
-  --ios-color-system-gray-4: #D1D1D6;
-  --ios-color-system-gray-5: #E5E5EA;
-  --ios-color-system-gray-6: #F2F2F7;
+  --mc-color-text-on-dark: #E0E0E0;
+  --mc-color-text-on-light: #3A3A3A;
 
-  --ios-color-separator: rgba(60, 60, 67, 0.29);
-  --ios-color-scrim: rgba(0, 0, 0, 0.35); /* Scrim for behind alerts */
-  --ios-blur-radius: 12px; /* For backdrop-filter */
+  --mc-color-accent-scanner: #55FF55; /* Emerald Green */
+  --mc-color-accent-action: #55CDFC; /* Diamond Blue */
+  --mc-color-accent-secondary: #FFAA00; /* Gold */
 
-  --ios-corner-radius-small: 8px;
-  --ios-corner-radius-medium: 13px; /* Common for alerts/buttons */
-  --ios-corner-radius-large: 20px;
+  --mc-pixel-size: 2px; /* Controls the "pixel" thickness of borders */
 
-  --ios-transition-duration: 0.2s;
-  --ios-transition-timing: ease-out;
+  /* Remove tap highlight globally */
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* Remove default focus outline for mouse/touch, provide alternative for keyboard */
-*:focus {
-  outline: none;
-}
-*:focus-visible {
-  outline: 2px solid var(--ios-color-system-blue);
-  outline-offset: 2px;
-}
-/* More specific for buttons/links if needed, but global *:focus should cover it */
-button:focus-visible, a:focus-visible, input:focus-visible {
-  outline: 2px solid var(--ios-color-system-blue);
-  outline-offset: 1px; /* Closer offset for these elements */
-}
+/* Basic Reset (from original) - Keep this */
+html,body,p,ol,ul,li,dl,dt,dd,blockquote,figure,fieldset,legend,textarea,pre,iframe,hr,h1,h2,h3,h4,h5,h6{margin:0;padding:0}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal}ul{list-style:none}button,input,select,textarea{margin:0}html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}img,embed,object,audio{height:auto;max-width:100%}iframe{border:0}table{border-collapse:collapse;border-spacing:0}td,th{padding:0;text-align:left}
 
-
+/* General Styling */
 body {
-  font-family: var(--ios-font-family);
-  font-size: 17px; /* Default iOS body font size */
-  font-weight: 400;
-  color: var(--ios-color-label);
-  background-color: var(--ios-color-system-background);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: var(--mc-font-pixel);
+  font-size: 10px; /* Pixel fonts work best at small base sizes */
   line-height: 1.4;
+  color: var(--mc-color-text-on-dark);
+  background-color: var(--mc-color-bg-main);
+  image-rendering: pixelated; /* Crucial for sharp pixels */
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: grayscale;
   overflow: hidden;
+}
+
+button, input, textarea, select {
+  font-family: var(--mc-font-pixel);
+  color: inherit;
+  image-rendering: pixelated;
+  -webkit-tap-highlight-color: transparent; /* Ensure on all interactive elements */
+}
+*:focus {
+  outline: none; /* Remove default browser outline, we'll add custom */
 }
 
 .app__layout {
@@ -69,401 +59,338 @@ body {
   overflow: hidden;
 }
 
-/* --- Header / Navigation Bar --- */
+/* --- Common Button Style (Minecraft inventory slot style) --- */
+.mc-button {
+  background-color: var(--mc-color-surface-elements);
+  color: var(--mc-color-text-on-light);
+  border: none;
+  padding: calc(var(--mc-pixel-size) * 4) calc(var(--mc-pixel-size) * 5);
+  text-align: center;
+  text-decoration: none;
+  display: inline-flex; /* For aligning icon and text */
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  cursor: pointer;
+  image-rendering: pixelated;
+  -webkit-tap-highlight-color: transparent;
+  /* Minecraft button border effect */
+  box-shadow:
+    /* Outer dark border */
+    0 0 0 var(--mc-pixel-size) var(--mc-color-border-outer),
+    /* Inner lighter highlight */
+    inset 0 0 0 var(--mc-pixel-size) var(--mc-color-border-inner-light),
+    /* Inner darker shadow for depth */
+    inset calc(var(--mc-pixel-size) * 2) calc(var(--mc-pixel-size) * 2) 0 0 var(--mc-color-border-inner-medium),
+    inset calc(var(--mc-pixel-size) * -2) calc(var(--mc-pixel-size) * -2) 0 0 var(--mc-color-border-inner-medium);
+  transition: transform 0.05s linear, box-shadow 0.05s linear; /* Quick, not smooth */
+}
+.mc-button:active {
+  transform: translate(var(--mc-pixel-size), var(--mc-pixel-size)); /* "Pressed in" effect */
+  box-shadow:
+    0 0 0 var(--mc-pixel-size) var(--mc-color-border-outer),
+    inset 0 0 0 var(--mc-pixel-size) var(--mc-color-border-inner-medium); /* Darken inner highlight */
+}
+.mc-button:focus-visible { /* For keyboard navigation */
+    box-shadow:
+    0 0 0 var(--mc-pixel-size) var(--mc-color-border-outer),
+    0 0 0 calc(var(--mc-pixel-size) * 2) var(--mc-color-accent-action), /* Gold outline */
+    inset 0 0 0 var(--mc-pixel-size) var(--mc-color-border-inner-light),
+    inset calc(var(--mc-pixel-size) * 2) calc(var(--mc-pixel-size) * 2) 0 0 var(--mc-color-border-inner-medium),
+    inset calc(var(--mc-pixel-size) * -2) calc(var(--mc-pixel-size) * -2) 0 0 var(--mc-color-border-inner-medium);
+}
+
+
+/* --- Header --- */
 .app__header {
   width: 100%;
-  height: 50px; /* iOS nav bar height (can vary, ~44-56pt) */
-  color: var(--ios-color-label);
-  /* background-color: var(--ios-color-system-background); Often translucent or blurred */
-  background-color: rgba(249, 249, 249, 0.85); /* Translucent white */
-  backdrop-filter: blur(var(--ios-blur-radius));
-  -webkit-backdrop-filter: blur(var(--ios-blur-radius));
-  border-bottom: 0.5px solid var(--ios-color-separator);
+  height: calc(var(--mc-pixel-size) * 20); /* ~40px */
+  background-color: var(--mc-color-surface-darker);
+  border-bottom: var(--mc-pixel-size) solid var(--mc-color-border-outer);
   display: flex;
   align-items: center;
-  justify-content: flex-end; /* Align items to the right (like the info icon) */
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 0; left: 0; right: 0;
   z-index: 10;
-  padding: 0 16px;
+  padding: 0 calc(var(--mc-pixel-size) * 5);
   box-sizing: border-box;
 }
-
 .app__header-icon { /* "About" icon button */
-  width: auto; /* Fit content */
-  height: 44px; /* iOS touch target height */
-  padding: 0 8px; /* Some padding for the icon */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  position: static; /* No longer absolute positioned */
-  transform: none;
-  border-radius: var(--ios-corner-radius-small);
-  transition: background-color var(--ios-transition-duration) var(--ios-transition-timing);
+  /* Apply common button style */
+  composes: mc-button; /* This is a CSS Modules concept, manually apply styles */
+  background-color: var(--mc-color-surface-elements);
+  color: var(--mc-color-text-on-light);
+  border: none;
+  padding: 0; /* Control size with width/height */
+  width: calc(var(--mc-pixel-size) * 14); /* ~28px */
+  height: calc(var(--mc-pixel-size) * 14);
+  position: absolute;
+  right: calc(var(--mc-pixel-size) * 5);
+  top: 50%;
+  transform: translateY(-50%);
+  /* Minecraft button border effect */
+  box-shadow:
+    0 0 0 var(--mc-pixel-size) var(--mc-color-border-outer),
+    inset 0 0 0 var(--mc-pixel-size) var(--mc-color-border-inner-light),
+    inset calc(var(--mc-pixel-size) * 1.5) calc(var(--mc-pixel-size) * 1.5) 0 0 var(--mc-color-border-inner-medium),
+    inset calc(var(--mc-pixel-size) * -1.5) calc(var(--mc-pixel-size) * -1.5) 0 0 var(--mc-color-border-inner-medium);
+}
+.app__header-icon:active {
+  transform: translateY(-50%) translate(var(--mc-pixel-size), var(--mc-pixel-size));
+  box-shadow:
+    0 0 0 var(--mc-pixel-size) var(--mc-color-border-outer),
+    inset 0 0 0 var(--mc-pixel-size) var(--mc-color-border-inner-medium);
 }
 .app__header-icon svg {
-  fill: var(--ios-color-system-blue); /* iOS tint color for actionable icons */
-  width: 24px; /* Adjust size as needed */
-  height: 24px;
+  fill: var(--mc-color-text-on-light);
+  width: calc(var(--mc-pixel-size) * 8); /* ~16px */
+  height: calc(var(--mc-pixel-size) * 8);
 }
-.app__header-icon:active { /* iOS active state for buttons */
-  background-color: var(--ios-color-system-gray-5);
-  opacity: 1;
-}
-.app__header-title { /* If a title was present, it would typically be centered */
-  /* position: absolute; left: 50%; transform: translateX(-50%); font-weight: 600; */
-  display: none;
-}
+.app__header-title { display: none; }
 
-.app__layout-content {
-  height: 100%;
-  position: relative;
-  padding-top: 50px; /* Account for fixed header */
-  box-sizing: border-box;
-}
+.app__layout-content { height: 100%; position: relative; }
 
-/* --- Button (Select Photos - adapted from FAB) --- */
+/* --- FAB (Select Image Button) --- */
 .app__select-photos {
+  /* Apply common button style */
+  composes: mc-button;
+  background-color: var(--mc-color-surface-elements);
+  color: var(--mc-color-text-on-light);
+  border: none;
+  padding: 0; /* Control size with width/height */
+  width: calc(var(--mc-pixel-size) * 22); /* ~44px */
+  height: calc(var(--mc-pixel-size) * 22);
   position: fixed;
-  right: 20px;
-  bottom: 20px;
-  background-color: var(--ios-color-system-blue);
-  color: #FFFFFF;
-  border-radius: var(--ios-corner-radius-medium); /* iOS style rounding */
-  border: 0;
-  width: 50px; /* iOS-like button size */
-  height: 50px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.08); /* Subtle iOS shadow */
-  z-index: 999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: transform var(--ios-transition-duration) var(--ios-transition-timing),
-              background-color var(--ios-transition-duration) var(--ios-transition-timing);
+  right: calc(var(--mc-pixel-size) * 8);
+  bottom: calc(var(--mc-pixel-size) * 8);
+  z-index: 9999;
+  /* Minecraft button border effect - slightly larger */
+  box-shadow:
+    0 0 0 var(--mc-pixel-size) var(--mc-color-border-outer),
+    inset 0 0 0 var(--mc-pixel-size) var(--mc-color-border-inner-light),
+    inset calc(var(--mc-pixel-size) * 2) calc(var(--mc-pixel-size) * 2) 0 0 var(--mc-color-border-inner-medium),
+    inset calc(var(--mc-pixel-size) * -2) calc(var(--mc-pixel-size) * -2) 0 0 var(--mc-color-border-inner-medium);
+
 }
 .app__select-photos:active {
-  transform: scale(0.95);
-  background-color: color-mix(in srgb, var(--ios-color-system-blue) 85%, black);
-  opacity: 1;
+  transform: translate(var(--mc-pixel-size), var(--mc-pixel-size));
+  box-shadow:
+    0 0 0 var(--mc-pixel-size) var(--mc-color-border-outer),
+    inset 0 0 0 var(--mc-pixel-size) var(--mc-color-border-inner-medium);
 }
 .app__select-photos svg {
-  fill: #FFFFFF;
-  width: 26px;
-  height: 26px;
+  fill: var(--mc-color-text-on-light);
+  width: calc(var(--mc-pixel-size) * 10); /* ~20px */
+  height: calc(var(--mc-pixel-size) * 10);
 }
-.custom-btn { display: none; } /* Hide old FAB */
-
+.custom-btn, .custom-fab-icon { display: none; }
 
 /* --- Video Background --- */
 video {
-  transform: translateX(-50%) translateY(-50%);
-  top: 50%; left: 50%; min-width: 100%; min-height: 100%;
-  width: auto; height: auto; position: absolute; z-index: -1; object-fit: cover;
+  transform: translateX(-50%) translateY(-50%); top: 50%; left: 50%;
+  min-width: 100%; min-height: 100%; width: auto; height: auto;
+  position: absolute; z-index: -1; object-fit: cover;
+  image-rendering: pixelated; /* If video itself should appear pixelated */
 }
 
 .hide { display: none !important; }
 
 /* --- Scanner Viewfinder & Animation --- */
 .app__overlay {
-  position: absolute; /* Relative to layout-content */
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%); /* Centering */
-  width: 250px; /* Typical iOS scanner view is squarish */
-  height: 250px;
-  z-index: 1;
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 220px; height: 220px; /* Pixel-friendly size */
+  z-index: 1; pointer-events: none;
+}
+.app__overlay::before { /* The "cutout" overlay */
+  content: ''; position: absolute; inset: 0;
+  /* Dark, slightly transparent overlay around scanning area */
+  box-shadow: 0 0 0 9999px rgba(20, 20, 20, 0.85);
   pointer-events: none;
 }
-.app__scanner-img { display: none !important; } /* Hide the old SVG frame */
-
-/* iOS-style scanner frame using pseudo-elements for rounded corners */
-.app__overlay::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: var(--ios-corner-radius-large); /* iOS specific rounded corners */
-  /* "Cutout" effect using box-shadow */
-  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.55); /* Darker overlay for better camera contrast */
+.app__overlay::after { /* The frame border */
+  content: ''; position: absolute;
+  inset: calc(var(--mc-pixel-size) * -1); /* Border sits just outside cutout */
+  border: var(--mc-pixel-size) solid var(--mc-color-accent-scanner); /* Emerald border */
+  box-shadow: inset 0 0 0 var(--mc-pixel-size) var(--mc-color-border-outer); /* Inner dark line */
+  pointer-events: none;
 }
-/* Optional: Corner guides (simpler than full SVG) */
-.app__overlay::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    inset: 0;
-    border-radius: var(--ios-corner-radius-large);
-    border: 3px solid rgba(255, 255, 255, 0.7); /* White border for the scan area */
-    box-sizing: border-box;
-}
+.app__scanner-img, .app__overlay-left, .app__overlay-right { display: none !important; }
 
-
-.custom-scanner { /* The animated line */
-  width: calc(100% - 20px); /* Span inside the frame */
-  height: 2.5px;
-  background: var(--ios-color-system-green);
+.custom-scanner { /* Animated line */
+  width: calc(100% - var(--mc-pixel-size) * 6);
+  height: var(--mc-pixel-size); /* Thin pixel line */
+  background-color: var(--mc-color-accent-scanner);
   position: absolute;
-  box-shadow: 0 0 8px var(--ios-color-system-green), 0 0 12px var(--ios-color-system-green);
+  box-shadow: 0 0 calc(var(--mc-pixel-size) * 2) var(--mc-color-accent-scanner);
   display: block !important;
-  left: 50%;
-  transform: translateX(-50%);
-  margin: 0;
-  border-radius: 2px;
-  z-index: 2;
-  animation: scanner 2.5s infinite ease-in-out;
+  left: 50%; transform: translateX(-50%);
+  margin: 0; z-index: 2;
+  animation: scanner 1.8s infinite steps(12, end); /* Stepped animation */
+  image-rendering: pixelated;
 }
-
 @keyframes scanner {
-  0% { top: 15%; opacity: 0.8; }
-  50% { top: 85%; opacity: 1; }
-  100% { top: 15%; opacity: 0.8; }
+  0% { bottom: 90%; } 50% { bottom: 10%; } 100% { bottom: 90%; }
 }
-@-webkit-keyframes scanner { /* For Safari */
-  0% { top: 15%; opacity: 0.8; }
-  50% { top: 85%; opacity: 1; }
-  100% { top: 15%; opacity: 0.8; }
+@-webkit-keyframes scanner { /* Safari */
+  0% { bottom: 90%; } 50% { bottom: 10%; } 100% { bottom: 90%; }
 }
 
-
-/* --- Toast/Temporary Notice (Adapted from Snackbar) --- */
+/* --- Snackbar / Toast --- */
 .app__snackbar {
-  position: fixed;
-  /* iOS notices can appear top or bottom, let's try bottom */
-  bottom: 70px; /* Above where a tab bar might be, or select photos button */
-  left: 50%;
+  position: fixed; bottom: calc(var(--mc-pixel-size) * 6); left: 50%;
   transform: translateX(-50%);
-  width: auto; /* Fit content */
-  max-width: calc(100% - 40px);
-  pointer-events: none;
-  z-index: 10000;
-  display: flex; /* Keep for alignment */
-  justify-content: center;
+  width: auto; max-width: calc(100% - var(--mc-pixel-size) * 10);
+  pointer-events: none; z-index: 10000;
 }
-
 .app__snackbar-msg {
-  width: auto;
-  min-width: 0; /* Allow it to be small for short messages */
-  padding: 10px 18px; /* iOS like padding */
-  background-color: rgba(40, 40, 40, 0.85); /* Dark translucent background */
-  backdrop-filter: blur(var(--ios-blur-radius));
-  -webkit-backdrop-filter: blur(var(--ios-blur-radius));
-  color: #FFFFFF; /* White text */
-  border-radius: var(--ios-corner-radius-large); /* Very rounded, like iOS toasts */
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  font-size: 14px; /* Smaller text for toasts */
-  font-weight: 500;
-  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
-  pointer-events: all;
-  opacity: 0;
-  transform: translateY(15px) scale(0.95);
+  background-color: var(--mc-color-surface-darker);
+  color: var(--mc-color-text-on-dark);
+  border: var(--mc-pixel-size) solid var(--mc-color-border-outer);
+  box-shadow: inset 0 0 0 var(--mc-pixel-size) var(--mc-color-border-inner-medium);
+  padding: calc(var(--mc-pixel-size) * 3) calc(var(--mc-pixel-size) * 5);
+  text-align: center; font-size: 10px;
+  margin-bottom: calc(var(--mc-pixel-size) * 3);
+  pointer-events: all; image-rendering: pixelated;
+  opacity: 0; transform: translateY(calc(var(--mc-pixel-size) * 8));
+  transition: opacity 0.1s linear, transform 0.1s linear;
 }
-/* JS will need to remove .app__snackbar--hide to show it */
 .app__snackbar:not(.app__snackbar--hide) .app__snackbar-msg {
-    opacity: 1;
-    transform: translateY(0px) scale(1);
+  opacity: 1; transform: translateY(0);
 }
 
-
-/* --- Alerts (Dialogs) --- */
+/* --- Dialogs --- */
 .app__dialog-overlay, .app__infodialog-overlay {
-  position: fixed;
-  inset: 0;
-  background: var(--ios-color-scrim);
-  z-index: 1000;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity var(--ios-transition-duration) var(--ios-transition-timing);
-  /* iOS alerts don't always blur the entire background, but a subtle one can be nice */
-  /* backdrop-filter: blur(3px); */
-  /* -webkit-backdrop-filter: blur(3px); */
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.7); /* Simple dark scrim */
+  z-index: 1000; opacity: 0; pointer-events: none;
+  transition: opacity 0.1s linear;
 }
 .app__dialog-overlay:not(.app__dialog--hide),
 .app__infodialog-overlay:not(.app__infodialog--hide) {
-  opacity: 1;
-  pointer-events: auto;
+  opacity: 1; pointer-events: auto;
 }
 
-.app__infodialog, .app__dialog { /* Styled like iOS Alerts */
+.app__infodialog, .app__dialog {
   z-index: 1001;
-  background-color: var(--ios-color-system-grouped-background); /* Opaque white */
-  color: var(--ios-color-label);
-  width: 270px; /* Standard iOS alert width */
-  max-width: calc(100% - 40px);
+  background-color: var(--mc-color-surface-elements);
+  color: var(--mc-color-text-on-light);
+  width: calc(100% - var(--mc-pixel-size) * 12);
+  max-width: 300px; /* Smaller max-width for dialogs */
   height: auto;
-  border-radius: var(--ios-corner-radius-medium);
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Center content */
-  text-align: center;
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%) scale(1.1); /* iOS zoom-in effect */
-  margin: 0;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15), 0 0 0 0.5px rgba(0,0,0,0.1);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s ease-out, transform 0.25s ease-out;
-  overflow: hidden;
+  border: none; /* Custom border with box-shadow */
+  box-shadow: /* Minecraft container/inventory style border */
+    0 0 0 var(--mc-pixel-size) var(--mc-color-border-outer), /* Outer dark */
+    inset 0 0 0 var(--mc-pixel-size) var(--mc-color-border-inner-light), /* Inner light */
+    inset calc(var(--mc-pixel-size) * 2) calc(var(--mc-pixel-size) * 2) 0 0 var(--mc-color-border-inner-medium), /* Inner shadow top-left */
+    inset calc(var(--mc-pixel-size) * -2) calc(var(--mc-pixel-size) * -2) 0 0 var(--mc-color-border-inner-medium); /* Inner shadow bottom-right */
+  display: flex; flex-direction: column;
+  position: fixed; left: 50%; top: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  margin: 0; opacity: 0; pointer-events: none;
+  transition: opacity 0.1s linear, transform 0.1s linear;
+  image-rendering: pixelated;
 }
-
 .app__infodialog:not(.app__infodialog--hide),
 .app__dialog:not(.app__dialog--hide) {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translate(-50%, -50%) scale(1);
+  opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1);
 }
 
 .app__dialog-content, .app__infodialog-content {
   width: 100%;
-  padding: 20px 16px 0 16px; /* iOS alert padding */
-  box-sizing: border-box;
-  flex-grow: 1;
+  padding: calc(var(--mc-pixel-size) * 6);
+  box-sizing: border-box; flex-grow: 1;
 }
-
 .app__infodialog-subcontent {
-  margin-top: 4px; /* Less space in alerts */
-  font-size: 13px; /* Smaller body text in alerts */
-  color: var(--ios-color-label); /* Standard text, not secondary for main message */
-  line-height: 1.3;
-  padding-bottom: 20px; /* Space before buttons if no input */
+  margin-top: calc(var(--mc-pixel-size) * 4); font-size: 10px;
+  color: var(--mc-color-text-on-light); line-height: 1.5;
 }
 .app__infodialog-subcontent a {
-  color: var(--ios-color-system-blue);
-  text-decoration: none;
-  font-weight: normal;
+  color: var(--mc-color-accent-action); text-decoration: none;
 }
-.app__infodialog-subcontent a:active {
-  text-decoration: underline;
-}
-.app__infodialog-subcontent p:not(:first-child) {
-  margin-top: 8px;
+.app__infodialog-subcontent a:hover { color: var(--mc-color-accent-scanner); }
+.app__infodialog-subcontent p:not(:first-child) { margin-top: calc(var(--mc-pixel-size) * 3); }
+
+.app__dialog-content h1, .app__infodialog h1 {
+  margin-top: 0; margin-bottom: calc(var(--mc-pixel-size) * 5);
+  font-size: 12px; line-height: 1.2;
+  color: var(--mc-color-text-on-light); text-align: center;
 }
 
-.app__dialog-content h1, .app__infodialog h1 { /* Alert Title */
-  margin-top: 0;
-  margin-bottom: 4px; /* Less space between title and message */
-  font-weight: 600; /* Bold title */
-  font-size: 17px;
-  line-height: 1.3;
-  color: var(--ios-color-label);
-}
-
-/* Dialog Input Field (not typical in simple alerts, but if used) */
+/* Dialog Input Field */
 .app__dialog input[type="text"] {
-  width: calc(100% - 32px); /* Indent input within the alert */
-  margin: 12px auto 20px auto; /* Spacing for input */
-  height: 36px; /* iOS input height */
-  border: 0.5px solid var(--ios-color-system-gray-4);
-  border-radius: var(--ios-corner-radius-small);
-  outline: 0;
-  font-family: var(--ios-font-family);
-  font-size: 15px;
-  color: var(--ios-color-label);
-  padding: 0 10px;
+  width: 100%;
+  height: calc(var(--mc-pixel-size) * 15);
+  border: var(--mc-pixel-size) solid var(--mc-color-border-outer);
+  outline: 0; font-size: 10px;
+  color: var(--mc-color-text-on-dark); /* Text on dark input background */
+  padding: 0 calc(var(--mc-pixel-size) * 3);
   box-sizing: border-box;
-  background-color: var(--ios-color-system-gray-6);
+  background-color: #303030; /* Dark input field background */
+  box-shadow: inset 0 calc(var(--mc-pixel-size) * 0.5) 0 0 var(--mc-color-border-inner-medium); /* Inner top shadow */
+  image-rendering: pixelated;
+  -webkit-tap-highlight-color: transparent;
 }
-.app__dialog input[type="text"]::placeholder {
-    color: var(--ios-color-placeholder-text);
-}
+.app__dialog input[type="text"]::placeholder { color: #787878; opacity: 1; }
 .app__dialog input[type="text"]:focus {
-  border-color: var(--ios-color-system-blue);
-  background-color: #FFFFFF;
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--ios-color-system-blue) 20%, transparent);
+  border-color: var(--mc-color-accent-action);
+  box-shadow: inset 0 calc(var(--mc-pixel-size) * 0.5) 0 0 var(--mc-color-border-inner-medium),
+              0 0 0 var(--mc-pixel-size) var(--mc-color-accent-action); /* Outer gold glow */
 }
 
 /* Dialog Actions (Buttons) */
 .app__dialog-actions, .app__infodialog-actions {
-  display: flex;
-  width: 100%; /* Full width for buttons */
-  border-top: 0.5px solid var(--ios-color-separator);
-  margin-top: 0; /* No margin, border is separator */
-  padding: 0; /* Reset padding */
+  display: flex; justify-content: center;
+  gap: calc(var(--mc-pixel-size) * 3);
+  padding: 0 calc(var(--mc-pixel-size) * 6) calc(var(--mc-pixel-size) * 6);
+  width: 100%; box-sizing: border-box;
+  margin-top: calc(var(--mc-pixel-size) * 6);
 }
-
 .app__dialog-actions button, .app__infodialog-actions button {
-  flex: 1; /* Buttons share space equally */
-  border: 0;
-  height: 44px; /* Standard iOS button height in alerts */
-  padding: 0 5px;
-  font-family: var(--ios-font-family);
-  font-size: 17px;
-  font-weight: 400; /* Regular weight for alert buttons */
-  background: transparent;
-  color: var(--ios-color-system-blue); /* Default action color */
-  outline: 0;
-  cursor: pointer;
-  border-radius: 0; /* No individual rounding, part of the alert box */
-  text-transform: none;
-  transition: background-color var(--ios-transition-duration) var(--ios-transition-timing);
+  /* Apply common button style */
+  composes: mc-button;
+  flex-grow: 1;
+  height: calc(var(--mc-pixel-size) * 16);
+  padding: 0 calc(var(--mc-pixel-size) * 3);
+  font-size: 10px;
+  text-transform: none; /* Or uppercase if preferred */
 }
-/* Separator between buttons if more than one */
-.app__dialog-actions button:not(:first-child),
-.app__infodialog-actions button:not(:first-child) {
-  border-left: 0.5px solid var(--ios-color-separator);
-}
-/* Active state for alert buttons */
-.app__dialog-actions button:active, .app__infodialog-actions button:active {
-  background-color: var(--ios-color-system-gray-5);
-}
-
-/* Make the primary action button bold if needed */
+/* Specific button styling if Open is different */
 .app__dialog-open {
-  font-weight: 600; /* Bold for default/primary action */
-  /* display: none; Retain if JS depends on it */
+  /* background-color: var(--mc-color-accent-action); */
+  /* color: var(--mc-color-text-on-dark); */
 }
-.app__dialog-close { /* No specific style needed unless destructive */
-  /* If destructive: color: var(--ios-color-system-red); */
-}
-.app__infodialog-close { /* Single button, can be bold or regular */
-   font-weight: 600;
-}
+.app__infodialog-close { max-width: 100%; }
 
 
 /* --- Helper texts and other small UI elements --- */
 .app__help-text {
-  color: var(--ios-color-secondary-label);
+  color: var(--mc-color-text-on-dark);
   position: absolute;
-  bottom: 85px; /* Position above the select photos button */
-  font-size: 13px; /* Smaller caption text */
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-  user-select: none;
-  padding: 6px 12px;
-  /* background-color: rgba(230, 230, 230, 0.8); */
-  /* border-radius: var(--ios-corner-radius-medium); */
-  z-index: 5;
-  display: block;
+  bottom: calc(var(--mc-pixel-size) * 8 + 44px + var(--mc-pixel-size) * 4); /* Above FAB */
+  font-size: 9px; /* Very small for pixel aesthetic */
+  left: 50%; transform: translateX(-50%);
+  text-align: center; user-select: none;
+  padding: calc(var(--mc-pixel-size) * 2) calc(var(--mc-pixel-size) * 4);
+  background-color: var(--mc-color-surface-darker);
+  border: var(--mc-pixel-size) solid var(--mc-color-border-outer);
+  box-shadow: inset 0 0 0 var(--mc-pixel-size) var(--mc-color-border-inner-medium);
+  z-index: 5; display: block;
+  max-width: 90%; line-height: 1.3;
 }
 
 input[type='file'] { display: none; }
 
 .app__version {
-  position: absolute;
-  bottom: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 11px;
-  color: var(--ios-color-tertiary-label);
-  opacity: 0.8;
+  position: absolute; bottom: calc(var(--mc-pixel-size) * 2); left: 50%;
+  transform: translateX(-50%); font-size: 8px;
+  color: #7A7A7A; opacity: 0.8;
 }
 
-/* --- Media Queries (iOS designs are generally adaptive, less dramatic changes) --- */
-@media screen and (max-width: 380px) { /* For very small iPhones */
-  .app__overlay { width: 230px; height: 230px; }
-  .app__infodialog, .app__dialog { width: 260px; } /* Slightly narrower alert */
-  .app__dialog-content h1, .app__infodialog h1 { font-size: 16px; }
-  .app__dialog-content, .app__infodialog-content { padding: 18px 16px 0 16px; }
-  .app__infodialog-subcontent { font-size: 12px; padding-bottom: 18px; }
-  .app__help-text { font-size: 12px; }
+/* --- Media Queries (Optional, pixel UIs often scale well) --- */
+@media screen and (max-width: 360px) { /* For very small screens */
+  .app__overlay { width: 180px; height: 180px; }
+  .app__help-text { font-size: 8px; padding: var(--mc-pixel-size) calc(var(--mc-pixel-size) * 3); }
+  .app__dialog-actions { flex-direction: column; }
+  .app__dialog-actions button { width: 100%; }
 }
