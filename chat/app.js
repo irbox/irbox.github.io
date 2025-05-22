@@ -1,13 +1,10 @@
 // app.js
-import { addEntry, getAllEntries, clearStore } from './db.js';
-import { parseAnkiDeck } from './anki-parser.js';
 
 // --- DOM Elements ---
 const setupStatus = document.getElementById("setup-status");
-const ankiFileInput = document.getElementById("anki-file-input");
-const processAnkiButton = document.getElementById("process-anki-button");
-const clearKbButton = document.getElementById("clear-kb-button");
-const kbStatusMessage = document.getElementById("kb-status-message");
+const apiKeyInput = document.getElementById("api-key-input");
+const modelSelect = document.getElementById("model-select");
+const activateAiButton = document.getElementById("activate-ai-button");
 const chatSection = document.getElementById("chat-section");
 const chatContainer = document.getElementById("chat-container");
 const userInput = document.getElementById("user-input");
@@ -15,295 +12,261 @@ const sendButton = document.getElementById("send-button");
 const modelStatusDisplay = document.getElementById("model-status");
 
 // --- Global Variables ---
-let model; // The Universal Sentence Encoder model
-let knowledgeBase = []; // Stores objects with {question, answer, embedding}
-let isLoading = true; // Flag to indicate if model is loading or processing
-
-// --- Configuration ---
-const SIMILARITY_THRESHOLD = 0.7; // Adjust for stricter/looser matching
-
-// --- Utility Function: Cosine Similarity ---
-function cosineSimilarity(vec1, vec2) {
-    let dotProduct = 0;
-    let magnitude1 = 0;
-    let magnitude2 = 0;
-    for (let i = 0; i < vec1.length; i++) {
-        dotProduct += vec1[i] * vec2[i];
-        magnitude1 += vec1[i] * vec1[i];
-        magnitude2 += vec2[i] * vec2[i];
-    }
-    magnitude1 = Math.sqrt(magnitude1);
-    magnitude2 = Math.sqrt(magnitude2);
-    if (magnitude1 === 0 || magnitude2 === 0) return 0;
-    return dotProduct / (magnitude1 * magnitude2);
-}
+const GEMINI_API_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/";
+let currentApiKey = '';
+let currentModelId = '';
+let chatHistory = []; // Stores conversation for Gemini API
+let isLoading = true; // Flag for API calls
 
 // --- Functions ---
 
 /**
- * Adds a message to the chat container.
- * @param {string} content - The message content (can be HTML).
- * @param {string} sender - 'user' or 'ai' or 'system'.
+ * Updates the main setup status message with new text and styling.
+ * @param {string} text - The message content.
+ * @param {string} type - 'loading', 'success', 'warning', 'error'
+ * @param {boolean} showSpinner - Whether to show the spinner.
  */
-function addMessage(content, sender) {
+function updateSetupStatus(text, type = 'loading', showSpinner = false) {
+    setupStatus.innerHTML = showSpinner ? `<div class="spinner"></div> ${text}` : text;
+    setupStatus.classList.remove('loading', 'success', 'warning', 'error');
+    setupStatus.classList.add(type);
+    setupStatus.style.display = 'block';
+}
+
+/**
+ * Adds a message to the chat container.
+ * @param {string} content - The message content.
+ * @param {string} sender - 'user' or 'ai'.
+ * @param {string} id - Optional ID for the message div (for typing indicator)
+ */
+function addMessage(content, sender, id = null) {
     const messageDiv = document.createElement("div");
     messageDiv.classList.add("message", `${sender}-message`);
-    if (sender === 'ai') { // Allow HTML for AI responses from Anki
-        messageDiv.innerHTML = content;
-    } else {
-        messageDiv.textContent = content;
+    if (id) {
+        messageDiv.id = id;
     }
+    messageDiv.textContent = content;
     chatContainer.appendChild(messageDiv);
     chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
 /**
- * Updates UI based on knowledge base status.
+ * Updates the content of an existing message.
+ * @param {string} id - The ID of the message element.
+ * @param {string} newContent - The new HTML content.
  */
-function updateKbStatusUI() {
-    const kbLoaded = knowledgeBase.length > 0;
-    if (kbLoaded) {
-        kbStatusMessage.textContent = `Knowledge base loaded: ${knowledgeBase.length} Q&A pairs.`;
-        kbStatusMessage.style.backgroundColor = '#d4edda'; // Greenish for success
-        kbStatusMessage.style.color = '#155724';
-        chatSection.style.display = 'flex'; // Show chat section
-        ankiFileInput.disabled = true;
-        processAnkiButton.disabled = true;
-        clearKbButton.disabled = false;
-        userInput.disabled = false;
-        sendButton.disabled = false;
-    } else {
-        kbStatusMessage.textContent = "No knowledge base loaded. Please upload an Anki deck.";
-        kbStatusMessage.style.backgroundColor = '#ffeeba'; // Yellowish for warning
-        kbStatusMessage.style.color = '#856404';
-        chatSection.style.display = 'none'; // Hide chat section
-        ankiFileInput.disabled = false;
-        processAnkiButton.disabled = true; // Still disabled until file selected
-        clearKbButton.disabled = true;
-        userInput.disabled = true;
-        sendButton.disabled = true;
+function updateMessageContent(id, newContent) {
+    const messageDiv = document.getElementById(id);
+    if (messageDiv) {
+        messageDiv.textContent = newContent;
+        chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 }
 
+/**
+ * Adds a typing indicator message.
+ * @returns {string} The ID of the typing indicator message element.
+ */
+function addTypingIndicator() {
+    const id = `ai-typing-${Date.now()}`;
+    const messageDiv = document.createElement("div");
+    messageDiv.classList.add("message", "ai-message", "typing-indicator");
+    messageDiv.id = id;
+    messageDiv.innerHTML = '<span></span><span></span><span></span>';
+    chatContainer.appendChild(messageDiv);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+    return id;
+}
 
 /**
- * Handles the sending of a user message.
+ * Removes the typing indicator message.
+ * @param {string} id - The ID of the typing indicator message element.
+ */
+function removeTypingIndicator(id) {
+    const indicator = document.getElementById(id);
+    if (indicator) {
+        indicator.remove();
+    }
+}
+
+/**
+ * Fetches available Gemini models and populates the dropdown.
+ */
+async function fetchAvailableModels() {
+    modelSelect.innerHTML = '<option value="">Loading models...</option>';
+    modelSelect.disabled = true;
+    activateAiButton.disabled = true;
+    modelStatusDisplay.textContent = 'Fetching models...';
+
+    const apiKey = apiKeyInput.value.trim();
+    if (!apiKey) {
+        updateSetupStatus("Please enter your Gemini API key.", 'warning');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${GEMINI_API_BASE_URL}models?key=${apiKey}`);
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`API Error: ${errorData.error.message || response.statusText}`);
+        }
+        const data = await response.json();
+
+        // Filter for chat-compatible models and exclude vision models
+        const models = data.models.filter(m =>
+            m.supportedGenerationMethods.includes('generateContent') &&
+            !m.name.includes('vision') &&
+            !m.name.includes('embedding') // Exclude embedding models
+        );
+
+        if (models.length === 0) {
+            modelSelect.innerHTML = '<option value="">No chat models found.</option>';
+            updateSetupStatus("No suitable chat models found with this API key.", 'warning');
+            modelStatusDisplay.textContent = 'No models';
+            return;
+        }
+
+        modelSelect.innerHTML = ''; // Clear existing options
+        models.forEach(model => {
+            const option = document.createElement('option');
+            option.value = model.name;
+            option.textContent = model.displayName || model.name;
+            modelSelect.appendChild(option);
+        });
+
+        modelSelect.disabled = false;
+        activateAiButton.disabled = false; // Enable activation button if models are loaded
+        updateSetupStatus("Models loaded. Enter API Key and activate AI.", 'success');
+        modelStatusDisplay.textContent = 'Models ready';
+
+    } catch (error) {
+        console.error("Error fetching models:", error);
+        modelSelect.innerHTML = '<option value="">Failed to load models.</option>';
+        updateSetupStatus(`Error fetching models: ${error.message}. Check API key.`, 'error');
+        modelStatusDisplay.textContent = 'Error';
+    } finally {
+        isLoading = false;
+    }
+}
+
+/**
+ * Activates the AI chat with the selected model.
+ */
+function activateAI() {
+    currentApiKey = apiKeyInput.value.trim();
+    currentModelId = modelSelect.value;
+
+    if (!currentApiKey) {
+        updateSetupStatus("Please enter your Gemini API key.", 'error');
+        return;
+    }
+    if (!currentModelId) {
+        updateSetupStatus("Please select an AI model.", 'error');
+        return;
+    }
+
+    // Hide setup, show chat
+    setupStatus.style.display = 'none'; // Hide the setup status message
+    document.getElementById('setup-section').style.display = 'none';
+    chatSection.style.display = 'flex';
+    modelStatusDisplay.textContent = `Active: ${modelSelect.options[modelSelect.selectedIndex].text}`;
+
+    // Reset chat history when activating AI to start fresh
+    chatHistory = [];
+    chatContainer.innerHTML = '';
+    addMessage("Hello! I'm ready to chat. How can I help you?", "ai");
+
+    userInput.focus();
+    isLoading = false; // AI is now active and ready for input
+}
+
+/**
+ * Handles sending a user message to Gemini API.
  */
 async function sendMessage() {
     const prompt = userInput.value.trim();
-    if (!prompt || isLoading || knowledgeBase.length === 0) {
+    if (!prompt || isLoading || !currentApiKey || !currentModelId) {
         return;
     }
 
     isLoading = true;
     userInput.disabled = true;
     sendButton.disabled = true;
-    setupStatus.textContent = "AI is processing...";
-    setupStatus.style.display = 'block';
+    modelStatusDisplay.textContent = 'AI is thinking...';
 
     addMessage(prompt, "user");
     userInput.value = ""; // Clear input
 
+    const typingIndicatorId = addTypingIndicator(); // Show typing indicator
+
+    // Add user message to chat history
+    chatHistory.push({ role: 'user', parts: [{ text: prompt }] });
+
     try {
-        // Embed the user's query
-        const userEmbeddingTensor = await model.embed([prompt]);
-        const userEmbedding = userEmbeddingTensor.arraySync()[0];
-        userEmbeddingTensor.dispose(); // Clean up tensor memory
+        const streamResponse = await fetch(
+            `${GEMINI_API_BASE_URL}models/${currentModelId}:streamGenerateContent?key=${currentApiKey}`,
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contents: chatHistory }),
+            }
+        );
 
-        let bestMatch = null;
-        let highestSimilarity = -1;
+        if (!streamResponse.ok) {
+            const errorData = await streamResponse.json();
+            throw new Error(`API Error: ${errorData.error.message || streamResponse.statusText}`);
+        }
 
-        // Find the most similar question in the knowledge base
-        for (const item of knowledgeBase) {
-            const similarity = cosineSimilarity(userEmbedding, item.embedding);
-            if (similarity > highestSimilarity) {
-                highestSimilarity = similarity;
-                bestMatch = item;
+        const reader = streamResponse.body.getReader();
+        const decoder = new TextDecoder();
+        let aiResponse = '';
+        let firstChunk = true;
+
+        while (true) {
+            const { value, done } = await reader.read();
+            if (done) break;
+
+            const chunk = decoder.decode(value, { stream: true });
+            const data = JSON.parse(chunk.split('\n')[0].replace(/^data: /, '')); // Handle potential 'data: ' prefix
+
+            if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts) {
+                const newText = data.candidates[0].content.parts[0].text || '';
+                aiResponse += newText;
+
+                if (firstChunk) {
+                    removeTypingIndicator(typingIndicatorId); // Remove indicator on first token
+                    addMessage(aiResponse, "ai", `ai-message-${Date.now()}`); // Add initial AI message
+                    firstChunk = false;
+                } else {
+                    updateMessageContent(chatContainer.lastChild.id, aiResponse); // Update the last AI message
+                }
             }
         }
-
-        let aiResponse;
-        if (bestMatch && highestSimilarity >= SIMILARITY_THRESHOLD) {
-            aiResponse = bestMatch.answer;
-        } else {
-            aiResponse = "I'm sorry, I don't understand that question from my knowledge base. Please try rephrasing.";
-        }
-
-        addMessage(aiResponse, "ai");
-        setupStatus.style.display = 'none';
+        // Add full AI response to chat history
+        chatHistory.push({ role: 'model', parts: [{ text: aiResponse }] });
+        modelStatusDisplay.textContent = `Active: ${modelSelect.options[modelSelect.selectedIndex].text}`;
 
     } catch (error) {
-        console.error("Error processing message:", error);
-        addMessage("Error: Something went wrong while processing your request.", "ai");
-        setupStatus.textContent = `Error: ${error.message}`;
-        setupStatus.style.display = 'block';
-        setupStatus.style.color = 'red';
+        console.error("Error generating content:", error);
+        removeTypingIndicator(typingIndicatorId);
+        addMessage(`Error: Could not get response. ${error.message}`, "ai");
+        modelStatusDisplay.textContent = `Error: ${error.message.substring(0, 50)}...`; // Truncate error
     } finally {
         isLoading = false;
         userInput.disabled = false;
         sendButton.disabled = false;
-        userInput.focus();
-        setupStatus.style.color = '#333'; // Reset color
-    }
-}
-
-/**
- * Processes the uploaded Anki deck.
- */
-async function processAnkiDeckFile() {
-    const file = ankiFileInput.files[0];
-    if (!file) {
-        setupStatus.textContent = "Please select an Anki deck file.";
-        setupStatus.style.color = 'orange';
-        setupStatus.style.display = 'block';
-        return;
-    }
-
-    isLoading = true;
-    ankiFileInput.disabled = true;
-    processAnkiButton.disabled = true;
-    clearKbButton.disabled = true;
-    userInput.disabled = true;
-    sendButton.disabled = true;
-    setupStatus.textContent = `Processing "${file.name}"... This may take a while for large decks.`;
-    setupStatus.style.color = '#333';
-    setupStatus.style.display = 'block';
-
-    try {
-        const arrayBuffer = await file.arrayBuffer();
-        const qaPairs = await parseAnkiDeck(arrayBuffer);
-
-        if (qaPairs.length === 0) {
-            throw new Error('No Q&A pairs could be extracted from the Anki deck. Ensure it has notes with at least two text fields.');
-        }
-
-        // Clear existing KB in IndexedDB
-        await clearStore();
-        knowledgeBase = []; // Reset in memory
-
-        // Embed and store
-        const questionsToEmbed = qaPairs.map(item => item.question);
-        setupStatus.textContent = `Embedding ${questionsToEmbed.length} questions...`;
-        const embeddingsTensor = await model.embed(questionsToEmbed);
-        const embeddings = embeddingsTensor.arraySync();
-        embeddingsTensor.dispose(); // Clean up tensor memory
-
-        for (let i = 0; i < qaPairs.length; i++) {
-            const entry = {
-                question: qaPairs[i].question,
-                answer: qaPairs[i].answer, // Store original Anki HTML
-                embedding: embeddings[i]
-            };
-            await addEntry(entry);
-            knowledgeBase.push(entry);
-        }
-
-        setupStatus.textContent = `Successfully loaded ${knowledgeBase.length} Q&A pairs from Anki deck.`;
-        setupStatus.style.backgroundColor = '#d4edda';
-        setupStatus.style.color = '#155724';
-
-    } catch (error) {
-        console.error("Error processing Anki deck:", error);
-        setupStatus.textContent = `Error: ${error.message}. Please try another file.`;
-        setupStatus.style.backgroundColor = '#f8d7da';
-        setupStatus.style.color = '#721c24';
-    } finally {
-        isLoading = false;
-        ankiFileInput.value = ''; // Clear file input for next upload
-        ankiFileInput.disabled = false;
-        updateKbStatusUI(); // Enable buttons based on KB status
-        userInput.focus();
-    }
-}
-
-/**
- * Clears the knowledge base.
- */
-async function clearKnowledgeBase() {
-    if (!confirm("Are you sure you want to clear the entire knowledge base? This action cannot be undone.")) {
-        return;
-    }
-
-    isLoading = true;
-    ankiFileInput.disabled = true;
-    processAnkiButton.disabled = true;
-    clearKbButton.disabled = true;
-    userInput.disabled = true;
-    sendButton.disabled = true;
-    setupStatus.textContent = "Clearing knowledge base...";
-    setupStatus.style.color = '#333';
-    setupStatus.style.display = 'block';
-
-    try {
-        await clearStore();
-        knowledgeBase = [];
-        setupStatus.textContent = "Knowledge base cleared successfully.";
-        setupStatus.style.backgroundColor = '#ffeeba';
-        setupStatus.style.color = '#856404';
-    } catch (error) {
-        console.error("Error clearing knowledge base:", error);
-        setupStatus.textContent = `Error clearing KB: ${error.message}`;
-        setupStatus.style.backgroundColor = '#f8d7da';
-        setupStatus.style.color = '#721c24';
-    } finally {
-        isLoading = false;
-        updateKbStatusUI();
-    }
-}
-
-
-/**
- * Initializes the Universal Sentence Encoder model and loads existing KB from IndexedDB.
- */
-async function initApp() {
-    isLoading = true;
-    ankiFileInput.disabled = true;
-    processAnkiButton.disabled = true;
-    clearKbButton.disabled = true;
-    userInput.disabled = true;
-    sendButton.disabled = true;
-    setupStatus.style.display = 'block';
-    setupStatus.textContent = "Initializing app...";
-    modelStatusDisplay.textContent = 'Loading model...';
-
-    try {
-        // Load the Universal Sentence Encoder model
-        model = await use.load();
-        modelStatusDisplay.textContent = 'Model loaded!';
-        setupStatus.textContent = "AI model loaded. Checking for existing knowledge base...";
-
-        // Load knowledge base from IndexedDB
-        const storedKb = await getAllEntries();
-        if (storedKb.length > 0) {
-            knowledgeBase = storedKb;
-            setupStatus.textContent = `Loaded ${knowledgeBase.length} Q&A pairs from local storage.`;
-            setupStatus.style.backgroundColor = '#d4edda';
-            setupStatus.style.color = '#155724';
-        } else {
-            setupStatus.textContent = "No knowledge base found. Please upload an Anki deck to start.";
-            setupStatus.style.backgroundColor = '#ffeeba';
-            setupStatus.style.color = '#856404';
-        }
-
-    } catch (error) {
-        console.error("Failed to load AI model or knowledge base:", error);
-        modelStatusDisplay.textContent = 'Error loading model!';
-        setupStatus.textContent = `Fatal Error: ${error.message}. Please ensure all files are served correctly and your browser is compatible.`;
-        setupStatus.style.backgroundColor = '#f8d7da';
-        setupStatus.style.color = '#721c24';
-    } finally {
-        isLoading = false;
-        updateKbStatusUI(); // Enable buttons based on KB status
         userInput.focus();
     }
 }
 
 // --- Event Listeners ---
-ankiFileInput.addEventListener("change", () => {
-    processAnkiButton.disabled = ankiFileInput.files.length === 0;
+apiKeyInput.addEventListener("input", () => {
+    // Re-fetch models if API key changes
+    fetchAvailableModels();
 });
-processAnkiButton.addEventListener("click", processAnkiDeckFile);
-clearKbButton.addEventListener("click", clearKnowledgeBase);
+
+activateAiButton.addEventListener("click", activateAI);
+
 sendButton.addEventListener("click", sendMessage);
 userInput.addEventListener("keypress", (event) => {
     if (event.key === "Enter" && !sendButton.disabled) {
@@ -312,4 +275,16 @@ userInput.addEventListener("keypress", (event) => {
 });
 
 // --- Initialize the app when the page loads ---
-document.addEventListener("DOMContentLoaded", initApp);
+document.addEventListener("DOMContentLoaded", () => {
+    // Try to load API key from localStorage if it exists (for convenience during dev)
+    const storedApiKey = localStorage.getItem('geminiApiKey');
+    if (storedApiKey) {
+        apiKeyInput.value = storedApiKey;
+    }
+    fetchAvailableModels();
+});
+
+// Store API key in localStorage on input change for convenience
+apiKeyInput.addEventListener('change', () => {
+    localStorage.setItem('geminiApiKey', apiKeyInput.value.trim());
+});
