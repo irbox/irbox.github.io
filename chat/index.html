@@ -3,71 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Offline Semantic Q&A Bot with Anki KB</title>
+    <title>Premium Online Gemini Chat App</title>
+    <!-- Google Fonts for a modern look -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Roboto+Mono:wght@400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="app">
-        <h1>Offline Anki Chatbot</h1>
+        <header>
+            <h1><span class="icon">✨</span> Gemini AI Chatbot</h1>
+        </header>
 
-        <div id="setup-section">
-            <div id="setup-status" class="message system-message">
-                Initializing...
+        <section id="setup-section" class="card">
+            <div id="setup-status" class="status-box loading">
+                <div class="spinner"></div> Initializing app...
             </div>
-            <div id="knowledge-base-upload" class="upload-section">
-                <h2>1. Upload Anki Deck (.apkg)</h2>
-                <p>Provide your Anki deck to build the knowledge base. The chatbot will use the first field as the question and the second field as the answer.</p>
-                <input type="file" id="anki-file-input" accept=".apkg">
-                <button id="process-anki-button" disabled>Process Anki Deck</button>
-                <button id="clear-kb-button" class="danger" disabled>Clear Knowledge Base</button>
+            
+            <div class="api-setup-section">
+                <h2>1. Configure Gemini API</h2>
+                <p class="description warning-text">
+                    <span class="warning-icon">⚠️</span> For demo purposes, API key is in frontend. For production, use a secure backend proxy.
+                </p>
+                <div class="input-group">
+                    <label for="api-key-input">Gemini API Key:</label>
+                    <input type="password" id="api-key-input" placeholder="Enter your Gemini API key" autocomplete="off">
+                </div>
+                <div class="input-group">
+                    <label for="model-select">Select AI Model:</label>
+                    <select id="model-select" disabled>
+                        <option value="">Loading models...</option>
+                    </select>
+                </div>
+                <div class="button-group">
+                    <button id="activate-ai-button" class="btn primary" disabled>Activate AI</button>
+                </div>
             </div>
-            <p id="kb-status-message" class="system-message">No knowledge base loaded.</p>
-        </div>
+        </section>
 
-        <div id="chat-section" style="display: none;">
-            <h2>2. Chat</h2>
+        <section id="chat-section" class="card" style="display: none;">
+            <h2>2. Start Chatting!</h2>
             <div id="chat-container">
                 <!-- Chat messages will be appended here -->
             </div>
             <div id="message-input-container">
-                <input type="text" id="user-input" placeholder="Ask a question from your Anki deck...">
-                <button id="send-button">Send</button>
+                <input type="text" id="user-input" placeholder="Type your message..." autocomplete="off">
+                <button id="send-button" class="btn send-btn">Send</button>
             </div>
-        </div>
+        </section>
 
-        <div id="model-info">
-             <small>AI Model: Universal Sentence Encoder Lite | Status: <span id="model-status">Loading...</span></small>
-        </div>
+        <footer>
+            <small>Powered by Google Gemini API | Status: <span id="model-status">Inactive</span></small>
+            <small class="version-info">Version 1.0 | Online Required</small>
+        </footer>
     </div>
 
-    <!-- Libraries (will be cached by service worker) -->
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.x/dist/tf.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/universal-sentence-encoder@1.x/dist/universal-sentence-encoder.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js"></script>
-
-    <!-- Our scripts -->
-    <script src="db.js"></script>
-    <script src="anki-parser.js"></script>
     <script src="app.js"></script>
-    <script>
-        // Register service worker
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(registration => {
-                        console.log('Service Worker registered with scope:', registration.scope);
-                    })
-                    .catch(error => {
-                        console.error('Service Worker registration failed:', error);
-                        document.getElementById('setup-status').textContent = 'Error: Service Worker registration failed. Offline features might be limited.';
-                        document.getElementById('setup-status').style.color = 'red';
-                    });
-            });
-        } else {
-             document.getElementById('setup-status').textContent = 'Warning: Service Workers not supported by your browser. App will not be fully offline.';
-             document.getElementById('setup-status').style.color = 'orange';
-        }
-    </script>
 </body>
 </html>
