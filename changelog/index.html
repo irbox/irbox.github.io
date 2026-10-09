@@ -1,0 +1,34 @@
+---
+layout: default
+title: Changelog
+description: What changed on this site and when.
+permalink: /changelog/
+body_class: has-sidebar
+---
+<div class="shell">
+  {% include sidebar.html mode="docs" %}
+  <div class="shell__main">
+    <button class="btn btn--secondary btn--sm sidebar-toggle" type="button" data-sidebar-toggle aria-controls="sidebar" aria-expanded="false">☰ Menu</button>
+    <div class="doc">
+      <article class="doc__article">
+        <header class="doc__header">
+          <h1 class="display-1">{{ page.title }}</h1>
+          <p class="lead">{{ page.description }}</p>
+          <hr class="divider">
+        </header>
+        <div class="prose" data-prose>
+          {%- for r in site.data.changelog %}
+          <section class="release">
+            <h2 id="v{{ r.version | replace: '.', '-' }}">{{ r.title }} <span class="badge">v{{ r.version }}</span></h2>
+            <p class="muted"><time datetime="{{ r.date | date_to_xmlschema }}">{{ r.date | date: "%B %-d, %Y" }}</time></p>
+            <ul>
+              {%- for c in r.changes %}<li><span class="badge badge--{{ c.type }}">{{ c.type }}</span> {{ c.text }}</li>{% endfor %}
+            </ul>
+          </section>
+          {%- endfor %}
+        </div>
+      </article>
+      <aside class="outline" aria-label="On this page" data-outline hidden><p class="outline__title">On this page</p><ul></ul></aside>
+    </div>
+  </div>
+</div>
