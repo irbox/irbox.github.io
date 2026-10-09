@@ -1,0 +1,17 @@
+<footer class="footer">
+  <div class="container">
+    <hr class="divider">
+    <div class="footer__row">
+      <a class="brand" href="{{ '/' | relative_url }}">
+        <img src="{{ '/assets/images/brand-icon.svg' | relative_url }}" alt="" width="20" height="20"><span>{{ site.title }}</span>
+      </a>
+      <nav class="footer__links" aria-label="Footer">
+        {%- for item in site.data.navigation.footer %}<a href="{{ item.url | relative_url }}">{{ item.label }}</a>{% endfor %}
+      </nav>
+      <div class="footer__social">
+        {%- for s in site.data.social %}<a class="icon-btn" href="{{ s.url }}" aria-label="{{ s.label }}" rel="me noopener">{% include icon.html name=s.icon size=18 %}</a>{% endfor %}
+      </div>
+    </div>
+    <p class="footer__legal">© {{ 'now' | date: '%Y' }} {{ site.author.name }}. Built with <a href="https://jekyllrb.com">Jekyll</a>.</p>
+  </div>
+</footer>

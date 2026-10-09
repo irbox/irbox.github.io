@@ -1,0 +1,14 @@
+{%- assign slugs = "" | split: "" -%}
+{%- for s in site.data.docs_nav %}{% for i in s.items %}{% assign slugs = slugs | push: i %}{% endfor %}{% endfor -%}
+{%- assign idx = -1 -%}
+{%- for s in slugs %}{% if s == page.slug %}{% assign idx = forloop.index0 %}{% endif %}{% endfor -%}
+{%- if idx >= 0 -%}
+  {%- assign prev_i = idx | minus: 1 -%}
+  {%- assign next_i = idx | plus: 1 -%}
+  {%- if idx > 0 %}{% assign prev_doc = site.docs | where: "slug", slugs[prev_i] | first %}{% endif -%}
+  {%- if next_i < slugs.size %}{% assign next_doc = site.docs | where: "slug", slugs[next_i] | first %}{% endif -%}
+  <nav class="pager" aria-label="Pagination">
+    {%- if prev_doc %}<a class="pager__item" href="{{ prev_doc.url | relative_url }}"><span class="pager__label">Previous</span><span class="pager__title">← {{ prev_doc.title }}</span></a>{% else %}<span></span>{% endif %}
+    {%- if next_doc %}<a class="pager__item pager__item--next" href="{{ next_doc.url | relative_url }}"><span class="pager__label">Next</span><span class="pager__title">{{ next_doc.title }} →</span></a>{% endif %}
+  </nav>
+{%- endif -%}

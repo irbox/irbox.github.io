@@ -1,0 +1,11 @@
+{%- comment -%} Usage: {% include project-card.html project=p n=forloop.index %} {%- endcomment -%}
+{%- assign p = include.project -%}
+<article class="project-card" data-category="{{ p.category }}">
+  <a class="card card--clickable" href="{{ p.url | relative_url }}" aria-label="{{ p.title }}">
+    {% include thumb.html src=p.thumbnail alt="" n=include.n %}
+  </a>
+  <div class="project-card__meta">
+    <a class="project-card__title" href="{{ p.url | relative_url }}">{{ p.title }}</a>
+    <span class="project-card__desc">{{ p.description | truncate: 80 }}</span>
+  </div>
+</article>

@@ -1,0 +1,24 @@
+{%- comment -%}
+  Announcement banner. Controlled from _config.yml → announcement.
+  Turn off globally: announcement.enabled: false
+  Turn off for one page: `announcement: false` in its front matter.
+{%- endcomment -%}
+{%- assign a = site.announcement -%}
+{%- if a.enabled and page.announcement != false -%}
+{%- assign status = a.status | default: 'info' -%}
+<section class="banner banner--{{ status }}" role="region" aria-label="Announcement" data-announcement="{{ a.id | default: 'default' }}">
+  <div class="banner__icon">
+    {%- if status == 'warning' or status == 'danger' -%}{% include icon.html name="alert" size=20 %}{%- else -%}{% include icon.html name="info" size=20 %}{%- endif -%}
+  </div>
+  <div class="banner__body">
+    {%- if a.title %}<strong class="banner__title">{{ a.title }}</strong>{% endif %}
+    {%- if a.message %}<span class="banner__text">{{ a.message | strip }}</span>{% endif %}
+  </div>
+  {%- if a.link.url %}
+  <a class="btn btn--secondary btn--sm" href="{{ a.link.url | relative_url }}">{{ a.link.label | default: 'Learn more' }}</a>
+  {%- endif %}
+  {%- if a.dismissible %}
+  <button class="icon-btn" type="button" data-announcement-dismiss aria-label="Dismiss announcement">{% include icon.html name="close" size=18 %}</button>
+  {%- endif %}
+</section>
+{%- endif -%}

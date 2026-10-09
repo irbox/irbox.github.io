@@ -1,0 +1,36 @@
+<header class="topnav" id="topnav">
+  <div class="topnav__inner">
+    <a class="brand" href="{{ '/' | relative_url }}" aria-label="{{ site.title }} home">
+      <img src="{{ '/assets/images/brand-icon.svg' | relative_url }}" alt="" width="24" height="24">
+      <span>{{ site.title }}</span>
+    </a>
+
+    <nav class="topnav__links" aria-label="Primary">
+      {%- for item in site.data.navigation.main %}
+      <a href="{{ item.url | relative_url }}" class="topnav__link{% if page.url contains item.match %} is-active{% endif %}"{% if page.url contains item.match %} aria-current="page"{% endif %}>{{ item.label }}</a>
+      {%- endfor %}
+    </nav>
+
+    <div class="topnav__actions">
+      <button class="btn btn--ghost btn--sm search-trigger" type="button" data-search-open aria-label="Search">
+        {% include icon.html name="search" size=16 %}<span class="search-trigger__label">Search</span><kbd>Ctrl K</kbd>
+      </button>
+      <a class="icon-btn desktop-only" href="{{ site.repo }}" aria-label="GitHub repository">{% include icon.html name="github" size=20 %}</a>
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Toggle color theme">
+        <span class="theme-icon theme-icon--moon">{% include icon.html name="moon" size=20 %}</span>
+        <span class="theme-icon theme-icon--sun">{% include icon.html name="sun" size=20 %}</span>
+      </button>
+      <button class="icon-btn mobile-only" type="button" data-drawer-toggle aria-expanded="false" aria-controls="drawer" aria-label="Open menu">{% include icon.html name="menu" size=22 %}</button>
+    </div>
+  </div>
+
+  <div class="drawer" id="drawer" hidden>
+    <nav aria-label="Mobile">
+      {%- for item in site.data.navigation.main %}
+      <a href="{{ item.url | relative_url }}" class="drawer__link{% if page.url contains item.match %} is-active{% endif %}">{{ item.label }}</a>
+      {%- endfor %}
+      <a href="{{ '/changelog/' | relative_url }}" class="drawer__link">Changelog</a>
+      <a href="{{ site.repo }}" class="drawer__link">GitHub {% include icon.html name="external" size=14 %}</a>
+    </nav>
+  </div>
+</header>
