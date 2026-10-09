@@ -1,0 +1,6 @@
+# Used in the footer. Remove any you don't need. `icon` must match a key in
+# _includes/icon.html (github, x, linkedin, mail, rss).
+- { label: GitHub,   icon: github,   url: "https://github.com/your-username" }
+- { label: X,        icon: x,        url: "https://x.com/your-handle" }
+- { label: LinkedIn, icon: linkedin, url: "https://www.linkedin.com/in/your-handle" }
+- { label: Email,    icon: mail,     url: "mailto:hello@example.com" }
