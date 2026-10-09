@@ -1,0 +1,16 @@
+---
+layout: null
+sitemap: false
+---
+[
+  {%- assign first = true -%}
+  {%- for d in site.docs %}{% unless first %},{% endunless %}{% assign first = false %}
+  {"title": {{ d.title | jsonify }}, "url": {{ d.url | relative_url | jsonify }}, "type": "Docs", "description": {{ d.description | default: '' | jsonify }}}
+  {%- endfor %}
+  {%- for p in site.projects %}{% unless first %},{% endunless %}{% assign first = false %}
+  {"title": {{ p.title | jsonify }}, "url": {{ p.url | relative_url | jsonify }}, "type": "Project", "description": {{ p.description | default: '' | jsonify }}}
+  {%- endfor %}
+  {%- for p in site.posts %}{% unless first %},{% endunless %}{% assign first = false %}
+  {"title": {{ p.title | jsonify }}, "url": {{ p.url | relative_url | jsonify }}, "type": "Blog", "description": {{ p.description | default: '' | jsonify }}}
+  {%- endfor %}
+]

@@ -1,0 +1,104 @@
+# ─────────────────────────────────────────────────────────────
+#  Site identity
+# ─────────────────────────────────────────────────────────────
+title: Folio
+tagline: Portfolio, docs, projects and writing in one place.
+description: >-
+  A personal showcase site: selected projects, documentation for the things
+  I build, and a blog about how I build them.
+url: "https://example.github.io"   # no trailing slash
+baseurl: ""                        # e.g. "/my-repo" for GitHub project pages
+lang: en
+image: /assets/images/og-image.svg   # swap for a 1200x630 PNG/JPG; most social scrapers ignore SVG
+timezone: UTC
+
+author:
+  name: Your Name
+  role: Software Engineer
+  email: hello@example.com
+  avatar: /assets/images/placeholders/avatar.svg
+  bio: >-
+    I design and build software, and I write about it here. Replace this
+    paragraph with a short bio.
+
+# "Edit this page" links and the footer GitHub button.
+repo: https://github.com/your-username/your-repo
+repo_branch: main
+
+# ─────────────────────────────────────────────────────────────
+#  Announcement banner  (replaces the old "Canary docs" warning)
+#  Flip `enabled` to true/false and rebuild. Change `id` to show the
+#  banner again to visitors who dismissed an earlier one.
+#  Hide it on a single page with `announcement: false` in front matter.
+# ─────────────────────────────────────────────────────────────
+announcement:
+  enabled: false
+  id: "2026-10-welcome"
+  status: warning          # info | warning | success | danger
+  title: "You're viewing a work-in-progress site"
+  message: >-
+    Some pages are still being written and may change. Thanks for your
+    patience while things take shape.
+  dismissible: true
+  link:
+    label: "Read the changelog"
+    url: /changelog/
+
+# ─────────────────────────────────────────────────────────────
+#  Projects
+#  Display order of category sections on /projects/ and in the sidebar.
+# ─────────────────────────────────────────────────────────────
+project_categories:
+  - Web Apps
+  - Libraries
+  - Tools & CLI
+  - Experiments
+
+# ─────────────────────────────────────────────────────────────
+#  Build
+# ─────────────────────────────────────────────────────────────
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  auto_ids: true
+  syntax_highlighter: rouge
+  hard_wrap: false
+
+permalink: /blog/:title/
+paginate: 9
+paginate_path: "/blog/page:num/"
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - jekyll-paginate
+
+collections:
+  docs:
+    output: true
+    permalink: /docs/:path/
+  projects:
+    output: true
+    permalink: /projects/:path/
+
+# Order matters: later entries override earlier ones, so the catch-all
+# `page` layout comes first and the typed collections override it.
+defaults:
+  - scope: { path: "" }
+    values: { layout: page }
+  - scope: { path: "", type: docs }
+    values: { layout: docs }
+  - scope: { path: "", type: projects }
+    values: { layout: project }
+  - scope: { path: "", type: posts }
+    values: { layout: post, author: me }
+
+exclude:
+  - README.md
+  - LICENSE
+  - Gemfile
+  - Gemfile.lock
+  - vendor
+  - node_modules

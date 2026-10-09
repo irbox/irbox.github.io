@@ -1,0 +1,64 @@
+---
+layout: default
+body_class: home
+---
+{%- assign featured = site.projects | where: "featured", true | sort: "order" -%}
+<section class="hero">
+  <div class="container hero__inner">
+    <p class="eyebrow">{{ site.author.role }}</p>
+    <h1 class="hero__title">{{ site.title }}</h1>
+    <p class="hero__tagline">{{ site.tagline }}</p>
+    <div class="hero__cta">
+      <a class="btn btn--primary btn--lg" href="{{ '/docs/getting-started/' | relative_url }}">Read the docs</a>
+      <a class="btn btn--secondary btn--lg" href="{{ '/projects/' | relative_url }}">Browse projects</a>
+    </div>
+    <p class="hero__note">Hi, I'm {{ site.author.name }}. {{ site.description }}</p>
+  </div>
+</section>
+
+<section class="section container">
+  <div class="section__head">
+    <h2 class="display-2">Selected projects</h2>
+    <a class="link-arrow" href="{{ '/projects/' | relative_url }}">All projects {% include icon.html name="arrow" size=16 %}</a>
+  </div>
+  <div class="grid grid--cards">
+    {%- for p in featured limit: 6 %}{% include project-card.html project=p n=forloop.index %}{% endfor %}
+  </div>
+</section>
+
+<section class="section container">
+  <h2 class="display-2 center">What you'll find here</h2>
+  <div class="bento">
+    <a class="bento__card" href="{{ '/docs/getting-started/' | relative_url }}">
+      <h3>Documentation</h3><p>Guides and references for the projects I maintain, kept next to the code they describe.</p>
+    </a>
+    <a class="bento__card" href="{{ '/projects/' | relative_url }}">
+      <h3>Projects</h3><p>Apps, libraries and tools, each with a write-up, tech stack and links.</p>
+    </a>
+    <a class="bento__card" href="{{ '/blog/' | relative_url }}">
+      <h3>Blog</h3><p>Notes on design, engineering and shipping, from short posts to deep dives.</p>
+    </a>
+    <a class="bento__card" href="{{ '/about/' | relative_url }}">
+      <h3>About</h3><p>Who I am, what I'm working on, and how to get in touch.</p>
+    </a>
+  </div>
+</section>
+
+<section class="section container">
+  <div class="section__head">
+    <h2 class="display-2">From the blog</h2>
+    <a class="link-arrow" href="{{ '/blog/' | relative_url }}">All posts {% include icon.html name="arrow" size=16 %}</a>
+  </div>
+  <div class="grid grid--posts">
+    {%- for post in site.posts limit: 3 %}{% include post-card.html post=post n=forloop.index %}{% endfor %}
+  </div>
+</section>
+
+<section class="section container container--prose about-strip">
+  <img class="avatar avatar--lg" src="{{ site.author.avatar | relative_url }}" alt="" width="96" height="96">
+  <div>
+    <h2 class="display-3">{{ site.author.name }}</h2>
+    <p>{{ site.author.bio | strip }}</p>
+    <a class="btn btn--secondary" href="{{ '/about/' | relative_url }}">More about me</a>
+  </div>
+</section>
