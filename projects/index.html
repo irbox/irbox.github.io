@@ -1,0 +1,30 @@
+---
+layout: default
+title: Projects
+description: Things I've built, with write-ups, tech stacks and links.
+permalink: /projects/
+---
+<div class="container section">
+  <header class="center page-header">
+    <h1 class="display-1">Projects</h1>
+    <p class="lead">{{ page.description }}</p>
+  </header>
+
+  <div class="chips" role="group" aria-label="Filter projects" data-filter-chips>
+    <button class="chip is-active" type="button" data-filter="all">All</button>
+    {%- for cat in site.project_categories %}<button class="chip" type="button" data-filter="{{ cat }}">{{ cat }}</button>{% endfor %}
+  </div>
+
+  {%- assign n = 0 -%}
+  {%- for cat in site.project_categories %}
+  {%- assign items = site.projects | where: "category", cat | sort: "order" -%}
+  {%- if items.size > 0 %}
+  <section class="category" data-category-section="{{ cat }}">
+    <h2 class="display-3">{{ cat }}</h2>
+    <div class="grid grid--cards">
+      {%- for p in items %}{% assign n = n | plus: 1 %}{% include project-card.html project=p n=n %}{% endfor %}
+    </div>
+  </section>
+  {%- endif %}
+  {%- endfor %}
+</div>
