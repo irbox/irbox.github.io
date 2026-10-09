@@ -1,0 +1,43 @@
+---
+layout: default
+title: Blog
+description: Notes on design, engineering and shipping.
+---
+<div class="container section">
+  <header class="center page-header">
+    <h1 class="display-1">Blog</h1>
+    <p class="lead">{{ page.description }}</p>
+  </header>
+
+  {%- if paginator.posts.size == 0 %}
+  <p class="center muted">No posts yet. Add a file to <code>_posts/</code>.</p>
+  {%- else %}
+  {%- if paginator.page == 1 %}
+  {%- assign lead = paginator.posts | first -%}
+  {%- assign au = site.data.authors[lead.author] | default: site.data.authors.me -%}
+  <article class="feature-card">
+    <a class="card card--clickable feature-card__cover" href="{{ lead.url | relative_url }}" aria-label="{{ lead.title }}">{% include thumb.html src=lead.cover alt="" n=1 %}</a>
+    <div class="feature-card__body">
+      <div class="post-card__tags">{% for t in lead.tags limit: 3 %}<span class="badge">{{ t }}</span>{% endfor %}</div>
+      <h2 class="display-2"><a href="{{ lead.url | relative_url }}">{{ lead.title }}</a></h2>
+      <p class="lead">{{ lead.description | default: lead.excerpt | strip_html | truncate: 200 }}</p>
+      <div class="byline"><img class="avatar" src="{{ au.avatar | relative_url }}" alt="" width="28" height="28"><span>{{ au.name }}</span><span aria-hidden="true">·</span><time datetime="{{ lead.date | date_to_xmlschema }}">{{ lead.date | date: "%B %-d, %Y" }}</time></div>
+    </div>
+  </article>
+  {%- endif %}
+
+  <div class="grid grid--posts">
+    {%- for post in paginator.posts %}
+    {%- if paginator.page == 1 and forloop.first %}{% continue %}{% endif %}
+    {% include post-card.html post=post n=forloop.index %}
+    {%- endfor %}
+  </div>
+
+  {%- if paginator.total_pages > 1 %}
+  <nav class="pager" aria-label="Blog pagination">
+    {%- if paginator.previous_page %}<a class="pager__item" href="{{ paginator.previous_page_path | relative_url }}"><span class="pager__label">Newer</span><span class="pager__title">← Page {{ paginator.previous_page }}</span></a>{% else %}<span></span>{% endif %}
+    {%- if paginator.next_page %}<a class="pager__item pager__item--next" href="{{ paginator.next_page_path | relative_url }}"><span class="pager__label">Older</span><span class="pager__title">Page {{ paginator.next_page }} →</span></a>{% endif %}
+  </nav>
+  {%- endif %}
+  {%- endif %}
+</div>
