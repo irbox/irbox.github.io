@@ -1,0 +1,33 @@
+---
+layout: default
+---
+{%- assign au = site.data.authors[page.author] | default: site.data.authors.me -%}
+<article class="container container--prose page-section">
+  <header class="post-header">
+    <div class="post-card__tags">{% for t in page.tags %}<span class="badge">{{ t }}</span>{% endfor %}</div>
+    <h1 class="display-1">{{ page.title }}</h1>
+    {%- if page.description %}<p class="lead">{{ page.description }}</p>{% endif %}
+    <div class="byline">
+      <img class="avatar" src="{{ au.avatar | relative_url }}" alt="" width="36" height="36">
+      <div><strong>{{ au.name }}</strong><br><span class="muted">{{ au.role }}</span></div>
+      <span class="spacer"></span>
+      <time class="muted" datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %-d, %Y" }} · {{ content | number_of_words | divided_by: 220 | plus: 1 }} min read</time>
+    </div>
+  </header>
+  {%- if page.cover %}
+  <figure class="post-cover">{% include thumb.html src=page.cover alt=page.cover_alt n=1 %}</figure>
+  {%- endif %}
+  <div class="prose" data-prose>{{ content }}</div>
+
+  {%- if page.related_docs %}
+  <aside class="related">
+    <p class="eyebrow">Related</p>
+    <ul>{% for r in page.related_docs %}<li><a href="{{ r.href | relative_url }}">{{ r.title }}</a></li>{% endfor %}</ul>
+  </aside>
+  {%- endif %}
+
+  <nav class="pager" aria-label="More posts">
+    {%- if page.previous %}<a class="pager__item" href="{{ page.previous.url | relative_url }}"><span class="pager__label">Older</span><span class="pager__title">← {{ page.previous.title }}</span></a>{% else %}<span></span>{% endif %}
+    {%- if page.next %}<a class="pager__item pager__item--next" href="{{ page.next.url | relative_url }}"><span class="pager__label">Newer</span><span class="pager__title">{{ page.next.title }} →</span></a>{% endif %}
+  </nav>
+</article>

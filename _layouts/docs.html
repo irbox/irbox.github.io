@@ -1,0 +1,31 @@
+---
+layout: default
+---
+<div class="shell">
+  {% include sidebar.html mode="docs" %}
+  <div class="shell__main">
+    <button class="btn btn--secondary btn--sm sidebar-toggle" type="button" data-sidebar-toggle aria-controls="sidebar" aria-expanded="false">☰ Menu</button>
+    <div class="doc">
+      <article class="doc__article">
+        <header class="doc__header">
+          {%- if page.category %}<p class="eyebrow">{{ page.category }}</p>{% endif %}
+          <h1 class="display-1">{{ page.title }}</h1>
+          {%- if page.description %}<p class="lead">{{ page.description }}</p>{% endif %}
+          <hr class="divider">
+        </header>
+        <div class="outline-mobile" data-outline-mobile hidden></div>
+        <div class="prose" data-prose>
+          {{ content }}
+        </div>
+        {% include docs-pager.html %}
+        <p class="edit-link">
+          <a href="{{ site.repo }}/edit/{{ site.repo_branch }}/{{ page.path }}">Edit this page on GitHub {% include icon.html name="external" size=14 %}</a>
+        </p>
+      </article>
+      <aside class="outline" aria-label="On this page" data-outline hidden>
+        <p class="outline__title">On this page</p>
+        <ul></ul>
+      </aside>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,90 @@
+---
+layout: default
+---
+{%- comment -%}
+  Project detail page. Mirrors the old component detail page:
+  title + summary, a "preview" stage, tabbed sections (Overview / Tech stack /
+  Gallery), and a sticky "On this page" outline.
+{%- endcomment -%}
+{%- assign related_doc = site.docs | where: "slug", page.docs | first -%}
+<div class="shell">
+  {% include sidebar.html mode="projects" %}
+  <div class="shell__main">
+    <button class="btn btn--secondary btn--sm sidebar-toggle" type="button" data-sidebar-toggle aria-controls="sidebar" aria-expanded="false">☰ Projects</button>
+    <div class="doc">
+      <article class="doc__article doc__article--wide">
+        <header class="doc__header">
+          <p class="eyebrow">{{ page.category }}</p>
+          <h1 class="display-1">{{ page.title }}</h1>
+          <p class="lead">{{ page.description }}</p>
+          <div class="project-actions">
+            {%- if page.links.demo %}<a class="btn btn--primary" href="{{ page.links.demo }}">Live demo {% include icon.html name="external" size=14 %}</a>{% endif %}
+            {%- if page.links.repo %}<a class="btn btn--secondary" href="{{ page.links.repo }}">{% include icon.html name="github" size=16 %} Source</a>{% endif %}
+            {%- if related_doc %}<a class="btn btn--secondary" href="{{ related_doc.url | relative_url }}">Documentation</a>{% endif %}
+          </div>
+          <ul class="facts">
+            {%- if page.status %}<li><span>Status</span><strong>{{ page.status }}</strong></li>{% endif %}
+            {%- if page.year %}<li><span>Year</span><strong>{{ page.year }}</strong></li>{% endif %}
+            {%- if page.role %}<li><span>Role</span><strong>{{ page.role }}</strong></li>{% endif %}
+          </ul>
+        </header>
+
+        <div class="stage">{% include thumb.html src=page.thumbnail alt=page.title n=page.order %}</div>
+
+        <div class="tabs" role="tablist" aria-label="Project sections" data-tabs>
+          <button role="tab" class="tab is-active" data-tab="overview" aria-selected="true">Overview</button>
+          {%- if page.stack %}<button role="tab" class="tab" data-tab="stack" aria-selected="false">Tech stack</button>{% endif %}
+          {%- if page.gallery %}<button role="tab" class="tab" data-tab="gallery" aria-selected="false">Gallery</button>{% endif %}
+        </div>
+
+        <section class="tab-panel" data-panel="overview" aria-label="Overview">
+          <div class="prose" data-prose>
+            {{ content }}
+            {%- if page.features %}
+            <h2 id="features">Features</h2>
+            <ul class="feature-list">
+              {%- for f in page.features %}<li>{{ f }}</li>{% endfor %}
+            </ul>
+            {%- endif %}
+          </div>
+        </section>
+
+        {%- if page.stack %}
+        <section class="tab-panel" data-panel="stack" aria-label="Tech stack">
+          <div class="prose" data-prose>
+            <h2 id="tech-stack">Tech stack</h2>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Technology</th><th>Used for</th></tr></thead>
+                <tbody>
+                  {%- for s in page.stack %}<tr><td><code>{{ s.name }}</code></td><td>{{ s.purpose }}</td></tr>{% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+        {%- endif %}
+
+        {%- if page.gallery %}
+        <section class="tab-panel" data-panel="gallery" aria-label="Gallery">
+          <div class="prose" data-prose><h2 id="gallery">Gallery</h2></div>
+          <div class="gallery">
+            {%- for g in page.gallery %}
+            <figure>{% include thumb.html src=g.src alt=g.caption n=forloop.index %}<figcaption>{{ g.caption }}</figcaption></figure>
+            {%- endfor %}
+          </div>
+        </section>
+        {%- endif %}
+
+        {%- if page.tags %}
+        <p class="tag-row">{% for t in page.tags %}<span class="badge">{{ t }}</span>{% endfor %}</p>
+        {%- endif %}
+        <p class="edit-link"><a href="{{ site.repo }}/edit/{{ site.repo_branch }}/{{ page.path }}">Edit this page on GitHub {% include icon.html name="external" size=14 %}</a></p>
+      </article>
+      <aside class="outline" aria-label="On this page" data-outline hidden>
+        <p class="outline__title">On this page</p>
+        <ul></ul>
+      </aside>
+    </div>
+  </div>
+</div>
