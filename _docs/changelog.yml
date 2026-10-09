@@ -1,0 +1,15 @@
+# Newest first. Rendered at /changelog/.
+- version: "1.0.0"
+  date: 2026-10-01
+  title: Site launch
+  changes:
+    - { type: added,   text: "Docs, projects, blog and about pages." }
+    - { type: added,   text: "Light/dark theme with a manual toggle." }
+    - { type: added,   text: "Command palette search (Ctrl/⌘ + K)." }
+    - { type: added,   text: "Config-driven announcement banner." }
+- version: "0.9.0"
+  date: 2026-09-15
+  title: Beta
+  changes:
+    - { type: changed, text: "Moved the site to Jekyll." }
+    - { type: fixed,   text: "Sidebar scroll position now persists between pages." }
