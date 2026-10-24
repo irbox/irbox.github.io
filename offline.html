@@ -1,0 +1,44 @@
+---
+layout: default
+title: Offline
+description: You are currently offline.
+permalink: /offline.html
+sitemap: false
+search: false
+---
+<div class="container container--prose section center">
+  <div class="hero__badge" style="margin-top: 32px">
+    {% include icon.html name="offline" size=36 %}
+  </div>
+  <h1 class="display-1">You're offline</h1>
+  <p class="lead">
+    It looks like your internet connection is unavailable. The page you requested hasn't been cached
+    yet.
+  </p>
+
+  <div style="margin: 32px 0; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap">
+    <button class="btn btn--primary" type="button" onclick="window.location.reload()">
+      Retry connection
+    </button>
+    <a class="btn btn--secondary" href="{{ '/' | relative_url }}">Return home</a>
+  </div>
+
+  <div class="card" style="padding: 24px; text-align: left; margin-top: 40px">
+    <h2 class="display-3" style="margin-top: 0">Previously cached sections</h2>
+    <p class="muted" style="margin-bottom: 16px">
+      Pages you have already visited remain accessible offline:
+    </p>
+    <ul style="margin: 0; padding-left: 20px; line-height: 1.8">
+      <li><a href="{{ '/docs/getting-started/' | relative_url }}">Documentation overview</a></li>
+      <li><a href="{{ '/projects/' | relative_url }}">Projects directory</a></li>
+      <li><a href="{{ '/blog/' | relative_url }}">Blog archive</a></li>
+      <li><a href="{{ '/about/' | relative_url }}">About</a></li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  window.addEventListener('online', function () {
+    window.location.reload();
+  });
+</script>

@@ -1,0 +1,22 @@
+---
+layout: null
+sitemap: false
+---
+[
+  {%- assign first = true -%}
+  {%- for d in site.docs %}{% unless first %},{% endunless %}{% assign first = false %}
+  {"title": {{ d.title | jsonify }}, "url": {{ d.url | relative_url | jsonify }}, "type": "Docs", "description": {{ d.description | default: '' | jsonify }}, "tags": {{ d.category | default: '' | jsonify }}}
+  {%- endfor %}
+  {%- for p in site.projects %}{% unless first %},{% endunless %}{% assign first = false %}
+  {"title": {{ p.title | jsonify }}, "url": {{ p.url | relative_url | jsonify }}, "type": "Project", "description": {{ p.description | default: '' | jsonify }}, "tags": {{ p.category | default: '' | jsonify }}}
+  {%- endfor %}
+  {%- for p in site.posts %}{% unless first %},{% endunless %}{% assign first = false %}
+  {"title": {{ p.title | jsonify }}, "url": {{ p.url | relative_url | jsonify }}, "type": "Blog", "description": {{ p.description | default: '' | jsonify }}, "tags": {{ p.tags | join: ' ' | default: '' | jsonify }}}
+  {%- endfor %}
+  {%- for pg in site.pages %}
+  {%- if pg.title and pg.sitemap != false and pg.search != false and pg.url != '/404.html' and pg.url != '/' %}
+  {% unless first %},{% endunless %}{% assign first = false %}
+  {"title": {{ pg.title | jsonify }}, "url": {{ pg.url | relative_url | jsonify }}, "type": "Page", "description": {{ pg.description | default: '' | jsonify }}, "tags": ""}
+  {%- endif %}
+  {%- endfor %}
+]

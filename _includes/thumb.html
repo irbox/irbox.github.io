@@ -1,0 +1,20 @@
+{%- comment -%}
+  Thumbnail with graceful placeholder. Usage:
+  {% include thumb.html src=project.thumbnail alt=project.title n=forloop.index %}
+  Falls back to one of four generated placeholder SVGs.
+{%- endcomment -%}
+{%- assign idx = include.n | default: 1 | modulo: 4 | plus: 1 -%}
+{%- capture fallback %}/assets/images/placeholders/cover-{{ idx }}.svg{% endcapture -%}
+{%- assign image_src = include.src -%}
+{%- if image_src == null or image_src == '' -%}
+  {%- assign image_src = fallback -%}
+{%- endif -%}
+<img
+  class="thumb"
+  src="{{ image_src | relative_url }}"
+  alt="{{ include.alt | default: '' }}"
+  loading="lazy"
+  decoding="async"
+  width="640"
+  height="400"
+>

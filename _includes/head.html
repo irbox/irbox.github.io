@@ -1,0 +1,84 @@
+<meta charset="utf-8">
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content"
+>
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#FAF8F5">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0C0E12">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+<meta
+  http-equiv="Permissions-Policy"
+  content="interest-cohort=(), camera=(), microphone=(), geolocation=()"
+>
+<meta
+  http-equiv="Content-Security-Policy"
+  content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self';"
+>
+{% seo %}
+<link rel="icon" href="{{ '/assets/images/favicon.svg' | relative_url }}" type="image/svg+xml">
+<link rel="apple-touch-icon" href="{{ '/assets/images/brand-icon.svg' | relative_url }}">
+<link rel="manifest" href="{{ '/manifest.webmanifest' | relative_url }}">
+<link rel="author" href="{{ '/humans.txt' | relative_url }}">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="{{ site.title }}">
+<meta name="application-name" content="{{ site.title }}">
+<!-- Preload Libron self-hosted web fonts for instant, privacy-respecting zero-CLS typography -->
+<link
+  rel="preload"
+  href="{{ '/assets/fonts/libron/Libron-Regular.woff2' | relative_url }}"
+  as="font"
+  type="font/woff2"
+  crossorigin
+>
+<link
+  rel="preload"
+  href="{{ '/assets/fonts/libron/Libron-Bold.woff2' | relative_url }}"
+  as="font"
+  type="font/woff2"
+  crossorigin
+>
+<script>
+  /* Runs synchronously before first paint: apply saved theme, hide dismissed banner, and suppress initial flash */
+  (function () {
+    try {
+      var d = document.documentElement;
+      d.classList.add('is-loading');
+      var t = localStorage.getItem('theme');
+      if (t === 'light' || t === 'dark') d.setAttribute('data-theme', t);
+      var a = localStorage.getItem('announcement-dismissed');
+      if (a && a === {{ site.announcement.id | default: 'default' | jsonify }})
+        d.setAttribute('data-announcement-hidden', '');
+    } catch (e) {}
+  })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+>
+<link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+{% feed_meta %}
+{% include schema.html %}
+<script type="speculationrules">
+  {
+    "prerender": [
+      {
+        "where": {
+          "and": [
+            { "href_matches": "/*" },
+            { "not": { "href_matches": "/feed.xml" } },
+            { "not": { "href_matches": "/*.svg" } },
+            { "not": { "href_matches": "/*.woff2" } }
+          ]
+        },
+        "eagerness": "moderate"
+      }
+    ]
+  }
+</script>

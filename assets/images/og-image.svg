@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" fill="none">
+  <defs>
+    <linearGradient id="og-card-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FAF8F5"/>
+      <stop offset="100%" stop-color="#F1ECE2"/>
+    </linearGradient>
+    <linearGradient id="og-logo-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1A56DB"/>
+      <stop offset="100%" stop-color="#1244B5"/>
+    </linearGradient>
+    <linearGradient id="og-logo-top" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.98"/>
+      <stop offset="100%" stop-color="#E0E7FF" stop-opacity="0.88"/>
+    </linearGradient>
+    <linearGradient id="og-logo-right" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.90"/>
+      <stop offset="100%" stop-color="#C7D2FE" stop-opacity="0.75"/>
+    </linearGradient>
+    <linearGradient id="og-logo-left" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.75"/>
+      <stop offset="100%" stop-color="#A5B4FC" stop-opacity="0.60"/>
+    </linearGradient>
+    <filter id="og-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#161412" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#og-card-bg)"/>
+
+  <!-- Subtle ambient top gradient -->
+  <circle cx="600" cy="180" r="380" fill="#1A56DB" fill-opacity="0.05"/>
+
+  <!-- Logo Mark (Centered at 600, 200) -->
+  <g transform="translate(540, 140)" filter="url(#og-shadow)">
+    <rect width="120" height="120" rx="30" fill="url(#og-logo-bg)"/>
+    <path d="M60 25L92 42.5L60 60L28 42.5Z" fill="url(#og-logo-top)"/>
+    <path d="M28 47L57.5 63.5V95.5L28 79Z" fill="url(#og-logo-left)"/>
+    <path d="M62.5 63.5L92 47V79L62.5 95.5Z" fill="url(#og-logo-right)"/>
+  </g>
+
+  <!-- Title -->
+  <text x="600" y="340" text-anchor="middle" font-family="Figtree, system-ui, -apple-system, sans-serif" font-size="64" font-weight="700" fill="#161412" letter-spacing="-0.02em">Irbox</text>
+
+  <!-- Tagline -->
+  <text x="600" y="400" text-anchor="middle" font-family="Figtree, system-ui, -apple-system, sans-serif" font-size="26" font-weight="500" fill="#58544E" letter-spacing="-0.01em">Design, Engineering &amp; Open Source Projects</text>
+
+  <!-- Domain Badge -->
+  <g transform="translate(490, 445)">
+    <rect width="220" height="42" rx="21" fill="#161412" fill-opacity="0.06"/>
+    <text x="110" y="27" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="16" font-weight="500" fill="#58544E">irbox.github.io</text>
+  </g>
+</svg>

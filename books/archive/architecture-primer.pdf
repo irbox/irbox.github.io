@@ -1,0 +1,123 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+2 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+3 0 obj
+<< /Type /Pages /Kids [4 0 R 6 0 R 8 0 R] /Count 3 >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 3 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> /Contents 3 0 R >>
+endobj
+5 0 obj
+<< /Length 1124 >>
+stream
+BT
+/F2 18 Tf
+50 750 Td
+(2. Client-Side Parsing & Standards Compliance) Tj
+/F1 11 Tf
+0 -24 Td
+(Traditional web architectures rely on server-side microservices to convert and display e-books.) Tj
+0 -16 Td
+(However, modern browser runtimes possess powerful native capabilities:) Tj
+0 -26 Td
+/F2 13 Tf
+(Standard EPUB Package Anatomy) Tj
+/F1 11 Tf
+0 -18 Td
+(An EPUB is fundamentally an unencrypted ZIP archive containing:) Tj
+0 -16 Td
+(  1. META-INF/container.xml pointing to the root Open Packaging Format (OPF) file.) Tj
+0 -16 Td
+(  2. The OPF file which declares the metadata, manifest items, and reading spine.) Tj
+0 -16 Td
+(  3. Clean XHTML documents styled with standard CSS.) Tj
+0 -16 Td
+(  4. Embedded images and fonts.) Tj
+0 -26 Td
+/F2 13 Tf
+(The Zero-Overhead In-Browser Reader) Tj
+/F1 11 Tf
+0 -18 Td
+(By utilizing the browser native DecompressionStream and Uint8Array buffers, client devices) Tj
+0 -16 Td
+(can parse chapters in milliseconds directly in memory. This eliminates server storage quotas,) Tj
+0 -16 Td
+(preserves privacy, and allows instant reading even when completely disconnected from the network.) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 3 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> /Contents 5 0 R >>
+endobj
+7 0 obj
+<< /Length 963 >>
+stream
+BT
+/F2 18 Tf
+50 750 Td
+(3. Building a Personal Digital Library Shelf) Tj
+/F1 11 Tf
+0 -24 Td
+(Personal archives must endure across years and system migrations.) Tj
+0 -16 Td
+(To make archiving frictionless for everyone:) Tj
+0 -24 Td
+(  1. Layman Workflow: Simply drop any .epub or .pdf into books/archive/.) Tj
+0 -16 Td
+(  2. Automatic Metadata Harvesting: The indexer automatically extracts titles, authors,) Tj
+0 -16 Td
+(     descriptions, and chapter counts without requiring manual configuration files.) Tj
+0 -16 Td
+(  3. Dual Consumption Modes: Visitors can download files directly to e-ink hardware) Tj
+0 -16 Td
+(     (Kindle, Kobo, reMarkable) or read instantly in the built-in browser reader.) Tj
+0 -32 Td
+/F2 14 Tf
+(Conclusion & Next Steps) Tj
+/F1 11 Tf
+0 -20 Td
+(With this setup, your site doubles as an interactive publication and a private digital vault.) Tj
+0 -16 Td
+(Your library remains entirely your own: portable, lightweight, and sovereign.) Tj
+ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 3 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> /Contents 7 0 R >>
+endobj
+9 0 obj
+<< /Type /Catalog /Pages 3 0 R >>
+endobj
+10 0 obj
+<<
+/Title (Architecture & Design Primer)
+/Author (Irbox)
+/Subject (A handbook on resilient static architectures, client-side tools, and publishing)
+/Creator (Irbox Archival Generator)
+/Producer (Pure-Node PDF Generator)
+/CreationDate (D:20261024120000Z)
+>>
+endobj
+xref
+0 11
+0000000000 65535 f 
+0000000015 00000 n 
+0000000085 00000 n 
+0000000160 00000 n 
+0000000229 00000 n 
+0000000365 00000 n 
+0000001541 00000 n 
+0000001677 00000 n 
+0000002691 00000 n 
+0000002827 00000 n 
+0000002876 00000 n 
+trailer
+<< /Size 11 /Root 9 0 R /Info 10 0 R >>
+startxref
+3149
+%%EOF

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" fill="none">
+  <defs>
+    <linearGradient id="irbox-fav-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1A56DB"/>
+      <stop offset="100%" stop-color="#1244B5"/>
+    </linearGradient>
+    <linearGradient id="irbox-fav-top" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.98"/>
+      <stop offset="100%" stop-color="#E0E7FF" stop-opacity="0.88"/>
+    </linearGradient>
+    <linearGradient id="irbox-fav-right" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.90"/>
+      <stop offset="100%" stop-color="#C7D2FE" stop-opacity="0.75"/>
+    </linearGradient>
+    <linearGradient id="irbox-fav-left" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.75"/>
+      <stop offset="100%" stop-color="#A5B4FC" stop-opacity="0.60"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="8" fill="url(#irbox-fav-bg)"/>
+  <path d="M16 6.5L24.5 11.2L16 15.9L7.5 11.2Z" fill="url(#irbox-fav-top)"/>
+  <path d="M7.5 12.4L15.3 16.7V25.2L7.5 20.8Z" fill="url(#irbox-fav-left)"/>
+  <path d="M16.7 16.7L24.5 12.4V20.8L16.7 25.2Z" fill="url(#irbox-fav-right)"/>
+</svg>

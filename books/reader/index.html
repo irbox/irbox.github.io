@@ -1,0 +1,353 @@
+---
+layout: default
+title: Web Book Reader
+description: Read digital EPUB and PDF books directly in your browser.
+permalink: /books/reader/
+---
+<div class="reader-shell" id="reader-shell" data-theme="sepia">
+  <!-- Reader Top Toolbar -->
+  <header
+    class="reader-toolbar"
+    id="reader-toolbar"
+    role="region"
+    aria-label="Book reader controls"
+  >
+    <div class="reader-toolbar__left">
+      <a
+        href="{{ '/books/' | relative_url }}"
+        class="btn btn--subtle reader-btn"
+        title="Back to library shelf"
+      >
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>Library</span>
+      </a>
+      <div class="reader-title-wrap">
+        <h1 class="reader-book-title" id="reader-book-title">Loading book...</h1>
+        <span class="reader-chapter-title" id="reader-chapter-title"></span>
+      </div>
+    </div>
+
+    <div class="reader-toolbar__right">
+      <!-- Chapter indicator / progress pill -->
+      <span class="reader-progress-pill" id="reader-progress-pill" aria-live="polite">0 / 0</span>
+
+      <!-- TOC button -->
+      <button
+        type="button"
+        class="btn btn--subtle reader-btn"
+        id="reader-toc-toggle"
+        aria-expanded="false"
+        aria-controls="reader-toc-drawer"
+        title="Table of Contents"
+      >
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <span class="reader-btn-label">Contents</span>
+      </button>
+
+      <!-- Appearance / Typography Settings button -->
+      <button
+        type="button"
+        class="btn btn--subtle reader-btn"
+        id="reader-settings-toggle"
+        aria-expanded="false"
+        aria-controls="reader-settings-popover"
+        title="Reading appearance and fonts"
+      >
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <polyline points="4 7 4 4 20 4 20 7"></polyline>
+          <line x1="9" y1="20" x2="15" y2="20"></line>
+          <line x1="12" y1="4" x2="12" y2="20"></line>
+        </svg>
+        <span class="reader-btn-label">Aa</span>
+      </button>
+
+      <!-- Fullscreen button -->
+      <button
+        type="button"
+        class="btn btn--subtle reader-btn"
+        id="reader-fullscreen-toggle"
+        title="Toggle fullscreen reading (F)"
+      >
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
+        <span class="sr-only">Fullscreen</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Progress Bar across top -->
+  <div class="reader-progress-track" aria-hidden="true">
+    <div class="reader-progress-bar" id="reader-progress-bar" style="width: 0%;"></div>
+  </div>
+
+  <!-- Appearance / Settings Popover -->
+  <aside
+    class="reader-settings-popover"
+    id="reader-settings-popover"
+    hidden
+    aria-label="Reading appearance settings"
+  >
+    <div class="reader-settings-section">
+      <span class="reader-settings-label">Reading Theme</span>
+      <div class="reader-theme-switcher" role="radiogroup" aria-label="Theme">
+        <button
+          type="button"
+          class="reader-theme-btn reader-theme-btn--light"
+          data-set-theme="light"
+          title="Light paper"
+        >
+          Light
+        </button>
+        <button
+          type="button"
+          class="reader-theme-btn reader-theme-btn--sepia is-active"
+          data-set-theme="sepia"
+          title="Warm Sepia"
+        >
+          Sepia
+        </button>
+        <button
+          type="button"
+          class="reader-theme-btn reader-theme-btn--dark"
+          data-set-theme="dark"
+          title="Dark mode"
+        >
+          Dark
+        </button>
+        <button
+          type="button"
+          class="reader-theme-btn reader-theme-btn--black"
+          data-set-theme="black"
+          title="OLED Black"
+        >
+          Black
+        </button>
+      </div>
+    </div>
+
+    <div class="reader-settings-section">
+      <span class="reader-settings-label">Font Family</span>
+      <div class="reader-font-switcher" role="radiogroup" aria-label="Font">
+        <button type="button" class="chip is-active" data-set-font="serif">Serif (Literary)</button>
+        <button type="button" class="chip" data-set-font="sans">Sans-serif</button>
+        <button type="button" class="chip" data-set-font="mono">Mono</button>
+      </div>
+    </div>
+
+    <div class="reader-settings-section">
+      <span class="reader-settings-label">Font Size</span>
+      <div class="reader-size-controls">
+        <button
+          type="button"
+          class="btn btn--secondary reader-size-btn"
+          id="reader-font-dec"
+          aria-label="Decrease text size"
+        >
+          A-
+        </button>
+        <span class="reader-size-display" id="reader-font-display">18px</span>
+        <button
+          type="button"
+          class="btn btn--secondary reader-size-btn"
+          id="reader-font-inc"
+          aria-label="Increase text size"
+        >
+          A+
+        </button>
+      </div>
+    </div>
+
+    <div class="reader-settings-section">
+      <span class="reader-settings-label">Line Spacing</span>
+      <div class="reader-line-switcher" role="radiogroup" aria-label="Line spacing">
+        <button type="button" class="chip" data-set-lh="compact">Compact</button>
+        <button type="button" class="chip is-active" data-set-lh="normal">Normal</button>
+        <button type="button" class="chip" data-set-lh="relaxed">Relaxed</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Table of Contents Drawer -->
+  <aside class="reader-toc-drawer" id="reader-toc-drawer" hidden aria-label="Table of Contents">
+    <div class="reader-toc-header">
+      <h2 class="display-3" style="font-size: 1.1rem; margin: 0;">Table of Contents</h2>
+      <button
+        type="button"
+        class="btn btn--subtle"
+        id="reader-toc-close"
+        aria-label="Close table of contents"
+      >
+        ✕
+      </button>
+    </div>
+    <ul class="reader-toc-list" id="reader-toc-list">
+      <!-- Populated dynamically -->
+    </ul>
+  </aside>
+
+  <!-- Reader Main View Area -->
+  <main class="reader-main" id="reader-main">
+    <!-- Loading Screen -->
+    <div class="reader-loading" id="reader-loading">
+      <div class="reader-spinner" aria-hidden="true"></div>
+      <p id="reader-loading-text">Loading e-book...</p>
+    </div>
+
+    <!-- Error / Missing Screen -->
+    <div class="reader-error" id="reader-error" hidden>
+      <div class="card center" style="max-width: 500px; margin: 60px auto; padding: 40px;">
+        <h2 class="display-3" id="reader-error-title">Book Not Found</h2>
+        <p class="muted" id="reader-error-message">
+          Could not find or load the requested book. Please check that the file exists in
+          <code>books/archive/</code>.
+        </p>
+        <div style="margin-top: 24px; display: flex; gap: 12px; justify-content: center;">
+          <a href="{{ '/books/' | relative_url }}" class="btn btn--primary"
+            >Return to Library Shelf</a
+          >
+          <button type="button" class="btn btn--secondary" id="reader-retry-btn">
+            Try Local File
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- EPUB Reader Container -->
+    <article class="reader-article" id="reader-epub-container" hidden>
+      <div class="reader-canvas" id="reader-canvas">
+        <!-- Chapter XHTML injected here -->
+      </div>
+
+      <!-- Chapter Pagination Buttons -->
+      <nav class="reader-nav" aria-label="Chapter pagination">
+        <button type="button" class="btn btn--secondary" id="reader-prev-chapter">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          <span>Previous Chapter</span>
+        </button>
+
+        <span class="muted" id="reader-chapter-count-bottom"></span>
+
+        <button type="button" class="btn btn--primary" id="reader-next-chapter">
+          <span>Next Chapter</span>
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </nav>
+    </article>
+
+    <!-- PDF Reader Container -->
+    <div class="reader-pdf-container" id="reader-pdf-container" hidden>
+      <div class="reader-pdf-toolbar">
+        <span id="reader-pdf-title" class="reader-pdf-filename"></span>
+        <div style="display: flex; gap: 8px;">
+          <a id="reader-pdf-download" href="#" class="btn btn--secondary" download>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>Download PDF</span>
+          </a>
+          <a
+            id="reader-pdf-external"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn--secondary"
+          >
+            <span>Open in New Tab ↗</span>
+          </a>
+        </div>
+      </div>
+      <iframe
+        id="reader-pdf-frame"
+        class="reader-pdf-frame"
+        title="PDF Document Viewer"
+        frameborder="0"
+      ></iframe>
+    </div>
+  </main>
+</div>
+
+<script src="{{ '/assets/js/reader.js' | relative_url }}"></script>

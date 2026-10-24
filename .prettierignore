@@ -1,0 +1,10 @@
+_site/
+.git/
+.bundle/
+vendor/
+Gemfile
+Gemfile.lock
+search.json
+manifest.webmanifest
+sw.js
+_includes/schema.html

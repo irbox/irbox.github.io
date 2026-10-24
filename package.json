@@ -1,0 +1,15 @@
+{
+  "name": "irbox.github.io",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Personal showcase, documentation, books archive and web reader",
+  "scripts": {
+    "index:books": "node scripts/index_books.js",
+    "build:epub": "node scripts/build_epub.js",
+    "format": "prettier --write .",
+    "check": "prettier --check ."
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

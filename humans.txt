@@ -1,0 +1,13 @@
+/* TEAM */
+Developer: Irbox
+Site: https://irbox.github.io
+GitHub: https://github.com/irbox
+
+/* THANKS */
+Font: Libron by Nico Verbruggen (SIL OFL 1.1)
+Platform: Jekyll & GitHub Pages
+
+/* SITE */
+Standards: HTML Living Standard, ECMAScript 2026, CSS Snapshot 2023/2024, RFC 8259 JSON
+Components: Native Web Components & Standard Web APIs
+Software: Jekyll 4.4.1, Ruby 3.3+
