@@ -457,21 +457,21 @@ h6,
   text-rendering: optimizeLegibility;
 }
 .display-1 {
-  font-size: clamp(32px, 5vw, 44px);
+  font-size: clamp(24px, 5vw, 44px);
   line-height: 1.15;
   font-weight: 700;
   letter-spacing: -0.02em;
   margin: 0 0 12px;
 }
 .display-2 {
-  font-size: clamp(26px, 3.4vw, 34px);
+  font-size: clamp(20px, 3.4vw, 34px);
   line-height: 1.2;
   font-weight: 700;
   letter-spacing: -0.015em;
   margin: 0;
 }
 .display-3 {
-  font-size: 24px;
+  font-size: clamp(17px, 2.5vw, 24px);
   line-height: 1.25;
   font-weight: 700;
   letter-spacing: -0.01em;
@@ -479,13 +479,13 @@ h6,
 }
 .lead {
   font-family: var(--font-reading);
-  font-size: 20px;
+  font-size: clamp(15px, 2vw, 20px);
   line-height: 1.6;
   color: var(--ink-2);
   margin: 0;
   max-width: 62ch;
   overflow-wrap: break-word;
-  word-wrap: break-word;
+  word-break: break-word;
 }
 .center .lead,
 .page-header.center .lead {
@@ -2975,6 +2975,56 @@ div.highlight {
   letter-spacing: 0.04em;
 }
 
+.books-toolbar {
+  margin-top: 36px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: space-between;
+  align-items: center;
+}
+.books-search-box {
+  flex: 1;
+  max-width: 320px;
+  min-width: 140px;
+  position: relative;
+  width: 100%;
+}
+.books-search-input {
+  width: 100%;
+  padding: 8px 12px 8px 36px;
+  border-radius: var(--radius-inner);
+  border: 1px solid var(--border);
+}
+.books-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  opacity: 0.6;
+}
+.book-guide-card {
+  margin-top: 64px;
+  padding: clamp(16px, 4vw, 32px);
+  border-left: 4px solid var(--accent);
+}
+.book-guide-inner {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+@media (max-width: 480px) {
+  .books-search-box {
+    max-width: 100%;
+  }
+  .book-guide-inner {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
 /* ─────────────────────────────────────────────────────────────
  *  Web Book Reader
  * ───────────────────────────────────────────────────────────── */
@@ -3399,6 +3449,298 @@ div.highlight {
   .reader-settings-popover {
     width: calc(100vw - 32px);
     right: 16px;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+ *  Omni-Responsive Architecture: From Smartwatches to 8K Screens
+ * ───────────────────────────────────────────────────────────── */
+
+/* ---------- Circular Smartwatches (Apple Watch, Galaxy Watch, Pixel Watch) ---------- */
+@media (shape: round) {
+  body {
+    padding-inline: 8%;
+  }
+  .topnav {
+    padding-inline: 12%;
+  }
+  .footer {
+    padding-inline: 12%;
+  }
+  .reader-toolbar {
+    padding-inline: 10%;
+  }
+  .reader-article {
+    padding-inline: 8%;
+  }
+}
+
+/* ---------- Small Mobile & Wearables (< 360px) ---------- */
+@media (max-width: 360px) {
+  :root {
+    --section-gap: 36px;
+  }
+  .container {
+    padding-left: max(10px, env(safe-area-inset-left, 0px));
+    padding-right: max(10px, env(safe-area-inset-right, 0px));
+  }
+  .display-1 {
+    font-size: clamp(22px, 7vw, 28px);
+  }
+  .display-2 {
+    font-size: clamp(19px, 6vw, 24px);
+  }
+  .display-3 {
+    font-size: clamp(17px, 5.5vw, 21px);
+  }
+  .lead {
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .card,
+  .bento__card,
+  .book-card {
+    padding: 14px 12px;
+    border-radius: 12px;
+  }
+  .hero {
+    padding: 36px 0 28px;
+  }
+  .hero__title {
+    font-size: clamp(22px, 8vw, 30px);
+  }
+  .hero__tagline {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+  .hero__cta {
+    gap: 8px;
+  }
+  .hero__cta .btn {
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+  .bento__spec-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+  .bento__spec-val {
+    font-size: 12px;
+  }
+  .book-card__footer {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .book-card__footer .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .book-dropzone {
+    padding: 14px 12px;
+  }
+  .book-dropzone__content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+  .book-dropzone__icon {
+    width: 40px;
+    height: 40px;
+  }
+  .book-dropzone__action .btn {
+    width: 100%;
+  }
+  .reader-toolbar {
+    padding: 6px 8px;
+    gap: 4px;
+  }
+  .reader-chapter-title,
+  .reader-progress-pill {
+    display: none;
+  }
+  .reader-toolbar__left .reader-btn span {
+    display: none;
+  }
+  .reader-nav {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .reader-nav .btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .reader-settings-popover {
+    width: calc(100vw - 16px);
+    right: 8px;
+    left: 8px;
+    padding: 14px;
+  }
+  .reader-theme-switcher {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+}
+
+/* ---------- Micro-Screens & Smartwatches (< 280px down to 180px) ---------- */
+@media (max-width: 280px) {
+  :root {
+    --header-h: 48px;
+    --section-gap: 24px;
+  }
+  .brand span {
+    display: none;
+  }
+  .brand img,
+  .brand svg {
+    width: 22px;
+    height: 22px;
+  }
+  .topnav__inner {
+    padding-left: max(6px, env(safe-area-inset-left, 0px));
+    padding-right: max(6px, env(safe-area-inset-right, 0px));
+    gap: 4px;
+  }
+  .icon-btn,
+  .search-trigger {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+    padding: 0 !important;
+  }
+  .chips {
+    gap: 4px;
+  }
+  .chip {
+    font-size: 11px;
+    padding: 3px 8px;
+    min-height: 28px;
+  }
+  .prose {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .prose pre,
+  .code-block-wrap pre {
+    padding: 12px 48px 12px 10px !important;
+    font-size: 11.5px;
+  }
+  .copy-btn {
+    padding: 3px 6px;
+    font-size: 10px;
+    top: 6px;
+    right: 6px;
+  }
+  .copy-btn .copy-btn__text {
+    display: none;
+  }
+  .footer {
+    padding-block: 28px 20px;
+    font-size: 12px;
+  }
+  .footer__nav {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .search {
+    width: calc(100vw - 8px);
+    margin: 4px auto;
+  }
+  .shortcuts-dialog {
+    width: calc(100vw - 8px);
+    margin: 4px auto;
+  }
+}
+
+/* ---------- Large Laptops & Monitors (1440px - 1599px) ---------- */
+@media (min-width: 1440px) {
+  :root {
+    --content-max: 1280px;
+    --prose-max: 820px;
+  }
+}
+
+/* ---------- Large Screens / Ultra-Wide Displays (1600px - 1919px) ---------- */
+@media (min-width: 1600px) {
+  :root {
+    --content-max: 1360px;
+    --prose-max: 860px;
+  }
+}
+
+/* ---------- 2K / QHD Displays (1920px - 2559px) ---------- */
+@media (min-width: 1920px) {
+  :root {
+    --content-max: 1500px;
+    --prose-max: 920px;
+  }
+  body {
+    font-size: 18px;
+  }
+  .grid--cards {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  }
+  .grid--posts {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
+  }
+}
+
+/* ---------- 4K / UHD Displays (2560px - 3839px) ---------- */
+@media (min-width: 2560px) {
+  :root {
+    --content-max: 1780px;
+    --prose-max: 1040px;
+    --header-h: 68px;
+  }
+  body {
+    font-size: 20px;
+    line-height: 1.7;
+  }
+  .display-1 {
+    font-size: clamp(48px, 4vw, 64px);
+  }
+  .display-2 {
+    font-size: clamp(36px, 3vw, 48px);
+  }
+  .display-3 {
+    font-size: clamp(28px, 2.2vw, 36px);
+  }
+  .hero__title {
+    font-size: clamp(64px, 5vw, 88px);
+  }
+  .grid--cards {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
+    gap: 36px 28px;
+  }
+}
+
+/* ---------- 8K Displays & Giant Wall Screens (3840px+) ---------- */
+@media (min-width: 3840px) {
+  :root {
+    --content-max: 2200px;
+    --prose-max: 1200px;
+    --header-h: 84px;
+  }
+  body {
+    font-size: 24px;
+    line-height: 1.75;
+  }
+  .display-1 {
+    font-size: 72px;
+  }
+  .display-2 {
+    font-size: 56px;
+  }
+  .hero__title {
+    font-size: 96px;
+  }
+  .grid--cards {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 460px), 1fr));
+    gap: 48px 36px;
   }
 }
 

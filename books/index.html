@@ -78,10 +78,7 @@ permalink: /books/
   </section>
 
   <!-- Filter & Search Controls -->
-  <div
-    class="books-toolbar"
-    style="margin-top: 36px; margin-bottom: 24px; display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: center;"
-  >
+  <div class="books-toolbar">
     <div class="chips" role="group" aria-label="Filter books by format" id="books-format-filters">
       <button class="chip is-active" type="button" data-format="all" aria-pressed="true">
         All Books
@@ -91,19 +88,16 @@ permalink: /books/
       <button class="chip" type="button" data-format="pdf" aria-pressed="false">PDF</button>
     </div>
 
-    <div
-      class="books-search-box"
-      style="flex: 1; max-width: 320px; min-width: 200px; position: relative;"
-    >
+    <div class="books-search-box">
       <input
         type="search"
         id="books-search"
-        class="input"
+        class="input books-search-input"
         placeholder="Filter shelf..."
         aria-label="Filter books shelf by title, author, or keywords"
-        style="width: 100%; padding: 8px 12px 8px 36px; border-radius: var(--radius-inner); border: 1px solid var(--border);"
       >
       <svg
+        class="books-search-icon"
         width="16"
         height="16"
         viewBox="0 0 24 24"
@@ -112,7 +106,6 @@ permalink: /books/
         stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"
-        style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; opacity: 0.6;"
         aria-hidden="true"
       >
         <circle cx="11" cy="11" r="8"></circle>
@@ -224,11 +217,8 @@ permalink: /books/
   </div>
 
   <!-- Layman Archiving Guide Section -->
-  <section
-    class="card book-guide-card"
-    style="margin-top: 64px; padding: 32px; border-left: 4px solid var(--accent);"
-  >
-    <div style="display: flex; gap: 16px; align-items: flex-start;">
+  <section class="card book-guide-card">
+    <div class="book-guide-inner">
       <div style="color: var(--accent); flex-shrink: 0;" aria-hidden="true">
         <svg
           width="28"
