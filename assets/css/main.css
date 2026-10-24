@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Folio / Irbox — design tokens + styles
+   Irbox — design tokens + styles
    Enhanced with Libron typeface (Nico Verbruggen, SIL OFL) & Astryx inspirations:
    calm e-reader prose typography, frame-first shells, and refined tokens.
    ========================================================================== */
@@ -122,6 +122,7 @@ html {
   scroll-padding-top: calc(var(--header-total-h) + 16px);
   -webkit-text-size-adjust: 100%;
   scrollbar-gutter: stable;
+  overflow-x: clip;
 }
 @media (prefers-reduced-motion: no-preference) {
   html {
@@ -210,6 +211,8 @@ html.is-loading *::after {
 
 body {
   margin: 0;
+  overflow-x: clip;
+  max-width: 100vw;
   background: var(--bg-body);
   color: var(--ink);
   font: 400 17px/1.65 var(--font-reading);
@@ -706,7 +709,7 @@ h6,
     max-height 0.25s ease,
     padding 0.25s ease,
     margin 0.25s ease;
-  max-height: 140px;
+  max-height: 480px;
   overflow: hidden;
 }
 .banner.is-dismissing {
@@ -947,6 +950,18 @@ h6,
 }
 .drawer__link.is-active {
   background: var(--ink-muted-fill);
+}
+@media (max-width: 920px) {
+  .search-trigger__label,
+  .search-trigger kbd {
+    display: none;
+  }
+  .search-trigger {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    justify-content: center;
+  }
 }
 @media (max-width: 767px) {
   .container {
@@ -1239,7 +1254,8 @@ h6,
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 8px 12px;
+  flex-wrap: wrap;
   padding-bottom: 6px;
   border-bottom: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
 }
@@ -1251,6 +1267,7 @@ h6,
   color: var(--ink-2);
   font-size: 12px;
   font-family: var(--font-sans);
+  flex-shrink: 0;
 }
 .bento__spec-val {
   font-weight: 500;
@@ -1261,6 +1278,8 @@ h6,
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 .bento__spec-val:hover {
   text-decoration: underline;
@@ -1758,6 +1777,10 @@ h6,
   font-size: 18px;
   line-height: 1.75;
   letter-spacing: -0.003em;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  min-width: 0;
+  max-width: 100%;
 }
 .prose > :first-child {
   margin-top: 0;
@@ -1768,6 +1791,7 @@ h6,
 .prose h4 {
   font-family: var(--font-heading);
   letter-spacing: -0.015em;
+  overflow-wrap: break-word;
 }
 .prose h2 {
   font-size: 28px;
@@ -1801,9 +1825,11 @@ h6,
 .prose ul,
 .prose ol {
   margin: 0 0 1.2em;
+  overflow-wrap: break-word;
 }
 .prose li {
   margin: 0.35em 0;
+  overflow-wrap: break-word;
 }
 .prose a {
   font-weight: 500;
@@ -1811,6 +1837,8 @@ h6,
   text-decoration: underline;
   text-decoration-color: color-mix(in srgb, var(--brand) 40%, transparent);
   text-underline-offset: 3px;
+  overflow-wrap: break-word;
+  word-break: break-word;
   transition:
     text-decoration-color 0.15s ease,
     color 0.15s ease;
@@ -1820,6 +1848,7 @@ h6,
 }
 .prose img {
   border-radius: var(--radius-container);
+  max-width: 100%;
   height: auto;
 }
 .prose blockquote {
@@ -1834,6 +1863,7 @@ h6,
   border-radius: 0 var(--radius-element) var(--radius-element) 0;
   color: var(--ink);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  overflow-wrap: break-word;
 }
 .prose blockquote > :last-child {
   margin-bottom: 0;
@@ -1844,18 +1874,36 @@ h6,
   padding: 0.18em 0.42em;
   border-radius: 6px;
   border: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
+
+/* Code block container & pre */
+.code-block-wrap {
+  position: relative;
+  margin: 1.6em 0;
+  max-width: 100%;
+  min-width: 0;
+}
+.code-block-wrap pre,
 .prose pre {
   position: relative;
   margin: 1.6em 0;
   padding: 18px 20px;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-element);
   font-size: 13.5px;
   line-height: 1.65;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  max-width: 100%;
+  min-width: 0;
+}
+.code-block-wrap pre {
+  margin: 0 !important;
+  padding-right: 64px !important;
 }
 .prose pre code {
   background: none;
@@ -1863,6 +1911,8 @@ h6,
   border: 0;
   font-size: inherit;
   font-weight: 400;
+  word-break: normal;
+  overflow-wrap: normal;
 }
 .prose details {
   margin: 1.2em 0;
@@ -1895,47 +1945,72 @@ h6,
 .prose details > :not(summary) {
   margin: 14px 16px;
 }
+
+/* Copy Button */
 .copy-btn {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font: 500 12px var(--font-sans);
   padding: 4px 10px;
   border-radius: 999px;
   border: 1px solid var(--border);
-  background: var(--bg-body);
+  background: var(--bg-surface);
   color: var(--ink-2);
   cursor: pointer;
-  opacity: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  opacity: 0.85;
   transition:
     opacity 0.18s ease,
     transform 0.15s ease,
     background-color 0.18s ease,
-    color 0.18s ease;
+    color 0.18s ease,
+    border-color 0.18s ease;
+}
+.code-block-wrap:hover .copy-btn,
+.copy-btn:focus,
+.copy-btn.is-copied {
+  opacity: 1;
 }
 .copy-btn:hover {
-  background: var(--bg-surface);
+  background: var(--bg-body);
   color: var(--ink);
-  border-color: color-mix(in srgb, var(--ink) 25%, var(--border));
+  border-color: color-mix(in srgb, var(--ink) 30%, var(--border));
 }
 .copy-btn:active {
   transform: scale(0.92);
 }
+.copy-btn__icon {
+  flex-shrink: 0;
+  display: block;
+}
+.copy-btn__icon--check {
+  display: none;
+}
 .copy-btn.is-copied {
   color: var(--success);
-  border-color: color-mix(in srgb, var(--success) 45%, var(--border));
+  border-color: color-mix(in srgb, var(--success) 50%, var(--border));
   background: var(--bg-surface);
 }
-.prose pre:hover .copy-btn,
-.copy-btn:focus {
-  opacity: 1;
+.copy-btn.is-copied .copy-btn__icon--copy {
+  display: none;
 }
-@media (hover: none) {
-  .copy-btn {
-    opacity: 0.85;
-  }
+.copy-btn.is-copied .copy-btn__icon--check {
+  display: block;
 }
+.copy-btn.is-error {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
 .table-wrap {
+  display: block;
+  width: 100%;
+  max-width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   margin: 1.6em 0;
@@ -1946,23 +2021,21 @@ h6,
 }
 .table-wrap table {
   margin: 0;
+  width: 100%;
+  min-width: 100%;
 }
 .table-wrap tr:last-child td {
   border-bottom: 0;
 }
 .prose table {
+  display: block;
   width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border-collapse: collapse;
   margin: 1.6em 0;
   font-size: 14.5px;
-}
-@media (max-width: 767px) {
-  .prose > table {
-    display: block;
-    max-width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
 }
 .prose th,
 .prose td {
@@ -1972,7 +2045,9 @@ h6,
   vertical-align: middle;
 }
 .prose td code {
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 .prose th {
   font-weight: 600;
@@ -2463,9 +2538,16 @@ h6,
   padding: 10px 12px;
   border-radius: var(--radius-inner);
   text-decoration: none;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  min-width: 0;
   transition:
     background-color 0.15s ease,
     padding-left 0.15s ease;
+}
+.search__results a strong {
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 .search__results a:hover,
 .search__results a.is-selected {
@@ -2481,6 +2563,8 @@ h6,
 .search__results .desc {
   font-size: 14px;
   color: var(--ink-2);
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 .search__empty {
   padding: 20px;
@@ -2665,10 +2749,12 @@ h6,
 .highlight .vi {
   color: var(--c-tag);
 }
-/* Rouge wraps code in div.highlighter-rouge > div.highlight > pre; the box styling lives on the pre. */
+/* Rouge wraps code in div.highlighter-rouge > div.highlight > pre; ensure containment */
 div.highlighter-rouge,
 div.highlight {
   margin: 0;
+  max-width: 100%;
+  min-width: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3196,6 +3282,9 @@ div.highlight {
   line-height: var(--reader-lh);
   color: var(--reader-ink);
   outline: none;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  min-width: 0;
 }
 .reader-canvas h1,
 .reader-canvas h2,
@@ -3237,7 +3326,11 @@ div.highlight {
   opacity: 0.9;
 }
 .reader-canvas table {
+  display: block;
   width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border-collapse: collapse;
   margin: 1.5em 0;
 }

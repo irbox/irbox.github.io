@@ -9,11 +9,11 @@ Everything site-wide lives in `_config.yml`.
 ## Identity
 
 ```yaml
-title: Folio
+title: Irbox
 tagline: Portfolio, docs, projects and writing in one place.
-url: 'https://example.github.io'
+url: 'https://irbox.github.io'
 author:
-  name: Your Name
+  name: Irbox
   role: Software Engineer
 ```
 

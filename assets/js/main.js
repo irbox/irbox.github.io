@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Folio / Irbox — Core Client Architecture
+   Irbox — Core Client Architecture
    Modular, dependency-free enhancements adhering to modern ECMAScript (ES2026).
    ========================================================================== */
 (() => {
@@ -236,18 +236,28 @@
   /* ---- Module 7: Prose (Heading Anchors & Copy Buttons) ---- */
   const copyText = async (text) => {
     if (navigator.clipboard && window.isSecureContext) {
-      return navigator.clipboard.writeText(text);
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch (_) {
+        // Fallback to execCommand below
+      }
     }
     const ta = doc.createElement('textarea');
     ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.contain = 'strict';
     ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    ta.style.top = '0';
     ta.style.opacity = '0';
     doc.body.appendChild(ta);
-    ta.focus();
     ta.select();
+    ta.setSelectionRange(0, ta.value.length);
     try {
       const ok = doc.execCommand('copy');
       if (!ok) throw new Error('Copy failed');
+      return true;
     } finally {
       doc.body.removeChild(ta);
     }
@@ -255,55 +265,99 @@
 
   const initProse = () => {
     // Responsive table wrappers
-    $$('[data-prose] table').forEach((table) => {
+    $$('[data-prose] table, .prose table').forEach((table) => {
       if (!table.parentElement.classList.contains('table-wrap')) {
         const wrap = doc.createElement('div');
         wrap.className = 'table-wrap';
+        wrap.tabIndex = 0;
+        wrap.setAttribute('role', 'region');
+        wrap.setAttribute('aria-label', 'Scrollable table');
         table.parentNode.insertBefore(wrap, table);
         wrap.appendChild(table);
       }
     });
 
     // Heading anchor links
-    $$('[data-prose] :is(h2,h3,h4)[id]').forEach((h) => {
-      const a = doc.createElement('a');
-      a.className = 'anchor';
-      a.href = '#' + h.id;
-      a.setAttribute('aria-label', 'Link to this section');
-      a.textContent = '#';
-      h.appendChild(a);
+    $$('[data-prose] :is(h2,h3,h4)[id], .prose :is(h2,h3,h4)[id]').forEach((h) => {
+      if (!h.querySelector('.anchor')) {
+        const a = doc.createElement('a');
+        a.className = 'anchor';
+        a.href = '#' + h.id;
+        a.setAttribute('aria-label', 'Link to this section');
+        a.textContent = '#';
+        h.appendChild(a);
+      }
     });
 
-    // Code copy buttons
-    $$('[data-prose] pre').forEach((pre) => {
+    // Code copy buttons with dedicated non-scrolling wrapper
+    $$('[data-prose] pre, .prose pre').forEach((pre) => {
+      if (pre.classList.contains('lineno') || pre.closest('.rouge-gutter')) return;
+      if (pre.dataset.hasCopyBtn) return;
+      pre.dataset.hasCopyBtn = 'true';
+
+      // Ensure pre is enclosed in a wrapper so copy button stays fixed
+      let container = pre.parentElement;
+      if (!container.classList.contains('code-block-wrap')) {
+        const wrap = doc.createElement('div');
+        wrap.className = 'code-block-wrap';
+        pre.parentNode.insertBefore(wrap, pre);
+        wrap.appendChild(pre);
+        container = wrap;
+      }
+
       const b = doc.createElement('button');
       b.type = 'button';
       b.className = 'copy-btn';
-      b.textContent = 'Copy';
       b.setAttribute('aria-label', 'Copy code to clipboard');
-      b.addEventListener('click', async () => {
-        const code = $('code', pre);
-        const text = code
-          ? code.innerText
-          : pre.innerText.replace(/\bCopy\b|\bCopied\b/g, '').trim();
+      b.innerHTML = `
+        <svg class="copy-btn__icon copy-btn__icon--copy" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+        <svg class="copy-btn__icon copy-btn__icon--check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span class="copy-btn__text">Copy</span>
+      `;
+
+      b.addEventListener('click', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        let text = '';
+        const rougeCode = pre.querySelector('td.rouge-code');
+        if (rougeCode) {
+          text = rougeCode.textContent;
+        } else {
+          const code = pre.querySelector('code');
+          text = (code || pre).textContent;
+        }
+        text = text.replace(/\r\n/g, '\n').replace(/\n$/, '');
+
+        const textSpan = b.querySelector('.copy-btn__text');
         try {
           await copyText(text);
-          b.textContent = 'Copied';
           b.classList.add('is-copied');
           b.setAttribute('aria-label', 'Code copied to clipboard');
+          if (textSpan) textSpan.textContent = 'Copied';
           setTimeout(() => {
-            b.textContent = 'Copy';
             b.classList.remove('is-copied');
             b.setAttribute('aria-label', 'Copy code to clipboard');
+            if (textSpan) textSpan.textContent = 'Copy';
           }, 1800);
         } catch {
-          b.textContent = 'Failed';
+          b.classList.add('is-error');
+          b.setAttribute('aria-label', 'Failed to copy');
+          if (textSpan) textSpan.textContent = 'Failed';
           setTimeout(() => {
-            b.textContent = 'Copy';
+            b.classList.remove('is-error');
+            b.setAttribute('aria-label', 'Copy code to clipboard');
+            if (textSpan) textSpan.textContent = 'Copy';
           }, 1800);
         }
       });
-      pre.appendChild(b);
+
+      container.appendChild(b);
     });
   };
 
@@ -827,7 +881,7 @@
         return;
       }
 
-      // Quick navigation: H (Home), D (Docs), P (Projects), B (Blog)
+      // Quick navigation: H (Home), D (Docs), P (Projects), B (Blog), L (Library/Books)
       if (!e.metaKey && !e.ctrlKey && !e.altKey) {
         const k = e.key.toLowerCase();
         const base = root.getAttribute('data-baseurl') || '';
@@ -839,6 +893,8 @@
           location.href = base + '/projects/';
         } else if (k === 'b') {
           location.href = base + '/blog/';
+        } else if (k === 'l') {
+          location.href = base + '/books/';
         }
       }
     });

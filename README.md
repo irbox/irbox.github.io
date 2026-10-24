@@ -1,23 +1,25 @@
-# Folio — Personal Engineering Portfolio, Documentation & Writing
+# Irbox — Personal Engineering Showcase, Books Archive & Writing
 
 A high-performance, accessible, and privacy-respecting personal showcase site built with Jekyll and modern native web standards.
 
-| Section   | Source                          | URL                               |
-| --------- | ------------------------------- | --------------------------------- |
-| Home      | `index.html`                    | `/`                               |
-| Docs      | `_docs/` + `_data/docs_nav.yml` | `/docs/…`                         |
-| Projects  | `_projects/`                    | `/projects/`, `/projects/<name>/` |
-| Blog      | `_posts/`                       | `/blog/`, `/blog/<slug>/`         |
-| Changelog | `_data/changelog.yml`           | `/changelog/`                     |
-| About     | `about.md`                      | `/about/`                         |
+| Section         | Source                          | URL                               |
+| --------------- | ------------------------------- | --------------------------------- |
+| Home            | `index.html`                    | `/`                               |
+| Docs            | `_docs/` + `_data/docs_nav.yml` | `/docs/…`                         |
+| Projects        | `_projects/`                    | `/projects/`, `/projects/<name>/` |
+| Blog            | `_posts/`                       | `/blog/`, `/blog/<slug>/`         |
+| Books & Archive | `books/` + `books/archive/`     | `/books/`, `/books/reader/`       |
+| Changelog       | `_data/changelog.yml`           | `/changelog/`                     |
+| About           | `about.md`                      | `/about/`                         |
 
 ## Features & Native Web Architecture
 
 - **Zero Heavy Frameworks & Zero Trackers**: Dependency-free vanilla JavaScript and native modern CSS.
+- **Personal Book Archive & In-Browser Reader**: Universal EPUB & PDF reading engine with themes, typography scaling, and offline support.
 - **Self-Hosted Typography**: High-legibility serif reading typeface (Libron by Nico Verbruggen, SIL OFL 1.1) preloaded in WOFF2 with zero external tracking calls.
 - **Native Color Schemes**: Light and dark themes implemented via native CSS `light-dark()` with OS preference matching and instant local persistence.
 - **Fast Client-Side Search**: `<dialog>` powered search palette with keyboard navigation (`⌘K` / `Ctrl+K`), live scoring, and fuzzy matches.
-- **Keyboard Navigation & Quick Actions**: Press `?` to open the shortcuts cheat sheet; `T` to toggle theme; `H`, `D`, `P`, `B` to jump directly to sections.
+- **Keyboard Navigation & Quick Actions**: Press `?` to open the shortcuts cheat sheet; `T` to toggle theme; `H`, `D`, `P`, `B`, `L` to jump directly to sections.
 - **Progressive Enhancement**: Native CSS Scroll-Driven reading progress, GPU-accelerated View Transitions, safe area insets, and high-fidelity print formatting.
 - **Strict Content Security Policy (CSP)**: Hardened headers, zero external third-party cookies or telemetry.
 

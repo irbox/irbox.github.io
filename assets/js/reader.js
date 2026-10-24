@@ -60,12 +60,28 @@
   let zipBuffer = null;
   let createdObjectUrls = [];
 
+  const safeStore = {
+    get: (key, fallback = null) => {
+      try {
+        const val = localStorage.getItem(key);
+        return val !== null ? val : fallback;
+      } catch {
+        return fallback;
+      }
+    },
+    set: (key, val) => {
+      try {
+        localStorage.setItem(key, val);
+      } catch {}
+    },
+  };
+
   // User Preferences
   const prefs = {
-    theme: localStorage.getItem('irbox_reader_theme') || 'sepia',
-    font: localStorage.getItem('irbox_reader_font') || 'serif',
-    size: parseInt(localStorage.getItem('irbox_reader_size') || '18', 10),
-    lh: localStorage.getItem('irbox_reader_lh') || 'normal',
+    theme: safeStore.get('irbox_reader_theme', 'sepia'),
+    font: safeStore.get('irbox_reader_font', 'serif'),
+    size: parseInt(safeStore.get('irbox_reader_size', '18'), 10),
+    lh: safeStore.get('irbox_reader_lh', 'normal'),
   };
 
   function applyPreferences() {
@@ -95,7 +111,7 @@
 
   function savePreference(key, val) {
     prefs[key] = val;
-    localStorage.setItem('irbox_reader_' + key, val);
+    safeStore.set('irbox_reader_' + key, val);
     applyPreferences();
   }
 
@@ -329,15 +345,13 @@
     buildTocUI();
 
     // Check saved progress
-    const savedIndex = parseInt(
-      localStorage.getItem('irbox_book_progress_' + bookStorageKey) || '0',
-      10
-    );
+    const savedIndex = parseInt(safeStore.get('irbox_book_progress_' + bookStorageKey, '0'), 10);
     currentChapterIndex =
       !isNaN(savedIndex) && savedIndex >= 0 && savedIndex < epubSpine.length ? savedIndex : 0;
 
     loadingEl.hidden = true;
     epubContainer.hidden = false;
+    pdfContainer.hidden = true;
 
     await renderChapter(currentChapterIndex);
   }
@@ -373,7 +387,7 @@
     currentChapterIndex = index;
 
     // Save progress
-    localStorage.setItem('irbox_book_progress_' + bookStorageKey, index);
+    safeStore.set('irbox_book_progress_' + bookStorageKey, index);
 
     // Clean up previous blob URLs to avoid memory leaks
     createdObjectUrls.forEach((url) => URL.revokeObjectURL(url));
@@ -410,7 +424,8 @@
         !srcAttr.startsWith('https://') &&
         !srcAttr.startsWith('data:')
       ) {
-        const fullImgPath = resolvePath(chapterDir, srcAttr);
+        const cleanSrc = decodeURIComponent(srcAttr.split('#')[0].split('?')[0]);
+        const fullImgPath = resolvePath(chapterDir, cleanSrc);
         const imgBytes = await readZipEntry(fullImgPath);
         if (imgBytes) {
           const mime = fullImgPath.endsWith('.svg')
@@ -466,6 +481,7 @@
   function loadPdf(url, filename) {
     loadingEl.hidden = true;
     pdfContainer.hidden = false;
+    epubContainer.hidden = true;
 
     const cleanTitle = filename.replace(/\.pdf$/i, '').replace(/[-_]+/g, ' ');
     bookTitleEl.textContent = cleanTitle;
