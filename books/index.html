@@ -39,17 +39,15 @@ permalink: /books/
         </svg>
       </div>
       <div class="book-dropzone__text">
-        <h2 class="display-3" style="margin: 0 0 4px; font-size: 1.15rem;">
-          Instant Web Book Reader
-        </h2>
-        <p class="muted" style="margin: 0; font-size: 0.925rem;">
+        <h2 class="display-3 book-dropzone__title">Instant Web Book Reader</h2>
+        <p class="muted book-dropzone__desc">
           Drag and drop any <strong>.epub</strong> or <strong>.pdf</strong> file here to read
           instantly in your browser. 100% private, runs entirely on your device with no server
           upload.
         </p>
       </div>
       <div class="book-dropzone__action">
-        <label for="book-file-input" class="btn btn--secondary" style="cursor: pointer;">
+        <label for="book-file-input" class="btn btn--secondary">
           <svg
             width="18"
             height="18"
@@ -130,7 +128,7 @@ permalink: /books/
               <span class="badge badge--{{ book.format | downcase }}">
                 {{- book.format | upcase -}}
               </span>
-              <span class="muted" style="font-size: 0.825rem;">{{ book.file_size }}</span>
+              <span class="muted book-card__size">{{ book.file_size }}</span>
             </div>
             <h2 class="display-3 book-card__title">
               <a href="{{ book.reader_url | relative_url }}">{{ book.title }}</a>
@@ -152,8 +150,7 @@ permalink: /books/
           <div class="book-card__footer">
             <a
               href="{{ book.reader_url | relative_url }}"
-              class="btn btn--primary"
-              style="flex: 1; justify-content: center;"
+              class="btn btn--primary book-card__action"
             >
               <svg
                 width="18"
@@ -199,7 +196,7 @@ permalink: /books/
         </article>
       {%- endfor %}
     {%- else %}
-      <div class="card center muted" style="grid-column: 1 / -1; padding: 48px;">
+      <div class="card center muted book-empty-state">
         <p>
           No books in archive yet. Drop a <code>.epub</code> or <code>.pdf</code> file into
           <code>books/archive/</code> and run <code>npm run index:books</code>.
@@ -210,8 +207,8 @@ permalink: /books/
 
   <div
     id="books-empty-search"
-    class="card center muted"
-    style="display: none; padding: 48px; margin-top: 24px;"
+    class="card center muted book-empty-state"
+    style="display: none; margin-top: 24px;"
   >
     <p>No books matching your search query.</p>
   </div>
@@ -219,7 +216,7 @@ permalink: /books/
   <!-- Layman Archiving Guide Section -->
   <section class="card book-guide-card">
     <div class="book-guide-inner">
-      <div style="color: var(--accent); flex-shrink: 0;" aria-hidden="true">
+      <div class="book-guide__icon" aria-hidden="true">
         <svg
           width="28"
           height="28"

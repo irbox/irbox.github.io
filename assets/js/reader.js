@@ -90,6 +90,7 @@
     shell.setAttribute('data-font', prefs.font);
     shell.setAttribute('data-lh', prefs.lh);
     document.documentElement.style.setProperty('--reader-font-size', prefs.size + 'px');
+    shell.style.setProperty('--reader-font-size', prefs.size + 'px');
 
     if (fontDisplay) fontDisplay.textContent = prefs.size + 'px';
 
