@@ -711,6 +711,13 @@ h6,
   word-wrap: break-word;
   letter-spacing: -0.015em;
   text-rendering: optimizeLegibility;
+  text-wrap: balance;
+}
+
+p,
+.lead,
+.prose p {
+  text-wrap: pretty;
 }
 .display-1 {
   font-size: clamp(24px, 5vw, 44px);

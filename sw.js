@@ -34,25 +34,29 @@ self.addEventListener('install', (event) => {
   );
 });
 
-/* Prune outdated caches on activation */
+/* Prune outdated caches on activation and enable modern Navigation Preload */
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches
-      .keys()
-      .then((keys) =>
-        Promise.all(
-          keys.map((key) => {
-            if (key !== CACHE_NAME) {
-              return caches.delete(key);
-            }
-          })
-        )
-      )
-      .then(() => self.clients.claim())
+    Promise.all([
+      caches
+        .keys()
+        .then((keys) =>
+          Promise.all(
+            keys.map((key) => {
+              if (key !== CACHE_NAME) {
+                return caches.delete(key);
+              }
+            })
+          )
+        ),
+      self.registration.navigationPreload
+        ? self.registration.navigationPreload.enable()
+        : Promise.resolve(),
+    ]).then(() => self.clients.claim())
   );
 });
 
-/* Network interceptor with Stale-While-Revalidate and Offline Fallback */
+/* Network interceptor with Navigation Preload, Stale-While-Revalidate and Offline Fallback */
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
@@ -68,22 +72,29 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 1. Navigation requests (HTML pages) -> Network first with cache & offline fallback
+  // 1. Navigation requests (HTML pages) -> Use Navigation Preload if available, else network-first
   if (req.mode === 'navigate') {
     event.respondWith(
-      fetch(req)
-        .then((networkRes) => {
+      (async () => {
+        try {
+          const preloadRes = await event.preloadResponse;
+          if (preloadRes) {
+            const clone = preloadRes.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(req, clone));
+            return preloadRes;
+          }
+          const networkRes = await fetch(req);
           if (networkRes && networkRes.status === 200) {
-            const resClone = networkRes.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(req, resClone));
+            const clone = networkRes.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(req, clone));
           }
           return networkRes;
-        })
-        .catch(async () => {
+        } catch {
           const cachedRes = await caches.match(req);
           if (cachedRes) return cachedRes;
           return caches.match(OFFLINE_URL);
-        })
+        }
+      })()
     );
     return;
   }

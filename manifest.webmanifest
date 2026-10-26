@@ -1,10 +1,16 @@
 {
+  "id": "/",
   "name": "irbox — Showcase, Docs & Engineering Notes",
   "short_name": "irbox",
   "description": "Personal site and digital garden of irbox — projects, technical notes, open-source tools, and documentation.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui", "browser"],
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+  },
+  "handle_links": "preferred",
   "orientation": "any",
   "background_color": "#0a0d12",
   "theme_color": "#faf8f5",
