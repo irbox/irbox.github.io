@@ -29,8 +29,8 @@ console.log('Hello, docs!');
 
 ## Linking between pages
 
-Link with `{% raw %}{{ site.baseurl }}{% endraw %}` in front of absolute paths so links keep working when the site is served from a sub-path:
+Link directly with absolute root paths:
 
 ```markdown
-[Getting started]({% raw %}{{ site.baseurl }}{% endraw %}/docs/getting-started/)
+[Getting started](/docs/getting-started/)
 ```

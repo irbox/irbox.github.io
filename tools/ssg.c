@@ -690,27 +690,50 @@ static void render_footer(StrBuf *out) {
         "    <span class=\"muted\" style=\"font-size:13px;\">© 2026 irbox. Zero external tracking.</span>\n"
         "  </div>\n"
         "</footer>\n"
-        "<dialog class=\"search-dialog\" id=\"search-dialog\">\n"
-        "  <div class=\"search-dialog__box\">\n"
-        "    <div class=\"search-input-wrap\">\n"
-        "      <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21-4.3-4.3\"/></svg>\n"
-        "      <input type=\"search\" id=\"search-input\" placeholder=\"Search documentation, projects, and articles...\" autocomplete=\"off\">\n"
-        "      <button class=\"icon-btn\" type=\"button\" data-search-close aria-label=\"Close search\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M18 6 6 18M6 6l12 12\"/></svg></button>\n"
-        "    </div>\n"
-        "    <div class=\"search-results\" id=\"search-results\"></div>\n"
+        "<dialog class=\"search\" id=\"search-dialog\" aria-label=\"Search the site\" data-index=\"/search.json\">\n"
+        "  <div class=\"search__box\">\n"
+        "    <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21-4.3-4.3\"/></svg>\n"
+        "    <input type=\"search\" id=\"search-input\" placeholder=\"Search docs, projects and posts…\" autocomplete=\"off\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-label=\"Search\">\n"
+        "    <button class=\"icon-btn\" type=\"button\" data-search-close aria-label=\"Close search\">\n"
+        "      <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M18 6 6 18M6 6l12 12\"/></svg>\n"
+        "    </button>\n"
         "  </div>\n"
+        "  <ul class=\"search__results\" id=\"search-results\" aria-label=\"Search results\"></ul>\n"
+        "  <div class=\"sr-only\" aria-live=\"polite\" id=\"search-status\"></div>\n"
+        "  <p class=\"search__hint\">↑↓ to navigate · Enter to open · Esc to close</p>\n"
         "</dialog>\n"
-        "<dialog class=\"shortcuts-dialog\" id=\"shortcuts-dialog\">\n"
-        "  <div class=\"shortcuts-dialog__box\">\n"
+        "<dialog class=\"shortcuts-dialog\" id=\"shortcuts-dialog\" aria-label=\"Keyboard Shortcuts\">\n"
+        "  <div class=\"shortcuts-dialog__inner\">\n"
         "    <div class=\"shortcuts-dialog__header\">\n"
-        "      <h2>Keyboard Shortcuts</h2>\n"
-        "      <button class=\"icon-btn\" type=\"button\" data-shortcuts-close aria-label=\"Close\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M18 6 6 18M6 6l12 12\"/></svg></button>\n"
+        "      <div class=\"shortcuts-dialog__title-group\">\n"
+        "        <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect width=\"20\" height=\"14\" x=\"2\" y=\"5\" rx=\"2\"/><path d=\"M6 9h.01M10 9h.01M14 9h.01M18 9h.01M6 13h.01M18 13h.01M10 13h4\"/></svg>\n"
+        "        <h2 class=\"shortcuts-dialog__title\">Keyboard Shortcuts</h2>\n"
+        "      </div>\n"
+        "      <button class=\"icon-btn\" type=\"button\" data-shortcuts-close aria-label=\"Close shortcuts\">\n"
+        "        <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M18 6 6 18M6 6l12 12\"/></svg>\n"
+        "      </button>\n"
         "    </div>\n"
-        "    <div class=\"shortcuts-list\">\n"
-        "      <div class=\"shortcut-item\"><kbd>/</kbd> or <kbd>Ctrl K</kbd><span>Open Search</span></div>\n"
-        "      <div class=\"shortcut-item\"><kbd>?</kbd><span>Show Keyboard Shortcuts</span></div>\n"
-        "      <div class=\"shortcut-item\"><kbd>T</kbd><span>Toggle Color Theme</span></div>\n"
-        "      <div class=\"shortcut-item\"><kbd>Esc</kbd><span>Close Dialogs</span></div>\n"
+        "    <div class=\"shortcuts-dialog__content\">\n"
+        "      <div class=\"shortcuts-group\">\n"
+        "        <h3 class=\"shortcuts-group__title\">Navigation</h3>\n"
+        "        <dl class=\"shortcuts-list\">\n"
+        "          <div class=\"shortcuts-item\"><dt><kbd>H</kbd></dt><dd>Home</dd></div>\n"
+        "          <div class=\"shortcuts-item\"><dt><kbd>D</kbd></dt><dd>Documentation</dd></div>\n"
+        "          <div class=\"shortcuts-item\"><dt><kbd>P</kbd></dt><dd>Projects</dd></div>\n"
+        "          <div class=\"shortcuts-item\"><dt><kbd>B</kbd></dt><dd>Blog</dd></div>\n"
+        "          <div class=\"shortcuts-item\"><dt><kbd>L</kbd></dt><dd>Books & Archive</dd></div>\n"
+        "        </dl>\n"
+        "      </div>\n"
+        "      <div class=\"shortcuts-group\">\n"
+        "        <h3 class=\"shortcuts-group__title\">General</h3>\n"
+        "        <dl class=\"shortcuts-list\">\n"
+        "          <div class=\"shortcuts-item\"><dt><kbd>/</kbd> <span class=\"or\">or</span> <kbd>Ctrl</kbd> <kbd>K</kbd></dt><dd>Search site</dd></div>\n"
+        "          <div class=\"shortcuts-item\"><dt><kbd>T</kbd></dt><dd>Toggle light / dark theme</dd></div>\n"
+        "          <div class=\"shortcuts-item\"><dt><kbd>?</kbd></dt><dd>Toggle keyboard shortcuts</dd></div>\n"
+        "          <div class=\"shortcuts-item\"><dt><kbd>Ctrl</kbd> <kbd>P</kbd></dt><dd>Print / Export PDF</dd></div>\n"
+        "          <div class=\"shortcuts-item\"><dt><kbd>Esc</kbd></dt><dd>Close dialog</dd></div>\n"
+        "        </dl>\n"
+        "      </div>\n"
         "    </div>\n"
         "  </div>\n"
         "</dialog>\n"
@@ -862,9 +885,65 @@ static void render_docs_page(const DocItem *d, const char *out_dir) {
     );
 
     buf_append_str(&body, d->html_content);
+    buf_append_str(&body, "        </div>\n");
+
+    /* Docs Previous / Next Pager */
+    const char *all_slugs[64];
+    size_t total_nav = 0;
+    for (size_t s = 0; s < nav_section_count; s++) {
+        for (size_t k = 0; k < nav_sections[s].count; k++) {
+            if (total_nav < 64) all_slugs[total_nav++] = nav_sections[s].slugs[k];
+        }
+    }
+    int cur_idx = -1;
+    for (size_t i = 0; i < total_nav; i++) {
+        if (strcmp(all_slugs[i], d->slug) == 0) {
+            cur_idx = (int)i;
+            break;
+        }
+    }
+    const DocItem *prev_d = NULL;
+    const DocItem *next_d = NULL;
+    if (cur_idx > 0) {
+        for (size_t i = 0; i < doc_count; i++) {
+            if (strcmp(docs[i].slug, all_slugs[cur_idx - 1]) == 0) {
+                prev_d = &docs[i];
+                break;
+            }
+        }
+    }
+    if (cur_idx >= 0 && (size_t)(cur_idx + 1) < total_nav) {
+        for (size_t i = 0; i < doc_count; i++) {
+            if (strcmp(docs[i].slug, all_slugs[cur_idx + 1]) == 0) {
+                next_d = &docs[i];
+                break;
+            }
+        }
+    }
+    if (prev_d || next_d) {
+        buf_append_str(&body, "        <nav class=\"pager\" aria-label=\"Documentation navigation\">\n");
+        if (prev_d) {
+            buf_append_str(&body, "          <a class=\"pager__item\" href=\"");
+            buf_append_str(&body, prev_d->url);
+            buf_append_str(&body, "\"><span class=\"pager__label\">Previous</span><span class=\"pager__title\">← ");
+            escape_html(&body, prev_d->title, strlen(prev_d->title));
+            buf_append_str(&body, "</span></a>\n");
+        } else {
+            buf_append_str(&body, "          <span aria-hidden=\"true\"></span>\n");
+        }
+        if (next_d) {
+            buf_append_str(&body, "          <a class=\"pager__item pager__item--next\" href=\"");
+            buf_append_str(&body, next_d->url);
+            buf_append_str(&body, "\"><span class=\"pager__label\">Next</span><span class=\"pager__title\">");
+            escape_html(&body, next_d->title, strlen(next_d->title));
+            buf_append_str(&body, " →</span></a>\n");
+        } else {
+            buf_append_str(&body, "          <span aria-hidden=\"true\"></span>\n");
+        }
+        buf_append_str(&body, "        </nav>\n");
+    }
 
     buf_append_str(&body,
-        "        </div>\n"
         "        <p class=\"edit-link\">\n"
         "          <a href=\""
     );
@@ -939,7 +1018,40 @@ static void render_post_page(const PostItem *p, const char *out_dir) {
     );
 
     buf_append_str(&body, p->html_content);
-    buf_append_str(&body, "  </div>\n</article>\n");
+    buf_append_str(&body, "  </div>\n");
+
+    /* Post Previous / Next Pager */
+    size_t cur_p = 0;
+    for (size_t i = 0; i < post_count; i++) {
+        if (&posts[i] == p) { cur_p = i; break; }
+    }
+    const PostItem *prev_p = cur_p > 0 ? &posts[cur_p - 1] : NULL;
+    const PostItem *next_p = (cur_p + 1 < post_count) ? &posts[cur_p + 1] : NULL;
+
+    if (prev_p || next_p) {
+        buf_append_str(&body, "  <nav class=\"pager\" aria-label=\"More posts\">\n");
+        if (prev_p) {
+            buf_append_str(&body, "    <a class=\"pager__item\" href=\"");
+            buf_append_str(&body, prev_p->url);
+            buf_append_str(&body, "\"><span class=\"pager__label\">Older</span><span class=\"pager__title\">← ");
+            escape_html(&body, prev_p->title, strlen(prev_p->title));
+            buf_append_str(&body, "</span></a>\n");
+        } else {
+            buf_append_str(&body, "    <span aria-hidden=\"true\"></span>\n");
+        }
+        if (next_p) {
+            buf_append_str(&body, "    <a class=\"pager__item pager__item--next\" href=\"");
+            buf_append_str(&body, next_p->url);
+            buf_append_str(&body, "\"><span class=\"pager__label\">Newer</span><span class=\"pager__title\">");
+            escape_html(&body, next_p->title, strlen(next_p->title));
+            buf_append_str(&body, " →</span></a>\n");
+        } else {
+            buf_append_str(&body, "    <span aria-hidden=\"true\"></span>\n");
+        }
+        buf_append_str(&body, "  </nav>\n");
+    }
+
+    buf_append_str(&body, "</article>\n");
 
     StrBuf full;
     buf_init(&full, 16384);
@@ -1035,7 +1147,7 @@ static void render_project_page(const ProjectItem *pr, const char *out_dir) {
    ========================================================================== */
 static void render_books_landing(const char *out_dir) {
     StrBuf body;
-    buf_init(&body, 8192);
+    buf_init(&body, 16384);
 
     buf_append_str(&body,
         "<div class=\"container section\">\n"
@@ -1055,38 +1167,151 @@ static void render_books_landing(const char *out_dir) {
         "        <p class=\"muted book-dropzone__desc\">Drag and drop any <strong>.epub</strong> or <strong>.pdf</strong> file here to read instantly in your browser. 100% private, runs entirely on your device with no server upload.</p>\n"
         "      </div>\n"
         "      <div class=\"book-dropzone__action\">\n"
-        "        <a href=\"/books/reader/\" class=\"btn btn--secondary\">Open Web Reader</a>\n"
+        "        <label for=\"book-file-input\" class=\"btn btn--secondary\">\n"
+        "          <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/><polyline points=\"17 8 12 3 7 8\"/><line x1=\"12\" y1=\"3\" x2=\"12\" y2=\"15\"/></svg>\n"
+        "          <span>Open local file</span>\n"
+        "        </label>\n"
+        "        <input type=\"file\" id=\"book-file-input\" accept=\".epub,.pdf,application/epub+zip,application/pdf\" style=\"display:none;\">\n"
         "      </div>\n"
         "    </div>\n"
         "  </section>\n"
-        "  <section class=\"section\">\n"
-        "    <h2 class=\"display-2\" style=\"margin-bottom:24px;\">Library Archive</h2>\n"
-        "    <div class=\"grid grid--cards\">\n"
-        "      <article class=\"card book-card\">\n"
-        "        <div class=\"book-card__body\">\n"
-        "          <span class=\"badge badge--added\">PDF</span>\n"
-        "          <h3 class=\"book-card__title\">Architecture &amp; Design Primer</h3>\n"
-        "          <p class=\"book-card__desc\">A handbook on resilient static architectures, client-side tools, and publishing.</p>\n"
-        "          <div style=\"display:flex;gap:8px;margin-top:16px;\">\n"
-        "            <a href=\"/books/reader/?book=architecture-primer.pdf\" class=\"btn btn--primary btn--sm\">Read Online</a>\n"
-        "            <a href=\"/books/archive/architecture-primer.pdf\" class=\"btn btn--secondary btn--sm\" download>Download</a>\n"
-        "          </div>\n"
-        "        </div>\n"
-        "      </article>\n"
-        "      <article class=\"card book-card\">\n"
-        "        <div class=\"book-card__body\">\n"
-        "          <span class=\"badge badge--added\">EPUB</span>\n"
-        "          <h3 class=\"book-card__title\">Irbox — Documentation &amp; Field Notes</h3>\n"
-        "          <p class=\"book-card__desc\">Complete documentation and reference guide for Irbox projects and systems.</p>\n"
-        "          <div style=\"display:flex;gap:8px;margin-top:16px;\">\n"
-        "            <a href=\"/books/reader/?book=irbox-docs.epub\" class=\"btn btn--primary btn--sm\">Read Online</a>\n"
-        "            <a href=\"/books/archive/irbox-docs.epub\" class=\"btn btn--secondary btn--sm\" download>Download</a>\n"
-        "          </div>\n"
-        "        </div>\n"
-        "      </article>\n"
+        "  <div class=\"books-toolbar\">\n"
+        "    <div class=\"chips\" role=\"group\" aria-label=\"Filter books by format\" id=\"books-format-filters\">\n"
+        "      <button class=\"chip is-active\" type=\"button\" data-format=\"all\" aria-pressed=\"true\">All Books <span class=\"badge\" style=\"margin-left:6px;\">2</span></button>\n"
+        "      <button class=\"chip\" type=\"button\" data-format=\"epub\" aria-pressed=\"false\">EPUB</button>\n"
+        "      <button class=\"chip\" type=\"button\" data-format=\"pdf\" aria-pressed=\"false\">PDF</button>\n"
         "    </div>\n"
-        "  </section>\n"
+        "    <div class=\"books-search-box\">\n"
+        "      <input type=\"search\" id=\"books-search\" class=\"input books-search-input\" placeholder=\"Filter shelf...\" aria-label=\"Filter books shelf by title, author, or keywords\">\n"
+        "      <svg class=\"books-search-icon\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><line x1=\"21\" y1=\"21\" x2=\"16.65\" y2=\"16.65\"/></svg>\n"
+        "    </div>\n"
+        "  </div>\n"
+        "  <div class=\"grid grid--cards\" id=\"books-grid\">\n"
+        "    <article class=\"card book-card\" data-format=\"pdf\" data-title=\"architecture &amp; design primer\" data-author=\"irbox\" data-desc=\"a handbook on resilient static architectures, client-side tools, and publishing.\">\n"
+        "      <div class=\"book-card__header\">\n"
+        "        <div class=\"book-card__badge-row\">\n"
+        "          <span class=\"badge badge--pdf\">PDF</span>\n"
+        "          <span class=\"muted book-card__size\">3.4 KB</span>\n"
+        "        </div>\n"
+        "        <h2 class=\"display-3 book-card__title\"><a href=\"/books/reader/?book=architecture-primer.pdf\">Architecture &amp; Design Primer</a></h2>\n"
+        "        <p class=\"book-card__byline\"><span>by</span> <strong>Irbox</strong> <span aria-hidden=\"true\">·</span> <span>3 pages</span></p>\n"
+        "      </div>\n"
+        "      <p class=\"book-card__desc\">A handbook on resilient static architectures, client-side tools, and publishing.</p>\n"
+        "      <div class=\"book-card__footer\">\n"
+        "        <a href=\"/books/reader/?book=architecture-primer.pdf\" class=\"btn btn--primary book-card__action\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z\"/><path d=\"M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z\"/></svg><span>Read Online</span></a>\n"
+        "        <a href=\"/books/archive/architecture-primer.pdf\" class=\"btn btn--secondary\" download title=\"Download PDF file\" aria-label=\"Download Architecture &amp; Design Primer (PDF)\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/><polyline points=\"17 8 12 3 7 8\"/><line x1=\"12\" y1=\"3\" x2=\"12\" y2=\"15\"/></svg><span>Download</span></a>\n"
+        "      </div>\n"
+        "    </article>\n"
+        "    <article class=\"card book-card\" data-format=\"epub\" data-title=\"irbox — documentation, architecture &amp; field notes\" data-author=\"irbox\" data-desc=\"complete documentation and reference guide for irbox projects and systems.\">\n"
+        "      <div class=\"book-card__header\">\n"
+        "        <div class=\"book-card__badge-row\">\n"
+        "          <span class=\"badge badge--epub\">EPUB</span>\n"
+        "          <span class=\"muted book-card__size\">15.4 KB</span>\n"
+        "        </div>\n"
+        "        <h2 class=\"display-3 book-card__title\"><a href=\"/books/reader/?book=irbox-docs.epub\">Irbox — Documentation &amp; Field Notes</a></h2>\n"
+        "        <p class=\"book-card__byline\"><span>by</span> <strong>Irbox</strong> <span aria-hidden=\"true\">·</span> <span>14 chapters</span></p>\n"
+        "      </div>\n"
+        "      <p class=\"book-card__desc\">Complete documentation and reference guide for Irbox projects and systems.</p>\n"
+        "      <div class=\"book-card__footer\">\n"
+        "        <a href=\"/books/reader/?book=irbox-docs.epub\" class=\"btn btn--primary book-card__action\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z\"/><path d=\"M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z\"/></svg><span>Read Online</span></a>\n"
+        "        <a href=\"/books/archive/irbox-docs.epub\" class=\"btn btn--secondary\" download title=\"Download EPUB file\" aria-label=\"Download Irbox Documentation (EPUB)\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/><polyline points=\"17 8 12 3 7 8\"/><line x1=\"12\" y1=\"3\" x2=\"12\" y2=\"15\"/></svg><span>Download</span></a>\n"
+        "      </div>\n"
+        "    </article>\n"
+        "  </div>\n"
+        "  <div id=\"books-empty-search\" class=\"card center muted book-empty-state\" style=\"display:none;margin-top:24px;\"><p>No books matching your search query.</p></div>\n"
         "</div>\n"
+        "<script>\n"
+        "(function(){\n"
+        "  var grid=document.getElementById('books-grid');\n"
+        "  var emptyMsg=document.getElementById('books-empty-search');\n"
+        "  var searchInput=document.getElementById('books-search');\n"
+        "  var filterButtons=document.querySelectorAll('#books-format-filters .chip');\n"
+        "  var dropzone=document.getElementById('book-dropzone');\n"
+        "  var fileInput=document.getElementById('book-file-input');\n"
+        "  var currentFormat='all';\n"
+        "  var currentQuery='';\n"
+        "  function filterBooks(){\n"
+        "    if(!grid)return;\n"
+        "    var cards=grid.querySelectorAll('.book-card');\n"
+        "    var visible=0;\n"
+        "    cards.forEach(function(card){\n"
+        "      var fmt=card.getAttribute('data-format')||'';\n"
+        "      var title=card.getAttribute('data-title')||'';\n"
+        "      var desc=card.getAttribute('data-desc')||'';\n"
+        "      var mFmt=(currentFormat==='all'||fmt===currentFormat);\n"
+        "      var mQ=(!currentQuery||title.indexOf(currentQuery)>-1||desc.indexOf(currentQuery)>-1);\n"
+        "      if(mFmt&&mQ){card.style.display='';visible++;}else{card.style.display='none';}\n"
+        "    });\n"
+        "    if(emptyMsg)emptyMsg.style.display=visible===0?'block':'none';\n"
+        "  }\n"
+        "  if(searchInput){\n"
+        "    searchInput.addEventListener('input',function(e){\n"
+        "      currentQuery=e.target.value.toLowerCase().trim();\n"
+        "      filterBooks();\n"
+        "    });\n"
+        "  }\n"
+        "  filterButtons.forEach(function(btn){\n"
+        "    btn.addEventListener('click',function(){\n"
+        "      filterButtons.forEach(function(b){b.classList.remove('is-active');b.setAttribute('aria-pressed','false');});\n"
+        "      btn.classList.add('is-active');\n"
+        "      btn.setAttribute('aria-pressed','true');\n"
+        "      currentFormat=btn.getAttribute('data-format')||'all';\n"
+        "      filterBooks();\n"
+        "    });\n"
+        "  });\n"
+        "  var bookDb={\n"
+        "    open:function(){\n"
+        "      return new Promise(function(resolve,reject){\n"
+        "        if(!window.indexedDB)return reject(new Error('No IndexedDB'));\n"
+        "        var req=indexedDB.open('irbox_books_db',1);\n"
+        "        req.onupgradeneeded=function(e){var db=e.target.result;if(!db.objectStoreNames.contains('books'))db.createObjectStore('books',{keyPath:'id'});};\n"
+        "        req.onsuccess=function(e){resolve(e.target.result);};\n"
+        "        req.onerror=function(e){reject(e.target.error);};\n"
+        "      });\n"
+        "    },\n"
+        "    save:function(name,data){\n"
+        "      return bookDb.open().then(function(db){\n"
+        "        return new Promise(function(resolve,reject){\n"
+        "          var tx=db.transaction('books','readwrite');\n"
+        "          tx.objectStore('books').put({id:'current',name:name,data:data,timestamp:Date.now()});\n"
+        "          tx.oncomplete=function(){resolve();};\n"
+        "          tx.onerror=function(e){reject(e.target.error);};\n"
+        "        });\n"
+        "      }).catch(function(){\n"
+        "        sessionStorage.setItem('irbox_temp_book_name',name);\n"
+        "        sessionStorage.setItem('irbox_temp_book_data',data);\n"
+        "      });\n"
+        "    }\n"
+        "  };\n"
+        "  function openLocalFile(file){\n"
+        "    if(!file)return;\n"
+        "    var reader=new FileReader();\n"
+        "    reader.onload=function(e){\n"
+        "      bookDb.save(file.name,e.target.result).then(function(){\n"
+        "        window.location.href='/books/reader/?book=local';\n"
+        "      });\n"
+        "    };\n"
+        "    reader.readAsDataURL(file);\n"
+        "  }\n"
+        "  if(fileInput){\n"
+        "    fileInput.addEventListener('change',function(e){\n"
+        "      if(e.target.files&&e.target.files[0])openLocalFile(e.target.files[0]);\n"
+        "    });\n"
+        "  }\n"
+        "  if(dropzone){\n"
+        "    ['dragenter','dragover'].forEach(function(evt){\n"
+        "      dropzone.addEventListener(evt,function(e){e.preventDefault();e.stopPropagation();dropzone.classList.add('is-dragover');});\n"
+        "    });\n"
+        "    ['dragleave','drop'].forEach(function(evt){\n"
+        "      dropzone.addEventListener(evt,function(e){e.preventDefault();e.stopPropagation();dropzone.classList.remove('is-dragover');});\n"
+        "    });\n"
+        "    dropzone.addEventListener('drop',function(e){\n"
+        "      var f=e.dataTransfer&&e.dataTransfer.files;\n"
+        "      if(f&&f.length>0)openLocalFile(f[0]);\n"
+        "    });\n"
+        "  }\n"
+        "})();\n"
+        "</script>\n"
     );
 
     StrBuf full;
@@ -1095,11 +1320,65 @@ static void render_books_landing(const char *out_dir) {
 
     char target[MAX_PATH];
     snprintf(target, sizeof(target), "%s/books/index.html", out_dir);
-    mkdir_p("_site/books");
+    char dir[MAX_PATH];
+    snprintf(dir, sizeof(dir), "%s/books", out_dir);
+    mkdir_p(dir);
     write_entire_file(target, full.data, full.len);
 
     buf_free(&body);
     buf_free(&full);
+}
+
+static void render_reader_page(const char *out_dir) {
+    char *content = read_entire_file("books/reader/index.html");
+    if (!content) return;
+
+    DocItem meta;
+    memset(&meta, 0, sizeof(meta));
+    const char *raw_html = parse_frontmatter_block(content, &meta, 1);
+
+    /* Replace Liquid tags */
+    StrBuf clean_reader;
+    buf_init(&clean_reader, strlen(raw_html) + 1024);
+    const char *p = raw_html;
+    while (*p) {
+        if (strncmp(p, "{{ '/books/' | relative_url }}", 30) == 0) {
+            buf_append_str(&clean_reader, "/books/");
+            p += 30;
+            continue;
+        }
+        if (strncmp(p, "{{ \"/books/\" | relative_url }}", 30) == 0) {
+            buf_append_str(&clean_reader, "/books/");
+            p += 30;
+            continue;
+        }
+        if (strncmp(p, "{{ '/assets/js/reader.js' | relative_url }}", 43) == 0) {
+            buf_append_str(&clean_reader, "/assets/js/reader.js");
+            p += 43;
+            continue;
+        }
+        if (strncmp(p, "{{ \"/assets/js/reader.js\" | relative_url }}", 43) == 0) {
+            buf_append_str(&clean_reader, "/assets/js/reader.js");
+            p += 43;
+            continue;
+        }
+        buf_append_char(&clean_reader, *p++);
+    }
+
+    StrBuf full;
+    buf_init(&full, clean_reader.len + 4096);
+    wrap_page(&full, "Web Book Reader", "Read digital EPUB and PDF books directly in your browser.", "books", clean_reader.data, "reader-page");
+
+    char target[MAX_PATH];
+    snprintf(target, sizeof(target), "%s/books/reader/index.html", out_dir);
+    char dir[MAX_PATH];
+    snprintf(dir, sizeof(dir), "%s/books/reader", out_dir);
+    mkdir_p(dir);
+    write_entire_file(target, full.data, full.len);
+
+    buf_free(&clean_reader);
+    buf_free(&full);
+    free(content);
 }
 
 static void render_changelog_page(const char *out_dir) {
@@ -1158,7 +1437,9 @@ static void render_changelog_page(const char *out_dir) {
 
     char target[MAX_PATH];
     snprintf(target, sizeof(target), "%s/changelog/index.html", out_dir);
-    mkdir_p("_site/changelog");
+    char dir[MAX_PATH];
+    snprintf(dir, sizeof(dir), "%s/changelog", out_dir);
+    mkdir_p(dir);
     write_entire_file(target, full.data, full.len);
 
     buf_free(&body);
@@ -1350,7 +1631,9 @@ static void render_blog_landing(const char *out_dir) {
 
     char target[MAX_PATH];
     snprintf(target, sizeof(target), "%s/blog/index.html", out_dir);
-    mkdir_p("_site/blog");
+    char dir[MAX_PATH];
+    snprintf(dir, sizeof(dir), "%s/blog", out_dir);
+    mkdir_p(dir);
     write_entire_file(target, full.data, full.len);
 
     buf_free(&body);
@@ -1394,7 +1677,9 @@ static void render_projects_landing(const char *out_dir) {
 
     char target[MAX_PATH];
     snprintf(target, sizeof(target), "%s/projects/index.html", out_dir);
-    mkdir_p("_site/projects");
+    char dir[MAX_PATH];
+    snprintf(dir, sizeof(dir), "%s/projects", out_dir);
+    mkdir_p(dir);
     write_entire_file(target, full.data, full.len);
 
     buf_free(&body);
@@ -1429,7 +1714,9 @@ static void render_about_page(const char *out_dir) {
 
     char target[MAX_PATH];
     snprintf(target, sizeof(target), "%s/about/index.html", out_dir);
-    mkdir_p("_site/about");
+    char dir[MAX_PATH];
+    snprintf(dir, sizeof(dir), "%s/about", out_dir);
+    mkdir_p(dir);
     write_entire_file(target, full.data, full.len);
 
     buf_free(&html);
@@ -1722,6 +2009,7 @@ int main(int argc, char **argv) {
     render_blog_landing(out_dir);
     render_projects_landing(out_dir);
     render_books_landing(out_dir);
+    render_reader_page(out_dir);
     render_changelog_page(out_dir);
     render_about_page(out_dir);
     render_404_page(out_dir);
@@ -1737,46 +2025,15 @@ int main(int argc, char **argv) {
         render_project_page(&projects[i], out_dir);
     }
 
-    /* Books & Reader static mirror */
-    char books_dst[MAX_PATH];
-    snprintf(books_dst, sizeof(books_dst), "%s/books", out_dir);
-    mkdir_p(books_dst);
-    copy_dir_recursive("books/archive", "_site/books/archive");
-    copy_dir_recursive("books/reader", "_site/books/reader");
+    /* Books archive static mirror */
+    char books_arc_dst[MAX_PATH];
+    snprintf(books_arc_dst, sizeof(books_arc_dst), "%s/books/archive", out_dir);
+    copy_dir_recursive("books/archive", books_arc_dst);
 
-    /* Mirror sw.js without liquid frontmatter */
-    char *sw_content = read_entire_file("sw.js");
-    if (sw_content) {
-        const char *sw_body = sw_content;
-        if (strncmp(sw_content, "---", 3) == 0) {
-            const char *second = strstr(sw_content + 3, "---");
-            if (second) {
-                sw_body = second + 3;
-                while (*sw_body == '\r' || *sw_body == '\n') sw_body++;
-            }
-        }
-        /* Replace {{ "/assets/... " | relative_url }} with standard URLs */
-        StrBuf clean_sw;
-        buf_init(&clean_sw, strlen(sw_body) + 1024);
-        const char *p = sw_body;
-        while (*p) {
-            if (strncmp(p, "{{ \"", 4) == 0) {
-                const char *close = strstr(p + 4, "\" | relative_url }}");
-                if (close) {
-                    size_t path_len = close - (p + 4);
-                    buf_append_len(&clean_sw, p + 4, path_len);
-                    p = close + strlen("\" | relative_url }}");
-                    continue;
-                }
-            }
-            buf_append_char(&clean_sw, *p++);
-        }
-        char sw_dst[MAX_PATH];
-        snprintf(sw_dst, sizeof(sw_dst), "%s/sw.js", out_dir);
-        write_entire_file(sw_dst, clean_sw.data, clean_sw.len);
-        buf_free(&clean_sw);
-        free(sw_content);
-    }
+    /* Mirror sw.js */
+    char sw_dst[MAX_PATH];
+    snprintf(sw_dst, sizeof(sw_dst), "%s/sw.js", out_dir);
+    copy_file("sw.js", sw_dst);
 
     /* Mirror Static Assets */
     char assets_dst[MAX_PATH];
@@ -1791,12 +2048,23 @@ int main(int argc, char **argv) {
     snprintf(robots_dst, sizeof(robots_dst), "%s/robots.txt", out_dir);
     copy_file("robots.txt", robots_dst);
 
+    char humans_dst[MAX_PATH];
+    snprintf(humans_dst, sizeof(humans_dst), "%s/humans.txt", out_dir);
+    copy_file("humans.txt", humans_dst);
+
+    char sec_dst[MAX_PATH];
+    snprintf(sec_dst, sizeof(sec_dst), "%s/security.txt", out_dir);
+    copy_file("security.txt", sec_dst);
+
     char sec_dir[MAX_PATH];
     snprintf(sec_dir, sizeof(sec_dir), "%s/.well-known", out_dir);
     mkdir_p(sec_dir);
-    char sec_dst[MAX_PATH];
-    snprintf(sec_dst, sizeof(sec_dst), "%s/security.txt", sec_dir);
-    copy_file(".well-known/security.txt", sec_dst);
+    char sec_well_known[MAX_PATH];
+    snprintf(sec_well_known, sizeof(sec_well_known), "%s/.well-known/security.txt", out_dir);
+    copy_file(".well-known/security.txt", sec_well_known);
+
+    /* Index reader for search */
+    add_search("Web Book Reader", "/books/reader/", "Books", "Read digital EPUB and PDF books directly in your browser with offline support.", "books reader epub pdf viewer");
 
     /* Write Search Index, Sitemap, and RSS Feed */
     write_search_json(out_dir);
@@ -1806,7 +2074,7 @@ int main(int argc, char **argv) {
     clock_gettime(CLOCK_MONOTONIC, &end);
     double elapsed_ms = (end.tv_sec - start.tv_sec) * 1000.0 + (end.tv_nsec - start.tv_nsec) / 1000000.0;
 
-    printf("✨ Successfully compiled & generated %zu pages!\n", doc_count + post_count + project_count + 6);
+    printf("✨ Successfully compiled & generated %zu pages!\n", doc_count + post_count + project_count + 7);
     printf("📊 Search index: %zu entries\n", search_entry_count);
     printf("⏱️  Total build time: %.2f ms\n", elapsed_ms);
     printf("================================================================\n");

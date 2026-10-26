@@ -10,8 +10,8 @@ This workspace includes built-in support for generating, archiving, and reading 
 
 You can download and read the complete workspace as an e-book or printable document at any time:
 
-- **[Download complete EPUB book]({{ '/assets/book.epub' | relative_url }})** — Optimized for Apple Books, Amazon Kindle, Kobo, and e-ink readers.
-- **[Read in Web Book Reader]({{ '/books/reader/?book=irbox-docs.epub' | relative_url }})** — Read right in your browser with adjustable typography, themes, and chapter navigation.
+- **[Download complete EPUB book](/assets/book.epub)** — Optimized for Apple Books, Amazon Kindle, Kobo, and e-ink readers.
+- **[Read in Web Book Reader](/books/reader/?book=irbox-docs.epub)** — Read right in your browser with adjustable typography, themes, and chapter navigation.
 - **Print / Save as PDF** — Use the **Print book** button or press <kbd>Ctrl</kbd> + <kbd>P</kbd> (or <kbd>⌘</kbd> + <kbd>P</kbd> on Mac). The browser will render a clean, publication-ready PDF book with headers, page numbers, and page breaks.
 
 ---

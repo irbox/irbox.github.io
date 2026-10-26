@@ -1,31 +1,27 @@
----
-layout: null
-sitemap: false
----
 /* ==========================================================================
    Irbox PWA Service Worker (v1.1.0)
    Resilient offline-first caching for static assets & intelligent navigation
    ========================================================================== */
 
 const CACHE_NAME = 'irbox-v1.3.0';
-const OFFLINE_URL = '{{ "/offline.html" | relative_url }}';
+const OFFLINE_URL = '/offline.html';
 
 const PRECACHE_ASSETS = [
-  '{{ "/" | relative_url }}',
+  '/',
   OFFLINE_URL,
-  '{{ "/assets/css/main.css" | relative_url }}',
-  '{{ "/assets/js/main.js" | relative_url }}',
-  '{{ "/assets/js/reader.js" | relative_url }}',
-  '{{ "/assets/images/brand-icon.svg" | relative_url }}',
-  '{{ "/assets/images/favicon.svg" | relative_url }}',
-  '{{ "/assets/images/icon-192.png" | relative_url }}',
-  '{{ "/assets/images/icon-512.png" | relative_url }}',
-  '{{ "/assets/fonts/libron/Libron-Regular.woff2" | relative_url }}',
-  '{{ "/assets/fonts/libron/Libron-Bold.woff2" | relative_url }}',
-  '{{ "/manifest.webmanifest" | relative_url }}',
-  '{{ "/assets/book.epub" | relative_url }}',
-  '{{ "/books/archive/irbox-docs.epub" | relative_url }}',
-  '{{ "/search.json" | relative_url }}'
+  '/assets/css/main.css',
+  '/assets/js/main.js',
+  '/assets/js/reader.js',
+  '/assets/images/brand-icon.svg',
+  '/assets/images/favicon.svg',
+  '/assets/images/icon-192.png',
+  '/assets/images/icon-512.png',
+  '/assets/fonts/libron/Libron-Regular.woff2',
+  '/assets/fonts/libron/Libron-Bold.woff2',
+  '/manifest.webmanifest',
+  '/assets/book.epub',
+  '/books/archive/irbox-docs.epub',
+  '/search.json',
 ];
 
 /* Pre-cache core application shell on installation */
@@ -64,7 +60,11 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(req.url);
 
   // Ignore cross-origin non-asset requests
-  if (url.origin !== self.location.origin && !url.hostname.includes('gstatic.com') && !url.hostname.includes('googleapis.com')) {
+  if (
+    url.origin !== self.location.origin &&
+    !url.hostname.includes('gstatic.com') &&
+    !url.hostname.includes('googleapis.com')
+  ) {
     return;
   }
 

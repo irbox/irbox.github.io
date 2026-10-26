@@ -15,4 +15,4 @@ A place to keep projects, documentation and writing together, on a stack I fully
 
 ## What's next
 
-I'll post release notes for my [projects]({{ site.baseurl }}/projects/), and longer pieces about design and engineering.
+I'll post release notes for my [projects](/projects/), and longer pieces about design and engineering.

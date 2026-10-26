@@ -1,21 +1,22 @@
 # Irbox — Personal Engineering Showcase, Books Archive & Writing
 
-A high-performance, accessible, and privacy-respecting personal showcase site built with Jekyll and modern native web standards.
+A high-performance, accessible, and privacy-respecting personal showcase site powered by a standalone zero-dependency C99 static site generator and modern native web standards.
 
-| Section         | Source                          | URL                               |
-| --------------- | ------------------------------- | --------------------------------- |
-| Home            | `index.html`                    | `/`                               |
-| Docs            | `_docs/` + `_data/docs_nav.yml` | `/docs/…`                         |
-| Projects        | `_projects/`                    | `/projects/`, `/projects/<name>/` |
-| Blog            | `_posts/`                       | `/blog/`, `/blog/<slug>/`         |
-| Books & Archive | `books/` + `books/archive/`     | `/books/`, `/books/reader/`       |
-| Changelog       | `_data/changelog.yml`           | `/changelog/`                     |
-| About           | `about.md`                      | `/about/`                         |
+| Section         | Source                      | URL                               |
+| --------------- | --------------------------- | --------------------------------- |
+| Home            | `index.html`                | `/`                               |
+| Docs            | `_docs/`                    | `/docs/…`                         |
+| Projects        | `_projects/`                | `/projects/`, `/projects/<name>/` |
+| Blog            | `_posts/`                   | `/blog/`, `/blog/<slug>/`         |
+| Books & Archive | `books/` + `books/archive/` | `/books/`, `/books/reader/`       |
+| Changelog       | `changelog/`                | `/changelog/`                     |
+| About           | `about.md`                  | `/about/`                         |
 
 ## Features & Native Web Architecture
 
+- **Zero-Dependency C99 SSG**: Standalone C compiler pipeline (`tools/ssg.c`), compiling in ~150ms and rendering the entire site in < 20ms. Completely replaces Jekyll, Ruby, and Bundler.
 - **Zero Heavy Frameworks & Zero Trackers**: Dependency-free vanilla JavaScript and native modern CSS.
-- **Personal Book Archive & In-Browser Reader**: Universal EPUB & PDF reading engine with themes, typography scaling, and offline support.
+- **Personal Book Archive & In-Browser Reader**: Universal EPUB & PDF reading engine with themes, typography scaling, and offline IndexedDB support.
 - **Self-Hosted Typography**: High-legibility serif reading typeface (Libron by Nico Verbruggen, SIL OFL 1.1) preloaded in WOFF2 with zero external tracking calls.
 - **Native Color Schemes**: Light and dark themes implemented via native CSS `light-dark()` with OS preference matching and instant local persistence.
 - **Fast Client-Side Search**: `<dialog>` powered search palette with keyboard navigation (`⌘K` / `Ctrl+K`), live scoring, and fuzzy matches.
@@ -26,32 +27,23 @@ A high-performance, accessible, and privacy-respecting personal showcase site bu
 ## Local Development
 
 ```bash
-bundle install
-npm install
-bundle exec jekyll serve --livereload   # http://localhost:4000
+make build              # Compiles tools/ssg.c and renders _site/ in < 20ms
 ```
 
-## Production Build & Extreme Optimization
+## Production Build & Optimization
 
-The site features an extreme obfuscation and minification pipeline designed for maximum runtime security and wire-transfer efficiency:
+The site features an optimization and pre-compression pipeline for maximum wire-transfer efficiency:
 
 ```bash
-# Full production build: Jekyll compile + Extreme Obfuscation + Extreme Minification + Brotli/Gzip pre-compression
-npm run build:prod
-
-# Or run Jekyll build followed by the optimizer directly:
-npm run build
-
-# Standalone optimization runs:
-npm run optimize      # Optimize and obfuscate all generated assets in _site/
-npm run obfuscate     # Obfuscate all JavaScript files with cryptographic Base64 string arrays and control flow flattening
-npm run minify        # Minify HTML, CSS, JavaScript, SVG, and data manifests
+npm run build           # Full production build: C SSG + Minification + Brotli/Gzip pre-compression
+npm run build:clean     # Clean rebuild from scratch
+npm run format          # Prettier code formatting
+npm run check           # Formatting style validation
 ```
 
 ### Optimization Pipeline Features
 
-- **Extreme JavaScript Obfuscation**: Cryptographic Base64 string array encoding, runtime rotation, control-flow flattening via switch-dispatch state machines, hexadecimal identifier mangling, split strings, and number-to-expression transforms. Fully compliant with strict Content Security Policy (`CSP`).
-- **Extreme HTML Minification**: Full whitespace collapse, comment stripping, attribute quote removal, boolean reduction, and inline CSS & JS compression. Email addresses (`mailto:`) are entity-encoded against scrapers.
+- **Extreme HTML Minification**: Full whitespace collapse, comment stripping, attribute quote removal, boolean reduction, and inline CSS & JS compression.
 - **Level 2 CSS Minification**: AST-level restructuring, rule merging, duplicate declaration elimination, and color/selector compaction via CleanCSS.
 - **SVG Vector Optimization**: Multi-pass SVGO optimization preserving responsive `viewBox` definitions.
 - **Data & Feed Compaction**: Zero-whitespace minification for `search.json`, `manifest.webmanifest`, `feed.xml`, and `sitemap.xml`.
@@ -59,9 +51,10 @@ npm run minify        # Minify HTML, CSS, JavaScript, SVG, and data manifests
 
 ## Adding Content
 
-- **Documentation**: Add `_docs/your-page.md`, then register the slug in `_data/docs_nav.yml`.
+- **Documentation**: Add `_docs/your-page.md`.
 - **Projects**: Add `_projects/your-project.md`. Specify `category`, `tags`, `features`, and `stack`.
 - **Blog Posts**: Add `_posts/YYYY-MM-DD-title.md`.
+- **Books**: Add `.epub` or `.pdf` to `books/archive/` and run `npm run index:books`.
 
 ## License
 

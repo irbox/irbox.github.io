@@ -4,7 +4,7 @@ description: Documentation for the Lumen project (sample).
 category: My projects
 ---
 
-Placeholder documentation for **Lumen**. See the [project page]({{ site.baseurl }}/projects/lumen/).
+Placeholder documentation for **Lumen**. See the [project page](/projects/lumen/).
 
 ## Getting started
 

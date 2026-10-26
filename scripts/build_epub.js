@@ -407,14 +407,19 @@ const epubBuffer = zip.toBuffer();
 
 const outAssets = path.join(rootDir, 'assets', 'book.epub');
 const outSite = path.join(siteDir, 'book.epub');
+const outSiteAssets = path.join(siteDir, 'assets', 'book.epub');
 
 fs.writeFileSync(outAssets, epubBuffer);
 if (fs.existsSync(siteDir)) {
   fs.writeFileSync(outSite, epubBuffer);
+  if (fs.existsSync(path.join(siteDir, 'assets'))) {
+    fs.writeFileSync(outSiteAssets, epubBuffer);
+  }
 }
 
 console.log(`✓ EPUB book generated successfully! (${epubBuffer.length} bytes)`);
 console.log(`  Saved to: ${outAssets}`);
 if (fs.existsSync(siteDir)) {
   console.log(`  Saved to: ${outSite}`);
+  console.log(`  Saved to: ${outSiteAssets}`);
 }

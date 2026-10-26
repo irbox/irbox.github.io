@@ -6,30 +6,32 @@ category: Introduction
 
 ## Requirements
 
-- Ruby 3.0 or newer
-- Bundler (`gem install bundler`)
+- C99-compatible compiler (`gcc` or `clang`)
+- `make`
+- Node.js >= 18 (optional, for asset minification and pre-compression)
 
 ## Install and run
 
-```bash
-bundle install
-bundle exec jekyll serve
-```
-
-## Build for production
+Build the entire static site instantly with zero external dependencies:
 
 ```bash
-JEKYLL_ENV=production bundle exec jekyll build
+make build
 ```
 
-The generated site is written to `_site/`.
+The C SSG compiles in ~150ms and generates all static HTML pages, search index, sitemap, and RSS feed in under 20ms into `_site/`.
+
+## Build for production (with optimization)
+
+```bash
+npm run build
+```
+
+This compiles the site using the C SSG, minifies CSS/HTML/JS, optimizes SVGs, and pre-compresses assets with Brotli (.br) and Gzip (.gz).
 
 ## Deploy
 
-| Host                       | How                                                                                                            |
-| -------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| GitHub Pages               | Push to GitHub, then enable Pages (GitHub Actions or branch deploy). Set `url` and `baseurl` in `_config.yml`. |
-| Netlify / Cloudflare Pages | Build command `bundle exec jekyll build`, publish directory `_site`.                                           |
-| Any static host            | Upload the contents of `_site/`.                                                                               |
-
-> **Project pages:** if the site lives at `username.github.io/repo`, set `baseurl: "/repo"`. All internal links use `relative_url`, so they keep working.
+| Host                      | How                                                                       |
+| ------------------------- | ------------------------------------------------------------------------- |
+| GitHub Pages              | Automated with GitHub Actions via `.github/workflows/deploy.yml`.         |
+| Cloudflare Pages / Vercel | Build command: `make build && node scripts/optimize.js`, output: `_site`. |
+| Any static host           | Upload the contents of `_site/`.                                          |

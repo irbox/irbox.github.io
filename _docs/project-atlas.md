@@ -8,7 +8,7 @@ This page is a template for documenting one of your projects. Replace the conten
 
 ## Overview
 
-Atlas is a sample project used to demonstrate how project documentation lives next to the project showcase. See the [project page]({{ site.baseurl }}/projects/atlas/).
+Atlas is a sample project used to demonstrate how project documentation lives next to the project showcase. See the [project page](/projects/atlas/).
 
 ## Installation
 

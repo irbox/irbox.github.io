@@ -4,29 +4,29 @@ description: Run this site locally and make it yours in a few minutes.
 category: Introduction
 ---
 
-This site is a static [Jekyll](https://jekyllrb.com) project. It combines a portfolio, project showcase, documentation and blog in a single codebase.
+This site is a zero-dependency static project powered by a standalone C99 site generator (`tools/ssg.c`). It combines a portfolio, project showcase, documentation, books archive, and blog in a single codebase.
 
 ## What's included
 
-- **Docs** in `_docs/`, listed in the sidebar by `_data/docs_nav.yml`.
-- **Projects** in `_projects/`, shown on the [Projects]({{ site.baseurl }}/projects/) landing page.
+- **Docs** in `_docs/`, organized into structured sidebar groups.
+- **Projects** in `_projects/`, shown on the [Projects](/projects/) landing page.
 - **Blog posts** in `_posts/`.
+- **Books & Web Reader** in `books/`, supporting native offline EPUB and PDF reading.
 - A configurable **announcement banner**, a **changelog**, light/dark theming and **search**.
 
 ## Quick start
 
 ```bash
-git clone https://github.com/your-username/your-repo.git
-cd your-repo
-bundle install
-bundle exec jekyll serve --livereload
+git clone https://github.com/irbox/irbox.github.io.git
+cd irbox.github.io
+make build
 ```
 
-Open <http://localhost:4000>. Edits to content, layouts and CSS reload automatically; changes to `_config.yml` need a restart.
+Open `_site/index.html` or serve with any local HTTP server. The C SSG compiles and generates the full 30-page site in sub-second speed with zero runtime dependencies.
 
 ## Next steps
 
-1. Edit `_config.yml`: title, author, URL, social links.
-2. Replace the sample [projects]({{ site.baseurl }}/projects/) and [posts]({{ site.baseurl }}/blog/) with your own.
-3. Swap the placeholder images in `assets/images/`.
-4. Read [Installation]({{ site.baseurl }}/docs/installation/) for deploy options.
+1. Add your projects to `_projects/`.
+2. Write notes and essays in `_posts/` and documentation guides in `_docs/`.
+3. Add books to `books/archive/` and run `npm run index:books`.
+4. Read [Installation](/docs/installation/) for deploy options.
