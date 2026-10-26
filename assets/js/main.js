@@ -189,9 +189,20 @@
     const drawerBtn = $('[data-drawer-toggle]');
     const drawer = $('#drawer');
     if (drawerBtn && drawer) {
-      drawer.removeAttribute('hidden');
       const setDrawer = (open) => {
-        drawer.classList.toggle('is-open', open);
+        if (open) {
+          drawer.removeAttribute('hidden');
+          requestAnimationFrame(() => {
+            drawer.classList.add('is-open');
+          });
+        } else {
+          drawer.classList.remove('is-open');
+          setTimeout(() => {
+            if (!drawer.classList.contains('is-open')) {
+              drawer.setAttribute('hidden', '');
+            }
+          }, 240);
+        }
         drawerBtn.setAttribute('aria-expanded', String(open));
         drawerBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
       };

@@ -1,7 +1,3 @@
----
-layout: null
-sitemap: false
----
 User-agent: HTTrack
 Disallow: /
 
@@ -51,4 +47,4 @@ User-agent: *
 Allow: /
 Disallow: /offline.html
 
-Sitemap: {{ "/sitemap.xml" | absolute_url }}
+Sitemap: https://irbox.github.io/sitemap.xml

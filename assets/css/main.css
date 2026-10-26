@@ -1170,7 +1170,8 @@ h6,
   box-shadow: var(--shadow-md);
 }
 @media (min-width: 768px) {
-  .drawer {
+  .drawer,
+  .drawer.is-open {
     display: none !important;
   }
 }
