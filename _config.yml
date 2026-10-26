@@ -95,6 +95,20 @@ defaults:
   - scope: { path: '', type: posts }
     values: { layout: post, author: me }
 
+# ─────────────────────────────────────────────────────────────
+#  Optimization & Obfuscation
+#  Controlled via scripts/optimize.js & _plugins/extreme_optimizer.rb
+#  Enabled by default when JEKYLL_ENV=production or via npm run build
+# ─────────────────────────────────────────────────────────────
+optimize:
+  auto_run: false # Set true to run on every jekyll build
+  obfuscate_js: true
+  minify_html: true
+  minify_css: true
+  minify_svg: true
+  minify_data: true
+  precompress: true
+
 exclude:
   - README.md
   - LICENSE
@@ -104,6 +118,9 @@ exclude:
   - node_modules
   - .prettierrc.json
   - .prettierignore
+  - .npmrc
+  - package.json
+  - package-lock.json
 
 include:
   - .well-known

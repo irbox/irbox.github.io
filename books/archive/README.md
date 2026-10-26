@@ -11,10 +11,12 @@ Welcome to your personal digital book archive. This folder is designed for effor
 
 2. **Index the books:**
    Run the following command in your terminal or workspace:
+
    ```bash
    node scripts/index_books.js
    ```
-   *Tip: This automatically reads the title, author, description, chapter count, and file size from each file and updates the site's bookshelf!*
+
+   _Tip: This automatically reads the title, author, description, chapter count, and file size from each file and updates the site's bookshelf!_
 
 3. **Enjoy on your website:**
    - Browse your digital shelf at `/books/`

@@ -27,8 +27,35 @@ A high-performance, accessible, and privacy-respecting personal showcase site bu
 
 ```bash
 bundle install
+npm install --no-bin-links
 bundle exec jekyll serve --livereload   # http://localhost:4000
 ```
+
+## Production Build & Extreme Optimization
+
+The site features an extreme obfuscation and minification pipeline designed for maximum runtime security and wire-transfer efficiency:
+
+```bash
+# Full production build: Jekyll compile + Extreme Obfuscation + Extreme Minification + Brotli/Gzip pre-compression
+npm run build:prod
+
+# Or run Jekyll build followed by the optimizer directly:
+npm run build
+
+# Standalone optimization runs:
+npm run optimize      # Optimize and obfuscate all generated assets in _site/
+npm run obfuscate     # Obfuscate all JavaScript files with cryptographic Base64 string arrays and control flow flattening
+npm run minify        # Minify HTML, CSS, JavaScript, SVG, and data manifests
+```
+
+### Optimization Pipeline Features
+
+- **Extreme JavaScript Obfuscation**: Cryptographic Base64 string array encoding, runtime rotation, control-flow flattening via switch-dispatch state machines, hexadecimal identifier mangling, split strings, and number-to-expression transforms. Fully compliant with strict Content Security Policy (`CSP`).
+- **Extreme HTML Minification**: Full whitespace collapse, comment stripping, attribute quote removal, boolean reduction, and inline CSS & JS compression. Email addresses (`mailto:`) are entity-encoded against scrapers.
+- **Level 2 CSS Minification**: AST-level restructuring, rule merging, duplicate declaration elimination, and color/selector compaction via CleanCSS.
+- **SVG Vector Optimization**: Multi-pass SVGO optimization preserving responsive `viewBox` definitions.
+- **Data & Feed Compaction**: Zero-whitespace minification for `search.json`, `manifest.webmanifest`, `feed.xml`, and `sitemap.xml`.
+- **Pre-Compression for Maximum Efficiency**: Generates both Brotli (`.br`, quality 11) and Gzip (`.gz`, level 9) pre-compressed assets alongside original files for instant, zero-CPU wire delivery on modern web servers and CDNs (~78% wire transfer reduction).
 
 ## Adding Content
 

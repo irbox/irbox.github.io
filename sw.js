@@ -15,6 +15,7 @@ const PRECACHE_ASSETS = [
   OFFLINE_URL,
   '{{ "/assets/css/main.css" | relative_url }}',
   '{{ "/assets/js/main.js" | relative_url }}',
+  '{{ "/assets/js/reader.js" | relative_url }}',
   '{{ "/assets/images/brand-icon.svg" | relative_url }}',
   '{{ "/assets/images/favicon.svg" | relative_url }}',
   '{{ "/assets/images/icon-192.png" | relative_url }}',

@@ -4,6 +4,12 @@
   "private": true,
   "description": "Personal showcase, documentation, books archive and web reader",
   "scripts": {
+    "build": "bundle exec jekyll build && node scripts/optimize.js",
+    "build:prod": "JEKYLL_ENV=production bundle exec jekyll build && node scripts/optimize.js",
+    "build:clean": "rm -rf _site .jekyll-cache && npm run build",
+    "optimize": "node scripts/optimize.js",
+    "obfuscate": "node scripts/optimize.js --obfuscate-only",
+    "minify": "node scripts/optimize.js --minify-only",
     "index:books": "node scripts/index_books.js",
     "build:epub": "node scripts/build_epub.js",
     "format": "prettier --write .",
@@ -11,5 +17,12 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "clean-css": "^5.3.3",
+    "html-minifier-terser": "^7.2.0",
+    "javascript-obfuscator": "^5.9.0",
+    "svgo": "^4.1.0",
+    "terser": "^5.51.2"
   }
 }
