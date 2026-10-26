@@ -330,21 +330,49 @@ permalink: /books/
       });
     });
 
+    // High-capacity IndexedDB local storage engine (handles books of any size without 5MB quota limits)
+    const bookDb = {
+      open: () =>
+        new Promise((resolve, reject) => {
+          if (!window.indexedDB) return reject(new Error('IndexedDB unavailable'));
+          const req = indexedDB.open('irbox_books_db', 1);
+          req.onupgradeneeded = (e) => {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains('books')) {
+              db.createObjectStore('books', { keyPath: 'id' });
+            }
+          };
+          req.onsuccess = (e) => resolve(e.target.result);
+          req.onerror = (e) => reject(e.target.error);
+        }),
+      save: async (name, data) => {
+        try {
+          const db = await bookDb.open();
+          return new Promise((resolve, reject) => {
+            const tx = db.transaction('books', 'readwrite');
+            tx.objectStore('books').put({ id: 'current', name, data, timestamp: Date.now() });
+            tx.oncomplete = () => resolve();
+            tx.onerror = (e) => reject(e.target.error);
+          });
+        } catch {
+          sessionStorage.setItem('irbox_temp_book_name', name);
+          sessionStorage.setItem('irbox_temp_book_data', data);
+        }
+      },
+    };
+
     // Handle local file selection or drag-drop to open in reader
     function openLocalFile(file) {
       if (!file) return;
       const readerUrl = '{{ "/books/reader/" | relative_url }}';
-      // Store in sessionStorage and redirect
       const reader = new FileReader();
-      reader.onload = function (e) {
+      reader.onload = async function (e) {
         try {
+          await bookDb.save(file.name, e.target.result);
           sessionStorage.setItem('irbox_temp_book_name', file.name);
           sessionStorage.setItem('irbox_temp_book_data', e.target.result);
-          window.location.href = readerUrl + '?book=local';
-        } catch (err) {
-          // If file is too large for sessionStorage, pass via IndexedDB or open direct
-          window.location.href = readerUrl;
-        }
+        } catch {}
+        window.location.href = readerUrl + '?book=local';
       };
       reader.readAsDataURL(file);
     }

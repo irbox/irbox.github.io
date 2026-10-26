@@ -422,10 +422,11 @@
       ? chapterItem.fullPath.slice(0, chapterItem.fullPath.lastIndexOf('/'))
       : '';
 
-    // Rewrite images
+    // Rewrite images (support standard img and SVG image with href/xlink:href)
     const images = doc.querySelectorAll('img, image');
     for (const img of images) {
-      const srcAttr = img.getAttribute('src') || img.getAttribute('xlink:href');
+      const srcAttr =
+        img.getAttribute('src') || img.getAttribute('xlink:href') || img.getAttribute('href');
       if (
         srcAttr &&
         !srcAttr.startsWith('http://') &&
@@ -449,6 +450,7 @@
           if (img.tagName.toLowerCase() === 'img') {
             img.setAttribute('src', blobUrl);
           } else {
+            img.setAttribute('href', blobUrl);
             img.setAttribute('xlink:href', blobUrl);
           }
         }
@@ -640,12 +642,85 @@
     }
   });
 
+  // Delegate in-book links (footnotes, cross-chapter links, external URLs)
+  if (canvas) {
+    canvas.addEventListener('click', (e) => {
+      const a = e.target.closest('a');
+      if (!a) return;
+
+      const rawHref = a.getAttribute('href');
+      if (!rawHref) return;
+
+      // External URLs -> open securely in new tab
+      if (/^(https?:|mailto:|tel:)/i.test(rawHref)) {
+        a.setAttribute('target', '_blank');
+        a.setAttribute('rel', 'noopener noreferrer');
+        return;
+      }
+
+      // In-chapter hash anchors (#footnote-1)
+      if (rawHref.startsWith('#')) {
+        e.preventDefault();
+        const targetId = rawHref.slice(1);
+        try {
+          const targetEl =
+            canvas.querySelector(`[id="${CSS.escape(targetId)}"]`) ||
+            canvas.querySelector(`[name="${CSS.escape(targetId)}"]`);
+          if (targetEl) {
+            targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        } catch {}
+        return;
+      }
+
+      // Cross-chapter EPUB navigation (e.g. "installation.xhtml" or "ch02.xhtml#sec1")
+      e.preventDefault();
+      const [targetFile, targetHash] = rawHref.split('#');
+      const currentItem = epubSpine[currentChapterIndex];
+      const chapterDir =
+        currentItem && currentItem.fullPath.includes('/')
+          ? currentItem.fullPath.slice(0, currentItem.fullPath.lastIndexOf('/'))
+          : '';
+      const resolvedTarget = resolvePath(chapterDir, decodeURIComponent(targetFile));
+
+      const targetIndex = epubSpine.findIndex((item) => {
+        return (
+          item.fullPath === resolvedTarget ||
+          item.href === targetFile ||
+          item.fullPath.endsWith('/' + targetFile)
+        );
+      });
+
+      if (targetIndex !== -1) {
+        renderChapter(targetIndex).then(() => {
+          if (targetHash) {
+            setTimeout(() => {
+              try {
+                const targetEl =
+                  canvas.querySelector(`[id="${CSS.escape(targetHash)}"]`) ||
+                  canvas.querySelector(`[name="${CSS.escape(targetHash)}"]`);
+                if (targetEl) targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              } catch {}
+            }, 100);
+          }
+        });
+      }
+    });
+  }
+
   // Click outside to close popovers
   document.addEventListener('click', (e) => {
-    if (!settingsPopover.contains(e.target) && !settingsToggle.contains(e.target)) {
+    if (
+      settingsPopover &&
+      settingsToggle &&
+      !settingsPopover.contains(e.target) &&
+      !settingsToggle.contains(e.target)
+    ) {
       closeSettings();
     }
     if (
+      tocDrawer &&
+      tocToggle &&
       !tocDrawer.contains(e.target) &&
       !tocToggle.contains(e.target) &&
       !tocDrawer.hasAttribute('hidden')
@@ -653,6 +728,35 @@
       closeToc();
     }
   });
+
+  // IndexedDB reader for large local books (avoids 5MB quota limits)
+  async function getLocalBook() {
+    try {
+      if (window.indexedDB) {
+        const db = await new Promise((resolve, reject) => {
+          const req = indexedDB.open('irbox_books_db', 1);
+          req.onsuccess = () => resolve(req.result);
+          req.onerror = () => reject(req.error);
+        });
+        const res = await new Promise((resolve) => {
+          const tx = db.transaction('books', 'readonly');
+          const req = tx.objectStore('books').get('current');
+          req.onsuccess = () => resolve(req.result || null);
+          req.onerror = () => resolve(null);
+        });
+        if (res && res.data) {
+          return { name: res.name, data: res.data };
+        }
+      }
+    } catch {}
+
+    const localName = sessionStorage.getItem('irbox_temp_book_name') || 'Local Book';
+    const localData = sessionStorage.getItem('irbox_temp_book_data');
+    if (localData) {
+      return { name: localName, data: localData };
+    }
+    return null;
+  }
 
   // Main Book Loader Entry Point
   async function initReader() {
@@ -667,12 +771,16 @@
       return;
     }
 
-    // Check if loading local file from sessionStorage
+    // Check if loading local file from IndexedDB / sessionStorage
     if (bookParam === 'local') {
       try {
-        const localName = sessionStorage.getItem('irbox_temp_book_name') || 'Local Book';
-        const localData = sessionStorage.getItem('irbox_temp_book_data');
-        if (!localData) throw new Error('No local book data found in session storage.');
+        const localBook = await getLocalBook();
+        if (!localBook || !localBook.data) {
+          throw new Error('No local book data found in storage.');
+        }
+
+        const localName = localBook.name || 'Local Book';
+        const localData = localBook.data;
 
         bookFilename = localName;
         bookStorageKey = 'local_' + localName;

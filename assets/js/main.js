@@ -1034,9 +1034,11 @@
       return;
     }
 
-    // 2. Prevent Context Menu (Right Click Inspect / Save As / View Source)
+    // 2. Prevent Context Menu (Right Click Inspect / Save As / View Source, allowing text copy)
     doc.addEventListener('contextmenu', (e) => {
       if (e.target.matches('input, textarea')) return;
+      const selection = window.getSelection ? window.getSelection().toString().trim() : '';
+      if (selection.length > 0) return; // Allow context menu if user is copying highlighted text
       e.preventDefault();
       showShieldToast('Code inspection and right-click menus are restricted.');
     });

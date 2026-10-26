@@ -7,7 +7,7 @@ sitemap: false
    Resilient offline-first caching for static assets & intelligent navigation
    ========================================================================== */
 
-const CACHE_NAME = 'irbox-v1.1.0';
+const CACHE_NAME = 'irbox-v1.2.0';
 const OFFLINE_URL = '{{ "/offline.html" | relative_url }}';
 
 const PRECACHE_ASSETS = [
@@ -22,6 +22,8 @@ const PRECACHE_ASSETS = [
   '{{ "/assets/images/icon-512.png" | relative_url }}',
   '{{ "/assets/fonts/libron/Libron-Regular.woff2" | relative_url }}',
   '{{ "/assets/fonts/libron/Libron-Bold.woff2" | relative_url }}',
+  '{{ "/manifest.webmanifest" | relative_url }}',
+  '{{ "/books/archive/irbox-docs.epub" | relative_url }}',
   '{{ "/search.json" | relative_url }}'
 ];
 
@@ -85,7 +87,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 2. Static assets (CSS, JS, WebFonts, SVGs, Images) -> Stale-While-Revalidate
+  // 2. Static assets (CSS, JS, WebFonts, SVGs, Images, E-Books, Manifests) -> Stale-While-Revalidate
   const isStatic =
     url.pathname.endsWith('.css') ||
     url.pathname.endsWith('.js') ||
@@ -93,6 +95,11 @@ self.addEventListener('fetch', (event) => {
     url.pathname.endsWith('.svg') ||
     url.pathname.endsWith('.png') ||
     url.pathname.endsWith('.jpg') ||
+    url.pathname.endsWith('.webp') ||
+    url.pathname.endsWith('.ico') ||
+    url.pathname.endsWith('.epub') ||
+    url.pathname.endsWith('.pdf') ||
+    url.pathname.endsWith('.webmanifest') ||
     url.pathname.endsWith('.json');
 
   if (isStatic) {
