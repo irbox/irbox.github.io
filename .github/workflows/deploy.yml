@@ -16,8 +16,8 @@ concurrency:
 
 jobs:
   deploy:
-    name: C23 Slim Container Deploy
-    runs-on: ubuntu-slim
+    name: Fast C23 Deploy
+    runs-on: ubuntu-latest
     env:
       NODE_OPTIONS: "--no-deprecation"
     environment:
@@ -28,13 +28,11 @@ jobs:
         run: |
           git init -b main
           git remote add origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
-          git fetch --depth 1 origin "${GITHUB_SHA}"
+          git fetch --depth 1 --no-tags origin "${GITHUB_SHA}"
           git reset --hard FETCH_HEAD
 
       - name: Compile and Generate Site with C23
-        run: |
-          gcc --version
-          make build OUT=_site
+        run: make build FAST=1 OUT=_site
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v5
@@ -45,3 +43,5 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
+        with:
+          reporting_interval: 1000
