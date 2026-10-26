@@ -4,8 +4,8 @@
   content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content"
 >
 <meta name="color-scheme" content="light dark">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#FAF8F5">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0C0E12">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#faf8f5">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a0d12">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="robots" content="index, follow, max-image-preview:large, noarchive">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
@@ -43,13 +43,22 @@
   crossorigin
 >
 <script>
-  /* Runs synchronously before first paint: apply saved theme, hide dismissed banner, and suppress initial flash */
+  /* Runs synchronously before first paint: apply saved theme, sync theme-color meta, hide dismissed banner, and suppress initial flash */
   (function () {
     try {
       var d = document.documentElement;
       d.classList.add('is-loading');
       var t = localStorage.getItem('theme');
-      if (t === 'light' || t === 'dark') d.setAttribute('data-theme', t);
+      var lightColor = '#faf8f5';
+      var darkColor = '#0a0d12';
+      if (t === 'light' || t === 'dark') {
+        d.setAttribute('data-theme', t);
+        var c = t === 'dark' ? darkColor : lightColor;
+        var metas = document.querySelectorAll('meta[name="theme-color"]');
+        for (var i = 0; i < metas.length; i++) {
+          metas[i].setAttribute('content', c);
+        }
+      }
       var a = localStorage.getItem('announcement-dismissed');
       if (a && a === {{ site.announcement.id | default: 'default' | jsonify }})
         d.setAttribute('data-announcement-hidden', '');

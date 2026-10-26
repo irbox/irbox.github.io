@@ -8,11 +8,13 @@ All design tokens are CSS custom properties at the top of `assets/css/main.css`.
 
 ```css
 :root {
-  --bg-body: light-dark(#faf8f5, #0c0e12);
-  --bg-surface: light-dark(#ffffff, #14171d);
-  --bg-muted: light-dark(#f3eee6, #1c2028);
-  --ink: light-dark(#161412, #f0f2f5);
-  --brand: light-dark(#1a56db, #4582ec);
+  --bg-body: light-dark(#faf8f5, #0a0d12);
+  --bg-surface: light-dark(#ffffff, #121620);
+  --bg-muted: light-dark(#f3ede4, #0f1218);
+  --ink: light-dark(#151413, #f1f3f7);
+  --ink-2: light-dark(#565149, #9da4b0);
+  --ink-3: light-dark(#706a61, #7e8794);
+  --brand: light-dark(#1a56db, #4887f4);
   --radius-container: 16px;
 }
 ```

@@ -101,6 +101,20 @@
 
     if (fontDisplay) fontDisplay.textContent = prefs.size + 'px';
 
+    // Synchronize meta theme-color with reader background
+    const readerThemeColors = {
+      light: '#fcfbfa',
+      sepia: '#fbf1dc',
+      dark: '#12151c',
+      black: '#000000',
+    };
+    const activeColor = readerThemeColors[prefs.theme];
+    if (activeColor) {
+      document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
+        meta.setAttribute('content', activeColor);
+      });
+    }
+
     // Update theme buttons
     document.querySelectorAll('[data-set-theme]').forEach((btn) => {
       btn.classList.toggle('is-active', btn.getAttribute('data-set-theme') === prefs.theme);

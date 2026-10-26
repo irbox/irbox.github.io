@@ -62,8 +62,8 @@
 
   /* Rich ink typography: Warm espresso (light) / Crisp silver (dark) */
   --ink: light-dark(#151413, #f1f3f7);
-  --ink-2: light-dark(#565149, #939aa6);
-  --ink-3: light-dark(#827c73, #666e7b);
+  --ink-2: light-dark(#565149, #9da4b0);
+  --ink-3: light-dark(#706a61, #7e8794);
   --ink-muted-fill: light-dark(rgba(22, 20, 18, 0.055), rgba(241, 243, 247, 0.08));
   --on-accent: light-dark(#ffffff, #0a0d12);
 
@@ -84,6 +84,24 @@
   --success-bg: light-dark(rgba(21, 128, 61, 0.08), rgba(52, 211, 153, 0.14));
   --danger: light-dark(#dc2626, #f87171);
   --danger-bg: light-dark(rgba(220, 38, 38, 0.08), rgba(248, 113, 113, 0.14));
+
+  /* Book and Media Badges */
+  --badge-epub-bg: light-dark(rgba(37, 99, 235, 0.12), rgba(96, 165, 250, 0.2));
+  --badge-epub-color: light-dark(#1d4ed8, #93c5fd);
+  --badge-pdf-bg: light-dark(rgba(220, 38, 38, 0.12), rgba(248, 113, 113, 0.2));
+  --badge-pdf-color: light-dark(#b91c1c, #fca5a5);
+
+  /* Rouge Code Syntax Highlighting Tokens (WCAG AA/AAA compliant) */
+  --c-com: light-dark(#57606a, #8b949e);
+  --c-kw: light-dark(#cf222e, #ff7b72);
+  --c-str: light-dark(#0a3069, #a5d6ff);
+  --c-fn: light-dark(#6e27a6, #d2a8ff);
+  --c-num: light-dark(#0550ae, #79c0ff);
+  --c-tag: light-dark(#116329, #7ee787);
+
+  /* Dynamic Card Spotlight Cursor Coordinates */
+  --mouse-x: -999px;
+  --mouse-y: -999px;
 
   /* Multi-stop Physically Based Elevation Shadows */
   --shadow-xs: 0 1px 2px light-dark(rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.2));
@@ -167,9 +185,157 @@
 }
 :root[data-theme='light'] {
   color-scheme: light;
+  --bg-body: #faf8f5;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #ffffff;
+  --bg-muted: #f3ede4;
+  --border: rgba(22, 20, 18, 0.085);
+  --border-subtle: rgba(22, 20, 18, 0.045);
+  --border-glass: rgba(255, 255, 255, 0.75);
+  --highlight-edge: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  --ink: #151413;
+  --ink-2: #565149;
+  --ink-3: #706a61;
+  --ink-muted-fill: rgba(22, 20, 18, 0.055);
+  --on-accent: #ffffff;
+  --brand: #1a56db;
+  --brand-hover: #1344af;
+  --brand-muted: rgba(26, 86, 219, 0.08);
+  --brand-glow: rgba(26, 86, 219, 0.16);
+  --accent: var(--brand);
+  --accent-subtle: rgba(26, 86, 219, 0.08);
+  --feature-bg: rgba(26, 86, 219, 0.045);
+  --info: #1a56db;
+  --info-bg: rgba(26, 86, 219, 0.08);
+  --warning: #b45309;
+  --warning-bg: rgba(180, 83, 9, 0.09);
+  --success: #15803d;
+  --success-bg: rgba(21, 128, 61, 0.08);
+  --danger: #dc2626;
+  --danger-bg: rgba(220, 38, 38, 0.08);
+  --badge-epub-bg: rgba(37, 99, 235, 0.12);
+  --badge-epub-color: #1d4ed8;
+  --badge-pdf-bg: rgba(220, 38, 38, 0.12);
+  --badge-pdf-color: #b91c1c;
+  --c-com: #57606a;
+  --c-kw: #cf222e;
+  --c-str: #0a3069;
+  --c-fn: #6e27a6;
+  --c-num: #0550ae;
+  --c-tag: #116329;
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 2px 5px -1px rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+  --shadow-md: 0 6px 18px -2px rgba(0, 0, 0, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
+  --shadow-lg: 0 14px 32px -4px rgba(0, 0, 0, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 24px 54px -8px rgba(0, 0, 0, 0.12), 0 8px 22px -4px rgba(0, 0, 0, 0.05);
+  --shadow-modal: 0 32px 72px -12px rgba(0, 0, 0, 0.18), 0 0 0 1px var(--border);
+  --shadow-sheet: 0 -1px 0 var(--border), 0 -16px 48px rgba(0, 0, 0, 0.04);
+  --glass-surface: rgba(255, 255, 255, 0.85);
+  --glass-scrim: rgba(21, 20, 19, 0.32);
 }
+
 :root[data-theme='dark'] {
   color-scheme: dark;
+  --bg-body: #0a0d12;
+  --bg-surface: #121620;
+  --bg-surface-elevated: #171c28;
+  --bg-muted: #0f1218;
+  --border: rgba(255, 255, 255, 0.095);
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --highlight-edge: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  --ink: #f1f3f7;
+  --ink-2: #9da4b0;
+  --ink-3: #7e8794;
+  --ink-muted-fill: rgba(241, 243, 247, 0.08);
+  --on-accent: #0a0d12;
+  --brand: #4887f4;
+  --brand-hover: #639bf7;
+  --brand-muted: rgba(72, 135, 244, 0.14);
+  --brand-glow: rgba(72, 135, 244, 0.24);
+  --accent: var(--brand);
+  --accent-subtle: rgba(72, 135, 244, 0.14);
+  --feature-bg: rgba(72, 135, 244, 0.08);
+  --info: #4887f4;
+  --info-bg: rgba(72, 135, 244, 0.14);
+  --warning: #fbbf24;
+  --warning-bg: rgba(251, 191, 36, 0.14);
+  --success: #34d399;
+  --success-bg: rgba(52, 211, 153, 0.14);
+  --danger: #f87171;
+  --danger-bg: rgba(248, 113, 113, 0.14);
+  --badge-epub-bg: rgba(96, 165, 250, 0.2);
+  --badge-epub-color: #93c5fd;
+  --badge-pdf-bg: rgba(248, 113, 113, 0.2);
+  --badge-pdf-color: #fca5a5;
+  --c-com: #8b949e;
+  --c-kw: #ff7b72;
+  --c-str: #a5d6ff;
+  --c-fn: #d2a8ff;
+  --c-num: #79c0ff;
+  --c-tag: #7ee787;
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 2px 5px -1px rgba(0, 0, 0, 0.28), 0 1px 2px -1px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 6px 18px -2px rgba(0, 0, 0, 0.36), 0 2px 6px -1px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 14px 32px -4px rgba(0, 0, 0, 0.46), 0 4px 12px -2px rgba(0, 0, 0, 0.24);
+  --shadow-xl: 0 24px 54px -8px rgba(0, 0, 0, 0.56), 0 8px 22px -4px rgba(0, 0, 0, 0.3);
+  --shadow-modal: 0 32px 72px -12px rgba(0, 0, 0, 0.65), 0 0 0 1px var(--border);
+  --shadow-sheet: 0 -1px 0 var(--border), 0 -16px 48px rgba(0, 0, 0, 0.38);
+  --glass-surface: rgba(18, 22, 32, 0.85);
+  --glass-scrim: rgba(241, 243, 247, 0.32);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --bg-body: #0a0d12;
+    --bg-surface: #121620;
+    --bg-surface-elevated: #171c28;
+    --bg-muted: #0f1218;
+    --border: rgba(255, 255, 255, 0.095);
+    --border-subtle: rgba(255, 255, 255, 0.05);
+    --border-glass: rgba(255, 255, 255, 0.08);
+    --highlight-edge: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    --ink: #f1f3f7;
+    --ink-2: #9da4b0;
+    --ink-3: #7e8794;
+    --ink-muted-fill: rgba(241, 243, 247, 0.08);
+    --on-accent: #0a0d12;
+    --brand: #4887f4;
+    --brand-hover: #639bf7;
+    --brand-muted: rgba(72, 135, 244, 0.14);
+    --brand-glow: rgba(72, 135, 244, 0.24);
+    --accent: var(--brand);
+    --accent-subtle: rgba(72, 135, 244, 0.14);
+    --feature-bg: rgba(72, 135, 244, 0.08);
+    --info: #4887f4;
+    --info-bg: rgba(72, 135, 244, 0.14);
+    --warning: #fbbf24;
+    --warning-bg: rgba(251, 191, 36, 0.14);
+    --success: #34d399;
+    --success-bg: rgba(52, 211, 153, 0.14);
+    --danger: #f87171;
+    --danger-bg: rgba(248, 113, 113, 0.14);
+    --badge-epub-bg: rgba(96, 165, 250, 0.2);
+    --badge-epub-color: #93c5fd;
+    --badge-pdf-bg: rgba(248, 113, 113, 0.2);
+    --badge-pdf-color: #fca5a5;
+    --c-com: #8b949e;
+    --c-kw: #ff7b72;
+    --c-str: #a5d6ff;
+    --c-fn: #d2a8ff;
+    --c-num: #79c0ff;
+    --c-tag: #7ee787;
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
+    --shadow-sm: 0 2px 5px -1px rgba(0, 0, 0, 0.28), 0 1px 2px -1px rgba(0, 0, 0, 0.15);
+    --shadow-md: 0 6px 18px -2px rgba(0, 0, 0, 0.36), 0 2px 6px -1px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 14px 32px -4px rgba(0, 0, 0, 0.46), 0 4px 12px -2px rgba(0, 0, 0, 0.24);
+    --shadow-xl: 0 24px 54px -8px rgba(0, 0, 0, 0.56), 0 8px 22px -4px rgba(0, 0, 0, 0.3);
+    --shadow-modal: 0 32px 72px -12px rgba(0, 0, 0, 0.65), 0 0 0 1px var(--border);
+    --shadow-sheet: 0 -1px 0 var(--border), 0 -16px 48px rgba(0, 0, 0, 0.38);
+    --glass-surface: rgba(18, 22, 32, 0.85);
+    --glass-scrim: rgba(241, 243, 247, 0.32);
+  }
 }
 @media (max-width: 767px) {
   :root {
@@ -2776,12 +2942,7 @@ h6,
 
 /* ---------- Rouge syntax highlighting ---------- */
 .highlight {
-  --c-com: light-dark(#6a737d, #8b949e);
-  --c-kw: light-dark(#d73a49, #ff7b72);
-  --c-str: light-dark(#032f62, #a5d6ff);
-  --c-fn: light-dark(#6f42c1, #d2a8ff);
-  --c-num: light-dark(#005cc5, #79c0ff);
-  --c-tag: light-dark(#22863a, #7ee787);
+  /* Inherits tokens from :root / [data-theme] with full cross-engine fallbacks */
 }
 .highlight .c,
 .highlight .c1,
@@ -2909,6 +3070,23 @@ div.highlight {
     --border: light-dark(rgba(0, 0, 0, 0.28), rgba(255, 255, 255, 0.32));
     --border-subtle: light-dark(rgba(0, 0, 0, 0.18), rgba(255, 255, 255, 0.22));
     --ink-2: light-dark(#33302c, #c5c9d1);
+  }
+  :root[data-theme='light'] {
+    --border: rgba(0, 0, 0, 0.28);
+    --border-subtle: rgba(0, 0, 0, 0.18);
+    --ink-2: #33302c;
+  }
+  :root[data-theme='dark'] {
+    --border: rgba(255, 255, 255, 0.32);
+    --border-subtle: rgba(255, 255, 255, 0.22);
+    --ink-2: #c5c9d1;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) {
+      --border: rgba(255, 255, 255, 0.32);
+      --border-subtle: rgba(255, 255, 255, 0.22);
+      --ink-2: #c5c9d1;
+    }
   }
   .card,
   .bento__card,
@@ -3076,14 +3254,14 @@ div.highlight {
 }
 
 .badge--epub {
-  background: light-dark(rgba(37, 99, 235, 0.12), rgba(96, 165, 250, 0.2));
-  color: light-dark(#1d4ed8, #93c5fd);
+  background: var(--badge-epub-bg);
+  color: var(--badge-epub-color);
   font-weight: 700;
   letter-spacing: 0.04em;
 }
 .badge--pdf {
-  background: light-dark(rgba(220, 38, 38, 0.12), rgba(248, 113, 113, 0.2));
-  color: light-dark(#b91c1c, #fca5a5);
+  background: var(--badge-pdf-bg);
+  color: var(--badge-pdf-color);
   font-weight: 700;
   letter-spacing: 0.04em;
 }
@@ -3567,7 +3745,7 @@ div.highlight {
   flex: 1;
   min-height: calc(100vh - 120px);
   border: 0;
-  background: #525659;
+  background: var(--bg-muted);
 }
 .reader-pdf-actions {
   display: flex;

@@ -89,14 +89,54 @@
   /* ---- Module 4: Theme Toggle Controller ---- */
   const initThemeToggle = () => {
     const themeBtns = $$('[data-theme-toggle]');
+    const lightColor = '#faf8f5';
+    const darkColor = '#0a0d12';
+
+    const updateThemeMeta = (theme) => {
+      const metas = $$('meta[name="theme-color"]');
+      let targetColor;
+      if (theme === 'light') {
+        targetColor = lightColor;
+      } else if (theme === 'dark') {
+        targetColor = darkColor;
+      } else {
+        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        targetColor = isDark ? darkColor : lightColor;
+      }
+      metas.forEach((meta) => meta.setAttribute('content', targetColor));
+    };
+
+    const updateAria = (currentTheme) => {
+      const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      const label = `Switch to ${nextTheme} theme (or press T)`;
+      themeBtns.forEach((btn) => {
+        btn.setAttribute('aria-label', label);
+        btn.setAttribute('title', label);
+      });
+    };
+
+    const getActiveTheme = () => {
+      return (
+        root.getAttribute('data-theme') ||
+        (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+      );
+    };
+
+    // Initialize aria labels and meta sync on mount
+    const initialTheme = getActiveTheme();
+    updateAria(initialTheme);
+    if (root.getAttribute('data-theme')) {
+      updateThemeMeta(initialTheme);
+    }
+
     themeBtns.forEach((btn) => {
       btn.addEventListener('click', () => {
-        const current =
-          root.getAttribute('data-theme') ||
-          (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        const current = getActiveTheme();
         const next = current === 'dark' ? 'light' : 'dark';
         root.setAttribute('data-theme', next);
         store.set('theme', next);
+        updateThemeMeta(next);
+        updateAria(next);
       });
     });
 
@@ -106,6 +146,9 @@
       colorMedia.addEventListener('change', () => {
         if (!store.get('theme')) {
           root.removeAttribute('data-theme');
+          const osTheme = colorMedia.matches ? 'dark' : 'light';
+          updateThemeMeta(null);
+          updateAria(osTheme);
         }
       });
     } catch {}
@@ -115,8 +158,12 @@
       if (e.key === 'theme') {
         if (e.newValue === 'light' || e.newValue === 'dark') {
           root.setAttribute('data-theme', e.newValue);
+          updateThemeMeta(e.newValue);
+          updateAria(e.newValue);
         } else {
           root.removeAttribute('data-theme');
+          updateThemeMeta(null);
+          updateAria(getActiveTheme());
         }
       }
     });
