@@ -3,7 +3,7 @@
    Resilient offline-first caching for static assets & intelligent navigation
    ========================================================================== */
 
-const CACHE_NAME = 'irbox-v1.4.0';
+const CACHE_NAME = 'irbox-v1.4.1';
 const OFFLINE_URL = '/offline.html';
 
 const PRECACHE_ASSETS = [

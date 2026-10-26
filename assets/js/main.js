@@ -271,6 +271,15 @@
           if (sideBtns[0]) sideBtns[0].focus();
         }
       });
+      window.addEventListener(
+        'resize',
+        () => {
+          if (window.innerWidth > 767 && sidebar.classList.contains('is-open')) {
+            setSidebar(false);
+          }
+        },
+        { passive: true }
+      );
 
       // Restore and save scroll position
       try {
