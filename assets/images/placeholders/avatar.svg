@@ -1,1 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="Avatar placeholder"><rect width="96" height="96" fill="#d9d2c3"/><circle cx="48" cy="38" r="17" fill="#f8f4ed"/><path d="M14 96c2-20 17-30 34-30s32 10 34 30z" fill="#f8f4ed"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" role="img" aria-label="Avatar placeholder">
+  <defs>
+    <clipPath id="avatar-clip">
+      <circle cx="48" cy="48" r="48"/>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#avatar-clip)">
+    <rect width="96" height="96" fill="#d9d2c3"/>
+    <circle cx="48" cy="38" r="17" fill="#f8f4ed"/>
+    <path d="M14 96c2-20 17-30 34-30s32 10 34 30z" fill="#f8f4ed"/>
+  </g>
+</svg>
+
