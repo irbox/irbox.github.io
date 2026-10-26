@@ -151,7 +151,10 @@
         if (done) break;
         chunks.push(value);
       }
-      const totalLen = chunks.reduce((acc, c) => acc + c.length, 0);
+      const totalLen =
+        typeof Math.sumPrecise === 'function'
+          ? Math.sumPrecise(chunks.map((c) => c.length))
+          : chunks.reduce((acc, c) => acc + c.length, 0);
       const res = new Uint8Array(totalLen);
       let off = 0;
       for (const c of chunks) {
@@ -850,17 +853,26 @@
         bookFilename = localName;
         bookStorageKey = 'local_' + localName;
 
+        // ES2026 native Uint8Array.fromBase64 with standard fallback
+        const decodeBase64ToUint8 = (b64) => {
+          if (typeof Uint8Array.fromBase64 === 'function') {
+            return Uint8Array.fromBase64(b64);
+          }
+          const binaryStr = atob(b64);
+          const len = binaryStr.length;
+          const bytes = new Uint8Array(len);
+          for (let i = 0; i < len; i++) {
+            bytes[i] = binaryStr.charCodeAt(i);
+          }
+          return bytes;
+        };
+
         if (localName.toLowerCase().endsWith('.pdf')) {
           bookType = 'pdf';
           // Convert Base64 data URL to binary Blob URL for CSP compatibility and memory efficiency
           try {
             const b64 = localData.includes(',') ? localData.split(',')[1] : localData;
-            const binaryStr = atob(b64);
-            const len = binaryStr.length;
-            const bytes = new Uint8Array(len);
-            for (let i = 0; i < len; i++) {
-              bytes[i] = binaryStr.charCodeAt(i);
-            }
+            const bytes = decodeBase64ToUint8(b64);
             const pdfBlob = new Blob([bytes], { type: 'application/pdf' });
             const pdfBlobUrl = URL.createObjectURL(pdfBlob);
             createdObjectUrls.push(pdfBlobUrl);
@@ -871,12 +883,7 @@
         } else {
           bookType = 'epub';
           const b64 = localData.includes(',') ? localData.split(',')[1] : localData;
-          const binaryStr = atob(b64);
-          const len = binaryStr.length;
-          const bytes = new Uint8Array(len);
-          for (let i = 0; i < len; i++) {
-            bytes[i] = binaryStr.charCodeAt(i);
-          }
+          const bytes = decodeBase64ToUint8(b64);
           await loadEpub(bytes);
         }
         return;

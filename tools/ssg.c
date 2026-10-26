@@ -5,7 +5,7 @@
  * Renders exact HTML, markup structure, styling hooks, and content matching commit 2d1aaa6.
  */
 
-#define _POSIX_C_SOURCE 200809L
+#define _POSIX_C_SOURCE 202405L
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -1240,7 +1240,7 @@ static void render_footer(StrBuf *out) {
         "    </div>\n"
         "  </div>\n"
         "</footer>\n"
-        "<dialog class=\"search\" id=\"search-dialog\" aria-label=\"Search the site\" data-index=\"/search.json\">\n"
+        "<dialog class=\"search\" id=\"search-dialog\" aria-label=\"Search the site\" data-index=\"/search.json\" closedby=\"any\">\n"
         "  <div class=\"search__box\">\n"
         "    "
     );
@@ -1258,7 +1258,7 @@ static void render_footer(StrBuf *out) {
         "  <div class=\"sr-only\" aria-live=\"polite\" id=\"search-status\"></div>\n"
         "  <p class=\"search__hint\">↑↓ to navigate · Enter to open · Esc to close</p>\n"
         "</dialog>\n"
-        "<dialog class=\"shortcuts-dialog\" id=\"shortcuts-dialog\" aria-label=\"Keyboard Shortcuts\">\n"
+        "<dialog class=\"shortcuts-dialog\" id=\"shortcuts-dialog\" aria-label=\"Keyboard Shortcuts\" closedby=\"any\">\n"
         "  <div class=\"shortcuts-dialog__inner\">\n"
         "    <div class=\"shortcuts-dialog__header\">\n"
         "      <div class=\"shortcuts-dialog__title-group\">\n"
