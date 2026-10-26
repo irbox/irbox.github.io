@@ -1,5 +1,5 @@
 CC ?= cc
-CFLAGS ?= -O3 -Wall -Wextra -std=c99
+CFLAGS ?= -O3 -Wall -Wextra -std=c23
 SRC = tools/ssg.c
 BIN ?= /tmp/irbox-ssg
 OUT ?= _site

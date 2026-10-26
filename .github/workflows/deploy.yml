@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   build:
-    name: Build Site (Pure C99)
+    name: Build Site (Modern C23 / C2Y)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

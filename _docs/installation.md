@@ -6,7 +6,7 @@ category: Introduction
 
 ## Requirements
 
-- C99-compatible compiler (`cc`, `gcc`, or `clang`)
+- Modern C23-compatible compiler (`cc`, `gcc`, or `clang` with `-std=c23` support)
 - `make` (GNU make or BSD make)
 
 No package managers, runtime interpreters, or external libraries required.

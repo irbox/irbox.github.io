@@ -4,7 +4,7 @@ description: Run this site locally and make it yours in a few minutes.
 category: Introduction
 ---
 
-This site is a zero-dependency static project powered by a standalone C99 site generator (`tools/ssg.c`). It combines a portfolio, project showcase, documentation, books archive, and blog in a single codebase.
+This site is a zero-dependency static project powered by a standalone modern C23 / C2Y site generator (`tools/ssg.c`). It combines a portfolio, project showcase, documentation, books archive, and blog in a single codebase.
 
 ## What's included
 

@@ -1,7 +1,7 @@
 /**
  * @file tools/ssg.c
- * @description Pure C99 Zero-Dependency Static Site Generator for irbox.github.io.
- * Replaces Jekyll, Ruby, and Bundler with a single, standalone POSIX binary.
+ * @description Modern C23 / C2Y Zero-Dependency Static Site Generator for irbox.github.io.
+ * Replaces Jekyll, Ruby, and Bundler with a single, standalone high-performance binary.
  * Renders exact HTML, markup structure, styling hooks, and content matching commit 2d1aaa6.
  */
 
@@ -9,7 +9,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 #include <ctype.h>
 #include <dirent.h>
 #include <sys/stat.h>
@@ -18,9 +17,9 @@
 #include <time.h>
 #include <errno.h>
 
-#define MAX_PATH 1024
-#define MAX_ITEMS 256
-#define MAX_SECTIONS 16
+constexpr size_t MAX_PATH = 1024;
+constexpr size_t MAX_ITEMS = 256;
+constexpr size_t MAX_SECTIONS = 16;
 
 /* ==========================================================================
    Site Identity & Metadata (Exact 2d1aaa6 _config.yml)
@@ -77,7 +76,7 @@ static void buf_append_char(StrBuf *b, char c) {
 
 static void buf_free(StrBuf *b) {
     if (b->data) free(b->data);
-    b->data = NULL;
+    b->data = nullptr;
     b->len = 0;
     b->cap = 0;
 }
@@ -188,8 +187,8 @@ static const size_t PROJECT_CATEGORY_COUNT = 4;
 /* ==========================================================================
    Utilities & String Helpers
    ========================================================================== */
-static char *trim_whitespace(char *str) {
-    if (!str) return NULL;
+[[nodiscard]] static char *trim_whitespace(char *str) {
+    if (str == nullptr) return nullptr;
     char *end;
     while (isspace((unsigned char)*str)) str++;
     if (*str == 0) return str;
@@ -200,7 +199,7 @@ static char *trim_whitespace(char *str) {
 }
 
 static void strip_quotes(char *str) {
-    if (!str) return;
+    if (str == nullptr) return;
     size_t len = strlen(str);
     if (len >= 2 && ((str[0] == '"' && str[len - 1] == '"') || (str[0] == '\'' && str[len - 1] == '\''))) {
         memmove(str, str + 1, len - 2);
@@ -238,15 +237,15 @@ static void format_date_short(char *out, size_t out_sz, const char *ymd) {
     snprintf(out, out_sz, "%s", ymd);
 }
 
-static char *read_entire_file(const char *path) {
+[[nodiscard]] static char *read_entire_file(const char *path) {
     FILE *f = fopen(path, "rb");
-    if (!f) return NULL;
+    if (f == nullptr) return nullptr;
     fseek(f, 0, SEEK_END);
     long size = ftell(f);
     fseek(f, 0, SEEK_SET);
-    if (size < 0) { fclose(f); return NULL; }
+    if (size < 0) { fclose(f); return nullptr; }
     char *buf = (char *)malloc(size + 1);
-    if (!buf) { fclose(f); return NULL; }
+    if (buf == nullptr) { fclose(f); return nullptr; }
     size_t r = fread(buf, 1, size, f);
     buf[r] = '\0';
     fclose(f);
@@ -294,7 +293,7 @@ static void copy_dir_recursive(const char *src, const char *dst) {
     if (!d) return;
     mkdir_p(dst);
     struct dirent *dir;
-    while ((dir = readdir(d)) != NULL) {
+    while ((dir = readdir(d)) != nullptr) {
         if (strcmp(dir->d_name, ".") == 0 || strcmp(dir->d_name, "..") == 0) continue;
         char src_sub[MAX_PATH], dst_sub[MAX_PATH];
         snprintf(src_sub, sizeof(src_sub), "%s/%s", src, dir->d_name);
@@ -588,14 +587,14 @@ static void markdown_to_html(StrBuf *out, const char *md) {
                 buf_append_str(out, ">");
                 in_code = true;
             }
-            line = strtok(NULL, "\r\n");
+            line = strtok(nullptr, "\r\n");
             continue;
         }
 
         if (in_code) {
             escape_html(out, line, strlen(line));
             buf_append_char(out, '\n');
-            line = strtok(NULL, "\r\n");
+            line = strtok(nullptr, "\r\n");
             continue;
         }
 
@@ -605,7 +604,7 @@ static void markdown_to_html(StrBuf *out, const char *md) {
             if (in_ul)    { buf_append_str(out, "</ul>\n"); in_ul = false; }
             if (in_ol)    { buf_append_str(out, "</ol>\n"); in_ol = false; }
             if (in_table) { buf_append_str(out, "      </tbody>\n    </table>\n  </div>\n"); in_table = false; }
-            line = strtok(NULL, "\r\n");
+            line = strtok(nullptr, "\r\n");
             continue;
         }
 
@@ -627,7 +626,7 @@ static void markdown_to_html(StrBuf *out, const char *md) {
             if (is_divider) {
                 table_header_done = true;
                 (void)table_header_done;
-                line = strtok(NULL, "\r\n");
+                line = strtok(nullptr, "\r\n");
                 continue;
             }
 
@@ -640,7 +639,7 @@ static void markdown_to_html(StrBuf *out, const char *md) {
             } else {
                 parse_table_row(out, trimmed, false);
             }
-            line = strtok(NULL, "\r\n");
+            line = strtok(nullptr, "\r\n");
             continue;
         } else {
             if (in_table) {
@@ -676,7 +675,7 @@ static void markdown_to_html(StrBuf *out, const char *md) {
             buf_append_str(out, tag_open);
             parse_inline(out, h_text);
             buf_append_str(out, tag_close);
-            line = strtok(NULL, "\r\n");
+            line = strtok(nullptr, "\r\n");
             continue;
         }
 
@@ -686,7 +685,7 @@ static void markdown_to_html(StrBuf *out, const char *md) {
             if (in_ul) { buf_append_str(out, "</ul>\n"); in_ul = false; }
             if (in_ol) { buf_append_str(out, "</ol>\n"); in_ol = false; }
             buf_append_str(out, "<hr class=\"divider\">\n");
-            line = strtok(NULL, "\r\n");
+            line = strtok(nullptr, "\r\n");
             continue;
         }
 
@@ -698,7 +697,7 @@ static void markdown_to_html(StrBuf *out, const char *md) {
             buf_append_str(out, "<blockquote><p>");
             parse_inline(out, trim_whitespace(trimmed + 1));
             buf_append_str(out, "</p></blockquote>\n");
-            line = strtok(NULL, "\r\n");
+            line = strtok(nullptr, "\r\n");
             continue;
         }
 
@@ -710,7 +709,7 @@ static void markdown_to_html(StrBuf *out, const char *md) {
             buf_append_str(out, "  <li>");
             parse_inline(out, trim_whitespace(trimmed + 2));
             buf_append_str(out, "</li>\n");
-            line = strtok(NULL, "\r\n");
+            line = strtok(nullptr, "\r\n");
             continue;
         }
 
@@ -724,7 +723,7 @@ static void markdown_to_html(StrBuf *out, const char *md) {
                 buf_append_str(out, "  <li>");
                 parse_inline(out, trim_whitespace(dot + 2));
                 buf_append_str(out, "</li>\n");
-                line = strtok(NULL, "\r\n");
+                line = strtok(nullptr, "\r\n");
                 continue;
             }
         }
@@ -739,7 +738,7 @@ static void markdown_to_html(StrBuf *out, const char *md) {
             buf_append_str(out, " ");
         }
         parse_inline(out, trimmed);
-        line = strtok(NULL, "\r\n");
+        line = strtok(nullptr, "\r\n");
     }
 
     if (in_code)  buf_append_str(out, "</code></pre>\n");
@@ -772,10 +771,10 @@ static const char *parse_frontmatter_block(const char *content, void *target, in
     while (line) {
         char *trimmed = trim_whitespace(line);
 
-        if (strncmp(trimmed, "features:", 9) == 0) { current_section = 1; line = strtok(NULL, "\r\n"); continue; }
-        if (strncmp(trimmed, "stack:", 6) == 0)    { current_section = 2; line = strtok(NULL, "\r\n"); continue; }
-        if (strncmp(trimmed, "gallery:", 8) == 0)  { current_section = 3; line = strtok(NULL, "\r\n"); continue; }
-        if (strncmp(trimmed, "links:", 6) == 0)    { current_section = 4; line = strtok(NULL, "\r\n"); continue; }
+        if (strncmp(trimmed, "features:", 9) == 0) { current_section = 1; line = strtok(nullptr, "\r\n"); continue; }
+        if (strncmp(trimmed, "stack:", 6) == 0)    { current_section = 2; line = strtok(nullptr, "\r\n"); continue; }
+        if (strncmp(trimmed, "gallery:", 8) == 0)  { current_section = 3; line = strtok(nullptr, "\r\n"); continue; }
+        if (strncmp(trimmed, "links:", 6) == 0)    { current_section = 4; line = strtok(nullptr, "\r\n"); continue; }
 
         if (type == 3) { /* ProjectItem list items */
             ProjectItem *pr = (ProjectItem *)target;
@@ -785,10 +784,10 @@ static const char *parse_frontmatter_block(const char *content, void *target, in
                     strip_quotes(feat);
                     strncpy(pr->features[pr->feature_count++], feat, sizeof(pr->features[0]) - 1);
                 }
-                line = strtok(NULL, "\r\n");
+                line = strtok(nullptr, "\r\n");
                 continue;
             }
-            if (current_section == 2 && strstr(trimmed, "name:") != NULL) {
+            if (current_section == 2 && strstr(trimmed, "name:") != nullptr) {
                 if (pr->stack_count < 16) {
                     char *name_p = strstr(trimmed, "name:");
                     char *purp_p = strstr(trimmed, "purpose:");
@@ -818,10 +817,10 @@ static const char *parse_frontmatter_block(const char *content, void *target, in
                         pr->stack_count++;
                     }
                 }
-                line = strtok(NULL, "\r\n");
+                line = strtok(nullptr, "\r\n");
                 continue;
             }
-            if (current_section == 3 && strstr(trimmed, "caption:") != NULL) {
+            if (current_section == 3 && strstr(trimmed, "caption:") != nullptr) {
                 if (pr->gallery_count < 16) {
                     char *cap_p = strstr(trimmed, "caption:");
                     cap_p += 8;
@@ -837,7 +836,7 @@ static const char *parse_frontmatter_block(const char *content, void *target, in
                         pr->gallery_count++;
                     }
                 }
-                line = strtok(NULL, "\r\n");
+                line = strtok(nullptr, "\r\n");
                 continue;
             }
             if (current_section == 4) {
@@ -850,7 +849,7 @@ static const char *parse_frontmatter_block(const char *content, void *target, in
                     if (strcmp(k, "repo") == 0) strncpy(pr->repo_url, v, sizeof(pr->repo_url) - 1);
                     else if (strcmp(k, "demo") == 0) strncpy(pr->demo_url, v, sizeof(pr->demo_url) - 1);
                 }
-                line = strtok(NULL, "\r\n");
+                line = strtok(nullptr, "\r\n");
                 continue;
             }
         }
@@ -892,7 +891,7 @@ static const char *parse_frontmatter_block(const char *content, void *target, in
                 else if (strcmp(key, "docs") == 0) strncpy(pr->docs_slug, val, sizeof(pr->docs_slug) - 1);
             }
         }
-        line = strtok(NULL, "\r\n");
+        line = strtok(nullptr, "\r\n");
     }
     free(fm);
 
@@ -1288,7 +1287,7 @@ static void render_docs_sidebar(StrBuf *out, const char *active_slug) {
 
         for (size_t k = 0; k < nav_sections[s].count; k++) {
             const char *item_slug = nav_sections[s].slugs[k];
-            const DocItem *target_doc = NULL;
+            const DocItem *target_doc = nullptr;
             for (size_t d = 0; d < doc_count; d++) {
                 if (strcmp(docs[d].slug, item_slug) == 0) {
                     target_doc = &docs[d];
@@ -1461,8 +1460,8 @@ static void render_docs_page(const DocItem *d, const char *out_dir) {
             break;
         }
     }
-    const DocItem *prev_d = NULL;
-    const DocItem *next_d = NULL;
+    const DocItem *prev_d = nullptr;
+    const DocItem *next_d = nullptr;
     if (cur_idx > 0) {
         for (size_t i = 0; i < doc_count; i++) {
             if (strcmp(docs[i].slug, all_slugs[cur_idx - 1]) == 0) {
@@ -1784,7 +1783,7 @@ static void render_post_page(const PostItem *p, const char *out_dir) {
                 escape_html(&body, t, strlen(t));
                 buf_append_str(&body, "</span>\n");
             }
-            t = strtok(NULL, ",[] \t");
+            t = strtok(nullptr, ",[] \t");
         }
         buf_append_str(&body, "    </div>\n");
     }
@@ -1848,8 +1847,8 @@ static void render_post_page(const PostItem *p, const char *out_dir) {
     for (size_t i = 0; i < post_count; i++) {
         if (&posts[i] == p) { cur_p = i; break; }
     }
-    const PostItem *prev_p = (cur_p + 1 < post_count) ? &posts[cur_p + 1] : NULL; /* Older */
-    const PostItem *next_p = (cur_p > 0) ? &posts[cur_p - 1] : NULL;             /* Newer */
+    const PostItem *prev_p = (cur_p + 1 < post_count) ? &posts[cur_p + 1] : nullptr; /* Older */
+    const PostItem *next_p = (cur_p > 0) ? &posts[cur_p - 1] : nullptr;             /* Newer */
 
     if (prev_p || next_p) {
         buf_append_str(&body, "  <nav class=\"pager\" aria-label=\"More posts\">\n");
@@ -2137,7 +2136,7 @@ static void render_home_page(const char *out_dir) {
 
     StrBuf full;
     buf_init(&full, 32768);
-    wrap_page(&full, NULL, SITE_DESCRIPTION, "home", body.data, "home");
+    wrap_page(&full, nullptr, SITE_DESCRIPTION, "home", body.data, "home");
 
     char target[MAX_PATH];
     snprintf(target, sizeof(target), "%s/index.html", out_dir);
@@ -2267,7 +2266,7 @@ static void render_blog_landing(const char *out_dir) {
                     escape_html(&body, tag, strlen(tag));
                     buf_append_str(&body, "</span>\n");
                 }
-                tag = strtok(NULL, ",[] \t");
+                tag = strtok(nullptr, ",[] \t");
             }
         }
         buf_append_str(&body,
@@ -3061,7 +3060,7 @@ static void load_docs() {
     DIR *d = opendir("_docs");
     if (!d) return;
     struct dirent *dir;
-    while ((dir = readdir(d)) != NULL) {
+    while ((dir = readdir(d)) != nullptr) {
         if (dir->d_name[0] == '.') continue;
         size_t len = strlen(dir->d_name);
         if (len < 4 || strcmp(dir->d_name + len - 3, ".md") != 0) continue;
@@ -3094,7 +3093,7 @@ static void load_posts() {
     DIR *d = opendir("_posts");
     if (!d) return;
     struct dirent *dir;
-    while ((dir = readdir(d)) != NULL) {
+    while ((dir = readdir(d)) != nullptr) {
         if (dir->d_name[0] == '.') continue;
         size_t len = strlen(dir->d_name);
         if (len < 4 || strcmp(dir->d_name + len - 3, ".md") != 0) continue;
@@ -3142,7 +3141,7 @@ static void load_projects() {
     DIR *d = opendir("_projects");
     if (!d) return;
     struct dirent *dir;
-    while ((dir = readdir(d)) != NULL) {
+    while ((dir = readdir(d)) != nullptr) {
         if (dir->d_name[0] == '.') continue;
         size_t len = strlen(dir->d_name);
         if (len < 4 || strcmp(dir->d_name + len - 3, ".md") != 0) continue;
@@ -3187,7 +3186,7 @@ int main(int argc, char **argv) {
     clock_gettime(CLOCK_MONOTONIC, &start);
 
     printf("================================================================\n");
-    printf("⚡ irbox C-SSG — Zero-Dependency Standalone Site Generator\n");
+    printf("⚡ irbox C23-SSG — Modern Zero-Dependency Standalone Site Generator\n");
     printf("Target Output: %s\n", out_dir);
     printf("================================================================\n");
 
