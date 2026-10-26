@@ -18,6 +18,8 @@ jobs:
   deploy:
     name: C23 Slim Container Deploy
     runs-on: ubuntu-slim
+    env:
+      NODE_OPTIONS: "--no-deprecation"
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -27,17 +29,18 @@ jobs:
           git init -b main
           git remote add origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
           git fetch --depth 1 origin "${GITHUB_SHA}"
-          git checkout --force FETCH_HEAD
+          git reset --hard FETCH_HEAD
 
       - name: Compile and Generate Site with C23
         run: |
-          gcc -v
+          gcc --version
           make build OUT=_site
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v5
         with:
           path: _site
+          include-hidden-files: true
 
       - name: Deploy to GitHub Pages
         id: deployment
