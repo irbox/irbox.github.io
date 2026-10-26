@@ -91,13 +91,17 @@
   --badge-pdf-bg: light-dark(rgba(220, 38, 38, 0.12), rgba(248, 113, 113, 0.2));
   --badge-pdf-color: light-dark(#b91c1c, #fca5a5);
 
-  /* Rouge Code Syntax Highlighting Tokens (WCAG AA/AAA compliant) */
-  --c-com: light-dark(#57606a, #8b949e);
-  --c-kw: light-dark(#cf222e, #ff7b72);
-  --c-str: light-dark(#0a3069, #a5d6ff);
-  --c-fn: light-dark(#6e27a6, #d2a8ff);
-  --c-num: light-dark(#0550ae, #79c0ff);
-  --c-tag: light-dark(#116329, #7ee787);
+  /* One Dark Pro / One Light Code Syntax Highlighting Tokens (WCAG AA compliant) */
+  --c-com: light-dark(#a0a1a7, #5c6370);
+  --c-kw: light-dark(#a626a4, #c678dd);
+  --c-str: light-dark(#50a14f, #98c379);
+  --c-fn: light-dark(#4078f2, #61afef);
+  --c-num: light-dark(#986801, #d19a66);
+  --c-tag: light-dark(#c18401, #e5c07b);
+  --c-op: light-dark(#0184bc, #56b6c2);
+  --code-bg: light-dark(#f6f8fa, #282c34);
+  --code-border: light-dark(#e1e4e8, #3e4451);
+  --code-ink: light-dark(#383a42, #abb2bf);
 
   /* Dynamic Card Spotlight Cursor Coordinates */
   --mouse-x: -999px;
@@ -217,12 +221,16 @@
   --badge-epub-color: #1d4ed8;
   --badge-pdf-bg: rgba(220, 38, 38, 0.12);
   --badge-pdf-color: #b91c1c;
-  --c-com: #57606a;
-  --c-kw: #cf222e;
-  --c-str: #0a3069;
-  --c-fn: #6e27a6;
-  --c-num: #0550ae;
-  --c-tag: #116329;
+  --c-com: #a0a1a7;
+  --c-kw: #a626a4;
+  --c-str: #50a14f;
+  --c-fn: #4078f2;
+  --c-num: #986801;
+  --c-tag: #c18401;
+  --c-op: #0184bc;
+  --code-bg: #f6f8fa;
+  --code-border: #e1e4e8;
+  --code-ink: #383a42;
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
   --shadow-sm: 0 2px 5px -1px rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
   --shadow-md: 0 6px 18px -2px rgba(0, 0, 0, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
@@ -268,12 +276,16 @@
   --badge-epub-color: #93c5fd;
   --badge-pdf-bg: rgba(248, 113, 113, 0.2);
   --badge-pdf-color: #fca5a5;
-  --c-com: #8b949e;
-  --c-kw: #ff7b72;
-  --c-str: #a5d6ff;
-  --c-fn: #d2a8ff;
-  --c-num: #79c0ff;
-  --c-tag: #7ee787;
+  --c-com: #5c6370;
+  --c-kw: #c678dd;
+  --c-str: #98c379;
+  --c-fn: #61afef;
+  --c-num: #d19a66;
+  --c-tag: #e5c07b;
+  --c-op: #56b6c2;
+  --code-bg: #282c34;
+  --code-border: #3e4451;
+  --code-ink: #abb2bf;
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
   --shadow-sm: 0 2px 5px -1px rgba(0, 0, 0, 0.28), 0 1px 2px -1px rgba(0, 0, 0, 0.15);
   --shadow-md: 0 6px 18px -2px rgba(0, 0, 0, 0.36), 0 2px 6px -1px rgba(0, 0, 0, 0.2);
@@ -320,12 +332,16 @@
     --badge-epub-color: #93c5fd;
     --badge-pdf-bg: rgba(248, 113, 113, 0.2);
     --badge-pdf-color: #fca5a5;
-    --c-com: #8b949e;
-    --c-kw: #ff7b72;
-    --c-str: #a5d6ff;
-    --c-fn: #d2a8ff;
-    --c-num: #79c0ff;
-    --c-tag: #7ee787;
+    --c-com: #5c6370;
+    --c-kw: #c678dd;
+    --c-str: #98c379;
+    --c-fn: #61afef;
+    --c-num: #d19a66;
+    --c-tag: #e5c07b;
+    --c-op: #56b6c2;
+    --code-bg: #282c34;
+    --code-border: #3e4451;
+    --code-ink: #abb2bf;
     --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
     --shadow-sm: 0 2px 5px -1px rgba(0, 0, 0, 0.28), 0 1px 2px -1px rgba(0, 0, 0, 0.15);
     --shadow-md: 0 6px 18px -2px rgba(0, 0, 0, 0.36), 0 2px 6px -1px rgba(0, 0, 0, 0.2);
@@ -2161,6 +2177,8 @@ a.bento__spec-val:hover {
 }
 .prose code {
   font: 500 0.86em var(--font-mono);
+  font-feature-settings: 'liga' 1, 'calt' 1, 'zero' 1;
+  font-variant-ligatures: contextual;
   background: var(--ink-muted-fill);
   padding: 0.18em 0.42em;
   border-radius: 6px;
@@ -2169,7 +2187,7 @@ a.bento__spec-val:hover {
   word-break: break-word;
 }
 
-/* Code block container & pre */
+/* Code block container & pre (One Dark Pro & JetBrains Mono) */
 .code-block-wrap {
   position: relative;
   margin: 1.6em 0;
@@ -2183,11 +2201,15 @@ a.bento__spec-val:hover {
   padding: 18px 20px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  background: var(--bg-surface);
-  border: 1px solid var(--border);
+  background: var(--code-bg);
+  color: var(--code-ink);
+  border: 1px solid var(--code-border);
   border-radius: var(--radius-element);
+  font-family: var(--font-mono);
   font-size: 13.5px;
   line-height: 1.65;
+  font-feature-settings: 'liga' 1, 'calt' 1, 'zero' 1;
+  font-variant-ligatures: contextual;
   box-shadow: var(--shadow-xs);
   max-width: 100%;
   min-width: 0;
@@ -3011,10 +3033,12 @@ a.bento__spec-val:hover {
 .highlight .kn,
 .highlight .kr,
 .highlight .kt,
-.highlight .kc,
+.highlight .kc {
+  color: var(--c-kw);
+}
 .highlight .o,
 .highlight .ow {
-  color: var(--c-kw);
+  color: var(--c-op);
 }
 .highlight .s,
 .highlight .s1,

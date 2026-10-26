@@ -440,6 +440,49 @@
 
       container.appendChild(b);
     });
+
+    // One Dark Pro Syntax Highlighting for code blocks
+    $$('[data-prose] pre code, .prose pre code').forEach((code) => {
+      if (code.dataset.highlighted) return;
+      code.dataset.highlighted = 'true';
+      code.classList.add('highlight');
+
+      const raw = code.textContent;
+      if (!raw || raw.length > 50000) return;
+
+      const escapeHtml = (s) =>
+        s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+      const tokenRegex =
+        /(\/\*[\s\S]*?\*\/|\/\/[^\n]*|#[^\n]*)|("(?:\\[\s\S]|[^"\\])*"|'(?:\\[\s\S]|[^'\\])*'|`(?:\\[\s\S]|[^`\\])*`)|(\b(?:0x[0-9a-fA-F]+|0b[01]+|\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)\b)|(\b(?:const|constexpr|auto|static|struct|typedef|void|int|char|size_t|bool|true|false|nullptr|if|else|for|while|return|switch|case|break|continue|default|import|export|from|function|class|async|await|try|catch|new|this|let|var|package|echo|cd|make|git|mkdir|rm)\b)|(\b[a-zA-Z_]\w*(?=\s*\())|(==|!=|<=|>=|=>|->|\+\+|--|&&|\|\||[+\-*\/%&|^!<>]=?)/g;
+
+      let html = '';
+      let pos = 0;
+      let match;
+
+      while ((match = tokenRegex.exec(raw)) !== null) {
+        if (match.index > pos) {
+          html += escapeHtml(raw.slice(pos, match.index));
+        }
+        const token = match[0];
+        let cls = 'o';
+        if (match[1]) cls = 'c';
+        else if (match[2]) cls = 's';
+        else if (match[3]) cls = 'm';
+        else if (match[4]) cls = 'k';
+        else if (match[5]) cls = 'nf';
+        else if (match[6]) cls = 'o';
+
+        html += `<span class="${cls}">${escapeHtml(token)}</span>`;
+        pos = tokenRegex.lastIndex;
+      }
+
+      if (pos < raw.length) {
+        html += escapeHtml(raw.slice(pos));
+      }
+
+      code.innerHTML = html;
+    });
   };
 
   /* ---- Module 8: Project Tabs & View Transitions ---- */
