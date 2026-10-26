@@ -17,9 +17,14 @@
 #include <time.h>
 #include <errno.h>
 
-constexpr size_t MAX_PATH = 1024;
+constexpr size_t MAX_PATH = 1'024;
 constexpr size_t MAX_ITEMS = 256;
 constexpr size_t MAX_SECTIONS = 16;
+constexpr size_t COPY_BUF_SIZE = 8'192;
+
+static_assert(MAX_PATH >= 512, "MAX_PATH must be at least 512");
+static_assert(MAX_ITEMS >= 128, "MAX_ITEMS must support site collections");
+static_assert(sizeof(size_t) >= 4, "Architecture must be at least 32-bit");
 
 /* ==========================================================================
    Site Identity & Metadata (Exact 2d1aaa6 _config.yml)
@@ -279,7 +284,7 @@ static void copy_file(const char *src, const char *dst) {
     if (!in) return;
     FILE *out = fopen(dst, "wb");
     if (!out) { fclose(in); return; }
-    char buf[8192];
+    char buf[COPY_BUF_SIZE] = {};
     size_t n;
     while ((n = fread(buf, 1, sizeof(buf), in)) > 0) {
         fwrite(buf, 1, n, out);
@@ -3178,11 +3183,10 @@ static void load_projects() {
 /* ==========================================================================
    Main Orchestrator
    ========================================================================== */
-int main(int argc, char **argv) {
-    const char *out_dir = "_site";
-    if (argc >= 2) out_dir = argv[1];
+int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
+    const char *out_dir = (argc >= 2) ? argv[1] : "_site";
 
-    struct timespec start, end;
+    struct timespec start = {}, end = {};
     clock_gettime(CLOCK_MONOTONIC, &start);
 
     printf("================================================================\n");
@@ -3265,7 +3269,7 @@ int main(int argc, char **argv) {
     write_feed_xml(out_dir);
 
     clock_gettime(CLOCK_MONOTONIC, &end);
-    double elapsed_ms = (end.tv_sec - start.tv_sec) * 1000.0 + (end.tv_nsec - start.tv_nsec) / 1000000.0;
+    auto elapsed_ms = (end.tv_sec - start.tv_sec) * 1000.0 + (end.tv_nsec - start.tv_nsec) / 1'000'000.0;
 
     printf("✨ Successfully compiled & generated %zu pages!\n", doc_count + post_count + project_count + 7);
     printf("📊 Search index: %zu entries\n", search_entry_count);
