@@ -29,10 +29,17 @@
 
   // PDF View Elements
   const pdfContainer = document.getElementById('reader-pdf-container');
-  const pdfFrame = document.getElementById('reader-pdf-frame');
+  const pdfObject = document.getElementById('reader-pdf-object');
+  const pdfEmbed = document.getElementById('reader-pdf-embed');
   const pdfTitle = document.getElementById('reader-pdf-title');
   const pdfDownload = document.getElementById('reader-pdf-download');
   const pdfExternal = document.getElementById('reader-pdf-external');
+  const pdfFallbackOpen = document.getElementById('reader-pdf-fallback-open');
+  const pdfFallbackDownload = document.getElementById('reader-pdf-fallback-download');
+  const pdfMobileView = document.getElementById('reader-pdf-mobile-view');
+  const pdfMobileTitle = document.getElementById('reader-pdf-mobile-title');
+  const pdfMobileOpen = document.getElementById('reader-pdf-mobile-open');
+  const pdfMobileDownload = document.getElementById('reader-pdf-mobile-download');
 
   // Settings & TOC Elements
   const tocToggle = document.getElementById('reader-toc-toggle');
@@ -488,12 +495,34 @@
     bookTitleEl.textContent = cleanTitle;
     document.title = `${cleanTitle} — PDF Reader`;
 
-    pdfTitle.textContent = filename;
-    pdfDownload.setAttribute('href', url);
-    pdfExternal.setAttribute('href', url);
+    if (pdfTitle) pdfTitle.textContent = filename;
+    if (pdfDownload) pdfDownload.setAttribute('href', url);
+    if (pdfExternal) pdfExternal.setAttribute('href', url);
+    if (pdfFallbackOpen) pdfFallbackOpen.setAttribute('href', url);
+    if (pdfFallbackDownload) pdfFallbackDownload.setAttribute('href', url);
+    if (pdfMobileOpen) pdfMobileOpen.setAttribute('href', url);
+    if (pdfMobileDownload) pdfMobileDownload.setAttribute('href', url);
+    if (pdfMobileTitle) pdfMobileTitle.textContent = cleanTitle;
 
-    // Embed PDF
-    pdfFrame.src = url + '#toolbar=1&navpanes=1';
+    // Detect if browser environment has native inline PDF viewer support
+    // (e.g., Chrome Android returns false; desktop Chrome/Firefox/Safari return true)
+    const hasInlinePdf = typeof navigator !== 'undefined' && Boolean(navigator.pdfViewerEnabled);
+
+    if (hasInlinePdf) {
+      if (pdfMobileView) pdfMobileView.hidden = true;
+      if (pdfObject) {
+        pdfObject.hidden = false;
+        pdfObject.setAttribute('data', url + '#toolbar=1&navpanes=1');
+      }
+      if (pdfEmbed) {
+        pdfEmbed.setAttribute('src', url + '#toolbar=1&navpanes=1');
+      }
+    } else {
+      // For mobile browsers (Chrome Android, etc.), do not navigate an embedded object/frame
+      // to avoid the flashing "This content is blocked. Contact the site owner to fix the issue."
+      if (pdfObject) pdfObject.hidden = true;
+      if (pdfMobileView) pdfMobileView.hidden = false;
+    }
 
     // Hide EPUB-only controls
     if (tocToggle) tocToggle.hidden = true;
@@ -650,7 +679,21 @@
 
         if (localName.toLowerCase().endsWith('.pdf')) {
           bookType = 'pdf';
-          loadPdf(localData, localName);
+          // Convert Base64 data URL to binary Blob URL for CSP compatibility and memory efficiency
+          try {
+            const binaryStr = atob(localData.split(',')[1]);
+            const len = binaryStr.length;
+            const bytes = new Uint8Array(len);
+            for (let i = 0; i < len; i++) {
+              bytes[i] = binaryStr.charCodeAt(i);
+            }
+            const pdfBlob = new Blob([bytes], { type: 'application/pdf' });
+            const pdfBlobUrl = URL.createObjectURL(pdfBlob);
+            createdObjectUrls.push(pdfBlobUrl);
+            loadPdf(pdfBlobUrl, localName);
+          } catch {
+            loadPdf(localData, localName);
+          }
         } else {
           bookType = 'epub';
           const binaryStr = atob(localData.split(',')[1]);

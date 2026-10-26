@@ -310,7 +310,7 @@ permalink: /books/reader/
     <div class="reader-pdf-container" id="reader-pdf-container" hidden>
       <div class="reader-pdf-toolbar">
         <span id="reader-pdf-title" class="reader-pdf-filename"></span>
-        <div style="display: flex; gap: 8px;">
+        <div class="reader-pdf-actions">
           <a id="reader-pdf-download" href="#" class="btn btn--secondary" download>
             <svg
               width="16"
@@ -334,18 +334,99 @@ permalink: /books/reader/
             href="#"
             target="_blank"
             rel="noopener noreferrer"
-            class="btn btn--secondary"
+            class="btn btn--primary"
           >
             <span>Open in New Tab ↗</span>
           </a>
         </div>
       </div>
-      <iframe
-        id="reader-pdf-frame"
+
+      <!-- Desktop / Inline PDF Object Viewer -->
+      <object
+        id="reader-pdf-object"
         class="reader-pdf-frame"
+        type="application/pdf"
+        data=""
         title="PDF Document Viewer"
-        frameborder="0"
-      ></iframe>
+      >
+        <embed
+          id="reader-pdf-embed"
+          class="reader-pdf-frame"
+          type="application/pdf"
+          src=""
+        >
+        <!-- Native object fallback if plugin fails to load inside object -->
+        <div class="reader-pdf-fallback" id="reader-pdf-fallback">
+          <div class="card reader-pdf-fallback__card">
+            <div class="reader-pdf-fallback__icon" aria-hidden="true">
+              <svg
+                width="40"
+                height="40"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+            </div>
+            <h2 class="display-3">Document Ready</h2>
+            <p class="muted">
+              Inline PDF rendering is unavailable in this browsing mode. You can open the document in a dedicated viewer tab or download it.
+            </p>
+            <div class="reader-pdf-fallback__actions">
+              <a id="reader-pdf-fallback-open" href="#" target="_blank" rel="noopener noreferrer" class="btn btn--primary">
+                <span>Open Document ↗</span>
+              </a>
+              <a id="reader-pdf-fallback-download" href="#" class="btn btn--secondary" download>
+                <span>Download PDF</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </object>
+
+      <!-- Dedicated Mobile View (active when navigator.pdfViewerEnabled === false) -->
+      <div class="reader-pdf-mobile-view" id="reader-pdf-mobile-view" hidden>
+        <div class="card reader-pdf-fallback__card">
+          <div class="reader-pdf-fallback__icon" aria-hidden="true">
+            <svg
+              width="44"
+              height="44"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+          </div>
+          <h2 class="display-3" id="reader-pdf-mobile-title">Document Ready</h2>
+          <p class="muted">
+            Mobile browsers do not embed PDF viewer plugins inside web pages. Open the file directly to read smoothly in your browser or default PDF viewer app.
+          </p>
+          <div class="reader-pdf-fallback__actions">
+            <a id="reader-pdf-mobile-open" href="#" target="_blank" rel="noopener noreferrer" class="btn btn--primary">
+              <span>Open Document ↗</span>
+            </a>
+            <a id="reader-pdf-mobile-download" href="#" class="btn btn--secondary" download>
+              <span>Download PDF</span>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
 </div>

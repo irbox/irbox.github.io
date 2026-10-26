@@ -3535,6 +3535,53 @@ div.highlight {
   border: 0;
   background: #525659;
 }
+.reader-pdf-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.reader-pdf-fallback,
+.reader-pdf-mobile-view {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 20px;
+  min-height: calc(100vh - 160px);
+  width: 100%;
+}
+.reader-pdf-fallback__card {
+  max-width: 520px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 36px 28px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+.reader-pdf-fallback__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--accent-subtle, rgba(235, 94, 40, 0.12));
+  color: var(--accent, #EB5E28);
+  margin-bottom: 4px;
+}
+.reader-pdf-fallback__actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  margin-top: 8px;
+}
 
 @media (max-width: 640px) {
   .reader-btn-label {
