@@ -943,7 +943,7 @@ static void init_docs_navigation() {
 /* ==========================================================================
    HTML Partials (Header, Footer, Head, Dialogs)
    ========================================================================== */
-static void render_head(StrBuf *out, const char *title, const char *desc) {
+static void render_head(StrBuf *out, const char *title, const char *desc, const char *url_path, const char *og_type, const char *date_pub) {
     buf_append_str(out,
         "<head>\n"
         "  <meta charset=\"utf-8\">\n"
@@ -957,6 +957,11 @@ static void render_head(StrBuf *out, const char *title, const char *desc) {
         "  <meta http-equiv=\"Permissions-Policy\" content=\"interest-cohort=(), camera=(), microphone=(), geolocation=()\">\n"
         "  <meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; frame-src 'self' blob: data: chrome-extension:; object-src 'self' blob: data:; child-src 'self' blob: data: chrome-extension:; worker-src 'self' blob:; connect-src 'self' blob:; base-uri 'self'; form-action 'self';\">\n"
     );
+
+    const char *page_title = (title && strlen(title) > 0) ? title : SITE_TITLE;
+    const char *page_desc = (desc && strlen(desc) > 0) ? desc : SITE_DESCRIPTION;
+    const char *full_url_path = (url_path && strlen(url_path) > 0) ? url_path : "/";
+    const char *type_val = (og_type && strlen(og_type) > 0) ? og_type : "website";
 
     if (title && strlen(title) > 0) {
         buf_append_str(out, "  <title>");
@@ -972,10 +977,70 @@ static void render_head(StrBuf *out, const char *title, const char *desc) {
         buf_append_str(out, "</title>\n");
     }
 
-    if (desc && strlen(desc) > 0) {
-        buf_append_str(out, "  <meta name=\"description\" content=\"");
-        escape_html(out, desc, strlen(desc));
-        buf_append_str(out, "\">\n");
+    buf_append_str(out, "  <meta name=\"description\" content=\"");
+    escape_html(out, page_desc, strlen(page_desc));
+    buf_append_str(out, "\">\n");
+
+    /* Canonical Link (Astro / Next.js hallmark) */
+    buf_append_str(out, "  <link rel=\"canonical\" href=\"");
+    buf_append_str(out, SITE_URL);
+    if (full_url_path[0] != '/' && strlen(full_url_path) > 0) buf_append_str(out, "/");
+    buf_append_str(out, full_url_path);
+    buf_append_str(out, "\">\n");
+
+    /* OpenGraph Metadata (Astro / Next.js hallmark) */
+    buf_append_str(out, "  <meta property=\"og:site_name\" content=\"");
+    buf_append_str(out, SITE_TITLE);
+    buf_append_str(out, "\">\n  <meta property=\"og:type\" content=\"");
+    buf_append_str(out, type_val);
+    buf_append_str(out, "\">\n  <meta property=\"og:title\" content=\"");
+    escape_html(out, page_title, strlen(page_title));
+    buf_append_str(out, "\">\n  <meta property=\"og:description\" content=\"");
+    escape_html(out, page_desc, strlen(page_desc));
+    buf_append_str(out, "\">\n  <meta property=\"og:url\" content=\"");
+    buf_append_str(out, SITE_URL);
+    buf_append_str(out, full_url_path);
+    buf_append_str(out, "\">\n  <meta property=\"og:image\" content=\"");
+    buf_append_str(out, SITE_URL);
+    buf_append_str(out, "/assets/images/brand-icon.svg\">\n");
+
+    /* Twitter Card Metadata (Next.js / Astro hallmark) */
+    buf_append_str(out, "  <meta name=\"twitter:card\" content=\"summary_large_image\">\n");
+    buf_append_str(out, "  <meta name=\"twitter:title\" content=\"");
+    escape_html(out, page_title, strlen(page_title));
+    buf_append_str(out, "\">\n  <meta name=\"twitter:description\" content=\"");
+    escape_html(out, page_desc, strlen(page_desc));
+    buf_append_str(out, "\">\n  <meta name=\"twitter:image\" content=\"");
+    buf_append_str(out, SITE_URL);
+    buf_append_str(out, "/assets/images/brand-icon.svg\">\n");
+
+    /* Schema.org JSON-LD (Gatsby hallmark) */
+    buf_append_str(out, "  <script type=\"application/ld+json\">\n  {\n    \"@context\": \"https://schema.org\",\n");
+    if (strcmp(type_val, "article") == 0) {
+        buf_append_str(out, "    \"@type\": \"BlogPosting\",\n    \"headline\": \"");
+        escape_html(out, page_title, strlen(page_title));
+        buf_append_str(out, "\",\n    \"description\": \"");
+        escape_html(out, page_desc, strlen(page_desc));
+        buf_append_str(out, "\",\n    \"url\": \"");
+        buf_append_str(out, SITE_URL);
+        buf_append_str(out, full_url_path);
+        buf_append_str(out, "\",\n");
+        if (date_pub && strlen(date_pub) > 0) {
+            buf_append_str(out, "    \"datePublished\": \"");
+            buf_append_str(out, date_pub);
+            buf_append_str(out, "\",\n");
+        }
+        buf_append_str(out, "    \"author\": {\n      \"@type\": \"Person\",\n      \"name\": \"");
+        buf_append_str(out, AUTHOR_NAME);
+        buf_append_str(out, "\"\n    }\n  }\n  </script>\n");
+    } else {
+        buf_append_str(out, "    \"@type\": \"WebSite\",\n    \"name\": \"");
+        buf_append_str(out, SITE_TITLE);
+        buf_append_str(out, "\",\n    \"url\": \"");
+        buf_append_str(out, SITE_URL);
+        buf_append_str(out, "/\",\n    \"description\": \"");
+        escape_html(out, page_desc, strlen(page_desc));
+        buf_append_str(out, "\"\n  }\n  </script>\n");
     }
 
     buf_append_str(out,
@@ -1238,12 +1303,12 @@ static void render_footer(StrBuf *out) {
     );
 }
 
-static void wrap_page(StrBuf *out, const char *title, const char *desc, const char *active_sec, const char *body, const char *body_class) {
+static void wrap_page_ext(StrBuf *out, const char *title, const char *desc, const char *active_sec, const char *body, const char *body_class, const char *url_path, const char *og_type, const char *date_pub) {
     buf_append_str(out,
         "<!doctype html>\n"
         "<html lang=\"en\" data-baseurl=\"\">\n"
     );
-    render_head(out, title, desc);
+    render_head(out, title, desc, url_path, og_type, date_pub);
     buf_append_str(out, "<body");
     if (body_class && strlen(body_class) > 0) {
         buf_append_str(out, " class=\"");
@@ -1264,6 +1329,10 @@ static void wrap_page(StrBuf *out, const char *title, const char *desc, const ch
 
     render_footer(out);
     buf_append_str(out, "</body>\n</html>\n");
+}
+
+static void wrap_page(StrBuf *out, const char *title, const char *desc, const char *active_sec, const char *body, const char *body_class) {
+    wrap_page_ext(out, title, desc, active_sec, body, body_class, nullptr, "website", nullptr);
 }
 
 /* ==========================================================================
@@ -1533,7 +1602,7 @@ static void render_docs_page(const DocItem *d, const char *out_dir) {
 
     StrBuf full;
     buf_init(&full, 16384);
-    wrap_page(&full, d->title, d->description, "docs", body.data, "has-sidebar");
+    wrap_page_ext(&full, d->title, d->description, "docs", body.data, "has-sidebar", d->url, "article", nullptr);
 
     char target_path[MAX_PATH];
     snprintf(target_path, sizeof(target_path), "%s%sindex.html", out_dir, d->url);
@@ -1753,7 +1822,7 @@ static void render_project_page(const ProjectItem *pr, const char *out_dir) {
 
     StrBuf full;
     buf_init(&full, 16384);
-    wrap_page(&full, pr->title, pr->description, "projects", body.data, "has-sidebar");
+    wrap_page_ext(&full, pr->title, pr->description, "projects", body.data, "has-sidebar", pr->url, "article", nullptr);
 
     char target_path[MAX_PATH];
     snprintf(target_path, sizeof(target_path), "%s%sindex.html", out_dir, pr->url);
@@ -1826,8 +1895,11 @@ static void render_post_page(const PostItem *p, const char *out_dir) {
     buf_append_str(&body, p->date);
     buf_append_str(&body, "\">");
     buf_append_str(&body, date_formatted);
+    int rtime = p->read_time > 0 ? p->read_time : 1;
+    char read_str[48];
+    snprintf(read_str, sizeof(read_str), " · %d min read</time>\n", rtime);
+    buf_append_str(&body, read_str);
     buf_append_str(&body,
-        " · 3 min read</time>\n"
         "      <button class=\"icon-btn\" type=\"button\" data-print-btn aria-label=\"Print or Save as PDF\" title=\"Print or Save as PDF\">\n"
         "        "
     );
@@ -1883,7 +1955,7 @@ static void render_post_page(const PostItem *p, const char *out_dir) {
 
     StrBuf full;
     buf_init(&full, 16384);
-    wrap_page(&full, p->title, p->description, "blog", body.data, "post-page");
+    wrap_page_ext(&full, p->title, p->description, "blog", body.data, "post-page", p->url, "article", p->date);
 
     char target_path[MAX_PATH];
     snprintf(target_path, sizeof(target_path), "%s%sindex.html", out_dir, p->url);
@@ -3077,6 +3149,22 @@ static int project_order_cmp(const void *a, const void *b) {
     return pa->order - pb->order;      /* Ascending order */
 }
 
+[[nodiscard]] static int calculate_reading_time(const char *text) {
+    if (text == nullptr) return 1;
+    size_t words = 0;
+    bool in_word = false;
+    for (const char *p = text; *p; p++) {
+        if (isspace((unsigned char)*p)) {
+            in_word = false;
+        } else if (!in_word) {
+            in_word = true;
+            words++;
+        }
+    }
+    int mins = (int)((words + 199) / 200);
+    return mins > 0 ? mins : 1;
+}
+
 static void load_docs() {
     DIR *d = opendir("_docs");
     if (!d) return;
@@ -3150,6 +3238,22 @@ static void load_posts() {
         strncpy(item->source_path, path, sizeof(item->source_path) - 1);
 
         const char *md = parse_frontmatter_block(content, item, 2);
+        if (item->read_time <= 0) {
+            item->read_time = calculate_reading_time(md);
+        }
+        if (item->description[0] == '\0') {
+            const char *more = strstr(md, "<!-- more -->");
+            if (more) {
+                size_t dlen = (size_t)(more - md);
+                if (dlen > sizeof(item->description) - 1) dlen = sizeof(item->description) - 1;
+                strncpy(item->description, md, dlen);
+                item->description[dlen] = '\0';
+                char *td = trim_whitespace(item->description);
+                if (td && td != item->description) {
+                    memmove(item->description, td, strlen(td) + 1);
+                }
+            }
+        }
         StrBuf html;
         buf_init(&html, 4096);
         markdown_to_html(&html, md);
@@ -3209,19 +3313,18 @@ static void load_projects() {
     }
 }
 
+static double get_diff_ms(struct timespec s, struct timespec e) {
+    return (e.tv_sec - s.tv_sec) * 1000.0 + (e.tv_nsec - s.tv_nsec) / 1'000'000.0;
+}
+
 /* ==========================================================================
    Main Orchestrator
    ========================================================================== */
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
     const char *out_dir = (argc >= 2) ? argv[1] : "_site";
 
-    struct timespec start = {}, end = {};
-    clock_gettime(CLOCK_MONOTONIC, &start);
-
-    printf("================================================================\n");
-    printf("⚡ irbox C23-SSG — Modern Zero-Dependency Standalone Site Generator\n");
-    printf("Target Output: %s\n", out_dir);
-    printf("================================================================\n");
+    struct timespec t_start = {}, t_load = {}, t_core = {}, t_docs = {}, t_posts = {}, t_proj = {}, t_assets = {}, t_feeds = {}, t_end = {};
+    clock_gettime(CLOCK_MONOTONIC, &t_start);
 
     mkdir_p(out_dir);
 
@@ -3229,6 +3332,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
     load_docs();
     load_posts();
     load_projects();
+    clock_gettime(CLOCK_MONOTONIC, &t_load);
 
     /* Render All Core Landing & Content Pages */
     render_home_page(out_dir);
@@ -3240,16 +3344,22 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
     render_about_page(out_dir);
     render_404_page(out_dir);
     render_offline_page(out_dir);
+    clock_gettime(CLOCK_MONOTONIC, &t_core);
 
     for (size_t i = 0; i < doc_count; i++) {
         render_docs_page(&docs[i], out_dir);
     }
+    clock_gettime(CLOCK_MONOTONIC, &t_docs);
+
     for (size_t i = 0; i < post_count; i++) {
         render_post_page(&posts[i], out_dir);
     }
+    clock_gettime(CLOCK_MONOTONIC, &t_posts);
+
     for (size_t i = 0; i < project_count; i++) {
         render_project_page(&projects[i], out_dir);
     }
+    clock_gettime(CLOCK_MONOTONIC, &t_proj);
 
     /* Books archive static mirror */
     char books_arc_dst[MAX_PATH];
@@ -3288,6 +3398,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
     char sec_well_known[MAX_PATH];
     snprintf(sec_well_known, sizeof(sec_well_known), "%s/.well-known/security.txt", out_dir);
     copy_file(".well-known/security.txt", sec_well_known);
+    clock_gettime(CLOCK_MONOTONIC, &t_assets);
 
     /* Index reader for search */
     add_search("Web Book Reader", "/books/reader/", "Books", "Read digital EPUB and PDF books directly in your browser with offline support.", "books reader epub pdf viewer");
@@ -3296,13 +3407,27 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
     write_search_json(out_dir);
     write_sitemap_xml(out_dir);
     write_feed_xml(out_dir);
+    clock_gettime(CLOCK_MONOTONIC, &t_feeds);
 
-    clock_gettime(CLOCK_MONOTONIC, &end);
-    auto elapsed_ms = (end.tv_sec - start.tv_sec) * 1000.0 + (end.tv_nsec - start.tv_nsec) / 1'000'000.0;
+    clock_gettime(CLOCK_MONOTONIC, &t_end);
 
-    printf("✨ Successfully compiled & generated %zu pages!\n", doc_count + post_count + project_count + 7);
-    printf("📊 Search index: %zu entries\n", search_entry_count);
-    printf("⏱️  Total build time: %.2f ms\n", elapsed_ms);
+    printf("================================================================\n");
+    printf("⚡ irbox C23-SSG — Modern Zero-Dependency Standalone Site Generator\n");
+    printf("Target Output: %s\n", out_dir);
+    printf("================================================================\n");
+    printf("  Stage                   Count    Status      Duration\n");
+    printf("  --------------------------------------------------------------\n");
+    printf("  Load Markdown & YAML    %3zu      ok        %6.2f ms\n", doc_count + post_count + project_count, get_diff_ms(t_start, t_load));
+    printf("  Core Landing Pages        9      ok        %6.2f ms\n", get_diff_ms(t_load, t_core));
+    printf("  Documentation Pages     %3zu      ok        %6.2f ms\n", doc_count, get_diff_ms(t_core, t_docs));
+    printf("  Blog Post Pages         %3zu      ok        %6.2f ms\n", post_count, get_diff_ms(t_docs, t_posts));
+    printf("  Project Pages           %3zu      ok        %6.2f ms\n", project_count, get_diff_ms(t_posts, t_proj));
+    printf("  Static Assets & Books   ---      ok        %6.2f ms\n", get_diff_ms(t_proj, t_assets));
+    printf("  Search, Feeds & Sitemap   3      ok        %6.2f ms\n", get_diff_ms(t_assets, t_feeds));
+    printf("  --------------------------------------------------------------\n");
+    printf("✨ Total Generated Pages: %3zu\n", doc_count + post_count + project_count + 9);
+    printf("📊 Search Index Entries:  %3zu\n", search_entry_count);
+    printf("⏱️  Total Build Time:      %.2f ms\n", get_diff_ms(t_start, t_end));
     printf("================================================================\n");
 
     return 0;
