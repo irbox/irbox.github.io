@@ -8,6 +8,7 @@
 #define _POSIX_C_SOURCE 200809L
 #include <stdio.h>
 #include <stdlib.h>
+#include <stddef.h>
 #include <string.h>
 #include <ctype.h>
 #include <dirent.h>
@@ -674,7 +675,7 @@ static void markdown_to_html(StrBuf *out, const char *md) {
             }
             anchor[ai] = '\0';
 
-            char tag_open[128], tag_close[16];
+            char tag_open[256], tag_close[16];
             snprintf(tag_open, sizeof(tag_open), "<h%d id=\"%s\">", level, anchor);
             snprintf(tag_close, sizeof(tag_close), "</h%d>\n", level);
             buf_append_str(out, tag_open);
@@ -2419,6 +2420,10 @@ static void render_books_landing(const char *out_dir) {
         "      <svg class=\"books-search-icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><circle cx=\"11\" cy=\"11\" r=\"8\"></circle><line x1=\"21\" y1=\"21\" x2=\"16.65\" y2=\"16.65\"></line></svg>\n"
         "    </div>\n"
         "  </div>\n\n"
+    );
+
+    /* Book Cards Grid & Details */
+    buf_append_str(&body,
         "  <!-- Book Cards Grid -->\n"
         "  <div class=\"grid grid--cards\" id=\"books-grid\">\n"
         "    <article class=\"card book-card\" data-format=\"pdf\" data-title=\"architecture &amp; design primer\" data-author=\"irbox\" data-desc=\"a handbook on resilient static architectures, client-side tools, and publishing\">\n"
@@ -2448,6 +2453,10 @@ static void render_books_landing(const char *out_dir) {
         "        </a>\n"
         "      </div>\n"
         "    </article>\n\n"
+    );
+
+    /* Second Card & Shelf Info */
+    buf_append_str(&body,
         "    <article class=\"card book-card\" data-format=\"epub\" data-title=\"irbox — documentation, architecture &amp; field notes\" data-author=\"irbox\" data-desc=\"complete documentation and reference guide for irbox projects and systems.\">\n"
         "      <div class=\"book-card__header\">\n"
         "        <div class=\"book-card__badge-row\">\n"
@@ -2500,6 +2509,9 @@ static void render_books_landing(const char *out_dir) {
         "    </div>\n"
         "  </section>\n"
         "</div>\n\n"
+    );
+
+    buf_append_str(&body,
         "<script>\n"
         "  (function () {\n"
         "    const grid = document.getElementById('books-grid');\n"
@@ -2553,6 +2565,10 @@ static void render_books_landing(const char *out_dir) {
         "        filterBooks();\n"
         "      });\n"
         "    });\n\n"
+    );
+
+    /* Books Reader IndexedDB & Drag-and-Drop Script */
+    buf_append_str(&body,
         "    const bookDb = {\n"
         "      open: () =>\n"
         "        new Promise((resolve, reject) => {\n"
@@ -3069,17 +3085,22 @@ static void load_docs() {
         if (dir->d_name[0] == '.') continue;
         size_t len = strlen(dir->d_name);
         if (len < 4 || strcmp(dir->d_name + len - 3, ".md") != 0) continue;
+        if (doc_count >= MAX_ITEMS) break;
 
         char path[MAX_PATH];
         snprintf(path, sizeof(path), "_docs/%s", dir->d_name);
         char *content = read_entire_file(path);
         if (!content) continue;
 
+        char slug[128] = {};
+        size_t copy_len = (len - 3 < sizeof(slug) - 1) ? (len - 3) : (sizeof(slug) - 1);
+        strncpy(slug, dir->d_name, copy_len);
+        slug[copy_len] = '\0';
+
         DocItem *item = &docs[doc_count++];
-        memset(item, 0, sizeof(DocItem));
-        strncpy(item->slug, dir->d_name, len - 3);
-        item->slug[len - 3] = '\0';
-        snprintf(item->url, sizeof(item->url), "/docs/%s/", item->slug);
+        *item = (DocItem){};
+        strncpy(item->slug, slug, sizeof(item->slug) - 1);
+        snprintf(item->url, sizeof(item->url), "/docs/%s/", slug);
         strncpy(item->source_path, path, sizeof(item->source_path) - 1);
 
         const char *md = parse_frontmatter_block(content, item, 1);
@@ -3102,27 +3123,30 @@ static void load_posts() {
         if (dir->d_name[0] == '.') continue;
         size_t len = strlen(dir->d_name);
         if (len < 4 || strcmp(dir->d_name + len - 3, ".md") != 0) continue;
+        if (post_count >= MAX_ITEMS) break;
 
         char path[MAX_PATH];
         snprintf(path, sizeof(path), "_posts/%s", dir->d_name);
         char *content = read_entire_file(path);
         if (!content) continue;
 
+        char raw_slug[128] = {};
+        size_t copy_len = (len - 3 < sizeof(raw_slug) - 1) ? (len - 3) : (sizeof(raw_slug) - 1);
+        strncpy(raw_slug, dir->d_name, copy_len);
+        raw_slug[copy_len] = '\0';
+
         PostItem *item = &posts[post_count++];
-        memset(item, 0, sizeof(PostItem));
-        char raw_slug[128];
-        strncpy(raw_slug, dir->d_name, len - 3);
-        raw_slug[len - 3] = '\0';
+        *item = (PostItem){};
 
         /* Strip date prefix if present and save date */
-        char *s = raw_slug;
+        const char *s = raw_slug;
         if (isdigit((unsigned char)s[0]) && isdigit((unsigned char)s[1]) && s[4] == '-' && s[7] == '-') {
             strncpy(item->date, raw_slug, 10);
             item->date[10] = '\0';
             s += 11;
         }
         strncpy(item->slug, s, sizeof(item->slug) - 1);
-        snprintf(item->url, sizeof(item->url), "/blog/%s/", item->slug);
+        snprintf(item->url, sizeof(item->url), "/blog/%s/", s);
         strncpy(item->source_path, path, sizeof(item->source_path) - 1);
 
         const char *md = parse_frontmatter_block(content, item, 2);
@@ -3150,17 +3174,22 @@ static void load_projects() {
         if (dir->d_name[0] == '.') continue;
         size_t len = strlen(dir->d_name);
         if (len < 4 || strcmp(dir->d_name + len - 3, ".md") != 0) continue;
+        if (project_count >= MAX_ITEMS) break;
 
         char path[MAX_PATH];
         snprintf(path, sizeof(path), "_projects/%s", dir->d_name);
         char *content = read_entire_file(path);
         if (!content) continue;
 
+        char slug[128] = {};
+        size_t copy_len = (len - 3 < sizeof(slug) - 1) ? (len - 3) : (sizeof(slug) - 1);
+        strncpy(slug, dir->d_name, copy_len);
+        slug[copy_len] = '\0';
+
         ProjectItem *item = &projects[project_count++];
-        memset(item, 0, sizeof(ProjectItem));
-        strncpy(item->slug, dir->d_name, len - 3);
-        item->slug[len - 3] = '\0';
-        snprintf(item->url, sizeof(item->url), "/projects/%s/", item->slug);
+        *item = (ProjectItem){};
+        strncpy(item->slug, slug, sizeof(item->slug) - 1);
+        snprintf(item->url, sizeof(item->url), "/projects/%s/", slug);
         strncpy(item->source_path, path, sizeof(item->source_path) - 1);
 
         const char *md = parse_frontmatter_block(content, item, 3);
