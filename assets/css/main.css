@@ -558,11 +558,15 @@ hr,
   margin: 24px 0;
 }
 kbd {
-  font: 500 11px var(--font-mono);
-  padding: 1px 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: 500 11px/1.2 var(--font-mono);
+  padding: 2px 6px;
   border: 1px solid var(--border);
   border-radius: 6px;
   color: var(--ink-2);
+  vertical-align: middle;
 }
 [hidden] {
   display: none !important;
@@ -643,7 +647,7 @@ mark {
 }
 .section__head {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
   margin-bottom: 24px;
@@ -745,7 +749,7 @@ h6,
   align-items: center;
   justify-content: center;
   gap: 8px;
-  font: 500 15px/1 var(--font-sans);
+  font: 500 15px/1.3 var(--font-sans);
   padding: 12px 20px;
   border-radius: 999px;
   border: 1px solid transparent;
@@ -754,7 +758,6 @@ h6,
   -webkit-tap-highlight-color: transparent;
   user-select: none;
   -webkit-user-select: none;
-  -webkit-touch-callout: none;
   transition:
     background-color 0.18s ease,
     border-color 0.18s ease,
@@ -830,7 +833,6 @@ h6,
   -webkit-tap-highlight-color: transparent;
   user-select: none;
   -webkit-user-select: none;
-  -webkit-touch-callout: none;
   transition:
     background-color 0.18s ease,
     color 0.18s ease,
@@ -853,6 +855,7 @@ h6,
 .btn svg,
 .icon-btn svg {
   flex-shrink: 0;
+  display: block;
 }
 .badge {
   display: inline-block;
@@ -904,7 +907,6 @@ h6,
   -webkit-tap-highlight-color: transparent;
   user-select: none;
   -webkit-user-select: none;
-  -webkit-touch-callout: none;
   transition:
     background-color 0.18s ease,
     border-color 0.18s ease,
@@ -1520,7 +1522,7 @@ h6,
   word-break: break-word;
   overflow-wrap: anywhere;
 }
-.bento__spec-val:hover {
+a.bento__spec-val:hover {
   text-decoration: underline;
 }
 
@@ -1564,6 +1566,11 @@ h6,
   transition:
     opacity 0.3s ease,
     transform 0.2s ease;
+}
+.avatar--sm,
+.byline--sm .avatar {
+  width: 24px;
+  height: 24px;
 }
 .avatar--lg {
   width: 96px;
@@ -1696,6 +1703,8 @@ h6,
   gap: 2px;
 }
 .project-card__title {
+  font-size: 18px;
+  line-height: 1.35;
   font-weight: 600;
   text-decoration: none;
   transition: color 0.15s ease;
@@ -2265,9 +2274,11 @@ h6,
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 .table-wrap table {
+  display: table;
   margin: 0;
   width: 100%;
   min-width: 100%;
+  border-collapse: collapse;
 }
 .table-wrap tr:last-child td {
   border-bottom: 0;
@@ -2387,7 +2398,7 @@ h6,
   display: none;
 }
 .tab {
-  font: 500 15px var(--font-sans);
+  font: 600 15px var(--font-sans);
   padding: 10px 16px;
   border: 0;
   background: transparent;
@@ -2510,6 +2521,7 @@ h6,
 }
 .pager__item--next {
   text-align: right;
+  align-items: flex-end;
   margin-left: auto;
 }
 .pager__label {
@@ -2537,6 +2549,7 @@ h6,
   }
   .pager__item--next {
     text-align: left;
+    align-items: flex-start;
     margin-left: 0;
   }
 }
@@ -3275,6 +3288,10 @@ div.highlight {
   justify-content: space-between;
   align-items: center;
 }
+.books-toolbar .chips {
+  margin-bottom: 0;
+  justify-content: flex-start;
+}
 .books-search-box {
   flex: 1;
   max-width: 320px;
@@ -3287,6 +3304,17 @@ div.highlight {
   padding: 8px 12px 8px 36px;
   border-radius: var(--radius-inner);
   border: 1px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--ink);
+  font: 400 14px var(--font-sans);
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.books-search-input:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 18%, transparent);
 }
 .books-search-icon {
   position: absolute;
@@ -3294,7 +3322,8 @@ div.highlight {
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
-  opacity: 0.6;
+  color: var(--ink-2);
+  display: block;
 }
 .book-guide-card {
   margin-top: 64px;
@@ -3450,8 +3479,10 @@ div.highlight {
 
 /* Progress Track */
 .reader-progress-track {
-  position: sticky;
-  top: 53px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   z-index: 31;
   height: 3px;
   background: color-mix(in srgb, var(--reader-ink) 8%, transparent);

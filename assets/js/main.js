@@ -1081,9 +1081,15 @@
       return;
     }
 
-    // 2. Prevent Context Menu (Right Click Inspect / Save As / View Source, allowing text copy)
+    // 2. Allow context menu & long-press on links, buttons, interactive controls, media, and selected text
     doc.addEventListener('contextmenu', (e) => {
-      if (e.target.matches('input, textarea')) return;
+      if (
+        e.target.closest(
+          'a, button, [role="button"], input, textarea, select, label, summary, .btn, .icon-btn, .chip, .tab, .card, audio, video'
+        )
+      ) {
+        return;
+      }
       const selection = window.getSelection ? window.getSelection().toString().trim() : '';
       if (selection.length > 0) return; // Allow context menu if user is copying highlighted text
       e.preventDefault();
