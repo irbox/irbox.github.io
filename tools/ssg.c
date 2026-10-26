@@ -3398,6 +3398,14 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
     char sec_well_known[MAX_PATH];
     snprintf(sec_well_known, sizeof(sec_well_known), "%s/.well-known/security.txt", out_dir);
     copy_file(".well-known/security.txt", sec_well_known);
+
+    /* GitHub Pages .nojekyll bypass */
+    char nojekyll_path[MAX_PATH];
+    snprintf(nojekyll_path, sizeof(nojekyll_path), "%s/.nojekyll", out_dir);
+    FILE *fnj = fopen(nojekyll_path, "wb");
+    if (fnj != nullptr) {
+        fclose(fnj);
+    }
     clock_gettime(CLOCK_MONOTONIC, &t_assets);
 
     /* Index reader for search */

@@ -6,9 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
@@ -16,23 +14,27 @@ concurrency:
 
 jobs:
   deploy:
-    name: Deploy to GitHub Pages
+    name: Pure C23 Native Deploy
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Git Checkout (Pure C)
+        run: |
+          git init
+          git remote add origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+          git fetch --depth 1 origin "${GITHUB_SHA}"
+          git checkout --force FETCH_HEAD
 
-      - name: Build with C SSG
-        run: make build OUT=_site
+      - name: Compile and Generate Site (Pure C23)
+        run: |
+          make build OUT=_site
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
-
-      - name: Deploy
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Publish to Pages (Pure C Git Plumbing)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          TMP_IDX=$(mktemp -u)
+          GIT_INDEX_FILE="$TMP_IDX" git --work-tree=_site add -A
+          TREE=$(GIT_INDEX_FILE="$TMP_IDX" git write-tree)
+          rm -f "$TMP_IDX"
+          COMMIT=$(git commit-tree "$TREE" -m "deploy: ${GITHUB_SHA} (pure C23 build)")
+          git push "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" "$COMMIT:refs/heads/gh-pages" --force
