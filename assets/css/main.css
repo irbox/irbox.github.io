@@ -44,46 +44,46 @@
 :root {
   color-scheme: light dark;
 
-  /* Surfaces & canvas: Warm editorial alabaster (light) / Space-slate obsidian (dark) */
-  --bg-body: light-dark(#faf8f5, #0a0d12);
-  --bg-surface: light-dark(#ffffff, #121620);
-  --bg-surface-elevated: light-dark(#ffffff, #171c28);
-  --bg-muted: light-dark(#f3ede4, #0f1218);
+  /* Apple HIG Surfaces & Canvas: Pure Canvas (light) / Apple True Black (dark) */
+  --bg-body: light-dark(#ffffff, #000000);
+  --bg-surface: light-dark(#ffffff, #161617);
+  --bg-surface-elevated: light-dark(#ffffff, #1c1c1e);
+  --bg-muted: light-dark(#f5f5f7, #1c1c1e);
   --surface: var(--bg-surface);
 
-  /* Hair-line crisp borders & surface edge highlights */
-  --border: light-dark(rgba(22, 20, 18, 0.085), rgba(255, 255, 255, 0.095));
-  --border-subtle: light-dark(rgba(22, 20, 18, 0.045), rgba(255, 255, 255, 0.05));
-  --border-glass: light-dark(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.08));
+  /* Apple Hair-line Separators & Translucent Edge Highlights */
+  --border: light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.12));
+  --border-subtle: light-dark(rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.06));
+  --border-glass: light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.1));
   --highlight-edge: light-dark(
-    inset 0 1px 0 rgba(255, 255, 255, 0.8),
-    inset 0 1px 0 rgba(255, 255, 255, 0.07)
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1)
   );
 
-  /* Rich ink typography: Warm espresso (light) / Crisp silver (dark) */
-  --ink: light-dark(#151413, #f1f3f7);
-  --ink-2: light-dark(#565149, #9da4b0);
-  --ink-3: light-dark(#706a61, #7e8794);
-  --ink-muted-fill: light-dark(rgba(22, 20, 18, 0.055), rgba(241, 243, 247, 0.08));
-  --on-accent: light-dark(#ffffff, #0a0d12);
+  /* Apple Dynamic Typography: Primary Graphite / Secondary System Gray */
+  --ink: light-dark(#1d1d1f, #f5f5f7);
+  --ink-2: light-dark(#86868b, #86868b);
+  --ink-3: light-dark(#a1a1a6, #6e6e73);
+  --ink-muted-fill: light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.08));
+  --on-accent: light-dark(#ffffff, #000000);
 
-  /* Brand sapphire: Authoritative, modern, high-contrast (WCAG AAA compliant) */
-  --brand: light-dark(#1a56db, #4887f4);
-  --brand-hover: light-dark(#1344af, #639bf7);
-  --brand-muted: light-dark(rgba(26, 86, 219, 0.08), rgba(72, 135, 244, 0.14));
-  --brand-glow: light-dark(rgba(26, 86, 219, 0.16), rgba(72, 135, 244, 0.24));
+  /* Apple Cupertino Blue Accent (#0071e3 light / #2997ff dark) */
+  --brand: light-dark(#0071e3, #2997ff);
+  --brand-hover: light-dark(#0077ed, #47a3ff);
+  --brand-muted: light-dark(rgba(0, 113, 227, 0.08), rgba(41, 151, 255, 0.15));
+  --brand-glow: light-dark(rgba(0, 113, 227, 0.22), rgba(41, 151, 255, 0.32));
   --accent: var(--brand);
-  --feature-bg: light-dark(rgba(26, 86, 219, 0.045), rgba(72, 135, 244, 0.08));
+  --feature-bg: light-dark(rgba(0, 113, 227, 0.04), rgba(41, 151, 255, 0.08));
 
-  /* Semantic feedback states */
-  --info: light-dark(#1a56db, #4887f4);
-  --info-bg: light-dark(rgba(26, 86, 219, 0.08), rgba(72, 135, 244, 0.14));
-  --warning: light-dark(#b45309, #fbbf24);
-  --warning-bg: light-dark(rgba(180, 83, 9, 0.09), rgba(251, 191, 36, 0.14));
-  --success: light-dark(#15803d, #34d399);
-  --success-bg: light-dark(rgba(21, 128, 61, 0.08), rgba(52, 211, 153, 0.14));
-  --danger: light-dark(#dc2626, #f87171);
-  --danger-bg: light-dark(rgba(220, 38, 38, 0.08), rgba(248, 113, 113, 0.14));
+  /* Apple Semantic System Colors */
+  --info: light-dark(#0071e3, #2997ff);
+  --info-bg: light-dark(rgba(0, 113, 227, 0.08), rgba(41, 151, 255, 0.15));
+  --warning: light-dark(#ff9500, #ff9f0a);
+  --warning-bg: light-dark(rgba(255, 149, 0, 0.09), rgba(255, 159, 10, 0.15));
+  --success: light-dark(#34c759, #30d158);
+  --success-bg: light-dark(rgba(52, 199, 89, 0.08), rgba(48, 209, 88, 0.15));
+  --danger: light-dark(#ff3b30, #ff453a);
+  --danger-bg: light-dark(rgba(255, 59, 48, 0.08), rgba(255, 69, 58, 0.15));
 
   /* Book and Media Badges */
   --badge-epub-bg: light-dark(rgba(37, 99, 235, 0.12), rgba(96, 165, 250, 0.2));
@@ -126,9 +126,9 @@
   --shadow-sheet:
     0 -1px 0 var(--border), 0 -16px 48px light-dark(rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.38));
 
-  /* Transparency & Glassmorphism Blur */
-  --backdrop-glass: blur(16px) saturate(180%);
-  --backdrop-modal: blur(14px) saturate(150%);
+  /* Transparency & Glassmorphism Blur (Apple Material) */
+  --backdrop-glass: blur(20px) saturate(180%);
+  --backdrop-modal: blur(25px) saturate(190%);
   --glass-surface: color-mix(in srgb, var(--bg-surface) 82%, transparent);
   --glass-scrim: color-mix(in srgb, var(--ink) 32%, transparent);
 
@@ -146,81 +146,88 @@
   --space-20: 80px;
   --space-24: 96px;
 
-  /* Harmonious Border Radius Scale */
+  /* Apple Squircle Border Radius Scale */
   --radius-xs: 4px;
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-inner: 8px;
-  --radius-lg: 12px;
-  --radius-element: 12px;
-  --radius-xl: 16px;
-  --radius-container: 16px;
-  --radius-card: var(--radius-container);
-  --radius-page: 32px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-inner: 12px;
+  --radius-lg: 16px;
+  --radius-element: 16px;
+  --radius-xl: 20px;
+  --radius-container: 20px;
+  --radius-card: 20px;
+  --radius-pill: 980px;
+  --radius-btn: 980px;
+  --radius-page: 36px;
   --radius-full: 9999px;
 
-  /* Typography Modular Scale (Major Third — 1.25 Modular Ratio) */
+  /* Typography Modular Scale (Apple HIG Scale) */
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
-  --text-base: 1rem;
-  --text-md: 1.125rem;
-  --text-lg: 1.25rem;
-  --text-xl: 1.5rem;
-  --text-2xl: 1.875rem;
-  --text-3xl: 2.25rem;
-  --text-4xl: 3rem;
+  --text-base: 1.0625rem; /* 17px Apple Body */
+  --text-md: 1.1875rem;  /* 19px */
+  --text-lg: 1.3125rem;  /* 21px */
+  --text-xl: 1.5rem;     /* 24px */
+  --text-2xl: 1.75rem;   /* 28px */
+  --text-3xl: 2.25rem;   /* 36px */
+  --text-4xl: 3rem;      /* 48px */
 
-  --accent-subtle: light-dark(rgba(26, 86, 219, 0.08), rgba(72, 135, 244, 0.14));
+  --accent-subtle: light-dark(rgba(0, 113, 227, 0.08), rgba(41, 151, 255, 0.15));
 
-  --font-serif: 'Libron', 'Newsreader', 'Bookerly', Georgia, 'Times New Roman', serif;
-  --font-heading: 'Libron', 'Newsreader', Georgia, 'Times New Roman', serif;
-  --font-reading: var(--font-serif);
+  /* Apple San Francisco Typography */
   --font-sans:
-    'Figtree', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
-    sans-serif;
-  --font-body: var(--font-reading);
-  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'SF Pro', system-ui, -system-ui,
+    'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-heading:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro', system-ui, -system-ui,
+    'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: 'Libron', 'Newsreader', 'Bookerly', Georgia, 'Times New Roman', serif;
+  --font-reading: var(--font-sans);
+  --font-body: var(--font-sans);
+  --font-mono: 'SF Mono', SFMono-Regular, ui-monospace, Menlo, Monaco, Consolas, 'JetBrains Mono', monospace;
 
-  --header-h: 56px;
+  /* Apple Dynamics */
+  --ease-apple: cubic-bezier(0.16, 1, 0.3, 1);
+  --header-h: 52px;
   --header-total-h: calc(var(--header-h) + env(safe-area-inset-top, 0px));
   --content-max: 1200px;
-  --prose-max: 800px;
-  --section-gap: 100px;
+  --prose-max: 760px;
+  --section-gap: 96px;
 }
 :root[data-theme='light'] {
   color-scheme: light;
-  --bg-body: #faf8f5;
+  --bg-body: #ffffff;
   --bg-surface: #ffffff;
   --bg-surface-elevated: #ffffff;
-  --bg-muted: #f3ede4;
-  --border: rgba(22, 20, 18, 0.085);
-  --border-subtle: rgba(22, 20, 18, 0.045);
-  --border-glass: rgba(255, 255, 255, 0.75);
-  --highlight-edge: inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  --ink: #151413;
-  --ink-2: #565149;
-  --ink-3: #706a61;
-  --ink-muted-fill: rgba(22, 20, 18, 0.055);
+  --bg-muted: #f5f5f7;
+  --border: rgba(0, 0, 0, 0.08);
+  --border-subtle: rgba(0, 0, 0, 0.04);
+  --border-glass: rgba(0, 0, 0, 0.08);
+  --highlight-edge: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  --ink: #1d1d1f;
+  --ink-2: #86868b;
+  --ink-3: #a1a1a6;
+  --ink-muted-fill: rgba(0, 0, 0, 0.05);
   --on-accent: #ffffff;
-  --brand: #1a56db;
-  --brand-hover: #1344af;
-  --brand-muted: rgba(26, 86, 219, 0.08);
-  --brand-glow: rgba(26, 86, 219, 0.16);
+  --brand: #0071e3;
+  --brand-hover: #0077ed;
+  --brand-muted: rgba(0, 113, 227, 0.08);
+  --brand-glow: rgba(0, 113, 227, 0.22);
   --accent: var(--brand);
-  --accent-subtle: rgba(26, 86, 219, 0.08);
-  --feature-bg: rgba(26, 86, 219, 0.045);
-  --info: #1a56db;
-  --info-bg: rgba(26, 86, 219, 0.08);
-  --warning: #b45309;
-  --warning-bg: rgba(180, 83, 9, 0.09);
-  --success: #15803d;
-  --success-bg: rgba(21, 128, 61, 0.08);
-  --danger: #dc2626;
-  --danger-bg: rgba(220, 38, 38, 0.08);
-  --badge-epub-bg: rgba(37, 99, 235, 0.12);
-  --badge-epub-color: #1d4ed8;
-  --badge-pdf-bg: rgba(220, 38, 38, 0.12);
-  --badge-pdf-color: #b91c1c;
+  --accent-subtle: rgba(0, 113, 227, 0.08);
+  --feature-bg: rgba(0, 113, 227, 0.04);
+  --info: #0071e3;
+  --info-bg: rgba(0, 113, 227, 0.08);
+  --warning: #ff9500;
+  --warning-bg: rgba(255, 149, 0, 0.09);
+  --success: #34c759;
+  --success-bg: rgba(52, 199, 89, 0.08);
+  --danger: #ff3b30;
+  --danger-bg: rgba(255, 59, 48, 0.08);
+  --badge-epub-bg: rgba(0, 113, 227, 0.1);
+  --badge-epub-color: #0071e3;
+  --badge-pdf-bg: rgba(255, 59, 48, 0.1);
+  --badge-pdf-color: #ff3b30;
   --c-com: #a0a1a7;
   --c-kw: #a626a4;
   --c-str: #50a14f;
@@ -228,54 +235,54 @@
   --c-num: #986801;
   --c-tag: #c18401;
   --c-op: #0184bc;
-  --code-bg: #f6f8fa;
-  --code-border: #e1e4e8;
-  --code-ink: #383a42;
+  --code-bg: #f5f5f7;
+  --code-border: rgba(0, 0, 0, 0.08);
+  --code-ink: #1d1d1f;
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-sm: 0 2px 5px -1px rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
-  --shadow-md: 0 6px 18px -2px rgba(0, 0, 0, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
-  --shadow-lg: 0 14px 32px -4px rgba(0, 0, 0, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 2px 6px -1px rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 6px 20px -2px rgba(0, 0, 0, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 14px 34px -4px rgba(0, 0, 0, 0.1), 0 4px 12px -2px rgba(0, 0, 0, 0.05);
   --shadow-xl: 0 24px 54px -8px rgba(0, 0, 0, 0.12), 0 8px 22px -4px rgba(0, 0, 0, 0.05);
   --shadow-modal: 0 32px 72px -12px rgba(0, 0, 0, 0.18), 0 0 0 1px var(--border);
   --shadow-sheet: 0 -1px 0 var(--border), 0 -16px 48px rgba(0, 0, 0, 0.04);
-  --glass-surface: rgba(255, 255, 255, 0.85);
-  --glass-scrim: rgba(21, 20, 19, 0.32);
+  --glass-surface: rgba(255, 255, 255, 0.82);
+  --glass-scrim: rgba(29, 29, 31, 0.32);
 }
 
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --bg-body: #0a0d12;
-  --bg-surface: #121620;
-  --bg-surface-elevated: #171c28;
-  --bg-muted: #0f1218;
-  --border: rgba(255, 255, 255, 0.095);
-  --border-subtle: rgba(255, 255, 255, 0.05);
-  --border-glass: rgba(255, 255, 255, 0.08);
-  --highlight-edge: inset 0 1px 0 rgba(255, 255, 255, 0.07);
-  --ink: #f1f3f7;
-  --ink-2: #9da4b0;
-  --ink-3: #7e8794;
-  --ink-muted-fill: rgba(241, 243, 247, 0.08);
-  --on-accent: #0a0d12;
-  --brand: #4887f4;
-  --brand-hover: #639bf7;
-  --brand-muted: rgba(72, 135, 244, 0.14);
-  --brand-glow: rgba(72, 135, 244, 0.24);
+  --bg-body: #000000;
+  --bg-surface: #161617;
+  --bg-surface-elevated: #1c1c1e;
+  --bg-muted: #1c1c1e;
+  --border: rgba(255, 255, 255, 0.12);
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-glass: rgba(255, 255, 255, 0.1);
+  --highlight-edge: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  --ink: #f5f5f7;
+  --ink-2: #86868b;
+  --ink-3: #6e6e73;
+  --ink-muted-fill: rgba(255, 255, 255, 0.08);
+  --on-accent: #000000;
+  --brand: #2997ff;
+  --brand-hover: #47a3ff;
+  --brand-muted: rgba(41, 151, 255, 0.15);
+  --brand-glow: rgba(41, 151, 255, 0.32);
   --accent: var(--brand);
-  --accent-subtle: rgba(72, 135, 244, 0.14);
-  --feature-bg: rgba(72, 135, 244, 0.08);
-  --info: #4887f4;
-  --info-bg: rgba(72, 135, 244, 0.14);
-  --warning: #fbbf24;
-  --warning-bg: rgba(251, 191, 36, 0.14);
-  --success: #34d399;
-  --success-bg: rgba(52, 211, 153, 0.14);
-  --danger: #f87171;
-  --danger-bg: rgba(248, 113, 113, 0.14);
-  --badge-epub-bg: rgba(96, 165, 250, 0.2);
-  --badge-epub-color: #93c5fd;
-  --badge-pdf-bg: rgba(248, 113, 113, 0.2);
-  --badge-pdf-color: #fca5a5;
+  --accent-subtle: rgba(41, 151, 255, 0.15);
+  --feature-bg: rgba(41, 151, 255, 0.08);
+  --info: #2997ff;
+  --info-bg: rgba(41, 151, 255, 0.15);
+  --warning: #ff9f0a;
+  --warning-bg: rgba(255, 159, 10, 0.15);
+  --success: #30d158;
+  --success-bg: rgba(48, 209, 88, 0.15);
+  --danger: #ff453a;
+  --danger-bg: rgba(255, 69, 58, 0.15);
+  --badge-epub-bg: rgba(41, 151, 255, 0.18);
+  --badge-epub-color: #2997ff;
+  --badge-pdf-bg: rgba(255, 69, 58, 0.18);
+  --badge-pdf-color: #ff453a;
   --c-com: #5c6370;
   --c-kw: #c678dd;
   --c-str: #98c379;
@@ -814,29 +821,31 @@ p,
   }
 }
 .btn--primary {
-  background: var(--ink);
-  color: var(--on-accent);
-  box-shadow: var(--shadow-sm);
+  background: var(--brand);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 2px 10px var(--brand-glow);
 }
 @media (hover: hover) and (pointer: fine) {
   .btn--primary:hover {
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
-    opacity: 0.94;
+    background: var(--brand-hover);
+    transform: scale(1.02);
+    box-shadow: 0 4px 16px var(--brand-glow);
+    opacity: 1;
   }
 }
 .btn--secondary {
-  background: var(--bg-surface);
-  color: var(--ink);
-  border-color: var(--border);
-  box-shadow: var(--shadow-xs);
+  background: var(--brand-muted);
+  color: var(--brand);
+  border-color: transparent;
+  box-shadow: none;
 }
 @media (hover: hover) and (pointer: fine) {
   .btn--secondary:hover {
-    background: var(--bg-surface);
-    border-color: color-mix(in srgb, var(--ink) 25%, var(--border));
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-sm);
+    background: color-mix(in srgb, var(--brand) 18%, transparent);
+    border-color: transparent;
+    transform: scale(1.02);
+    box-shadow: none;
   }
 }
 .btn--ghost {
@@ -1343,10 +1352,10 @@ p,
 }
 .hero__title {
   font-family: var(--font-heading);
-  font-size: clamp(38px, 6.2vw, 68px);
-  line-height: 1.14;
+  font-size: clamp(40px, 6.5vw, 72px);
+  line-height: 1.06;
   font-weight: 700;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.028em;
   margin: 0 auto 20px;
   color: var(--ink);
   max-width: 22ch;
@@ -1357,12 +1366,13 @@ p,
   color: var(--ink);
 }
 .hero__tagline {
-  font-family: var(--font-heading);
-  font-size: clamp(18px, 2.2vw, 22px);
-  line-height: 1.55;
+  font-family: var(--font-sans);
+  font-size: clamp(18px, 2.2vw, 24px);
+  line-height: 1.45;
+  letter-spacing: -0.015em;
   color: var(--ink-2);
-  margin: 0 auto 32px;
-  max-width: 46ch;
+  margin: 0 auto 36px;
+  max-width: 48ch;
 }
 .hero__cta {
   display: flex;
@@ -1435,19 +1445,19 @@ p,
 }
 .bento__card {
   position: relative;
-  background: var(--bg-muted);
-  border-radius: var(--radius-container);
+  background: var(--bg-surface);
+  border-radius: var(--radius-card);
   border: 1px solid var(--border);
-  box-shadow: var(--shadow-xs);
-  padding: 24px 28px;
+  box-shadow: var(--shadow-sm);
+  padding: 26px 28px;
   text-decoration: none;
   color: var(--ink);
   display: flex;
   flex-direction: column;
   transition:
-    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.2s ease;
+    transform 0.35s var(--ease-apple),
+    box-shadow 0.35s var(--ease-apple),
+    border-color 0.25s ease;
   overflow: hidden;
 }
 .bento__card::before {
@@ -1691,20 +1701,20 @@ a.bento__spec-val:hover {
   display: block;
   background: var(--bg-surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius-container);
-  box-shadow: var(--shadow-xs);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-sm);
   overflow: hidden;
   transition:
-    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.2s ease;
+    transform 0.35s var(--ease-apple),
+    box-shadow 0.35s var(--ease-apple),
+    border-color 0.25s ease;
 }
 .card--clickable {
   text-decoration: none;
 }
 @media (hover: hover) {
   .card--clickable:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px) scale(1.008);
     box-shadow: var(--shadow-lg);
     border-color: color-mix(in srgb, var(--brand) 32%, var(--border));
   }
@@ -2198,21 +2208,34 @@ a.bento__spec-val:hover {
 .prose pre {
   position: relative;
   margin: 1.6em 0;
-  padding: 18px 20px;
+  padding: 38px 20px 18px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   background: var(--code-bg);
   color: var(--code-ink);
   border: 1px solid var(--code-border);
-  border-radius: var(--radius-element);
+  border-radius: var(--radius-lg);
   font-family: var(--font-mono);
   font-size: 13.5px;
   line-height: 1.65;
   font-feature-settings: 'liga' 1, 'calt' 1, 'zero' 1;
   font-variant-ligatures: contextual;
-  box-shadow: var(--shadow-xs);
+  box-shadow: var(--shadow-sm);
   max-width: 100%;
   min-width: 0;
+}
+.code-block-wrap pre::before,
+.prose pre::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ff5f56;
+  box-shadow: 16px 0 0 #ffbd2e, 32px 0 0 #27c93f;
+  pointer-events: none;
 }
 .code-block-wrap pre {
   margin: 0 !important;
