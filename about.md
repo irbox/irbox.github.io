@@ -10,7 +10,7 @@ Hi, I'm **Irbox**. Welcome to my personal showcase site where I document selecte
 
 - Build web apps, libraries and developer tools.
 - Write documentation people actually read.
-- Share what I learn on the [blog]({{ '/blog/' | relative_url }}).
+- Share what I learn on the [blog](/blog/).
 
 ## Experience
 
