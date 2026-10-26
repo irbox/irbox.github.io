@@ -623,9 +623,12 @@
       fullscreenToggle.setAttribute('title', isFs ? 'Exit Fullscreen' : 'Toggle Fullscreen');
     }
   };
-  ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(
-    (evt) => document.addEventListener(evt, updateFullscreenUI)
-  );
+  [
+    'fullscreenchange',
+    'webkitfullscreenchange',
+    'mozfullscreenchange',
+    'MSFullscreenChange',
+  ].forEach((evt) => document.addEventListener(evt, updateFullscreenUI));
 
   // Event Listeners
   if (prevBtn) {

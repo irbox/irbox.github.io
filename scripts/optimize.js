@@ -203,26 +203,23 @@ async function optimizeJavaScript(filePath) {
   const originalSize = Buffer.byteLength(raw, 'utf8');
   let outputCode = raw;
 
-  if (minifyOnly) {
+  try {
     const minified = await terser.minify(raw, {
+      ecma: 2020,
       compress: {
-        passes: 3,
+        passes: 2,
         drop_console: false,
         pure_getters: true,
-        unsafe_arrows: true,
       },
-      mangle: {
-        toplevel: true,
-      },
+      mangle: false,
       format: {
         comments: false,
       },
     });
-    outputCode = '/* @irbox-shield */' + (minified.code || raw);
-  } else {
-    // Extreme Obfuscation
-    const obfuscated = JavaScriptObfuscator.obfuscate(raw, OBFUSCATOR_CONFIG);
-    outputCode = '/* @irbox-shield */' + obfuscated.getObfuscatedCode();
+    outputCode = minified.code || raw;
+  } catch (err) {
+    console.warn(`  [JS] Minify fallback for ${path.basename(filePath)}:`, err.message);
+    outputCode = raw;
   }
 
   const outputBuffer = Buffer.from(outputCode, 'utf8');
@@ -297,25 +294,10 @@ async function optimizeHTML(filePath) {
       sortAttributes: true,
       sortClassName: true,
       minifyCSS: (text) => cleanCssInstance.minify(text).styles || text,
-      minifyJS: (text, inline) => {
+      minifyJS: (text) => {
         if (!text || !text.trim()) return text;
         try {
-          if (!minifyOnly) {
-            // Obfuscate inline JavaScript
-            return JavaScriptObfuscator.obfuscate(text, {
-              compact: true,
-              identifierNamesGenerator: 'hexadecimal',
-              stringArray: true,
-              stringArrayThreshold: 0.7,
-              stringArrayEncoding: ['base64'],
-              numbersToExpressions: true,
-              renameGlobals: false,
-              target: 'browser',
-              selfDefending: false,
-            }).getObfuscatedCode();
-          } else {
-            return terser.minify_sync ? terser.minify_sync(text).code : text;
-          }
+          return terser.minify_sync ? terser.minify_sync(text).code : text;
         } catch {
           return text;
         }

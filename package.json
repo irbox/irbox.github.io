@@ -4,9 +4,9 @@
   "private": true,
   "description": "Personal showcase, documentation, books archive and web reader",
   "scripts": {
-    "build": "bundle exec jekyll build && node scripts/optimize.js",
-    "build:prod": "JEKYLL_ENV=production bundle exec jekyll build && node scripts/optimize.js",
-    "build:clean": "rm -rf _site .jekyll-cache && npm run build",
+    "build": "make build && node scripts/optimize.js",
+    "build:prod": "make build && node scripts/optimize.js",
+    "build:clean": "make clean && npm run build",
     "optimize": "node scripts/optimize.js",
     "obfuscate": "node scripts/optimize.js --obfuscate-only",
     "minify": "node scripts/optimize.js --minify-only",
