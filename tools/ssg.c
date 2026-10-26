@@ -2486,7 +2486,7 @@ static void render_books_landing(const char *out_dir) {
         "        <p class=\"muted\" style=\"margin-bottom: 16px;\">You don't need coding knowledge or database setups to publish or archive books here.</p>\n"
         "        <ol style=\"padding-left: 20px; line-height: 1.7; margin-bottom: 16px;\">\n"
         "          <li><strong>Add files:</strong> Place any <code>.epub</code> or <code>.pdf</code> book inside the folder <code>books/archive/</code>.</li>\n"
-        "          <li><strong>Auto-index:</strong> Run <code>npm run index:books</code> (or <code>node scripts/index_books.js</code>) in your workspace terminal.</li>\n"
+        "          <li><strong>Build:</strong> Run <code>make build</code> in your terminal. Zero setup, zero external dependencies.</li>\n"
         "          <li><strong>Instant reader:</strong> That's it! Your book automatically receives a card on this shelf, full-text reading controls, and chapter navigation.</li>\n"
         "        </ol>\n"
         "        <p style=\"margin: 0;\">\n"

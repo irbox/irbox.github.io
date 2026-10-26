@@ -28,5 +28,5 @@ Open `_site/index.html` or serve with any local HTTP server. The C SSG compiles 
 
 1. Add your projects to `_projects/`.
 2. Write notes and essays in `_posts/` and documentation guides in `_docs/`.
-3. Add books to `books/archive/` and run `npm run index:books`.
+3. Add books to `books/archive/` and rebuild with `make build`.
 4. Read [Installation](/docs/installation/) for deploy options.

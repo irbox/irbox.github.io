@@ -31,17 +31,15 @@ books/archive/
 └── your-new-book.epub
 ```
 
-### Step 2: Auto-index the archive
+### Step 2: Build the site
 
-Run the indexing command in your workspace:
+Rebuild the site using the standalone C SSG:
 
 ```bash
-npm run index:books
+make build
 ```
 
-_(or run `node scripts/index_books.js`)_
-
-The indexer automatically reads the title, author, description, chapter count, page count, and file size from each file and updates your digital bookshelf at **`/books/`**.
+The C SSG automatically mirrors your archive and presents all book metadata, cards, and reading controls at **`/books/`**.
 
 ---
 
@@ -124,17 +122,9 @@ Open `_data/docs_nav.yml` and add your file slug (without `.md`) to the desired 
     - getting-started
 ```
 
-### Step 3: Build your EPUB
+### Step 3: Distribution
 
-Run the build script:
-
-```bash
-npm run build:epub
-```
-
-_(or run `node scripts/build_epub.js`)_
-
-Your updated `.epub` book is immediately created in `assets/book.epub`, containing all your chapters in the exact sequence declared in your navigation file.
+Your ready-to-read `.epub` edition is available in `assets/book.epub` and `books/archive/irbox-docs.epub`, containing all your documentation chapters for offline reading on Kindle, Kobo, or mobile e-readers.
 
 ---
 

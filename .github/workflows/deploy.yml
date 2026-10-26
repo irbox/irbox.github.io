@@ -1,4 +1,4 @@
-name: Build & Deploy with Zero-Dependency C SSG & Optimizer
+name: Build & Deploy with Zero-Dependency C SSG
 
 on:
   push:
@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   build:
-    name: Build & Optimize
+    name: Build Site (Pure C99)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -26,20 +26,8 @@ jobs:
         id: pages
         uses: actions/configure-pages@v6
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version: '24'
-          cache: 'npm'
-
-      - name: Install Node dependencies
-        run: npm ci || npm install --no-bin-links
-
       - name: Build site with C SSG
         run: make build OUT=_site
-
-      - name: Run Optimization & Pre-Compression
-        run: node scripts/optimize.js --dir _site
 
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v5

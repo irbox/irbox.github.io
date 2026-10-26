@@ -1,4 +1,4 @@
-CC ?= gcc
+CC ?= cc
 CFLAGS ?= -O3 -Wall -Wextra -std=c99
 SRC = tools/ssg.c
 BIN ?= /tmp/irbox-ssg

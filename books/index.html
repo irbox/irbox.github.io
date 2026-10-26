@@ -209,7 +209,7 @@ permalink: /books/
       <div class="card center muted book-empty-state">
         <p>
           No books in archive yet. Drop a <code>.epub</code> or <code>.pdf</code> file into
-          <code>books/archive/</code> and run <code>npm run index:books</code>.
+          <code>books/archive/</code> and run <code>make build</code>.
         </p>
       </div>
     {%- endif %}
@@ -258,8 +258,7 @@ permalink: /books/
             inside the folder <code>books/archive/</code>.
           </li>
           <li>
-            <strong>Auto-index:</strong> Run <code>npm run index:books</code> (or
-            <code>node scripts/index_books.js</code>) in your workspace terminal.
+            <strong>Build:</strong> Run <code>make build</code> in your terminal. Zero setup, zero external dependencies.
           </li>
           <li>
             <strong>Instant reader:</strong> That's it! Your book automatically receives a card on

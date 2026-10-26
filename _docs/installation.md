@@ -6,9 +6,10 @@ category: Introduction
 
 ## Requirements
 
-- C99-compatible compiler (`gcc` or `clang`)
-- `make`
-- Node.js >= 18 (optional, for asset minification and pre-compression)
+- C99-compatible compiler (`cc`, `gcc`, or `clang`)
+- `make` (GNU make or BSD make)
+
+No package managers, runtime interpreters, or external libraries required.
 
 ## Install and run
 
@@ -20,18 +21,10 @@ make build
 
 The C SSG compiles in ~150ms and generates all static HTML pages, search index, sitemap, and RSS feed in under 20ms into `_site/`.
 
-## Build for production (with optimization)
-
-```bash
-npm run build
-```
-
-This compiles the site using the C SSG, minifies CSS/HTML/JS, optimizes SVGs, and pre-compresses assets with Brotli (.br) and Gzip (.gz).
-
 ## Deploy
 
-| Host                      | How                                                                       |
-| ------------------------- | ------------------------------------------------------------------------- |
-| GitHub Pages              | Automated with GitHub Actions via `.github/workflows/deploy.yml`.         |
-| Cloudflare Pages / Vercel | Build command: `make build && node scripts/optimize.js`, output: `_site`. |
-| Any static host           | Upload the contents of `_site/`.                                          |
+| Host                      | How                                                               |
+| ------------------------- | ----------------------------------------------------------------- |
+| GitHub Pages              | Automated with GitHub Actions via `.github/workflows/deploy.yml`. |
+| Cloudflare Pages / Vercel | Build command: `make build`, output: `_site`.                     |
+| Any static host           | Upload the contents of `_site/`.                                  |

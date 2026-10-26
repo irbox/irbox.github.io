@@ -9,14 +9,14 @@ Welcome to your personal digital book archive. This folder is designed for effor
    - Example: `books/archive/my-favorite-novel.epub`
    - Example: `books/archive/cheat-sheet.pdf`
 
-2. **Index the books:**
-   Run the following command in your terminal or workspace:
+2. **Build the site:**
+   Run the build command in your terminal:
 
    ```bash
-   node scripts/index_books.js
+   make build
    ```
 
-   _Tip: This automatically reads the title, author, description, chapter count, and file size from each file and updates the site's bookshelf!_
+   _Tip: The C SSG automatically mirrors your archive and makes your books immediately available!_
 
 3. **Enjoy on your website:**
    - Browse your digital shelf at `/books/`
