@@ -194,6 +194,12 @@ function precompressFile(filePath, buffer) {
 
 async function optimizeJavaScript(filePath) {
   const raw = fs.readFileSync(filePath, 'utf8');
+  if (raw.startsWith('/* @irbox-shield */')) {
+    if (!isQuiet) {
+      console.log(`  [JS Skip] ${path.relative(targetDir, filePath)}: Already obfuscated`);
+    }
+    return;
+  }
   const originalSize = Buffer.byteLength(raw, 'utf8');
   let outputCode = raw;
 
@@ -212,11 +218,11 @@ async function optimizeJavaScript(filePath) {
         comments: false,
       },
     });
-    outputCode = minified.code || raw;
+    outputCode = '/* @irbox-shield */' + (minified.code || raw);
   } else {
     // Extreme Obfuscation
     const obfuscated = JavaScriptObfuscator.obfuscate(raw, OBFUSCATOR_CONFIG);
-    outputCode = obfuscated.getObfuscatedCode();
+    outputCode = '/* @irbox-shield */' + obfuscated.getObfuscatedCode();
   }
 
   const outputBuffer = Buffer.from(outputCode, 'utf8');
@@ -262,10 +268,19 @@ function optimizeCSS(filePath) {
 
 async function optimizeHTML(filePath) {
   const raw = fs.readFileSync(filePath, 'utf8');
+  if (raw.includes('x-irbox-optimized')) {
+    if (!isQuiet) {
+      console.log(`  [HTML Skip] ${path.relative(targetDir, filePath)}: Already minified`);
+    }
+    return;
+  }
   const originalSize = Buffer.byteLength(raw, 'utf8');
 
-  // Obfuscate emails in HTML
+  // Obfuscate emails in HTML and tag with optimization marker
   let processed = obfuscateEmail(raw);
+  if (processed.includes('</head>')) {
+    processed = processed.replace('</head>', '<meta name="x-irbox-optimized" content="1"></head>');
+  }
 
   try {
     const minified = await htmlMinifier.minify(processed, {

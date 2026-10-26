@@ -9,8 +9,7 @@
 ##
 
 Jekyll::Hooks.register :site, :post_write do |site|
-  should_run = ENV['JEKYLL_ENV'] == 'production' ||
-               ENV['OPTIMIZE'] == 'true' ||
+  should_run = ENV['OPTIMIZE'] == 'true' ||
                site.config.dig('optimize', 'auto_run') == true
 
   if should_run

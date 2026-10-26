@@ -27,7 +27,7 @@ A high-performance, accessible, and privacy-respecting personal showcase site bu
 
 ```bash
 bundle install
-npm install --no-bin-links
+npm install
 bundle exec jekyll serve --livereload   # http://localhost:4000
 ```
 
