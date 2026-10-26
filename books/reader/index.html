@@ -3,6 +3,8 @@ layout: default
 title: Web Book Reader
 description: Read digital EPUB and PDF books directly in your browser.
 permalink: /books/reader/
+body_class: reader-page
+announcement: false
 ---
 <div class="reader-shell" id="reader-shell" data-theme="sepia">
   <!-- Reader Top Toolbar -->
@@ -234,7 +236,7 @@ permalink: /books/reader/
   </aside>
 
   <!-- Reader Main View Area -->
-  <main class="reader-main" id="reader-main">
+  <section class="reader-main" id="reader-main">
     <!-- Loading Screen -->
     <div class="reader-loading" id="reader-loading">
       <div class="reader-spinner" aria-hidden="true"></div>
@@ -428,7 +430,7 @@ permalink: /books/reader/
         </div>
       </div>
     </div>
-  </main>
+  </section>
 </div>
 
 <script src="{{ '/assets/js/reader.js' | relative_url }}"></script>

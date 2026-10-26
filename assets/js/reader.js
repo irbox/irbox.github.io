@@ -497,7 +497,7 @@
     }
 
     // Scroll back to top
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'instant' });
     canvas.focus();
   }
 
@@ -581,12 +581,51 @@
   }
 
   function toggleFullscreen() {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(() => {});
+    const docEl = document.documentElement;
+    const fullscreenEl =
+      document.fullscreenElement ||
+      document.webkitFullscreenElement ||
+      document.mozFullScreenElement ||
+      document.msFullscreenElement;
+
+    if (!fullscreenEl) {
+      if (docEl.requestFullscreen) {
+        docEl.requestFullscreen().catch(() => {});
+      } else if (docEl.webkitRequestFullscreen) {
+        docEl.webkitRequestFullscreen();
+      } else if (docEl.mozRequestFullScreen) {
+        docEl.mozRequestFullScreen();
+      } else if (docEl.msRequestFullscreen) {
+        docEl.msRequestFullscreen();
+      }
     } else {
-      if (document.exitFullscreen) document.exitFullscreen();
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      }
     }
   }
+
+  const updateFullscreenUI = () => {
+    const isFs = Boolean(
+      document.fullscreenElement ||
+      document.webkitFullscreenElement ||
+      document.mozFullScreenElement ||
+      document.msFullscreenElement
+    );
+    if (fullscreenToggle) {
+      fullscreenToggle.setAttribute('aria-pressed', isFs ? 'true' : 'false');
+      fullscreenToggle.setAttribute('title', isFs ? 'Exit Fullscreen' : 'Toggle Fullscreen');
+    }
+  };
+  ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(
+    (evt) => document.addEventListener(evt, updateFullscreenUI)
+  );
 
   // Event Listeners
   if (prevBtn) {
@@ -749,9 +788,18 @@
       if (window.indexedDB) {
         const db = await new Promise((resolve, reject) => {
           const req = indexedDB.open('irbox_books_db', 1);
+          req.onupgradeneeded = (e) => {
+            const d = e.target.result;
+            if (!d.objectStoreNames.contains('books')) {
+              d.createObjectStore('books', { keyPath: 'id' });
+            }
+          };
           req.onsuccess = () => resolve(req.result);
           req.onerror = () => reject(req.error);
         });
+        if (!db.objectStoreNames.contains('books')) {
+          return null;
+        }
         const res = await new Promise((resolve) => {
           const tx = db.transaction('books', 'readonly');
           const req = tx.objectStore('books').get('current');
@@ -803,7 +851,8 @@
           bookType = 'pdf';
           // Convert Base64 data URL to binary Blob URL for CSP compatibility and memory efficiency
           try {
-            const binaryStr = atob(localData.split(',')[1]);
+            const b64 = localData.includes(',') ? localData.split(',')[1] : localData;
+            const binaryStr = atob(b64);
             const len = binaryStr.length;
             const bytes = new Uint8Array(len);
             for (let i = 0; i < len; i++) {
@@ -818,7 +867,8 @@
           }
         } else {
           bookType = 'epub';
-          const binaryStr = atob(localData.split(',')[1]);
+          const b64 = localData.includes(',') ? localData.split(',')[1] : localData;
+          const binaryStr = atob(b64);
           const len = binaryStr.length;
           const bytes = new Uint8Array(len);
           for (let i = 0; i < len; i++) {

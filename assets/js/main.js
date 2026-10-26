@@ -59,6 +59,20 @@
       if (!link || !link.href || link.target === '_blank' || link.hasAttribute('download')) return;
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.defaultPrevented) return;
 
+      const href = link.getAttribute('href');
+      if (
+        !href ||
+        href.startsWith('#') ||
+        href.startsWith('mailto:') ||
+        href.startsWith('tel:') ||
+        href.startsWith('javascript:')
+      ) {
+        return;
+      }
+
+      // Ignore downloadable binary and data files that trigger browser file downloads rather than document navigations
+      if (/\.(epub|pdf|zip|tar|gz|br|xml|json|rss|txt)$/i.test(link.pathname)) return;
+
       let url;
       try {
         url = new URL(link.href, location.href);
@@ -443,7 +457,8 @@
         e.preventDefault();
         const target = doc.getElementById(h.id);
         if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
           if (history.replaceState) {
             history.replaceState(null, '', '#' + h.id);
           }
@@ -476,7 +491,8 @@
         if (e.target.value) {
           const target = doc.getElementById(e.target.value);
           if (target) {
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
             if (history.replaceState) {
               history.replaceState(null, '', '#' + e.target.value);
             }
@@ -957,7 +973,7 @@
         rect = card.getBoundingClientRect();
       });
       card.addEventListener('pointermove', (e) => {
-        if (!rect) rect = card.getBoundingClientRect();
+        rect = card.getBoundingClientRect();
         card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
         card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
       });
@@ -1003,7 +1019,8 @@
 
     topLink.addEventListener('click', (e) => {
       e.preventDefault();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
       if (mainEl) {
         mainEl.setAttribute('tabindex', '-1');
         mainEl.focus({ preventScroll: true });

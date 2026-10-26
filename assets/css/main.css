@@ -377,11 +377,12 @@ html {
   navigation: auto;
 }
 
-/* Suppress all transitions during initial document load to prevent FOUC / theme flash */
+/* Suppress all transitions and animations during initial document load to prevent FOUC / theme flash */
 html.is-loading *,
 html.is-loading *::before,
 html.is-loading *::after {
   transition: none !important;
+  animation: none !important;
 }
 
 /* Page navigation progress indicator — GPU-accelerated scaleX for zero-reflow transitions */
@@ -488,7 +489,6 @@ body,
 main#main {
   flex: 1 0 auto;
   animation: pageFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
 }
 main#main:focus,
 main#main:focus-visible {
@@ -3024,6 +3024,11 @@ div.highlight {
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
 }
 
 /* ---------- Cross-Platform: Windows High Contrast Mode (forced-colors: active) ---------- */
@@ -3352,6 +3357,21 @@ div.highlight {
 /* ─────────────────────────────────────────────────────────────
  *  Web Book Reader
  * ───────────────────────────────────────────────────────────── */
+/* Isolated distraction-free reader environment */
+body.reader-page .topnav,
+body.reader-page .footer,
+body.reader-page .banner,
+body.reader-page #page-progress,
+body.reader-page #reading-progress,
+body.reader-page .skip-link {
+  display: none !important;
+}
+body.reader-page main#main {
+  margin: 0;
+  padding: 0;
+  animation: none !important;
+}
+
 .reader-shell {
   --reader-bg: var(--bg-body);
   --reader-ink: var(--ink);
@@ -3648,11 +3668,6 @@ div.highlight {
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
   margin-bottom: 16px;
-}
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
 }
 .reader-article {
   max-width: 72ch;
