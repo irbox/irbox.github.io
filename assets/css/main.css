@@ -104,6 +104,71 @@
     url('/assets/fonts/apple/SFProText-Bold.woff') format('woff');
 }
 
+/* SF Pro Icons (Apple Official WSS Cascade) */
+@font-face {
+  font-family: 'SF Pro Icons';
+  font-style: normal;
+  font-weight: 100;
+  font-display: swap;
+  src: url('https://www.apple.com/wss/fonts/SF-Pro-Icons/v3/sf-pro-icons_ultralight.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'SF Pro Icons';
+  font-style: normal;
+  font-weight: 200;
+  font-display: swap;
+  src: url('https://www.apple.com/wss/fonts/SF-Pro-Icons/v3/sf-pro-icons_thin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'SF Pro Icons';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('https://www.apple.com/wss/fonts/SF-Pro-Icons/v3/sf-pro-icons_light.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'SF Pro Icons';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('https://www.apple.com/wss/fonts/SF-Pro-Icons/v3/sf-pro-icons_regular.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'SF Pro Icons';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('https://www.apple.com/wss/fonts/SF-Pro-Icons/v3/sf-pro-icons_medium.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'SF Pro Icons';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('https://www.apple.com/wss/fonts/SF-Pro-Icons/v3/sf-pro-icons_semibold.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'SF Pro Icons';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('https://www.apple.com/wss/fonts/SF-Pro-Icons/v3/sf-pro-icons_bold.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'SF Pro Icons';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('https://www.apple.com/wss/fonts/SF-Pro-Icons/v3/sf-pro-icons_heavy.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'SF Pro Icons';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url('https://www.apple.com/wss/fonts/SF-Pro-Icons/v3/sf-pro-icons_black.woff2') format('woff2');
+}
+
 /* SF Mono */
 @font-face {
   font-family: 'SF Mono';
@@ -297,10 +362,10 @@
 
   /* Apple San Francisco & New York Typography */
   --font-sans:
-    'SF Pro Text', -apple-system, BlinkMacSystemFont, 'SF Pro', system-ui, -system-ui,
+    'SF Pro Text', 'SF Pro Icons', -apple-system, BlinkMacSystemFont, 'SF Pro', system-ui, -system-ui,
     'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --font-heading:
-    'SF Pro Display', -apple-system, BlinkMacSystemFont, 'SF Pro', system-ui, -system-ui,
+    'SF Pro Display', 'SF Pro Icons', -apple-system, BlinkMacSystemFont, 'SF Pro', system-ui, -system-ui,
     'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --font-serif: 'New York', 'Libron', 'Newsreader', 'Bookerly', Georgia, 'Times New Roman', serif;
   --font-reading: var(--font-sans);
@@ -2193,7 +2258,7 @@ a.bento__spec-val:hover {
   height: 42px;
   box-sizing: border-box;
   font: 500 14px/1.4 var(--font-sans);
-  padding: 0 40px 0 14px;
+  padding: 0 38px 0 14px;
   border-radius: var(--radius-element);
   border: 1px solid var(--border);
   background-color: var(--bg-surface);
@@ -2202,20 +2267,20 @@ a.bento__spec-val:hover {
   -moz-appearance: none;
   appearance: none;
   cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236e7681' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 16 10' fill='%236e7681'%3E%3Cpath d='m7.9379 8.4382-6.4238-6.5581c-.2319-.2368-.6118-.2407-.8486-.0088-.2373.2324-.2407.6123-.0088.8486l6.8569 7c.1138.1157.2695.1807.4316.1802.1621-.001.3174-.0674.4297-.1846l6.7241-7c.1118-.1162.1675-.2661.1675-.4155 0-.1577-.062-.3149-.1846-.4326-.2388-.2295-.6187-.2222-.8481.0171z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 14px center;
-  background-size: 16px 16px;
+  background-size: 12px 8px;
   box-shadow: var(--shadow-xs);
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 :root[data-theme='dark'] .outline-mobile select,
 [data-theme='dark'] .outline-mobile select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 16 10' fill='%239ca3af'%3E%3Cpath d='m7.9379 8.4382-6.4238-6.5581c-.2319-.2368-.6118-.2407-.8486-.0088-.2373.2324-.2407.6123-.0088.8486l6.8569 7c.1138.1157.2695.1807.4316.1802.1621-.001.3174-.0674.4297-.1846l6.7241-7c.1118-.1162.1675-.2661.1675-.4155 0-.1577-.062-.3149-.1846-.4326-.2388-.2295-.6187-.2222-.8481.0171z'/%3E%3C/svg%3E");
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) .outline-mobile select {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 16 10' fill='%239ca3af'%3E%3Cpath d='m7.9379 8.4382-6.4238-6.5581c-.2319-.2368-.6118-.2407-.8486-.0088-.2373.2324-.2407.6123-.0088.8486l6.8569 7c.1138.1157.2695.1807.4316.1802.1621-.001.3174-.0674.4297-.1846l6.7241-7c.1118-.1162.1675-.2661.1675-.4155 0-.1577-.062-.3149-.1846-.4326-.2388-.2295-.6187-.2222-.8481.0171z'/%3E%3C/svg%3E");
   }
 }
 .outline-mobile select:focus {
@@ -2811,16 +2876,24 @@ a.bento__spec-val:hover {
   margin: 10px 0;
 }
 
-/* ---------- Footer ---------- */
+/* ---------- Apple Cupertino Directory Footer ---------- */
 .footer {
   margin-top: auto;
-  padding-top: var(--section-gap);
-  padding-bottom: max(40px, calc(40px + env(safe-area-inset-bottom, 0px)));
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border);
+  padding-top: clamp(36px, 6vw, 56px);
+  padding-bottom: max(36px, calc(36px + env(safe-area-inset-bottom, 0px)));
+  transition: background-color 0.22s ease, border-color 0.22s ease;
 }
 .footer .brand {
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 16px;
+  text-decoration: none;
+  letter-spacing: -0.015em;
 }
 .footer .brand img,
 .footer .brand svg {
@@ -2829,6 +2902,44 @@ a.bento__spec-val:hover {
   flex-shrink: 0;
   display: block;
   border-radius: 5px;
+}
+.footer__directory {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px 24px;
+  margin-bottom: 32px;
+}
+.footer__col-title {
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+.footer__col-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.footer__col-list a {
+  font-size: 13px;
+  color: var(--ink-2);
+  text-decoration: none;
+  transition: color 0.15s ease;
+  line-height: 1.4;
+}
+.footer__col-list a:hover {
+  color: var(--brand);
+}
+.footer__divider {
+  height: 1px;
+  background: var(--border);
+  margin-block: 20px 24px;
 }
 .footer__row {
   display: flex;
@@ -2841,18 +2952,19 @@ a.bento__spec-val:hover {
   display: flex;
   flex-wrap: wrap;
   gap: 8px 20px;
-  font-size: 14px;
+  font-size: 13px;
 }
 .footer__links a {
   color: var(--ink-2);
   text-decoration: none;
+  transition: color 0.15s ease;
 }
 .footer__links a:hover {
   color: var(--ink);
 }
 .footer__social {
   display: flex;
-  gap: 4px;
+  gap: 6px;
   align-items: center;
 }
 .footer__bottom {
@@ -2860,33 +2972,52 @@ a.bento__spec-val:hover {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-top: 24px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+.footer__brand-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
   flex-wrap: wrap;
 }
 .footer__legal {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--ink-2);
   margin: 0;
+  line-height: 1.5;
 }
 .footer__back-to-top {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--ink-2);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   gap: 6px;
   white-space: nowrap;
+  padding: 5px 12px;
+  border-radius: 980px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface-elevated);
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
 }
 .footer__back-to-top:hover {
   color: var(--ink);
+  border-color: var(--border-glass);
 }
 .footer__back-to-top svg {
   transform: rotate(-90deg);
-  transition: transform 0.15s;
+  transition: transform 0.15s ease;
   flex-shrink: 0;
 }
 .footer__back-to-top:hover svg {
   transform: rotate(-90deg) translateX(2px);
+}
+@media (max-width: 860px) {
+  .footer__directory {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
 }
 @media (max-width: 767px) {
   .footer__row {
@@ -2914,6 +3045,17 @@ a.bento__spec-val:hover {
   }
   .footer__legal {
     text-align: center;
+  }
+  .footer__brand-group {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+}
+@media (max-width: 480px) {
+  .footer__directory {
+    grid-template-columns: 1fr;
+    gap: 18px;
   }
 }
 
