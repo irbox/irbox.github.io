@@ -4862,3 +4862,111 @@ body.reader-page main#main {
   border-left-color: var(--danger);
   background: var(--danger-bg);
 }
+
+/* 6. Sign in with Apple (HIG Compliant Button System) */
+.apple-btn-siwa {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 20px;
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 8px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-apple);
+  box-sizing: border-box;
+  user-select: none;
+}
+
+.apple-btn-siwa--black {
+  background: #000000;
+  color: #ffffff;
+  border: 1px solid #000000;
+}
+.apple-btn-siwa--black:hover {
+  background: #1a1a1a;
+  color: #ffffff;
+}
+
+.apple-btn-siwa--white {
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+.apple-btn-siwa--white:hover {
+  background: #f5f5f7;
+  color: #000000;
+}
+
+.apple-btn-siwa--pill {
+  border-radius: 980px;
+}
+
+.apple-btn-siwa img,
+.apple-btn-siwa svg {
+  width: 17px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* 7. Official Hardware Device Bezel Frame Containers */
+.apple-bezel-frame {
+  position: relative;
+  max-width: 100%;
+  margin: var(--space-6) auto;
+  display: flex;
+  justify-content: center;
+}
+
+.apple-bezel-frame img.apple-bezel-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  pointer-events: none;
+  position: relative;
+  z-index: 2;
+}
+
+.apple-bezel-frame--iphone {
+  max-width: 340px;
+}
+
+.apple-bezel-frame--macbook {
+  max-width: 680px;
+}
+
+.apple-bezel-frame--ipad {
+  max-width: 520px;
+}
+
+/* 8. Apple Identity Badges (Watch Face, Game Center, Siri) */
+.apple-identity-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 6px 14px;
+  border-radius: 980px;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  text-decoration: none;
+  border: 1px solid var(--border);
+  background: var(--bg-surface-elevated);
+  color: var(--ink);
+  transition: all 0.2s var(--ease-apple);
+}
+
+.apple-identity-badge:hover {
+  border-color: var(--brand);
+  background: var(--bg-muted);
+}
+
+.apple-identity-badge img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
