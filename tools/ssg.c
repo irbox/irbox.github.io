@@ -445,7 +445,7 @@ static void escape_json(StrBuf *out, const char *text) {
 }
 
 /* ==========================================================================
-   SVG Icons
+   SVG Icons (Restored Full Suite)
    ========================================================================== */
 static void render_icon_arrow(StrBuf *out, int size) {
     char buf[1024];
@@ -515,6 +515,46 @@ static void render_icon_close(StrBuf *out, int size) {
     char buf[1024];
     snprintf(buf, sizeof(buf),
         "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"%d\" height=\"%d\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><line x1=\"18\" y1=\"6\" x2=\"6\" y2=\"18\"/><line x1=\"6\" y1=\"6\" x2=\"18\" y2=\"18\"/></svg>",
+        size, size);
+    buf_append_str(out, buf);
+}
+
+static void render_icon_book(StrBuf *out, int size) {
+    char buf[1024];
+    snprintf(buf, sizeof(buf),
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"%d\" height=\"%d\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z\"/><path d=\"M6 6h10M6 10h10\"/></svg>",
+        size, size);
+    buf_append_str(out, buf);
+}
+
+static void render_icon_printer(StrBuf *out, int size) {
+    char buf[1024];
+    snprintf(buf, sizeof(buf),
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"%d\" height=\"%d\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><polyline points=\"6 9 6 2 18 2 18 9\"/><path d=\"M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2\"/><rect width=\"12\" height=\"8\" x=\"6\" y=\"14\" rx=\"1\"/></svg>",
+        size, size);
+    buf_append_str(out, buf);
+}
+
+static void render_icon_share(StrBuf *out, int size) {
+    char buf[1024];
+    snprintf(buf, sizeof(buf),
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"%d\" height=\"%d\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8\"/><polyline points=\"16 6 12 2 8 6\"/><line x1=\"12\" y1=\"2\" x2=\"12\" y2=\"15\"/></svg>",
+        size, size);
+    buf_append_str(out, buf);
+}
+
+static void render_icon_mail(StrBuf *out, int size) {
+    char buf[1024];
+    snprintf(buf, sizeof(buf),
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"%d\" height=\"%d\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><rect x=\"2\" y=\"4\" width=\"20\" height=\"16\" rx=\"3\"/><path d=\"m22 7-10 6L2 7\"/></svg>",
+        size, size);
+    buf_append_str(out, buf);
+}
+
+static void render_icon_rss(StrBuf *out, int size) {
+    char buf[1024];
+    snprintf(buf, sizeof(buf),
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"%d\" height=\"%d\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M4 11a9 9 0 0 1 9 9\"/><path d=\"M4 4a16 16 0 0 1 16 16\"/><circle cx=\"5\" cy=\"19\" r=\"1.5\" fill=\"currentColor\"/></svg>",
         size, size);
     buf_append_str(out, buf);
 }
@@ -2925,7 +2965,7 @@ static void render_changelog_page(const char *out_dir) {
         "                <span class=\"badge badge--added\">added</span> Light/dark theme with a manual toggle.\n"
         "              </li>\n"
         "              <li>\n"
-        "                <span class=\"badge badge--added\">added</span> Command palette search (Ctrl/& مراسم; + K).\n"
+        "                <span class=\"badge badge--added\">added</span> Command palette search (Ctrl/&⌘ + K).\n"
         "              </li>\n"
         "              <li>\n"
         "                <span class=\"badge badge--added\">added</span> Config-driven announcement banner.\n"
@@ -3104,7 +3144,7 @@ static void render_offline_page(const char *out_dir) {
 }
 
 /* ==========================================================================
-   Search Index & XML Feeds (Hardened JSON Escaping)
+   Search Index & XML Feeds
    ========================================================================== */
 static void add_search(const char *title, const char *url, const char *type, const char *desc, const char *tags) {
     if (search_entry_count >= sizeof(search_entries) / sizeof(search_entries[0])) return;
