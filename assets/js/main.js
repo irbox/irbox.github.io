@@ -30,9 +30,6 @@
   const setTouchLock = (locked) => {
     root.classList.toggle('touch-locked', locked);
     doc.body?.classList?.toggle('touch-locked', locked);
-    if (doc.body) {
-      doc.body.style.overflow = locked ? 'hidden' : '';
-    }
   };
 
   const onReady = () => {
@@ -197,20 +194,30 @@
     const drawerBtn = $('[data-drawer-toggle]');
     const drawer = $('#drawer');
     if (drawerBtn && drawer) {
+      const onTouchMove = (e) => {
+        if (drawer.classList.contains('is-open') && !e.target.closest('#drawer nav')) {
+          e.preventDefault();
+        }
+      };
+
       const setDrawer = (open) => {
         setTouchLock(open);
+        const topnav = $('#topnav');
+        if (topnav) topnav.classList.toggle('is-menu-open', open);
         if (open) {
           drawer.removeAttribute('hidden');
+          doc.addEventListener('touchmove', onTouchMove, { passive: false });
           requestAnimationFrame(() => {
             drawer.classList.add('is-open');
           });
         } else {
           drawer.classList.remove('is-open');
+          doc.removeEventListener('touchmove', onTouchMove);
           setTimeout(() => {
             if (!drawer.classList.contains('is-open')) {
               drawer.setAttribute('hidden', '');
             }
-          }, 240);
+          }, 260);
         }
         drawerBtn.setAttribute('aria-expanded', String(open));
         drawerBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
@@ -227,11 +234,13 @@
           drawerBtn.focus();
         }
       });
-      doc.addEventListener('click', (e) => {
+      const onOutsideClose = (e) => {
         if (drawer.classList.contains('is-open') && !e.target.closest('#topnav')) {
           setDrawer(false);
         }
-      });
+      };
+      doc.addEventListener('click', onOutsideClose);
+      doc.addEventListener('touchend', onOutsideClose, { passive: true });
       window.addEventListener(
         'resize',
         () => {
@@ -271,13 +280,15 @@
           }
         });
       });
-      doc.addEventListener('click', (e) => {
+      const onSidebarOutsideClose = (e) => {
         if (sidebar.classList.contains('is-open')) {
           if (!sidebar.contains(e.target) && !e.target.closest('[data-sidebar-toggle]')) {
             setSidebar(false);
           }
         }
-      });
+      };
+      doc.addEventListener('click', onSidebarOutsideClose);
+      doc.addEventListener('touchend', onSidebarOutsideClose, { passive: true });
       doc.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && sidebar.classList.contains('is-open')) {
           setSidebar(false);
@@ -308,31 +319,27 @@
     }
   };
 
-  /* ---- Module 5b: Sticky Header Controller (Audited from Apple localnav.js) ---- */
+  /* ---- Module 5b: Sticky Header Controller (Liquid Glass iOS Island) ---- */
   const initStickyNav = () => {
     const topnav = $('#topnav');
     if (!topnav) return;
 
-    if ('IntersectionObserver' in window) {
-      const sentinel = doc.createElement('div');
-      sentinel.setAttribute('aria-hidden', 'true');
-      sentinel.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:1px;pointer-events:none;visibility:hidden;';
-      doc.body.prepend(sentinel);
+    let ticking = false;
+    const updateStuck = () => {
+      // Clean, jitter-free scroll check (protects against iOS rubber-band bounce)
+      const isStuck = window.scrollY > 8;
+      topnav.classList.toggle('is-stuck', isStuck);
+      ticking = false;
+    };
 
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          topnav.classList.toggle('is-stuck', !entry.isIntersecting);
-        });
-      }, { rootMargin: '0px', threshold: 0 });
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(updateStuck);
+        ticking = true;
+      }
+    }, { passive: true });
 
-      observer.observe(sentinel);
-    } else {
-      const onScroll = () => {
-        topnav.classList.toggle('is-stuck', window.scrollY > 4);
-      };
-      window.addEventListener('scroll', onScroll, { passive: true });
-      onScroll();
-    }
+    updateStuck();
   };
 
   /* ---- Module 6: Announcement Banner Controller ---- */

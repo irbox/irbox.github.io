@@ -1320,16 +1320,18 @@ static void render_header(StrBuf *out, const char *active_section) {
         buf_append_str(out, "\" class=\"drawer__link");
         if (is_act) buf_append_str(out, " is-active\" aria-current=\"page\"");
         else buf_append_str(out, "\"");
-        buf_append_str(out, ">");
+        buf_append_str(out, "><span>");
         buf_append_str(out, labels[i]);
+        buf_append_str(out, "</span>");
+        render_icon_arrow(out, 12);
         buf_append_str(out, "</a>\n");
     }
 
     buf_append_str(out, "      <a class=\"drawer__link\" href=\"");
     buf_append_str(out, site_config.repo);
-    buf_append_str(out, "\" target=\"_blank\" rel=\"noopener noreferrer\">");
-    render_icon_github(out, 18);
-    buf_append_str(out, " GitHub</a>\n    </nav>\n  </div>\n</header>\n");
+    buf_append_str(out, "\" target=\"_blank\" rel=\"noopener noreferrer\"><span>GitHub</span>");
+    render_icon_external(out, 12);
+    buf_append_str(out, "</a>\n    </nav>\n  </div>\n</header>\n");
 }
 
 static void render_footer(StrBuf *out) {
