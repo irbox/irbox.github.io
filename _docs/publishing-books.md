@@ -111,15 +111,16 @@ Write your content here in standard Markdown. You can include:
 - Quotes and tables
 ```
 
-### Step 2: Add your chapter to the reading order
+### Step 2: Assign your chapter category
 
-Open `_data/docs_nav.yml` and add your file slug (without `.md`) to the desired section:
+Assign the `category` in front matter matching your target documentation section:
 
 ```yaml
-- title: Part I — Foundations
-  items:
-    - my-chapter
-    - getting-started
+---
+title: My First Chapter
+description: A short overview of what this chapter covers.
+category: Writing content
+---
 ```
 
 ### Step 3: Distribution

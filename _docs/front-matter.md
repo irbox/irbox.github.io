@@ -32,5 +32,4 @@ category: Reference
 | -------------------- | ---------------------------------------------- |
 | `tags`               | Badges on cards and the post header.           |
 | `cover`, `cover_alt` | Cover image.                                   |
-| `author`             | Key from `_data/authors.yml`.                  |
 | `related_docs`       | List of `title` / `href` shown after the post. |

@@ -5,7 +5,7 @@ GitHub: https://github.com/irbox
 
 /* THANKS */
 Font: Libron by Nico Verbruggen (SIL OFL 1.1)
-Platform: Jekyll & GitHub Pages
+Platform: GitHub Pages
 
 /* SITE */
 Standards: HTML Living Standard, ECMAScript, Modern CSS, ISO C23

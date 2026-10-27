@@ -1,8 +1,7 @@
 /**
  * @file tools/ssg.c
- * @description Modern C23 / C2Y Zero-Dependency Static Site Generator for irbox.github.io.
- * Replaces Jekyll, Ruby, and Bundler with a single, standalone high-performance binary.
- * Renders exact HTML, markup structure, styling hooks, and content matching commit 2d1aaa6.
+ * @description Modern ISO C23 Zero-Dependency Static Site Generator for irbox.github.io.
+ * Generates semantic static HTML, RSS feeds, sitemap, and search index with sub-second performance.
  */
 
 #define _POSIX_C_SOURCE 202405L
@@ -295,7 +294,6 @@ static void parse_ssg_config(const char *filename) {
 }
 
 static void load_site_config(void) {
-    parse_ssg_config("_config.yml");
     parse_ssg_config("_config.cfg");
 }
 
@@ -1764,7 +1762,7 @@ static void render_docs_page(const DocItem *d, const char *out_dir) {
     buf_free(&full);
 }
 
-/* Project Detail Page (Exact 2d1aaa6 _layouts/project.html) */
+/* Project Detail Page */
 static void render_project_page(const ProjectItem *pr, const char *out_dir) {
     StrBuf body;
     buf_init(&body, 8192);
@@ -1984,7 +1982,7 @@ static void render_project_page(const ProjectItem *pr, const char *out_dir) {
     buf_free(&full);
 }
 
-/* Blog Post Detail Page (Exact 2d1aaa6 _layouts/post.html) */
+/* Blog Post Detail Page */
 static void render_post_page(const PostItem *p, const char *out_dir) {
     StrBuf body;
     buf_init(&body, 8192);
@@ -2381,7 +2379,7 @@ static void render_home_page(const char *out_dir) {
     buf_free(&full);
 }
 
-/* Projects Directory Page (Exact 2d1aaa6 projects/index.html) */
+/* Projects Directory Page */
 static void render_projects_landing(const char *out_dir) {
     StrBuf body;
     buf_init(&body, 16384);
@@ -2463,7 +2461,7 @@ static void render_projects_landing(const char *out_dir) {
     buf_free(&full);
 }
 
-/* Blog Directory Page (Exact 2d1aaa6 blog/index.html) */
+/* Blog Directory Page */
 static void render_blog_landing(const char *out_dir) {
     StrBuf body;
     buf_init(&body, 16384);
@@ -2597,7 +2595,7 @@ static void render_blog_landing(const char *out_dir) {
     buf_free(&full);
 }
 
-/* Books Directory Page (Exact 2d1aaa6 books/index.html) */
+/* Books Directory Page */
 static void render_books_landing(const char *out_dir) {
     StrBuf body;
     buf_init(&body, 16384);
@@ -2888,12 +2886,12 @@ static void render_books_landing(const char *out_dir) {
     buf_free(&full);
 }
 
-/* Web Book Reader Page (Exact 2d1aaa6 books/reader/index.html) */
+/* Web Book Reader Page (books/reader/index.html) */
 static void render_reader_page(const char *out_dir) {
     char *content = read_entire_file("books/reader/index.html");
     if (!content) return;
 
-    /* Strip frontmatter */
+    /* Strip frontmatter if present */
     const char *start = content;
     if (strncmp(start, "---", 3) == 0) {
         const char *end = strstr(start + 3, "---");
@@ -2901,37 +2899,9 @@ static void render_reader_page(const char *out_dir) {
         while (*start == '\r' || *start == '\n') start++;
     }
 
-    StrBuf clean_reader;
-    buf_init(&clean_reader, strlen(start) + 2048);
-
-    const char *p = start;
-    while (*p) {
-        if (strncmp(p, "{{ '/books/' | relative_url }}", 30) == 0) {
-            buf_append_str(&clean_reader, "/books/");
-            p += 30;
-            continue;
-        }
-        if (strncmp(p, "{{ \"/books/\" | relative_url }}", 30) == 0) {
-            buf_append_str(&clean_reader, "/books/");
-            p += 30;
-            continue;
-        }
-        if (strncmp(p, "{{ '/assets/js/reader.js' | relative_url }}", 43) == 0) {
-            buf_append_str(&clean_reader, "/assets/js/reader.js");
-            p += 43;
-            continue;
-        }
-        if (strncmp(p, "{{ \"/assets/js/reader.js\" | relative_url }}", 43) == 0) {
-            buf_append_str(&clean_reader, "/assets/js/reader.js");
-            p += 43;
-            continue;
-        }
-        buf_append_char(&clean_reader, *p++);
-    }
-
     StrBuf full;
-    buf_init(&full, clean_reader.len + 4096);
-    wrap_page(&full, "Web Book Reader", "Read digital EPUB and PDF books directly in your browser.", "books", clean_reader.data, "reader-page");
+    buf_init(&full, strlen(start) + 4096);
+    wrap_page(&full, "Web Book Reader", "Read digital EPUB and PDF books directly in your browser.", "books", start, "reader-page");
 
     char target[MAX_PATH];
     snprintf(target, sizeof(target), "%s/books/reader/index.html", out_dir);
@@ -2940,12 +2910,11 @@ static void render_reader_page(const char *out_dir) {
     mkdir_p(dir);
     write_entire_file(target, full.data, full.len);
 
-    buf_free(&clean_reader);
-    buf_free(&full);
     free(content);
+    buf_free(&full);
 }
 
-/* Changelog Page (Exact 2d1aaa6 changelog/index.html + _data/changelog.yml) */
+/* Changelog Page */
 static void render_changelog_page(const char *out_dir) {
     StrBuf body;
     buf_init(&body, 8192);
@@ -3061,7 +3030,7 @@ static void render_changelog_page(const char *out_dir) {
         "            </p>\n"
         "            <ul>\n"
         "              <li>\n"
-        "                <span class=\"badge badge--changed\">changed</span> Moved the site to Jekyll.\n"
+        "                <span class=\"badge badge--changed\">changed</span> Initial release of site architecture.\n"
         "              </li>\n"
         "              <li>\n"
         "                <span class=\"badge badge--fixed\">fixed</span> Sidebar scroll position now persists between pages.\n"
@@ -3094,7 +3063,7 @@ static void render_changelog_page(const char *out_dir) {
     buf_free(&full);
 }
 
-/* About Page (Exact 2d1aaa6 _layouts/page.html + about.md) */
+/* About Page */
 static void render_about_page(const char *out_dir) {
     char *content = read_entire_file("about.md");
     if (!content) return;
@@ -3143,7 +3112,7 @@ static void render_about_page(const char *out_dir) {
     free(content);
 }
 
-/* 404 Error Page (Exact 2d1aaa6 404.html) */
+/* 404 Error Page */
 static void render_404_page(const char *out_dir) {
     StrBuf body;
     buf_init(&body, 2048);
@@ -3171,7 +3140,7 @@ static void render_404_page(const char *out_dir) {
     buf_free(&full);
 }
 
-/* Offline Page (Exact 2d1aaa6 offline.html) */
+/* Offline Page */
 static void render_offline_page(const char *out_dir) {
     StrBuf body;
     buf_init(&body, 4096);

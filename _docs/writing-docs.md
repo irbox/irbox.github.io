@@ -10,22 +10,31 @@ category: Writing content
    ---
    title: My topic
    description: One sentence shown under the title and in search.
-   category: Guides
+   category: Writing content
    ---
    ```
 
-2. Add `my-topic` to a section in `_data/docs_nav.yml`.
-3. Write Markdown. `##` and `###` headings automatically appear in the "On this page" outline.
+2. Assign a `category` matching one of the documentation sections:
+   - `Introduction`
+   - `Writing content`
+   - `Customizing`
+   - `My projects`
+   - `Reference`
+
+3. Write standard Markdown. `##` and `###` headings automatically appear in the sticky "On this page" outline.
 
 ## Useful Markdown
 
-Code blocks get syntax highlighting and a copy button. Blockquotes work well as notes.
+Code blocks get syntax highlighting and a one-click copy button. Blockquotes render as highlighted callouts.
 
-```js
-console.log('Hello, docs!');
+```c
+#include <stdio.h>
+
+int main(void) {
+    printf("Hello from C23 SSG!\n");
+    return 0;
+}
 ```
-
-> **Note:** Pages not listed in `docs_nav.yml` still build and are searchable, but won't appear in the sidebar.
 
 ## Linking between pages
 

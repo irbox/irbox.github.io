@@ -1,11 +1,3 @@
----
-layout: default
-title: Web Book Reader
-description: Read digital EPUB and PDF books directly in your browser.
-permalink: /books/reader/
-body_class: reader-page
-announcement: false
----
 <div class="reader-shell" id="reader-shell" data-theme="sepia">
   <!-- Reader Top Toolbar -->
   <header
@@ -16,7 +8,7 @@ announcement: false
   >
     <div class="reader-toolbar__left">
       <a
-        href="{{ '/books/' | relative_url }}"
+        href="/books/"
         class="btn btn--subtle reader-btn"
         title="Back to library shelf"
       >
@@ -260,7 +252,7 @@ announcement: false
           <code>books/archive/</code>.
         </p>
         <div style="margin-top: 24px; display: flex; gap: 12px; justify-content: center;">
-          <a href="{{ '/books/' | relative_url }}" class="btn btn--primary"
+          <a href="/books/" class="btn btn--primary"
             >Return to Library Shelf</a
           >
           <button type="button" class="btn btn--secondary" id="reader-retry-btn">
@@ -467,4 +459,4 @@ announcement: false
   </section>
 </div>
 
-<script src="{{ '/assets/js/reader.js' | relative_url }}"></script>
+<script src="/assets/js/reader.js"></script>

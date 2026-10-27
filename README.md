@@ -4,12 +4,12 @@ A high-performance, accessible, and privacy-respecting personal showcase site po
 
 | Section         | Source                      | URL                               |
 | --------------- | --------------------------- | --------------------------------- |
-| Home            | `index.html`                | `/`                               |
+| Home            | `tools/ssg.c` (C23 Engine)  | `/`                               |
 | Docs            | `_docs/`                    | `/docs/…`                         |
 | Projects        | `_projects/`                | `/projects/`, `/projects/<name>/` |
 | Blog            | `_posts/`                   | `/blog/`, `/blog/<slug>/`         |
-| Books & Archive | `books/` + `books/archive/` | `/books/`, `/books/reader/`       |
-| Changelog       | `changelog/`                | `/changelog/`                     |
+| Books & Archive | `books/archive/` + `reader` | `/books/`, `/books/reader/`       |
+| Changelog       | `tools/ssg.c`               | `/changelog/`                     |
 | About           | `about.md`                  | `/about/`                         |
 
 ## Features & Native Web Architecture

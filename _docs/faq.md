@@ -1,21 +1,21 @@
 ---
 title: FAQ
-description: Common questions.
+description: Common questions about Irbox and the C23 static site generator.
 category: Reference
 ---
 
+## How does the C23 static generator work?
+
+The site is built by [`tools/ssg.c`](/docs/getting-started/), a single-file C23 engine with zero external dependencies. Running `make build` compiles `ssg.c` and generates all HTML pages, search indexes, feeds, and sitemaps in under a second.
+
 ## Why isn't my page in the sidebar?
 
-Docs only appear if listed in `_data/docs_nav.yml`. Projects appear automatically if their `category` matches `project_categories`.
+Documentation pages are grouped by their front matter `category`. Projects appear automatically when their `category` matches one of the labels in `_config.cfg`.
 
 ## Why are my links broken on GitHub Pages?
 
-Set `baseurl` to your repository name (for example `"/my-repo"`) when the site is served from a project page.
+If your site is served from a project subdirectory (e.g. `username.github.io/my-repo`), set `baseurl = /my-repo` in `_config.cfg` and rebuild.
 
-## How do I replace the placeholder images?
+## How do I add books to the reader shelf?
 
-Drop your images into `assets/images/` and point `thumbnail`, `cover` or `gallery.src` at them. Anything omitted falls back to a generated placeholder.
-
-## How do I remove the search?
-
-Delete `_includes/search-dialog.html` and its `include` in `_layouts/default.html`, and remove the search button from `_includes/header.html`.
+Drop any `.epub` or `.pdf` file into `books/archive/` and run `make build`. The book is immediately indexed and readable in the browser at `/books/reader/`.
