@@ -2173,19 +2173,46 @@ a.bento__spec-val:hover {
 .outline-mobile {
   position: sticky;
   top: var(--header-total-h);
-  z-index: 5;
+  z-index: 20;
   background: var(--bg-body);
   padding: 8px 0;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
+  position: relative;
 }
 .outline-mobile select {
   width: 100%;
-  font: 500 14px var(--font-sans);
-  padding: 10px 12px;
+  height: 42px;
+  box-sizing: border-box;
+  font: 500 14px/1.4 var(--font-sans);
+  padding: 0 40px 0 14px;
   border-radius: var(--radius-element);
   border: 1px solid var(--border);
-  background: var(--bg-surface);
+  background-color: var(--bg-surface);
   color: var(--ink);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236e7681' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px 16px;
+  box-shadow: var(--shadow-xs);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+:root[data-theme='dark'] .outline-mobile select,
+[data-theme='dark'] .outline-mobile select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .outline-mobile select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  }
+}
+.outline-mobile select:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-glow);
 }
 @media (max-width: 1024px) {
   html {
@@ -5025,31 +5052,6 @@ body.reader-page main#main {
   margin-bottom: 14px;
 }
 
-/* Apple Hardware Stage Grid */
-.apple-showcase-section {
-  margin-top: -20px;
-  margin-bottom: 72px;
-  position: relative;
-  z-index: 5;
-}
-
-.apple-showcase-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
-  gap: var(--space-6);
-  align-items: stretch;
-}
-
-@media (max-width: 900px) {
-  .apple-showcase-grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-6);
-  }
-}
-
-.apple-showcase-column {
-  min-width: 0;
-}
 
 .terminal-card {
   background: var(--code-bg, #1a1b26);

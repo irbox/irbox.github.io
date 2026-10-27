@@ -622,6 +622,19 @@ static void parse_inline(StrBuf *out, const char *text) {
                 }
             }
         }
+        /* Inline HTML tags (pass through verbatim, e.g. <img ...>, <svg ...>, <code>, etc.) */
+        if (text[i] == '<') {
+            const char *gt = strchr(text + i, '>');
+            if (gt) {
+                char next = text[i + 1];
+                if (isalpha((unsigned char)next) || next == '/' || next == '!' || next == '?') {
+                    size_t tag_len = (size_t)(gt - (text + i) + 1);
+                    buf_append_len(out, text + i, tag_len);
+                    i += tag_len;
+                    continue;
+                }
+            }
+        }
         escape_html(out, text + i, 1);
         i++;
     }
@@ -704,6 +717,18 @@ static void markdown_to_html(StrBuf *out, const char *md) {
             if (in_ul)    { buf_append_str(out, "</ul>\n"); in_ul = false; }
             if (in_ol)    { buf_append_str(out, "</ol>\n"); in_ol = false; }
             if (in_table) { buf_append_str(out, "      </tbody>\n    </table>\n  </div>\n"); in_table = false; }
+            line = strtok(nullptr, "\r\n");
+            continue;
+        }
+
+        /* Raw HTML block pass-through */
+        if (trimmed[0] == '<') {
+            if (in_p)     { buf_append_str(out, "</p>\n"); in_p = false; }
+            if (in_ul)    { buf_append_str(out, "</ul>\n"); in_ul = false; }
+            if (in_ol)    { buf_append_str(out, "</ol>\n"); in_ol = false; }
+            if (in_table) { buf_append_str(out, "      </tbody>\n    </table>\n  </div>\n"); in_table = false; }
+            buf_append_str(out, trimmed);
+            buf_append_char(out, '\n');
             line = strtok(nullptr, "\r\n");
             continue;
         }
@@ -2086,7 +2111,7 @@ static void render_home_page(const char *out_dir) {
         "    <div class=\"hero__badge\">\n"
         "      <img src=\"/assets/images/brand-icon.svg\" alt=\"Irbox logo\" width=\"52\" height=\"52\" fetchpriority=\"high\" decoding=\"async\">\n"
         "    </div>\n"
-        "    <p class=\"hero__eyebrow\">C23 Static Site Generator</p>\n"
+        "    <p class=\"hero__eyebrow\">Software &amp; Projects</p>\n"
         "    <h1 class=\"hero__title\">Software engineering, developer tooling, and technical writing.</h1>\n"
         "    <p class=\"hero__tagline\">\n      "
     );
@@ -2104,63 +2129,6 @@ static void render_home_page(const char *out_dir) {
         "    </div>\n"
         "  </div>\n"
         "</section>\n\n"
-        "<section class=\"apple-showcase-section container\">\n"
-        "  <div class=\"apple-showcase-grid\">\n"
-        "    <div class=\"apple-showcase-column\">\n"
-        "      <div class=\"terminal-card\">\n"
-        "        <div class=\"terminal-header\">\n"
-        "          <div class=\"terminal-dots\">\n"
-        "            <span class=\"dot dot--red\"></span>\n"
-        "            <span class=\"dot dot--yellow\"></span>\n"
-        "            <span class=\"dot dot--green\"></span>\n"
-        "          </div>\n"
-        "          <span class=\"terminal-title\">irbox-ssg &mdash; zsh (C23 ISO Std)</span>\n"
-        "          <span class=\"terminal-badge\">C23 Native</span>\n"
-        "        </div>\n"
-        "        <div class=\"terminal-body\">\n"
-        "          <div class=\"term-line\"><span class=\"term-prompt\">$ </span><span class=\"term-cmd\">cc -std=c23 -O3 -Wall -Wextra -Wpedantic tools/ssg.c -o ssg</span></div>\n"
-        "          <div class=\"term-line term-dim\">Compiling C23 static site generator... (0 warnings)</div>\n"
-        "          <div class=\"term-line\"><span class=\"term-prompt\">$ </span><span class=\"term-cmd\">./ssg _site</span></div>\n"
-        "          <div class=\"term-line term-info\">&#9889; irbox C23-SSG &mdash; Standalone Zero-Dependency Site Generator</div>\n"
-        "          <div class=\"term-line term-dim\">--------------------------------------------------------------</div>\n"
-        "          <div class=\"term-line\">Load Config &amp; Content    <span class=\"term-success\">25 files ok</span>     (45.12 ms)</div>\n"
-        "          <div class=\"term-line\">Documentation Pages      <span class=\"term-success\">14 pages ok</span>     (57.73 ms)</div>\n"
-        "          <div class=\"term-line\">Project &amp; Blog Directory <span class=\"term-success\">10 pages ok</span>     (42.27 ms)</div>\n"
-        "          <div class=\"term-line\">Static Assets &amp; Media   <span class=\"term-success\">all assets ok</span>   (327.99 ms)</div>\n"
-        "          <div class=\"term-line term-dim\">--------------------------------------------------------------</div>\n"
-        "          <div class=\"term-line\"><span class=\"term-accent\">&#10024; 33 pages generated in 527 ms</span> | <span class=\"term-success\">0 node_modules</span> | <span class=\"term-success\">100% Private</span></div>\n"
-        "        </div>\n"
-        "      </div>\n"
-        "    </div>\n"
-        "    <div class=\"apple-showcase-column\">\n"
-        "      <div class=\"terminal-card\">\n"
-        "        <div class=\"terminal-header\">\n"
-        "          <div class=\"terminal-dots\">\n"
-        "            <span class=\"dot dot--red\"></span>\n"
-        "            <span class=\"dot dot--yellow\"></span>\n"
-        "            <span class=\"dot dot--green\"></span>\n"
-        "          </div>\n"
-        "          <span class=\"terminal-title\">_config.cfg &mdash; C23 Approach 3 Tokenizer</span>\n"
-        "          <span class=\"terminal-badge\">Zero Alloc</span>\n"
-        "        </div>\n"
-        "        <div class=\"terminal-body\">\n"
-        "          <div class=\"term-line term-dim\"># Zero-dependency key = value configuration</div>\n"
-        "          <div class=\"term-line\"><span class=\"term-prompt\">title</span> = <span class=\"term-cmd\">Irbox</span></div>\n"
-        "          <div class=\"term-line\"><span class=\"term-prompt\">tagline</span> = <span class=\"term-cmd\">Zero-dependency C23 static site generator</span></div>\n"
-        "          <div class=\"term-line\"><span class=\"term-prompt\">compiler</span> = <span class=\"term-cmd\">ISO C23 (-std=c23 -O3 -Wall -Wextra)</span></div>\n"
-        "          <div class=\"term-line\"><span class=\"term-prompt\">dependencies</span> = <span class=\"term-success\">0 (No Node.js, no Ruby, no Python)</span></div>\n"
-        "          <div class=\"term-line\"><span class=\"term-prompt\">build_time</span> = <span class=\"term-accent\">&lt; 600 ms full site build</span></div>\n"
-        "          <div class=\"term-line\"><span class=\"term-prompt\">deployment</span> = <span class=\"term-info\">GitHub Pages (11-second CI run)</span></div>\n"
-        "          <div class=\"term-line term-dim\">--------------------------------------------------------------</div>\n"
-        "          <div class=\"term-line term-dim\">// Rugged 30-line tokenizer: safe, portable, no bloat</div>\n"
-        "        </div>\n"
-        "      </div>\n"
-        "    </div>\n"
-        "  </div>\n"
-        "</section>\n\n"
-    );
-
-    buf_append_str(&body,
         "<div class=\"showcase-sheet\">\n"
         "  <section class=\"section container\">\n"
         "    <div class=\"bento\">\n"
@@ -2225,8 +2193,8 @@ static void render_home_page(const char *out_dir) {
         "            <span class=\"badge badge--added\">Open Source</span>\n"
         "            <span class=\"bento__chip-count\">Public Repo</span>\n"
         "          </div>\n"
-        "          <h3>Open Source &amp; Private</h3>\n"
-        "          <p>Zero trackers, zero analytics, and self-hosted fonts and assets.</p>\n\n"
+        "          <h3>Open Source &amp; Fast</h3>\n"
+        "          <p>Zero trackers, self-hosted assets, and clean handwritten code.</p>\n\n"
         "          <div class=\"bento__spec-list\">\n"
         "            <div class=\"bento__spec-item\">\n"
         "              <span class=\"bento__spec-label\">Repository</span>\n"
@@ -2239,20 +2207,20 @@ static void render_home_page(const char *out_dir) {
         "\n              </a>\n"
         "            </div>\n"
         "            <div class=\"bento__spec-item\">\n"
-        "              <span class=\"bento__spec-label\">Architecture</span>\n"
-        "              <span class=\"bento__spec-val\">Standalone C23 (0 Dependencies)</span>\n"
+        "              <span class=\"bento__spec-label\">Site Generator</span>\n"
+        "              <span class=\"bento__spec-val\">Standalone C23</span>\n"
         "            </div>\n"
         "            <div class=\"bento__spec-item\">\n"
-        "              <span class=\"bento__spec-label\">Config Engine</span>\n"
-        "              <span class=\"bento__spec-val\">Approach 3 (key = value)</span>\n"
+        "              <span class=\"bento__spec-label\">Dependencies</span>\n"
+        "              <span class=\"bento__spec-val\">None (0 runtime bloat)</span>\n"
         "            </div>\n"
         "            <div class=\"bento__spec-item\">\n"
-        "              <span class=\"bento__spec-label\">Runtime Bloat</span>\n"
-        "              <span class=\"bento__spec-val\">0 Node.js / 0 npm</span>\n"
+        "              <span class=\"bento__spec-label\">License</span>\n"
+        "              <span class=\"bento__spec-val\">MIT License</span>\n"
         "            </div>\n"
         "            <div class=\"bento__spec-item\">\n"
-        "              <span class=\"bento__spec-label\">Tracking / Ads</span>\n"
-        "              <span class=\"bento__spec-val\">None (100% Private)</span>\n"
+        "              <span class=\"bento__spec-label\">Privacy</span>\n"
+        "              <span class=\"bento__spec-val\">No Trackers / No Ads</span>\n"
         "            </div>\n"
         "            <div class=\"bento__spec-item\">\n"
         "              <span class=\"bento__spec-label\">Feed</span>\n"

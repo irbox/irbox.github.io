@@ -15,7 +15,7 @@ body_class: home
         decoding="async"
       >
     </div>
-    <p class="hero__eyebrow">C23 Static Site Generator</p>
+    <p class="hero__eyebrow">Software &amp; Projects</p>
     <h1 class="hero__title">Software engineering, developer tooling, and technical writing.</h1>
     <p class="hero__tagline">
       {{ site.description }}
@@ -24,61 +24,6 @@ body_class: home
       <a class="btn btn--primary btn--lg" href="{{ '/projects/' | relative_url }}">Browse projects</a>
       <a class="btn btn--secondary btn--lg" href="{{ '/docs/getting-started/' | relative_url }}">Documentation</a>
       <a class="btn btn--ghost btn--lg" href="{{ site.repo }}" target="_blank" rel="noopener noreferrer">Source Code</a>
-    </div>
-  </div>
-</section>
-
-<section class="apple-showcase-section container">
-  <div class="apple-showcase-grid">
-    <div class="apple-showcase-column">
-      <div class="terminal-card">
-        <div class="terminal-header">
-          <div class="terminal-dots">
-            <span class="dot dot--red"></span>
-            <span class="dot dot--yellow"></span>
-            <span class="dot dot--green"></span>
-          </div>
-          <span class="terminal-title">irbox-ssg &mdash; zsh (C23 ISO Std)</span>
-          <span class="terminal-badge">C23 Native</span>
-        </div>
-        <div class="terminal-body">
-          <div class="term-line"><span class="term-prompt">$ </span><span class="term-cmd">cc -std=c23 -O3 -Wall -Wextra -Wpedantic tools/ssg.c -o ssg</span></div>
-          <div class="term-line term-dim">Compiling C23 static site generator... (0 warnings)</div>
-          <div class="term-line"><span class="term-prompt">$ </span><span class="term-cmd">./ssg _site</span></div>
-          <div class="term-line term-info">&#9889; irbox C23-SSG &mdash; Standalone Zero-Dependency Site Generator</div>
-          <div class="term-line term-dim">--------------------------------------------------------------</div>
-          <div class="term-line">Load Config &amp; Content    <span class="term-success">25 files ok</span>     (45.12 ms)</div>
-          <div class="term-line">Documentation Pages      <span class="term-success">14 pages ok</span>     (57.73 ms)</div>
-          <div class="term-line">Project &amp; Blog Directory <span class="term-success">10 pages ok</span>     (42.27 ms)</div>
-          <div class="term-line">Static Assets &amp; Media   <span class="term-success">all assets ok</span>   (327.99 ms)</div>
-          <div class="term-line term-dim">--------------------------------------------------------------</div>
-          <div class="term-line"><span class="term-accent">&#10024; 33 pages generated in 527 ms</span> | <span class="term-success">0 node_modules</span> | <span class="term-success">100% Private</span></div>
-        </div>
-      </div>
-    </div>
-    <div class="apple-showcase-column">
-      <div class="terminal-card">
-        <div class="terminal-header">
-          <div class="terminal-dots">
-            <span class="dot dot--red"></span>
-            <span class="dot dot--yellow"></span>
-            <span class="dot dot--green"></span>
-          </div>
-          <span class="terminal-title">_config.cfg &mdash; C23 Approach 3 Tokenizer</span>
-          <span class="terminal-badge">Zero Alloc</span>
-        </div>
-        <div class="terminal-body">
-          <div class="term-line term-dim"># Zero-dependency key = value configuration</div>
-          <div class="term-line"><span class="term-prompt">title</span> = <span class="term-cmd">Irbox</span></div>
-          <div class="term-line"><span class="term-prompt">tagline</span> = <span class="term-cmd">Zero-dependency C23 static site generator</span></div>
-          <div class="term-line"><span class="term-prompt">compiler</span> = <span class="term-cmd">ISO C23 (-std=c23 -O3 -Wall -Wextra)</span></div>
-          <div class="term-line"><span class="term-prompt">dependencies</span> = <span class="term-success">0 (No Node.js, no Ruby, no Python)</span></div>
-          <div class="term-line"><span class="term-prompt">build_time</span> = <span class="term-accent">&lt; 600 ms full site build</span></div>
-          <div class="term-line"><span class="term-prompt">deployment</span> = <span class="term-info">GitHub Pages (11-second CI run)</span></div>
-          <div class="term-line term-dim">--------------------------------------------------------------</div>
-          <div class="term-line term-dim">// Rugged 30-line tokenizer: safe, portable, no bloat</div>
-        </div>
-      </div>
     </div>
   </div>
 </section>
@@ -140,8 +85,8 @@ body_class: home
             <span class="badge badge--added">Open Source</span>
             <span class="bento__chip-count">Public Repo</span>
           </div>
-          <h3>Open Source &amp; Private</h3>
-          <p>Zero trackers, zero analytics, and self-hosted fonts and assets.</p>
+          <h3>Open Source &amp; Fast</h3>
+          <p>Zero trackers, self-hosted assets, and clean handwritten code.</p>
 
           <div class="bento__spec-list">
             <div class="bento__spec-item">
@@ -156,20 +101,20 @@ body_class: home
               </a>
             </div>
             <div class="bento__spec-item">
-              <span class="bento__spec-label">Architecture</span>
-              <span class="bento__spec-val">Standalone C23 (0 Dependencies)</span>
+              <span class="bento__spec-label">Site Generator</span>
+              <span class="bento__spec-val">Standalone C23</span>
             </div>
             <div class="bento__spec-item">
-              <span class="bento__spec-label">Config Engine</span>
-              <span class="bento__spec-val">Approach 3 (key = value)</span>
+              <span class="bento__spec-label">Dependencies</span>
+              <span class="bento__spec-val">None (0 runtime bloat)</span>
             </div>
             <div class="bento__spec-item">
-              <span class="bento__spec-label">Runtime Bloat</span>
-              <span class="bento__spec-val">0 Node.js / 0 npm</span>
+              <span class="bento__spec-label">License</span>
+              <span class="bento__spec-val">MIT License</span>
             </div>
             <div class="bento__spec-item">
-              <span class="bento__spec-label">Tracking / Ads</span>
-              <span class="bento__spec-val">None (100% Private)</span>
+              <span class="bento__spec-label">Privacy</span>
+              <span class="bento__spec-val">No Trackers / No Ads</span>
             </div>
             <div class="bento__spec-item">
               <span class="bento__spec-label">Feed</span>
