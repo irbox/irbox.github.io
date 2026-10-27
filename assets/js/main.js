@@ -27,11 +27,6 @@
     },
   };
 
-  const setTouchLock = (locked) => {
-    root.classList.toggle('touch-locked', locked);
-    doc.body?.classList?.toggle('touch-locked', locked);
-  };
-
   const onReady = () => {
     requestAnimationFrame(() => {
       root.classList.remove('is-loading');
@@ -194,30 +189,19 @@
     const drawerBtn = $('[data-drawer-toggle]');
     const drawer = $('#drawer');
     if (drawerBtn && drawer) {
-      const onTouchMove = (e) => {
-        if (drawer.classList.contains('is-open') && !e.target.closest('#drawer nav')) {
-          e.preventDefault();
-        }
-      };
-
       const setDrawer = (open) => {
-        setTouchLock(open);
-        const topnav = $('#topnav');
-        if (topnav) topnav.classList.toggle('is-menu-open', open);
         if (open) {
           drawer.removeAttribute('hidden');
-          doc.addEventListener('touchmove', onTouchMove, { passive: false });
           requestAnimationFrame(() => {
             drawer.classList.add('is-open');
           });
         } else {
           drawer.classList.remove('is-open');
-          doc.removeEventListener('touchmove', onTouchMove);
           setTimeout(() => {
             if (!drawer.classList.contains('is-open')) {
               drawer.setAttribute('hidden', '');
             }
-          }, 260);
+          }, 240);
         }
         drawerBtn.setAttribute('aria-expanded', String(open));
         drawerBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
@@ -234,19 +218,16 @@
           drawerBtn.focus();
         }
       });
-      const onOutsideClose = (e) => {
+      doc.addEventListener('click', (e) => {
         if (drawer.classList.contains('is-open') && !e.target.closest('#topnav')) {
           setDrawer(false);
         }
-      };
-      doc.addEventListener('click', onOutsideClose);
-      doc.addEventListener('touchend', onOutsideClose, { passive: true });
+      });
       window.addEventListener(
         'resize',
         () => {
           if (window.innerWidth > 767 && drawer.classList.contains('is-open')) {
             setDrawer(false);
-            setTouchLock(false);
           }
         },
         { passive: true }
@@ -259,9 +240,6 @@
     if (sidebar) {
       const setSidebar = (open) => {
         sidebar.classList.toggle('is-open', open);
-        if (window.innerWidth <= 767) {
-          setTouchLock(open);
-        }
         sideBtns.forEach((btn) => {
           btn.setAttribute('aria-expanded', String(open));
           btn.setAttribute('aria-label', open ? 'Close sidebar' : 'Open sidebar');
@@ -280,15 +258,13 @@
           }
         });
       });
-      const onSidebarOutsideClose = (e) => {
+      doc.addEventListener('click', (e) => {
         if (sidebar.classList.contains('is-open')) {
           if (!sidebar.contains(e.target) && !e.target.closest('[data-sidebar-toggle]')) {
             setSidebar(false);
           }
         }
-      };
-      doc.addEventListener('click', onSidebarOutsideClose);
-      doc.addEventListener('touchend', onSidebarOutsideClose, { passive: true });
+      });
       doc.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && sidebar.classList.contains('is-open')) {
           setSidebar(false);
@@ -300,7 +276,6 @@
         () => {
           if (window.innerWidth > 767 && sidebar.classList.contains('is-open')) {
             setSidebar(false);
-            setTouchLock(false);
           }
         },
         { passive: true }
@@ -317,29 +292,6 @@
         });
       } catch {}
     }
-  };
-
-  /* ---- Module 5b: Sticky Header Controller (Liquid Glass iOS Island) ---- */
-  const initStickyNav = () => {
-    const topnav = $('#topnav');
-    if (!topnav) return;
-
-    let ticking = false;
-    const updateStuck = () => {
-      // Clean, jitter-free scroll check (protects against iOS rubber-band bounce)
-      const isStuck = window.scrollY > 8;
-      topnav.classList.toggle('is-stuck', isStuck);
-      ticking = false;
-    };
-
-    window.addEventListener('scroll', () => {
-      if (!ticking) {
-        requestAnimationFrame(updateStuck);
-        ticking = true;
-      }
-    }, { passive: true });
-
-    updateStuck();
   };
 
   /* ---- Module 6: Announcement Banner Controller ---- */
@@ -864,7 +816,6 @@
 
   const openSearch = () => {
     if (!searchDlg?.showModal) return;
-    setTouchLock(true);
     searchLastFocus = doc.activeElement;
     if (!searchDlg.open) searchDlg.showModal();
     searchInput.value = '';
@@ -877,7 +828,6 @@
   };
 
   const closeSearch = () => {
-    setTouchLock(false);
     if (searchDlg?.open) {
       searchDlg.close();
       if (searchLastFocus && typeof searchLastFocus.focus === 'function') {
@@ -986,12 +936,10 @@
   let shortcutsLastFocus = null;
   const openShortcuts = () => {
     if (!shortcutsDlg?.showModal) return;
-    setTouchLock(true);
     shortcutsLastFocus = doc.activeElement;
     if (!shortcutsDlg.open) shortcutsDlg.showModal();
   };
   const closeShortcuts = () => {
-    setTouchLock(false);
     if (shortcutsDlg?.open) {
       shortcutsDlg.close();
       if (shortcutsLastFocus && typeof shortcutsLastFocus.focus === 'function') {
@@ -1198,7 +1146,6 @@
   initImageTransitions();
   initThemeToggle();
   initMobileNav();
-  initStickyNav();
   initAnnouncement();
   initProse();
   initProjectTabs();

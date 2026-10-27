@@ -450,7 +450,7 @@ static void render_icon_keyboard(StrBuf *out, int size) {
 static void render_icon_search(StrBuf *out, int size) {
     char buf[1024];
     snprintf(buf, sizeof(buf),
-        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"%d\" height=\"%d\" viewBox=\"0 0 16 16\" fill=\"currentColor\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M14.798 14.202l-3.87-3.87c.701-.929 1.122-2.081 1.122-3.332 0-3.06-2.489-5.55-5.55-5.55-3.06 0-5.55 2.49-5.55 5.55 0 3.061 2.49 5.55 5.55 5.55 1.251 0 2.403-.421 3.332-1.122l3.87 3.87c.151.151.35.228.548.228s.396-.076.548-.228c.303-.303.303-.793 0-1.096zM2.05 7c0-2.454 1.997-4.45 4.45-4.45 2.454 0 4.45 1.997 4.45 4.45s-1.996 4.45-4.45 4.45c-2.454 0-4.45-1.996-4.45-4.45z\"/></svg>",
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"%d\" height=\"%d\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><line x1=\"21\" y1=\"21\" x2=\"16.65\" y2=\"16.65\"/></svg>",
         size, size);
     buf_append_str(out, buf);
 }
@@ -1090,7 +1090,7 @@ static void render_head(StrBuf *out, const char *title, const char *desc, const 
         "  <meta name=\"robots\" content=\"index, follow, max-image-preview:large, noarchive\">\n"
         "  <meta http-equiv=\"X-Content-Type-Options\" content=\"nosniff\">\n"
         "  <meta http-equiv=\"Permissions-Policy\" content=\"interest-cohort=(), camera=(), microphone=(), geolocation=()\">\n"
-        "  <meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com https://www.apple.com; img-src 'self' data: https: blob:; frame-src 'self' blob: data: chrome-extension:; object-src 'self' blob: data:; child-src 'self' blob: data: chrome-extension:; worker-src 'self' blob:; connect-src 'self' blob:; base-uri 'self'; form-action 'self';\">\n"
+        "  <meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; frame-src 'self' blob: data: chrome-extension:; object-src 'self' blob: data:; child-src 'self' blob: data: chrome-extension:; worker-src 'self' blob:; connect-src 'self' blob:; base-uri 'self'; form-action 'self';\">\n"
     );
 
     const char *page_title = (title && strlen(title) > 0) ? title : site_config.title;
@@ -1320,89 +1320,41 @@ static void render_header(StrBuf *out, const char *active_section) {
         buf_append_str(out, "\" class=\"drawer__link");
         if (is_act) buf_append_str(out, " is-active\" aria-current=\"page\"");
         else buf_append_str(out, "\"");
-        buf_append_str(out, "><span>");
+        buf_append_str(out, ">");
         buf_append_str(out, labels[i]);
-        buf_append_str(out, "</span>");
-        render_icon_arrow(out, 12);
         buf_append_str(out, "</a>\n");
     }
 
     buf_append_str(out, "      <a class=\"drawer__link\" href=\"");
     buf_append_str(out, site_config.repo);
-    buf_append_str(out, "\" target=\"_blank\" rel=\"noopener noreferrer\"><span>GitHub</span>");
-    render_icon_external(out, 12);
-    buf_append_str(out, "</a>\n    </nav>\n  </div>\n</header>\n");
+    buf_append_str(out, "\" target=\"_blank\" rel=\"noopener noreferrer\">");
+    render_icon_github(out, 18);
+    buf_append_str(out, " GitHub</a>\n    </nav>\n  </div>\n</header>\n");
 }
 
 static void render_footer(StrBuf *out) {
     buf_append_str(out,
-        "<footer class=\"footer\" id=\"colophon\">\n"
+        "<footer class=\"footer\">\n"
         "  <div class=\"container\">\n"
-        "    <div class=\"footer__directory\" aria-label=\"Site directory\">\n"
-        "      <div class=\"footer__col\">\n"
-        "        <h3 class=\"footer__col-title\">Documentation</h3>\n"
-        "        <ul class=\"footer__col-list\">\n"
-        "          <li><a href=\"/docs/getting-started/\">Getting Started</a></li>\n"
-        "          <li><a href=\"/docs/installation/\">Installation</a></li>\n"
-        "          <li><a href=\"/docs/configuration/\">Configuration</a></li>\n"
-        "          <li><a href=\"/docs/theming/\">Theming &amp; Layouts</a></li>\n"
-        "          <li><a href=\"/docs/faq/\">FAQs</a></li>\n"
-        "        </ul>\n"
-        "      </div>\n"
-        "      <div class=\"footer__col\">\n"
-        "        <h3 class=\"footer__col-title\">Projects</h3>\n"
-        "        <ul class=\"footer__col-list\">\n"
-        "          <li><a href=\"/projects/atlas/\">Atlas — Router</a></li>\n"
-        "          <li><a href=\"/projects/lumen/\">Lumen — Renderer</a></li>\n"
-        "          <li><a href=\"/projects/noise-garden/\">Noise Garden</a></li>\n"
-        "          <li><a href=\"/projects/tokenize/\">Tokenize Lexer</a></li>\n"
-        "          <li><a href=\"/projects/\">All Projects →</a></li>\n"
-        "        </ul>\n"
-        "      </div>\n"
-        "      <div class=\"footer__col\">\n"
-        "        <h3 class=\"footer__col-title\">Publishing</h3>\n"
-        "        <ul class=\"footer__col-list\">\n"
-        "          <li><a href=\"/books/\">EPUB Books</a></li>\n"
-        "          <li><a href=\"/books/reader/\">Web E-Reader</a></li>\n"
-        "          <li><a href=\"/blog/\">Engineering Blog</a></li>\n"
-        "          <li><a href=\"/changelog/\">Changelog</a></li>\n"
-        "        </ul>\n"
-        "      </div>\n"
-        "      <div class=\"footer__col\">\n"
-        "        <h3 class=\"footer__col-title\">Engine</h3>\n"
-        "        <ul class=\"footer__col-list\">\n"
-        "          <li><a href=\""
-    );
-    buf_append_str(out, site_config.repo);
-    buf_append_str(out, "\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub Repo</a></li>\n"
-        "          <li><a href=\"/feed.xml\">RSS Feed</a></li>\n"
-        "          <li><a href=\"/manifest.webmanifest\">Web App Manifest</a></li>\n"
-        "          <li><a href=\"/humans.txt\">Humans.txt</a></li>\n"
-        "          <li><a href=\"/about/\">About</a></li>\n"
-        "        </ul>\n"
-        "      </div>\n"
-        "    </div>\n"
-        "    <div class=\"footer__divider\" role=\"separator\"></div>\n"
-        "    <div class=\"footer__bottom\">\n"
-        "      <div class=\"footer__brand-group\">\n"
-        "        <a class=\"brand\" href=\"/\" aria-label=\""
-    );
+        "    <hr class=\"divider\">\n"
+        "    <div class=\"footer__row\">\n"
+        "      <a class=\"brand\" href=\"/\" aria-label=\"");
     buf_append_str(out, site_config.title);
     buf_append_str(out, " Home\">\n"
-        "          <img src=\"/assets/images/brand-icon.svg\" alt=\"\" width=\"20\" height=\"20\" loading=\"lazy\" decoding=\"async\">\n"
-        "          <span>"
-    );
+        "        <img src=\"/assets/images/brand-icon.svg\" alt=\"\" width=\"20\" height=\"20\" loading=\"lazy\" decoding=\"async\">\n"
+        "        <span>");
     buf_append_str(out, site_config.title);
     buf_append_str(out, "</span>\n"
-        "        </a>\n"
-        "        <p class=\"footer__legal\">\n"
-        "          © 2026 "
-    );
-    buf_append_str(out, site_config.title);
-    buf_append_str(out, ". Built with C23 zero-dependency SSG.\n"
-        "        </p>\n"
-        "      </div>\n"
-        "      <div class=\"footer__actions\">\n"
+        "      </a>\n"
+        "      <nav class=\"footer__links\" aria-label=\"Footer\">\n"
+        "        <a href=\"/docs/getting-started/\">Docs</a>\n"
+        "        <a href=\"/projects/\">Projects</a>\n"
+        "        <a href=\"/blog/\">Blog</a>\n"
+        "        <a href=\"/books/\">Books</a>\n"
+        "        <a href=\"/changelog/\">Changelog</a>\n"
+        "        <a href=\"/about/\">About</a>\n"
+        "      </nav>\n"
+        "      <div class=\"footer__social\">\n"
         "        <a class=\"icon-btn\" href=\""
     );
     buf_append_str(out, site_config.repo);
@@ -1416,13 +1368,20 @@ static void render_footer(StrBuf *out) {
     render_icon_rss(out, 18);
     buf_append_str(out,
         "</a>\n"
-        "        <a class=\"footer__back-to-top\" href=\"#main\" aria-label=\"Back to top\">\n"
-        "          <span>Back to top</span>"
+        "      </div>\n"
+        "    </div>\n"
+        "    <div class=\"footer__bottom\">\n"
+        "      <p class=\"footer__legal\">\n"
+        "        © 2026 ");
+    buf_append_str(out, site_config.title);
+    buf_append_str(out, ".\n"
+        "      </p>\n"
+        "      <a class=\"footer__back-to-top\" href=\"#main\" aria-label=\"Back to top\">\n"
+        "        <span>Back to top</span>"
     );
     render_icon_arrow(out, 14);
     buf_append_str(out,
-        "\n        </a>\n"
-        "      </div>\n"
+        "\n      </a>\n"
         "    </div>\n"
         "  </div>\n"
         "</footer>\n"
