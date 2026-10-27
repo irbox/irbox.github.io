@@ -79,12 +79,28 @@ Compliant with Apple Human Interface Guidelines button specifications:
 
 <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin: 1.5rem 0;">
   <span class="apple-identity-badge">
-    <img src="/assets/images/apple/watch-face-dark.svg" alt="Apple Watch Face">
-    <span>Add to Apple Watch</span>
+    <img src="/assets/images/apple/watch-face-dark.svg" alt="Apple Watch Face Dark">
+    <span>Watch Face (Dark)</span>
   </span>
   <span class="apple-identity-badge">
-    <img src="/assets/images/apple/game-center-black.svg" alt="Game Center">
-    <span>Apple Game Center</span>
+    <img src="/assets/images/apple/watch-face-light.svg" alt="Apple Watch Face Light">
+    <span>Watch Face (Light)</span>
+  </span>
+  <span class="apple-identity-badge">
+    <img src="/assets/images/apple/game-center-black.svg" alt="Game Center Black">
+    <span>Game Center (Dark)</span>
+  </span>
+  <span class="apple-identity-badge">
+    <img src="/assets/images/apple/game-center-white.svg" alt="Game Center White">
+    <span>Game Center (Light)</span>
+  </span>
+  <span class="apple-identity-badge">
+    <img src="/assets/images/apple/siwa-logo-black.svg" alt="Apple Logo Dark">
+    <span>Apple ID (Dark)</span>
+  </span>
+  <span class="apple-identity-badge">
+    <img src="/assets/images/apple/siwa-logo-white.svg" alt="Apple Logo Light">
+    <span>Apple ID (Light)</span>
   </span>
   <span class="apple-identity-badge">
     <img src="/assets/images/apple/siri-orb.png" alt="Siri" style="border-radius: 50%;">
@@ -113,13 +129,15 @@ Authentic device frames allow project screenshots, code output, and book preview
       <span class="apple-device-mac__dot apple-device-mac__dot--minimize"></span>
       <span class="apple-device-mac__dot apple-device-mac__dot--fullscreen"></span>
     </div>
-    <span class="apple-device-mac__title">Terminal — irbox-ssg (C23) — 80×24</span>
+    <span class="apple-device-mac__title">Terminal — zsh — 80×24</span>
   </div>
   <div class="apple-device-mac__body" style="padding: 1.5rem; font-family: var(--font-mono); font-size: 0.875rem;">
-    <p style="margin: 0; color: var(--success);">$ make build FAST=1</p>
-    <p style="margin: 0.5rem 0 0; color: var(--ink-2);">⚡ irbox C23-SSG — Modern Standalone Site Generator</p>
-    <p style="margin: 0.25rem 0 0; color: var(--ink);">⏱️  Total Build Time: 4.43 ms | 33 pages generated</p>
-    <p style="margin: 0.25rem 0 0; color: var(--brand);">✨ Status: 0 warnings, ISO C23 verified.</p>
+    <p style="margin: 0; color: var(--success);">$ make check &amp;&amp; make build</p>
+    <p style="margin: 0.35rem 0 0; color: var(--ink-2);">cc -std=c23 -Wall -Wextra -Wpedantic -fsyntax-only tools/ssg.c</p>
+    <p style="margin: 0.25rem 0 0; color: var(--ink);">C23 syntax check passed with 0 warnings.</p>
+    <p style="margin: 0.25rem 0 0; color: var(--ink-2);">cc -O3 -Wall -Wextra -Wpedantic -std=c23 -flto -fstack-protector-strong tools/ssg.c -o /tmp/irbox-ssg</p>
+    <p style="margin: 0.25rem 0 0; color: var(--ink);">/tmp/irbox-ssg _site</p>
+    <p style="margin: 0.25rem 0 0; color: var(--brand);">Build complete in _site/ (33 pages)</p>
   </div>
 </div>
 
@@ -152,6 +170,27 @@ The repository bundles official transparent PNG bezels extracted from Apple disk
 - `assets/images/apple/bezels/iphone-16-pro.png` (iPhone 16 Pro Black Titanium)
 - `assets/images/apple/bezels/macbook-pro-m5.png` (MacBook Pro M5 Space Black)
 - `assets/images/apple/bezels/ipad-pro-m5.png` (iPad Pro M5 Space Black)
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin: 1.5rem 0; align-items: end;">
+  <div style="text-align: center;">
+    <div class="apple-bezel-frame apple-bezel-frame--iphone">
+      <img class="apple-bezel-img" src="/assets/images/apple/bezels/iphone-16-pro.png" alt="iPhone 16 Pro Bezel" loading="lazy">
+    </div>
+    <span style="font-size: 0.75rem; color: var(--ink-2); display: block; margin-top: 0.5rem;">iPhone 16 Pro</span>
+  </div>
+  <div style="text-align: center;">
+    <div class="apple-bezel-frame apple-bezel-frame--macbook">
+      <img class="apple-bezel-img" src="/assets/images/apple/bezels/macbook-pro-m5.png" alt="MacBook Pro M5 Bezel" loading="lazy">
+    </div>
+    <span style="font-size: 0.75rem; color: var(--ink-2); display: block; margin-top: 0.5rem;">MacBook Pro M5</span>
+  </div>
+  <div style="text-align: center;">
+    <div class="apple-bezel-frame apple-bezel-frame--ipad">
+      <img class="apple-bezel-img" src="/assets/images/apple/bezels/ipad-pro-m5.png" alt="iPad Pro M5 Bezel" loading="lazy">
+    </div>
+    <span style="font-size: 0.75rem; color: var(--ink-2); display: block; margin-top: 0.5rem;">iPad Pro M5</span>
+  </div>
+</div>
 
 ```html
 <div class="apple-bezel-frame apple-bezel-frame--iphone">
@@ -198,7 +237,7 @@ The repository bundles official transparent PNG bezels extracted from Apple disk
       <strong>Pipeline Engine</strong>
     </div>
     <div class="apple-grouped-item__right">
-      <span>C23 (Sub-second)</span>
+      <span>ISO C23 Standalone</span>
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
     </div>
   </div>

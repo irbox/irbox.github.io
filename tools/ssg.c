@@ -537,14 +537,6 @@ static void render_icon_offline(StrBuf *out, int size) {
     buf_append_str(out, buf);
 }
 
-[[maybe_unused]] static void render_icon_apple(StrBuf *out, int size) {
-    char buf[2048];
-    snprintf(buf, sizeof(buf),
-        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"%d\" height=\"%d\" viewBox=\"0 0 170 170\" fill=\"currentColor\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.7-3.04-7.58-7.7-11.63-13.98-5.37-8.23-9.61-17.75-12.74-28.56-3.13-10.8-4.7-21.2-4.7-31.18 0-14.83 3.8-27.26 11.39-37.3 7.6-10.03 17.29-15.15 29.07-15.35 4.36 0 9.4 1.13 15.13 3.39 5.73 2.26 9.48 3.44 11.26 3.53 1.57-.1 5.37-1.33 11.41-3.71 6.04-2.37 11.13-3.41 15.27-3.1 11.27.78 20.37 4.95 27.29 12.52-9.87 5.98-14.67 14.23-14.41 24.75.26 8.23 3.37 15.17 9.34 20.81 5.97 5.65 13.11 8.89 21.43 9.72-2.12 6.42-4.66 13.11-7.62 20.08zM119.22 33.15c0-7.39 2.66-14.4 7.99-21.03 5.33-6.63 11.86-10.74 19.59-12.33.17 1.05.26 2.05.26 3 0 7.39-2.78 14.52-8.34 21.39-5.56 6.87-12.27 10.9-20.13 12.1-.26-1.04-.37-2.09-.37-3.13z\"/></svg>",
-        size, size);
-    buf_append_str(out, buf);
-}
-
 /* ==========================================================================
    Markdown Parser (with Tables, Headings, Lists, Blockquotes, Codes)
    ========================================================================== */
@@ -595,6 +587,31 @@ static void parse_inline(StrBuf *out, const char *text) {
                 buf_append_str(out, "</em>");
                 i = end - text + 1;
                 continue;
+            }
+        }
+        /* Images: ![alt](url) */
+        if (text[i] == '!' && i + 1 < len && text[i + 1] == '[') {
+            const char *close_b = strchr(text + i + 2, ']');
+            if (close_b && *(close_b + 1) == '(') {
+                const char *close_p = strchr(close_b + 2, ')');
+                if (close_p) {
+                    size_t alt_len = close_b - (text + i + 2);
+                    size_t url_len = close_p - (close_b + 2);
+                    char *alt = (char *)malloc(alt_len + 1);
+                    char *url = (char *)malloc(url_len + 1);
+                    memcpy(alt, text + i + 2, alt_len); alt[alt_len] = '\0';
+                    memcpy(url, close_b + 2, url_len); url[url_len] = '\0';
+
+                    buf_append_str(out, "<img src=\"");
+                    escape_html(out, url, url_len);
+                    buf_append_str(out, "\" alt=\"");
+                    escape_html(out, alt, alt_len);
+                    buf_append_str(out, "\" loading=\"lazy\" decoding=\"async\">");
+
+                    free(alt); free(url);
+                    i = close_p - text + 1;
+                    continue;
+                }
             }
         }
         /* Links: [label](url) */

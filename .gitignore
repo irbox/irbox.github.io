@@ -1,3 +1,5 @@
 _site/
+.jekyll-cache/
 tools/ssg
+*.o
 .DS_Store
