@@ -1193,6 +1193,199 @@
     });
   };
 
+  /* ---- Module 18: Apple Multi-OS Ecosystem Controller ---- */
+  const initAppleOSEcosystem = () => {
+    const switcherBtn = $('#os-switcher-btn');
+    const switcherMenu = $('#os-switcher-menu');
+    const currentPill = $('#os-current-pill');
+    const macosLabel = $('#macos-os-label');
+    const clockElem = $('#macos-live-clock');
+    const watchClockElem = $('#watchos-time');
+
+    // Live Apple System Clock
+    const updateClock = () => {
+      const now = new Date();
+      let hours = now.getHours();
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12 || 12;
+      const timeStr = `${hours}:${minutes} ${ampm}`;
+      if (clockElem) clockElem.textContent = timeStr;
+      if (watchClockElem) {
+        watchClockElem.textContent = `${String(now.getHours()).padStart(2, '0')}:${minutes}`;
+      }
+    };
+    updateClock();
+    setInterval(updateClock, 30000);
+
+    const getAutoOS = () => {
+      const w = window.innerWidth;
+      if (w <= 360) return { id: 'watchos', name: 'watchOS 11' };
+      if (w <= 767) return { id: 'ios', name: 'iOS 18 · Duo' };
+      if (w <= 1024) return { id: 'ipados', name: 'iPadOS 18' };
+      if (w <= 1599) return { id: 'macos', name: 'macOS Sequoia' };
+      return { id: 'visionos', name: 'visionOS 2' };
+    };
+
+    let activeOS = store.get('irbox-apple-os') || 'auto';
+
+    const applyOS = (osId) => {
+      activeOS = osId;
+      store.set('irbox-apple-os', osId);
+      if (osId === 'auto') {
+        root.removeAttribute('data-apple-os');
+        const auto = getAutoOS();
+        if (currentPill) currentPill.textContent = `Auto (${auto.name.split(' ')[0]})`;
+        if (macosLabel) macosLabel.textContent = auto.name;
+      } else {
+        root.setAttribute('data-apple-os', osId);
+        const nameMap = {
+          watchos: 'watchOS 11',
+          ios: 'iOS 18 · Duo',
+          ipados: 'iPadOS 18',
+          macos: 'macOS Sequoia',
+          visionos: 'visionOS 2',
+        };
+        const displayName = nameMap[osId] || osId;
+        if (currentPill) currentPill.textContent = displayName.split(' ')[0];
+        if (macosLabel) macosLabel.textContent = displayName;
+      }
+
+      if (switcherMenu) {
+        $$('.os-switcher__item', switcherMenu).forEach((btn) => {
+          btn.classList.toggle('is-active', btn.getAttribute('data-os') === osId);
+        });
+      }
+    };
+
+    if (switcherBtn && switcherMenu) {
+      switcherBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = !switcherMenu.hasAttribute('hidden');
+        if (isOpen) {
+          switcherMenu.setAttribute('hidden', '');
+        } else {
+          switcherMenu.removeAttribute('hidden');
+        }
+        switcherBtn.setAttribute('aria-expanded', String(!isOpen));
+      });
+
+      doc.addEventListener('click', (e) => {
+        if (!e.target.closest('#os-switcher')) {
+          switcherMenu.setAttribute('hidden', '');
+          switcherBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      $$('.os-switcher__item', switcherMenu).forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const os = btn.getAttribute('data-os');
+          applyOS(os);
+          switcherMenu.setAttribute('hidden', '');
+          switcherBtn.setAttribute('aria-expanded', 'false');
+        });
+      });
+    }
+
+    window.addEventListener(
+      'resize',
+      () => {
+        if (activeOS === 'auto') {
+          const auto = getAutoOS();
+          if (currentPill) currentPill.textContent = `Auto (${auto.name.split(' ')[0]})`;
+          if (macosLabel) macosLabel.textContent = auto.name;
+        }
+      },
+      { passive: true }
+    );
+
+    applyOS(activeOS);
+  };
+
+  /* ---- Module 19: iPhone Duo 3D Spatial Folding Engine Controller ---- */
+  const initIphoneDuoStage = () => {
+    const chassis = $('#duo-chassis');
+    if (!chassis) return;
+
+    const slider = $('#duo-angle-slider');
+    const scrubberVal = $('#duo-scrubber-val');
+    const angleDisplay = $('#duo-angle-display');
+    const postureBadge = $('#duo-posture-badge');
+    const postureBtns = $$('.duo-posture-btn');
+
+    const postureNames = {
+      180: 'Flat Posture · 180°',
+      135: 'Book Posture · 135°',
+      90: 'Laptop Posture · 90°',
+      60: 'Tent Posture · 60°',
+      28: 'Folded Glance · 28°',
+    };
+
+    const setAngle = (angle, posture = null) => {
+      const clamped = Math.max(25, Math.min(180, Math.round(+angle)));
+      chassis.style.setProperty('--duo-angle', `${clamped}deg`);
+      if (slider) slider.value = clamped;
+      if (scrubberVal) scrubberVal.textContent = `${clamped}°`;
+      if (angleDisplay) angleDisplay.textContent = `${clamped}.0`;
+
+      let assignedPosture = posture;
+      if (!assignedPosture) {
+        if (clamped >= 170) assignedPosture = 'flat';
+        else if (clamped >= 115) assignedPosture = 'book';
+        else if (clamped >= 75) assignedPosture = 'laptop';
+        else if (clamped >= 45) assignedPosture = 'tent';
+        else assignedPosture = 'folded';
+      }
+      chassis.setAttribute('data-posture', assignedPosture);
+
+      if (postureBadge) {
+        postureBadge.textContent =
+          postureNames[clamped] || `${assignedPosture.toUpperCase()} · ${clamped}°`;
+      }
+
+      postureBtns.forEach((btn) => {
+        btn.classList.toggle('is-active', btn.getAttribute('data-posture') === assignedPosture);
+      });
+    };
+
+    if (slider) {
+      slider.addEventListener('input', (e) => {
+        setAngle(e.target.value);
+      });
+    }
+
+    postureBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const targetAngle = btn.getAttribute('data-angle');
+        const posture = btn.getAttribute('data-posture');
+        setAngle(targetAngle, posture);
+      });
+    });
+
+    // Touch gesture on chassis
+    let startX = 0;
+    let initialAngle = 135;
+    chassis.addEventListener(
+      'touchstart',
+      (e) => {
+        startX = e.touches[0].clientX;
+        const current = getComputedStyle(chassis).getPropertyValue('--duo-angle');
+        initialAngle = parseFloat(current) || 135;
+      },
+      { passive: true }
+    );
+
+    chassis.addEventListener(
+      'touchmove',
+      (e) => {
+        const deltaX = e.touches[0].clientX - startX;
+        const newAngle = initialAngle + deltaX * 0.35;
+        setAngle(newAngle);
+      },
+      { passive: true }
+    );
+  };
+
   /* ---- Initialize All Controllers ---- */
   initPageProgress();
   initImageTransitions();
@@ -1212,4 +1405,6 @@
   initShare();
   initServiceWorker();
   initPrint();
+  initAppleOSEcosystem();
+  initIphoneDuoStage();
 })();
