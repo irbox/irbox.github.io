@@ -1,4 +1,13 @@
 # Newest first. Rendered at /changelog/.
+- version: '1.2.0'
+  date: '2026-10-27'
+  title: Standalone C23 Engine & Zero-Dependency Architecture
+  changes:
+    - { type: added, text: 'Standalone zero-dependency C23 site generator (tools/ssg.c) with sub-second full site compilation.' }
+    - { type: added, text: 'Official Apple Design Resources documentation suite, SF Symbols, and device bezels.' }
+    - { type: added, text: 'Comprehensive technical write-ups and documentation for all showcased projects.' }
+    - { type: fixed, text: 'Mathematically balanced vector SVG icons and mobile dropdown select alignment.' }
+    - { type: removed, text: 'Purged lingering unused styles and eliminated redundant build dependencies.' }
 - version: '1.1.0'
   date: '2026-10-24'
   title: Performance & Polish Release

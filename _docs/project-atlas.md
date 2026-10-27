@@ -1,33 +1,80 @@
 ---
 title: Atlas
-description: Documentation for the Atlas project (sample).
+description: Architecture, coordinate pipeline, and offline storage reference for Atlas.
 category: My projects
 ---
 
-This page is a template for documenting one of your projects. Replace the content below.
+[Atlas](/projects/atlas/) is an offline-capable spatial itinerary planner. This guide covers its client-side architecture, tile caching mechanisms, and data exchange formats.
 
-## Overview
+## Architecture overview
 
-Atlas is a sample project used to demonstrate how project documentation lives next to the project showcase. See the [project page](/projects/atlas/).
+Atlas is structured around a decoupled spatial pipeline where coordinate calculation, route optimization, and vector tile rendering operate independently:
 
-## Installation
+1. **Map Engine**: Powered by MapLibre GL for rendering vector tile packages (`.mbtiles` and vector PBF tiles).
+2. **Local Tile Store**: Uses `CacheStorage` for caching tile coordinates with LRU eviction.
+3. **Trip State**: Backed by `IndexedDB` with immutable revision histories for undo/redo support.
+4. **Elevation Worker**: Background Web Worker that calculates elevation gain and slope profiles without locking user interactions.
+
+## Quick start
+
+To integrate Atlas components into an existing web project:
 
 ```bash
-npm install atlas-sample
+npm install @irbox/atlas
 ```
 
-## Usage
+```typescript
+import { createAtlasMap, WaypointManager } from '@irbox/atlas';
 
-```js
-import { createAtlas } from 'atlas-sample';
+const map = createAtlasMap({
+  container: '#map-container',
+  center: [-122.4194, 37.7749], // [longitude, latitude]
+  zoom: 12,
+  offlineStorage: true,
+});
 
-const atlas = createAtlas({ container: '#app' });
-atlas.start();
+const waypoints = new WaypointManager(map);
+waypoints.add({
+  id: 'point-1',
+  name: 'Trailhead',
+  coordinates: [-122.4201, 37.7755],
+  elevationMeters: 450,
+});
 ```
 
-## Options
+## Data interchange formats
 
-| Option      | Type                | Default   | Description                 |
-| ----------- | ------------------- | --------- | --------------------------- |
-| `container` | `string`            | `"#app"`  | CSS selector to mount into. |
-| `theme`     | `"light" \| "dark"` | `"light"` | Color scheme.               |
+Atlas exports and imports standard spatial data formats:
+
+### GeoJSON Schema
+
+All itineraries export to standard RFC 7946 GeoJSON FeatureCollections:
+
+```json
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-122.4194, 37.7749]
+      },
+      "properties": {
+        "name": "Basecamp",
+        "timestamp": "2026-10-27T10:00:00Z"
+      }
+    }
+  ]
+}
+```
+
+## Configuration options
+
+| Option | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `container` | `string \| HTMLElement` | `"#map"` | Target container element or CSS selector. |
+| `offlineStorage` | `boolean` | `true` | Enables CacheStorage vector tile persistence. |
+| `maxTileCacheMB` | `number` | `250` | Maximum disk storage budget for offline map regions. |
+| `elevationSmoothing` | `number` | `3` | Smoothing window radius for elevation profile graphing. |
+| `theme` | `"light" \| "dark" \| "auto"` | `"auto"` | Map basemap theme mode matching system appearance. |
