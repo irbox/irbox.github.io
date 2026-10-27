@@ -27,6 +27,14 @@
     },
   };
 
+  const setTouchLock = (locked) => {
+    root.classList.toggle('touch-locked', locked);
+    doc.body?.classList?.toggle('touch-locked', locked);
+    if (doc.body) {
+      doc.body.style.overflow = locked ? 'hidden' : '';
+    }
+  };
+
   const onReady = () => {
     requestAnimationFrame(() => {
       root.classList.remove('is-loading');
@@ -190,6 +198,7 @@
     const drawer = $('#drawer');
     if (drawerBtn && drawer) {
       const setDrawer = (open) => {
+        setTouchLock(open);
         if (open) {
           drawer.removeAttribute('hidden');
           requestAnimationFrame(() => {
@@ -228,6 +237,7 @@
         () => {
           if (window.innerWidth > 767 && drawer.classList.contains('is-open')) {
             setDrawer(false);
+            setTouchLock(false);
           }
         },
         { passive: true }
@@ -240,6 +250,9 @@
     if (sidebar) {
       const setSidebar = (open) => {
         sidebar.classList.toggle('is-open', open);
+        if (window.innerWidth <= 767) {
+          setTouchLock(open);
+        }
         sideBtns.forEach((btn) => {
           btn.setAttribute('aria-expanded', String(open));
           btn.setAttribute('aria-label', open ? 'Close sidebar' : 'Open sidebar');
@@ -276,6 +289,7 @@
         () => {
           if (window.innerWidth > 767 && sidebar.classList.contains('is-open')) {
             setSidebar(false);
+            setTouchLock(false);
           }
         },
         { passive: true }
@@ -291,6 +305,33 @@
           sessionStorage.setItem('sidebar-scroll', sidebar.scrollTop);
         });
       } catch {}
+    }
+  };
+
+  /* ---- Module 5b: Sticky Header Controller (Audited from Apple localnav.js) ---- */
+  const initStickyNav = () => {
+    const topnav = $('#topnav');
+    if (!topnav) return;
+
+    if ('IntersectionObserver' in window) {
+      const sentinel = doc.createElement('div');
+      sentinel.setAttribute('aria-hidden', 'true');
+      sentinel.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:1px;pointer-events:none;visibility:hidden;';
+      doc.body.prepend(sentinel);
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          topnav.classList.toggle('is-stuck', !entry.isIntersecting);
+        });
+      }, { rootMargin: '0px', threshold: 0 });
+
+      observer.observe(sentinel);
+    } else {
+      const onScroll = () => {
+        topnav.classList.toggle('is-stuck', window.scrollY > 4);
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
     }
   };
 
@@ -816,6 +857,7 @@
 
   const openSearch = () => {
     if (!searchDlg?.showModal) return;
+    setTouchLock(true);
     searchLastFocus = doc.activeElement;
     if (!searchDlg.open) searchDlg.showModal();
     searchInput.value = '';
@@ -828,6 +870,7 @@
   };
 
   const closeSearch = () => {
+    setTouchLock(false);
     if (searchDlg?.open) {
       searchDlg.close();
       if (searchLastFocus && typeof searchLastFocus.focus === 'function') {
@@ -936,10 +979,12 @@
   let shortcutsLastFocus = null;
   const openShortcuts = () => {
     if (!shortcutsDlg?.showModal) return;
+    setTouchLock(true);
     shortcutsLastFocus = doc.activeElement;
     if (!shortcutsDlg.open) shortcutsDlg.showModal();
   };
   const closeShortcuts = () => {
+    setTouchLock(false);
     if (shortcutsDlg?.open) {
       shortcutsDlg.close();
       if (shortcutsLastFocus && typeof shortcutsLastFocus.focus === 'function') {
@@ -1146,6 +1191,7 @@
   initImageTransitions();
   initThemeToggle();
   initMobileNav();
+  initStickyNav();
   initAnnouncement();
   initProse();
   initProjectTabs();

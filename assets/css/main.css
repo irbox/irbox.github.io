@@ -1042,6 +1042,44 @@ p,
   background: var(--ink-muted-fill);
   color: var(--ink);
 }
+/* Apple Button Hierarchy (Audited from Apple Design Resources) */
+.btn--neutral {
+  background: light-dark(#1d1d1f, #f5f5f7);
+  color: light-dark(#ffffff, #000000);
+  border: 1px solid transparent;
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn--neutral:hover {
+    background: light-dark(#272729, #ffffff);
+    color: light-dark(#ffffff, #000000);
+    transform: scale(1.02);
+  }
+}
+.btn--secondary-neutral {
+  background: transparent;
+  color: light-dark(#1d1d1f, #f5f5f7);
+  border: 1px solid light-dark(rgba(0, 0, 0, 0.18), rgba(255, 255, 255, 0.24));
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn--secondary-neutral:hover {
+    background: light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.1));
+    color: light-dark(#000000, #ffffff);
+    transform: scale(1.02);
+  }
+}
+.btn--blur {
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  background: color-mix(in srgb, var(--bg-surface-elevated) 70%, transparent);
+  border: 1px solid var(--border-glass);
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn--blur:hover {
+    background: color-mix(in srgb, var(--bg-surface-elevated) 88%, transparent);
+    border-color: var(--border);
+    transform: scale(1.02);
+  }
+}
 .btn--sm {
   padding: 8px 14px;
   font-size: 14px;
@@ -1254,6 +1292,15 @@ p,
   border-bottom: 1px solid var(--border);
   box-shadow: 0 1px 0 var(--border-subtle);
   padding-top: env(safe-area-inset-top, 0px);
+  transition:
+    background-color 0.25s cubic-bezier(0.28, 0.11, 0.32, 1),
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+.topnav.is-stuck {
+  background: var(--glass-surface);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04), 0 1px 0 var(--border-subtle);
 }
 .topnav__inner {
   display: flex;
@@ -1430,16 +1477,38 @@ p,
   display: flex;
   align-items: center;
   gap: 6px;
+  opacity: 0;
+  transform: translateY(-4px);
   transition:
+    opacity 0.28s cubic-bezier(0.4, 0, 0.6, 1),
+    transform 0.28s cubic-bezier(0.4, 0, 0.6, 1),
     background-color 0.15s ease,
     padding-left 0.15s ease;
 }
+.drawer.is-open .drawer__link {
+  opacity: 1;
+  transform: translateY(0);
+}
+.drawer.is-open .drawer__link:nth-child(1) { transition-delay: 0.04s; }
+.drawer.is-open .drawer__link:nth-child(2) { transition-delay: 0.08s; }
+.drawer.is-open .drawer__link:nth-child(3) { transition-delay: 0.12s; }
+.drawer.is-open .drawer__link:nth-child(4) { transition-delay: 0.16s; }
+.drawer.is-open .drawer__link:nth-child(5) { transition-delay: 0.20s; }
+.drawer.is-open .drawer__link:nth-child(6) { transition-delay: 0.24s; }
+
 .drawer__link:hover {
   padding-left: 12px;
   background: var(--ink-muted-fill);
 }
 .drawer__link.is-active {
   background: var(--ink-muted-fill);
+}
+
+/* Apple Audited: Touch Scroll Lock */
+html.touch-locked,
+body.touch-locked {
+  overflow: hidden !important;
+  overscroll-behavior: none;
 }
 @media (max-width: 920px) {
   .search-trigger__label,
