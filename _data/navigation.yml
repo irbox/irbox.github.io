@@ -1,6 +1,7 @@
 # Primary navigation (top bar + mobile drawer + footer)
 main:
   - { label: Docs, url: /docs/getting-started/, match: /docs/ }
+  - { label: Design, url: /docs/apple-design-resources/, match: /apple-design-resources/ }
   - { label: Projects, url: /projects/, match: /projects/ }
   - { label: Blog, url: /blog/, match: /blog/ }
   - { label: Books, url: /books/, match: /books/ }
@@ -8,6 +9,7 @@ main:
 
 footer:
   - { label: Docs, url: /docs/getting-started/ }
+  - { label: Design, url: /docs/apple-design-resources/ }
   - { label: Projects, url: /projects/ }
   - { label: Blog, url: /blog/ }
   - { label: Books, url: /books/ }

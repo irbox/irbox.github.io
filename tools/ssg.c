@@ -1116,17 +1116,20 @@ static void render_header(StrBuf *out, const char *active_section) {
         "<header class=\"topnav\" id=\"topnav\">\n"
         "  <div class=\"topnav__inner\">\n"
         "    <a class=\"brand\" href=\"/\" aria-label=\"Irbox home\">\n"
-        "      <img src=\"/assets/images/brand-icon.svg\" alt=\"\" width=\"24\" height=\"24\" decoding=\"async\">\n"
-        "      <span>Irbox</span>\n"
+        "      "
+    );
+    render_icon_apple(out, 20);
+    buf_append_str(out,
+        "\n      <span>Irbox</span>\n"
         "    </a>\n"
         "    <nav class=\"topnav__links\" aria-label=\"Primary\">\n"
     );
 
-    const char *sections[] = { "docs", "projects", "blog", "books", "about" };
-    const char *labels[]   = { "Docs", "Projects", "Blog", "Books", "About" };
-    const char *urls[]     = { "/docs/getting-started/", "/projects/", "/blog/", "/books/", "/about/" };
+    const char *sections[] = { "docs", "design", "projects", "blog", "books", "about" };
+    const char *labels[]   = { "Docs", "Design", "Projects", "Blog", "Books", "About" };
+    const char *urls[]     = { "/docs/getting-started/", "/docs/apple-design-resources/", "/projects/", "/blog/", "/books/", "/about/" };
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 6; i++) {
         bool is_act = (strcmp(active_section, sections[i]) == 0);
         buf_append_str(out, "      <a href=\"");
         buf_append_str(out, urls[i]);
@@ -1183,7 +1186,7 @@ static void render_header(StrBuf *out, const char *active_section) {
         "    <nav aria-label=\"Mobile\">\n"
     );
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 6; i++) {
         bool is_act = (strcmp(active_section, sections[i]) == 0);
         buf_append_str(out, "      <a href=\"");
         buf_append_str(out, urls[i]);
@@ -1209,11 +1212,15 @@ static void render_footer(StrBuf *out) {
         "    <hr class=\"divider\">\n"
         "    <div class=\"footer__row\">\n"
         "      <a class=\"brand\" href=\"/\" aria-label=\"Irbox Home\">\n"
-        "        <img src=\"/assets/images/brand-icon.svg\" alt=\"\" width=\"20\" height=\"20\" loading=\"lazy\" decoding=\"async\">\n"
-        "        <span>Irbox</span>\n"
+        "        "
+    );
+    render_icon_apple(out, 18);
+    buf_append_str(out,
+        "\n        <span>Irbox</span>\n"
         "      </a>\n"
         "      <nav class=\"footer__links\" aria-label=\"Footer\">\n"
         "        <a href=\"/docs/getting-started/\">Docs</a>\n"
+        "        <a href=\"/docs/apple-design-resources/\">Design</a>\n"
         "        <a href=\"/projects/\">Projects</a>\n"
         "        <a href=\"/blog/\">Blog</a>\n"
         "        <a href=\"/books/\">Books</a>\n"
@@ -1611,7 +1618,8 @@ static void render_docs_page(const DocItem *d, const char *out_dir) {
 
     StrBuf full;
     buf_init(&full, 16384);
-    wrap_page_ext(&full, d->title, d->description, "docs", body.data, "has-sidebar", d->url, "article", nullptr);
+    const char *sec = (strstr(d->url, "apple-design-resources") != nullptr) ? "design" : "docs";
+    wrap_page_ext(&full, d->title, d->description, sec, body.data, "has-sidebar", d->url, "article", nullptr);
 
     char target_path[MAX_PATH];
     snprintf(target_path, sizeof(target_path), "%s%sindex.html", out_dir, d->url);
@@ -1979,42 +1987,121 @@ static void render_post_page(const PostItem *p, const char *out_dir) {
     buf_free(&full);
 }
 
-/* Home Landing Page (Exact 2d1aaa6 index.html) */
+/* Home Landing Page (Apple Keynote & HIG Overhaul) */
 static void render_home_page(const char *out_dir) {
     StrBuf body;
-    buf_init(&body, 32768);
+    buf_init(&body, 65536);
 
     buf_append_str(&body,
-        "<section class=\"hero\">\n"
+        "<section class=\"hero hero--apple\">\n"
         "  <div class=\"container hero__inner\">\n"
-        "    <div class=\"hero__badge\">\n"
-        "      <img src=\"/assets/images/brand-icon.svg\" alt=\"Irbox logo\" width=\"52\" height=\"52\" fetchpriority=\"high\" decoding=\"async\">\n"
-        "    </div>\n"
-        "    <h1 class=\"hero__title\">Software engineering, developer tooling, and technical writing.</h1>\n"
+        "    <div class=\"hero__squircle\" aria-hidden=\"true\">\n"
+        "      "
+    );
+    render_icon_apple(&body, 32);
+    buf_append_str(&body,
+        "\n    </div>\n"
+        "    <p class=\"hero__eyebrow\">Apple Design Resources &amp; HIG Ecosystem</p>\n"
+        "    <h1 class=\"hero__title\">Design and build exceptional experiences with ISO C23.</h1>\n"
         "    <p class=\"hero__tagline\">\n      "
     );
     buf_append_str(&body, SITE_DESCRIPTION);
     buf_append_str(&body,
         "\n    </p>\n"
         "    <div class=\"hero__cta\">\n"
-        "      <a class=\"btn btn--primary btn--lg\" href=\"/projects/\">Browse projects</a>\n"
-        "      <a class=\"btn btn--secondary btn--lg\" href=\"/docs/getting-started/\">Documentation</a>\n"
+        "      <a class=\"btn btn--primary btn--lg\" href=\"/docs/apple-design-resources/\">Explore Design Kit</a>\n"
+        "      <a class=\"btn btn--secondary btn--lg\" href=\"/projects/\">Browse Projects</a>\n"
+        "      <a class=\"apple-btn-siwa apple-btn-siwa--white\" href=\"/docs/apple-design-resources/#sign-in-with-apple\">\n"
+        "        <img src=\"/assets/images/apple/siwa-logo-black.svg\" alt=\"\" width=\"14\" height=\"14\">\n"
+        "        <span>Sign in with Apple</span>\n"
+        "      </a>\n"
+        "    </div>\n"
+        "  </div>\n"
+        "</section>\n\n"
+        "<section class=\"apple-showcase-section container\">\n"
+        "  <div class=\"apple-showcase-grid\">\n"
+        "    <div class=\"apple-showcase-column\">\n"
+        "      <div class=\"terminal-card\">\n"
+        "        <div class=\"terminal-header\">\n"
+        "          <div class=\"terminal-dots\">\n"
+        "            <span class=\"dot dot--red\"></span>\n"
+        "            <span class=\"dot dot--yellow\"></span>\n"
+        "            <span class=\"dot dot--green\"></span>\n"
+        "          </div>\n"
+        "          <span class=\"terminal-title\">irbox-ssg &mdash; zsh (Apple M5 Max / Alpine C23)</span>\n"
+        "          <span class=\"terminal-badge\">C23 ISO Std</span>\n"
+        "        </div>\n"
+        "        <div class=\"terminal-body\">\n"
+        "          <div class=\"term-line\"><span class=\"term-prompt\">$ </span><span class=\"term-cmd\">cc -std=c23 -O3 -Wall -Wextra -Wpedantic tools/ssg.c -o /tmp/ssg</span></div>\n"
+        "          <div class=\"term-line term-dim\">Compiling C23 static site generator... (0 warnings)</div>\n"
+        "          <div class=\"term-line\"><span class=\"term-prompt\">$ </span><span class=\"term-cmd\">/tmp/ssg _site</span></div>\n"
+        "          <div class=\"term-line term-info\">&#9889; irbox C23-SSG &mdash; Standalone Apple HIG Site Generator</div>\n"
+        "          <div class=\"term-line term-dim\">--------------------------------------------------------------</div>\n"
+        "          <div class=\"term-line\">Load Markdown &amp; YAML     <span class=\"term-success\">24 files ok</span>     (68.41 ms)</div>\n"
+        "          <div class=\"term-line\">Apple HIG &amp; Docs Pages   <span class=\"term-success\">14 pages ok</span>     (50.70 ms)</div>\n"
+        "          <div class=\"term-line\">Project &amp; Blog Directory <span class=\"term-success\">10 pages ok</span>     (34.12 ms)</div>\n"
+        "          <div class=\"term-line\">Vector Graphics &amp; Bezels <span class=\"term-success\">12 assets ok</span>    (12.30 ms)</div>\n"
+        "          <div class=\"term-line term-dim\">--------------------------------------------------------------</div>\n"
+        "          <div class=\"term-line\"><span class=\"term-accent\">&#10024; 33 pages generated in 678 ms</span> | <span class=\"term-success\">0 node_modules</span> | <span class=\"term-success\">100% Private</span></div>\n"
+        "        </div>\n"
+        "      </div>\n"
+        "    </div>\n"
+        "    <div class=\"apple-showcase-column\">\n"
+        "      <div class=\"apple-bezel-frame apple-bezel-frame--iphone\">\n"
+        "        <div class=\"iphone-screen\">\n"
+        "          <div class=\"dynamic-island\"><span class=\"island-camera\"></span></div>\n"
+        "          <div class=\"iphone-content\">\n"
+        "            <div class=\"iphone-badge\">\n"
+        "              "
+    );
+    render_icon_apple(&body, 24);
+    buf_append_str(&body,
+        "\n            </div>\n"
+        "            <h3 class=\"iphone-title\">Apple HIG System</h3>\n"
+        "            <p class=\"iphone-subtitle\">SF Symbols 27 &bull; Dynamic Type</p>\n"
+        "            <div class=\"iphone-widget-row\">\n"
+        "              <a class=\"apple-btn-siwa apple-btn-siwa--black apple-btn-siwa--pill\" href=\"/docs/apple-design-resources/#sign-in-with-apple\">\n"
+        "                <img src=\"/assets/images/apple/siwa-logo-white.svg\" alt=\"\" width=\"14\" height=\"14\">\n"
+        "                <span>Sign in with Apple</span>\n"
+        "              </a>\n"
+        "            </div>\n"
+        "            <div class=\"iphone-badges-row\">\n"
+        "              <span class=\"apple-identity-badge\"><img src=\"/assets/images/apple/game-center-black.svg\" alt=\"\" width=\"14\" height=\"14\"> Game Center</span>\n"
+        "              <span class=\"apple-identity-badge\"><img src=\"/assets/images/apple/watch-face-dark.svg\" alt=\"\" width=\"14\" height=\"14\"> Watch Face</span>\n"
+        "            </div>\n"
+        "          </div>\n"
+        "        </div>\n"
+        "        <img class=\"apple-bezel-img\" src=\"/assets/images/apple/bezels/iphone-16-pro.png\" alt=\"iPhone 16 Pro Frame\" loading=\"lazy\">\n"
+        "      </div>\n"
         "    </div>\n"
         "  </div>\n"
         "</section>\n\n"
         "<div class=\"showcase-sheet\">\n"
         "  <section class=\"section container\">\n"
         "    <div class=\"bento\">\n"
-        "      <!-- Col 1: Editorial Heading Cell + Documentation Card -->\n"
+        "      <!-- Col 1: Editorial Heading Cell + Apple HIG Kit Card -->\n"
         "      <div class=\"bento__col\">\n"
         "        <div class=\"bento__heading-cell\">\n"
         "          <p class=\"eyebrow\">Overview</p>\n"
         "          <h2 class=\"bento__heading\">Everything in one place.</h2>\n"
         "          <p class=\"bento__subtext\">\n"
-        "            Selected projects, technical guides, and engineering notes with full source code on\n"
+        "            Selected projects, Apple HIG design resources, and engineering notes with full source code on\n"
         "            GitHub.\n"
         "          </p>\n"
         "        </div>\n"
+        "        <a class=\"bento__card\" href=\"/docs/apple-design-resources/\">\n"
+        "          <div class=\"bento__card-header\">\n"
+        "            <span class=\"badge badge--added\">Apple HIG Kit</span>\n"
+        "            "
+    );
+    render_icon_arrow(&body, 16);
+    buf_append_str(&body,
+        "\n          </div>\n"
+        "          <h3>Apple Design Resources</h3>\n"
+        "          <p>\n"
+        "            Official SF Symbols 27, Dynamic Type, hardware bezels (M5 MacBook, iPhone 16 Pro), and vector marks.\n"
+        "          </p>\n"
+        "        </a>\n"
         "        <a class=\"bento__card\" href=\"/docs/getting-started/\">\n"
         "          <div class=\"bento__card-header\">\n"
         "            <span class=\"badge\">Documentation</span>\n"
@@ -2080,12 +2167,16 @@ static void render_home_page(const char *out_dir) {
         "\n              </a>\n"
         "            </div>\n"
         "            <div class=\"bento__spec-item\">\n"
-        "              <span class=\"bento__spec-label\">License</span>\n"
-        "              <span class=\"bento__spec-val\">MIT Open Source</span>\n"
+        "              <span class=\"bento__spec-label\">Design System</span>\n"
+        "              <span class=\"bento__spec-val\">Apple HIG / SF Pro</span>\n"
         "            </div>\n"
         "            <div class=\"bento__spec-item\">\n"
-        "              <span class=\"bento__spec-label\">Typography</span>\n"
-        "              <span class=\"bento__spec-val\">Libron (Self-Hosted)</span>\n"
+        "              <span class=\"bento__spec-label\">Compiler</span>\n"
+        "              <span class=\"bento__spec-val\">ISO C23 (-O3 Native)</span>\n"
+        "            </div>\n"
+        "            <div class=\"bento__spec-item\">\n"
+        "              <span class=\"bento__spec-label\">Runtime Bloat</span>\n"
+        "              <span class=\"bento__spec-val\">0 Node.js / 0 npm</span>\n"
         "            </div>\n"
         "            <div class=\"bento__spec-item\">\n"
         "              <span class=\"bento__spec-label\">Tracking / Ads</span>\n"
@@ -2204,6 +2295,28 @@ static void render_home_page(const char *out_dir) {
     }
 
     buf_append_str(&body,
+        "    </div>\n"
+        "  </section>\n\n"
+        "  <section class=\"section container\">\n"
+        "    <div class=\"apple-design-showcase-card card\">\n"
+        "      <div class=\"section__head\" style=\"margin-bottom: 1.25rem;\">\n"
+        "        <div>\n"
+        "          <span class=\"badge badge--added\">Flagship HIG Experience</span>\n"
+        "          <h2 class=\"display-2\" style=\"margin-top: 0.5rem;\">Engineered to Apple Standards</h2>\n"
+        "        </div>\n"
+        "      </div>\n"
+        "      <p style=\"max-width: 680px; margin-bottom: 1.5rem; color: var(--ink-2); font-size: 1.0625rem; line-height: 1.6;\">\n"
+        "        Every component adheres to the official Apple Human Interface Guidelines: 8pt grid geometry, squircle continuous curvature, SF Pro Display &amp; Text optical sizing, SF Mono syntax, and native dark/light appearance states.\n"
+        "      </p>\n"
+        "      <div class=\"apple-design-showcase__actions\">\n"
+        "        <a class=\"btn btn--primary\" href=\"/docs/apple-design-resources/\">View Complete HIG Guide</a>\n"
+        "        <a class=\"apple-btn-siwa apple-btn-siwa--black\" href=\"/docs/apple-design-resources/#sign-in-with-apple\">\n"
+        "          <img src=\"/assets/images/apple/siwa-logo-white.svg\" alt=\"\" width=\"14\" height=\"14\">\n"
+        "          <span>Sign in with Apple</span>\n"
+        "        </a>\n"
+        "        <span class=\"apple-identity-badge\"><img src=\"/assets/images/apple/game-center-black.svg\" alt=\"\" width=\"14\" height=\"14\"> Game Center</span>\n"
+        "        <span class=\"apple-identity-badge\"><img src=\"/assets/images/apple/watch-face-dark.svg\" alt=\"\" width=\"14\" height=\"14\"> Watch Face</span>\n"
+        "      </div>\n"
         "    </div>\n"
         "  </section>\n\n"
         "  <section class=\"section container container--prose about-strip\">\n"

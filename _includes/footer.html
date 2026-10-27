@@ -3,14 +3,7 @@
     <hr class="divider">
     <div class="footer__row">
       <a class="brand" href="{{ '/' | relative_url }}" aria-label="{{ site.title }} Home">
-        <img
-          src="{{ '/assets/images/brand-icon.svg' | relative_url }}"
-          alt=""
-          width="20"
-          height="20"
-          loading="lazy"
-          decoding="async"
-        >
+        {% include icon.html name="apple" size=18 class="brand__apple-icon" %}
         <span>{{ site.title }}</span>
       </a>
       <nav class="footer__links" aria-label="Footer">

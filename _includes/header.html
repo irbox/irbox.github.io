@@ -1,13 +1,7 @@
 <header class="topnav" id="topnav">
   <div class="topnav__inner">
     <a class="brand" href="{{ '/' | relative_url }}" aria-label="{{ site.title }} home">
-      <img
-        src="{{ '/assets/images/brand-icon.svg' | relative_url }}"
-        alt=""
-        width="24"
-        height="24"
-        decoding="async"
-      >
+      {% include icon.html name="apple" size=20 class="brand__apple-icon" %}
       <span>{{ site.title }}</span>
     </a>
 
