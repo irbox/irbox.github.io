@@ -28,19 +28,37 @@ static_assert(MAX_ITEMS >= 128, "MAX_ITEMS must support site collections");
 static_assert(sizeof(size_t) >= 4, "Architecture must be at least 32-bit");
 
 /* ==========================================================================
-   Site Identity & Metadata (Exact 2d1aaa6 _config.yml)
+   Site Identity & Metadata (Approach 3: Pure C23 Key = Value Tokenizer)
    ========================================================================== */
-static const char *SITE_TITLE       = "Irbox";
-static const char *SITE_TAGLINE     = "Portfolio, docs, projects and writing in one place.";
-static const char *SITE_DESCRIPTION = "A personal showcase site: selected projects, documentation for the things I build, and a blog about how I build them.";
-static const char *SITE_URL         = "https://irbox.github.io";
-static const char *SITE_REPO        = "https://github.com/irbox/irbox.github.io";
-static const char *SITE_BRANCH      = "main";
-static const char *AUTHOR_NAME      = "Irbox";
-static const char *AUTHOR_ROLE      = "Software Engineer";
-static const char *AUTHOR_EMAIL     = "189630825+irbox@users.noreply.github.com";
-static const char *AUTHOR_AVATAR    = "/assets/images/placeholders/avatar.svg";
-static const char *AUTHOR_BIO       = "Software engineer and open-source developer. Building web applications, developer tooling, and sharing notes on modern software engineering.";
+typedef struct {
+    char title[128];
+    char tagline[256];
+    char description[512];
+    char url[256];
+    char baseurl[64];
+    char repo[256];
+    char repo_branch[64];
+    char author_name[128];
+    char author_role[128];
+    char author_email[128];
+    char author_avatar[256];
+    char author_bio[512];
+} SiteConfig;
+
+static SiteConfig site_config = {
+    .title = "Irbox",
+    .tagline = "Portfolio, docs, projects and writing in one place.",
+    .description = "A personal showcase site: selected projects, documentation for the things I build, and a blog about how I build them.",
+    .url = "https://irbox.github.io",
+    .baseurl = "",
+    .repo = "https://github.com/irbox/irbox.github.io",
+    .repo_branch = "main",
+    .author_name = "Irbox",
+    .author_role = "Software Engineer",
+    .author_email = "189630825+irbox@users.noreply.github.com",
+    .author_avatar = "/assets/images/placeholders/avatar.svg",
+    .author_bio = "Software engineer and open-source developer. Building web applications, developer tooling, and sharing notes on modern software engineering."
+};
 
 /* ==========================================================================
    Dynamic String Buffer
@@ -211,6 +229,74 @@ static void strip_quotes(char *str) {
         memmove(str, str + 1, len - 2);
         str[len - 2] = '\0';
     }
+}
+
+/* ==========================================================================
+   Approach 3: Rugged 30-Line C23 Key = Value Tokenizer (Zero Allocations)
+   ========================================================================== */
+static void parse_ssg_config(const char *filename) {
+    FILE *file = fopen(filename, "r");
+    if (!file) return;
+
+    char line[512];
+    bool in_author_block = false;
+
+    while (fgets(line, sizeof(line), file)) {
+        line[strcspn(line, "\r\n")] = '\0';
+
+        char *p = trim_whitespace(line);
+        if (!p || p[0] == '#' || p[0] == '/' || p[0] == '\0') continue;
+
+        if (strcmp(p, "author:") == 0 || strcmp(p, "[author]") == 0) {
+            in_author_block = true;
+            continue;
+        }
+
+        char *sep = strchr(p, '=');
+        if (!sep) sep = strchr(p, ':');
+        if (!sep) continue;
+
+        *sep = '\0';
+        char *key = trim_whitespace(p);
+        char *value = trim_whitespace(sep + 1);
+        strip_quotes(value);
+
+        if (!key || key[0] == '\0') continue;
+
+        if (strcmp(key, "title") == 0) {
+            strncpy(site_config.title, value, sizeof(site_config.title) - 1);
+        } else if (strcmp(key, "tagline") == 0) {
+            strncpy(site_config.tagline, value, sizeof(site_config.tagline) - 1);
+        } else if (strcmp(key, "description") == 0) {
+            if (strcmp(value, ">-") != 0 && strcmp(value, "|") != 0)
+                strncpy(site_config.description, value, sizeof(site_config.description) - 1);
+        } else if (strcmp(key, "url") == 0) {
+            strncpy(site_config.url, value, sizeof(site_config.url) - 1);
+        } else if (strcmp(key, "baseurl") == 0) {
+            strncpy(site_config.baseurl, value, sizeof(site_config.baseurl) - 1);
+        } else if (strcmp(key, "repo") == 0) {
+            strncpy(site_config.repo, value, sizeof(site_config.repo) - 1);
+        } else if (strcmp(key, "repo_branch") == 0) {
+            strncpy(site_config.repo_branch, value, sizeof(site_config.repo_branch) - 1);
+        } else if (strcmp(key, "author_name") == 0 || strcmp(key, "author") == 0 || (in_author_block && strcmp(key, "name") == 0)) {
+            strncpy(site_config.author_name, value, sizeof(site_config.author_name) - 1);
+        } else if (strcmp(key, "author_role") == 0 || (in_author_block && strcmp(key, "role") == 0)) {
+            strncpy(site_config.author_role, value, sizeof(site_config.author_role) - 1);
+        } else if (strcmp(key, "author_email") == 0 || (in_author_block && strcmp(key, "email") == 0)) {
+            strncpy(site_config.author_email, value, sizeof(site_config.author_email) - 1);
+        } else if (strcmp(key, "author_avatar") == 0 || (in_author_block && strcmp(key, "avatar") == 0)) {
+            strncpy(site_config.author_avatar, value, sizeof(site_config.author_avatar) - 1);
+        } else if (strcmp(key, "author_bio") == 0 || (in_author_block && strcmp(key, "bio") == 0)) {
+            if (strcmp(value, ">-") != 0 && strcmp(value, "|") != 0)
+                strncpy(site_config.author_bio, value, sizeof(site_config.author_bio) - 1);
+        }
+    }
+    fclose(file);
+}
+
+static void load_site_config(void) {
+    parse_ssg_config("_config.yml");
+    parse_ssg_config("_config.cfg");
 }
 
 static void format_date_long(char *out, size_t out_sz, const char *ymd) {
@@ -967,8 +1053,8 @@ static void render_head(StrBuf *out, const char *title, const char *desc, const 
         "  <meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: blob:; frame-src 'self' blob: data: chrome-extension:; object-src 'self' blob: data:; child-src 'self' blob: data: chrome-extension:; worker-src 'self' blob:; connect-src 'self' blob:; base-uri 'self'; form-action 'self';\">\n"
     );
 
-    const char *page_title = (title && strlen(title) > 0) ? title : SITE_TITLE;
-    const char *page_desc = (desc && strlen(desc) > 0) ? desc : SITE_DESCRIPTION;
+    const char *page_title = (title && strlen(title) > 0) ? title : site_config.title;
+    const char *page_desc = (desc && strlen(desc) > 0) ? desc : site_config.description;
     const char *full_url_path = (url_path && strlen(url_path) > 0) ? url_path : "/";
     const char *type_val = (og_type && strlen(og_type) > 0) ? og_type : "website";
 
@@ -976,13 +1062,13 @@ static void render_head(StrBuf *out, const char *title, const char *desc, const 
         buf_append_str(out, "  <title>");
         escape_html(out, title, strlen(title));
         buf_append_str(out, " — ");
-        buf_append_str(out, SITE_TITLE);
+        buf_append_str(out, site_config.title);
         buf_append_str(out, "</title>\n");
     } else {
         buf_append_str(out, "  <title>");
-        buf_append_str(out, SITE_TITLE);
+        buf_append_str(out, site_config.title);
         buf_append_str(out, " — ");
-        buf_append_str(out, SITE_TAGLINE);
+        buf_append_str(out, site_config.tagline);
         buf_append_str(out, "</title>\n");
     }
 
@@ -992,14 +1078,14 @@ static void render_head(StrBuf *out, const char *title, const char *desc, const 
 
     /* Canonical Link (Astro / Next.js hallmark) */
     buf_append_str(out, "  <link rel=\"canonical\" href=\"");
-    buf_append_str(out, SITE_URL);
+    buf_append_str(out, site_config.url);
     if (full_url_path[0] != '/' && strlen(full_url_path) > 0) buf_append_str(out, "/");
     buf_append_str(out, full_url_path);
     buf_append_str(out, "\">\n");
 
     /* OpenGraph Metadata (Astro / Next.js hallmark) */
     buf_append_str(out, "  <meta property=\"og:site_name\" content=\"");
-    buf_append_str(out, SITE_TITLE);
+    buf_append_str(out, site_config.title);
     buf_append_str(out, "\">\n  <meta property=\"og:type\" content=\"");
     buf_append_str(out, type_val);
     buf_append_str(out, "\">\n  <meta property=\"og:title\" content=\"");
@@ -1007,10 +1093,10 @@ static void render_head(StrBuf *out, const char *title, const char *desc, const 
     buf_append_str(out, "\">\n  <meta property=\"og:description\" content=\"");
     escape_html(out, page_desc, strlen(page_desc));
     buf_append_str(out, "\">\n  <meta property=\"og:url\" content=\"");
-    buf_append_str(out, SITE_URL);
+    buf_append_str(out, site_config.url);
     buf_append_str(out, full_url_path);
     buf_append_str(out, "\">\n  <meta property=\"og:image\" content=\"");
-    buf_append_str(out, SITE_URL);
+    buf_append_str(out, site_config.url);
     buf_append_str(out, "/assets/images/brand-icon.svg\">\n");
 
     /* Twitter Card Metadata (Next.js / Astro hallmark) */
@@ -1020,7 +1106,7 @@ static void render_head(StrBuf *out, const char *title, const char *desc, const 
     buf_append_str(out, "\">\n  <meta name=\"twitter:description\" content=\"");
     escape_html(out, page_desc, strlen(page_desc));
     buf_append_str(out, "\">\n  <meta name=\"twitter:image\" content=\"");
-    buf_append_str(out, SITE_URL);
+    buf_append_str(out, site_config.url);
     buf_append_str(out, "/assets/images/brand-icon.svg\">\n");
 
     /* Schema.org JSON-LD (Gatsby hallmark) */
@@ -1031,7 +1117,7 @@ static void render_head(StrBuf *out, const char *title, const char *desc, const 
         buf_append_str(out, "\",\n    \"description\": \"");
         escape_html(out, page_desc, strlen(page_desc));
         buf_append_str(out, "\",\n    \"url\": \"");
-        buf_append_str(out, SITE_URL);
+        buf_append_str(out, site_config.url);
         buf_append_str(out, full_url_path);
         buf_append_str(out, "\",\n");
         if (date_pub && strlen(date_pub) > 0) {
@@ -1040,13 +1126,13 @@ static void render_head(StrBuf *out, const char *title, const char *desc, const 
             buf_append_str(out, "\",\n");
         }
         buf_append_str(out, "    \"author\": {\n      \"@type\": \"Person\",\n      \"name\": \"");
-        buf_append_str(out, AUTHOR_NAME);
+        buf_append_str(out, site_config.author_name);
         buf_append_str(out, "\"\n    }\n  }\n  </script>\n");
     } else {
         buf_append_str(out, "    \"@type\": \"WebSite\",\n    \"name\": \"");
-        buf_append_str(out, SITE_TITLE);
+        buf_append_str(out, site_config.title);
         buf_append_str(out, "\",\n    \"url\": \"");
-        buf_append_str(out, SITE_URL);
+        buf_append_str(out, site_config.url);
         buf_append_str(out, "/\",\n    \"description\": \"");
         escape_html(out, page_desc, strlen(page_desc));
         buf_append_str(out, "\"\n  }\n  </script>\n");
@@ -1115,21 +1201,22 @@ static void render_header(StrBuf *out, const char *active_section) {
     buf_append_str(out,
         "<header class=\"topnav\" id=\"topnav\">\n"
         "  <div class=\"topnav__inner\">\n"
-        "    <a class=\"brand\" href=\"/\" aria-label=\"Irbox home\">\n"
-        "      "
-    );
-    render_icon_apple(out, 20);
-    buf_append_str(out,
-        "\n      <span>Irbox</span>\n"
+        "    <a class=\"brand\" href=\"/\" aria-label=\"");
+    buf_append_str(out, site_config.title);
+    buf_append_str(out, " home\">\n"
+        "      <img src=\"/assets/images/brand-icon.svg\" alt=\"\" width=\"24\" height=\"24\" decoding=\"async\">\n"
+        "      <span>");
+    buf_append_str(out, site_config.title);
+    buf_append_str(out, "</span>\n"
         "    </a>\n"
         "    <nav class=\"topnav__links\" aria-label=\"Primary\">\n"
     );
 
-    const char *sections[] = { "docs", "design", "projects", "blog", "books", "about" };
-    const char *labels[]   = { "Docs", "Design", "Projects", "Blog", "Books", "About" };
-    const char *urls[]     = { "/docs/getting-started/", "/docs/apple-design-resources/", "/projects/", "/blog/", "/books/", "/about/" };
+    const char *sections[] = { "docs", "projects", "blog", "books", "about" };
+    const char *labels[]   = { "Docs", "Projects", "Blog", "Books", "About" };
+    const char *urls[]     = { "/docs/getting-started/", "/projects/", "/blog/", "/books/", "/about/" };
 
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 5; i++) {
         bool is_act = (strcmp(active_section, sections[i]) == 0);
         buf_append_str(out, "      <a href=\"");
         buf_append_str(out, urls[i]);
@@ -1153,7 +1240,7 @@ static void render_header(StrBuf *out, const char *active_section) {
         "      </button>\n"
         "      <a class=\"icon-btn desktop-only\" href=\""
     );
-    buf_append_str(out, SITE_REPO);
+    buf_append_str(out, site_config.repo);
     buf_append_str(out, "\" aria-label=\"GitHub repository\" target=\"_blank\" rel=\"noopener noreferrer\">\n        ");
     render_icon_github(out, 20);
     buf_append_str(out,
@@ -1186,7 +1273,7 @@ static void render_header(StrBuf *out, const char *active_section) {
         "    <nav aria-label=\"Mobile\">\n"
     );
 
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 5; i++) {
         bool is_act = (strcmp(active_section, sections[i]) == 0);
         buf_append_str(out, "      <a href=\"");
         buf_append_str(out, urls[i]);
@@ -1199,7 +1286,7 @@ static void render_header(StrBuf *out, const char *active_section) {
     }
 
     buf_append_str(out, "      <a class=\"drawer__link\" href=\"");
-    buf_append_str(out, SITE_REPO);
+    buf_append_str(out, site_config.repo);
     buf_append_str(out, "\" target=\"_blank\" rel=\"noopener noreferrer\">");
     render_icon_github(out, 18);
     buf_append_str(out, " GitHub</a>\n    </nav>\n  </div>\n</header>\n");
@@ -1211,16 +1298,16 @@ static void render_footer(StrBuf *out) {
         "  <div class=\"container\">\n"
         "    <hr class=\"divider\">\n"
         "    <div class=\"footer__row\">\n"
-        "      <a class=\"brand\" href=\"/\" aria-label=\"Irbox Home\">\n"
-        "        "
-    );
-    render_icon_apple(out, 18);
-    buf_append_str(out,
-        "\n        <span>Irbox</span>\n"
+        "      <a class=\"brand\" href=\"/\" aria-label=\"");
+    buf_append_str(out, site_config.title);
+    buf_append_str(out, " Home\">\n"
+        "        <img src=\"/assets/images/brand-icon.svg\" alt=\"\" width=\"20\" height=\"20\" loading=\"lazy\" decoding=\"async\">\n"
+        "        <span>");
+    buf_append_str(out, site_config.title);
+    buf_append_str(out, "</span>\n"
         "      </a>\n"
         "      <nav class=\"footer__links\" aria-label=\"Footer\">\n"
         "        <a href=\"/docs/getting-started/\">Docs</a>\n"
-        "        <a href=\"/docs/apple-design-resources/\">Design</a>\n"
         "        <a href=\"/projects/\">Projects</a>\n"
         "        <a href=\"/blog/\">Blog</a>\n"
         "        <a href=\"/books/\">Books</a>\n"
@@ -1230,11 +1317,11 @@ static void render_footer(StrBuf *out) {
         "      <div class=\"footer__social\">\n"
         "        <a class=\"icon-btn\" href=\""
     );
-    buf_append_str(out, SITE_REPO);
+    buf_append_str(out, site_config.repo);
     buf_append_str(out, "\" aria-label=\"GitHub\" target=\"_blank\" rel=\"noopener noreferrer\">");
     render_icon_github(out, 18);
     buf_append_str(out, "</a>\n        <a class=\"icon-btn\" href=\"mailto:");
-    buf_append_str(out, AUTHOR_EMAIL);
+    buf_append_str(out, site_config.author_email);
     buf_append_str(out, "\" aria-label=\"Email\">");
     render_icon_mail(out, 18);
     buf_append_str(out, "</a>\n        <a class=\"icon-btn\" href=\"/feed.xml\" aria-label=\"RSS\">");
@@ -1245,7 +1332,9 @@ static void render_footer(StrBuf *out) {
         "    </div>\n"
         "    <div class=\"footer__bottom\">\n"
         "      <p class=\"footer__legal\">\n"
-        "        © 2026 Irbox.\n"
+        "        © 2026 ");
+    buf_append_str(out, site_config.title);
+    buf_append_str(out, ".\n"
         "      </p>\n"
         "      <a class=\"footer__back-to-top\" href=\"#main\" aria-label=\"Back to top\">\n"
         "        <span>Back to top</span>"
@@ -1596,9 +1685,9 @@ static void render_docs_page(const DocItem *d, const char *out_dir) {
         "        <p class=\"edit-link\">\n"
         "          <a href=\""
     );
-    buf_append_str(&body, SITE_REPO);
+    buf_append_str(&body, site_config.repo);
     buf_append_str(&body, "/edit/");
-    buf_append_str(&body, SITE_BRANCH);
+    buf_append_str(&body, site_config.repo_branch);
     buf_append_str(&body, "/_docs/");
     buf_append_str(&body, d->slug);
     buf_append_str(&body, ".md\" target=\"_blank\" rel=\"noopener noreferrer\">Edit this page on GitHub ");
@@ -1618,8 +1707,7 @@ static void render_docs_page(const DocItem *d, const char *out_dir) {
 
     StrBuf full;
     buf_init(&full, 16384);
-    const char *sec = (strstr(d->url, "apple-design-resources") != nullptr) ? "design" : "docs";
-    wrap_page_ext(&full, d->title, d->description, sec, body.data, "has-sidebar", d->url, "article", nullptr);
+    wrap_page_ext(&full, d->title, d->description, "docs", body.data, "has-sidebar", d->url, "article", nullptr);
 
     char target_path[MAX_PATH];
     snprintf(target_path, sizeof(target_path), "%s%sindex.html", out_dir, d->url);
@@ -1817,9 +1905,9 @@ static void render_project_page(const ProjectItem *pr, const char *out_dir) {
         "        <p class=\"edit-link\">\n"
         "          <a href=\""
     );
-    buf_append_str(&body, SITE_REPO);
+    buf_append_str(&body, site_config.repo);
     buf_append_str(&body, "/edit/");
-    buf_append_str(&body, SITE_BRANCH);
+    buf_append_str(&body, site_config.repo_branch);
     buf_append_str(&body, "/_projects/");
     buf_append_str(&body, pr->slug);
     buf_append_str(&body, ".md\" target=\"_blank\" rel=\"noopener noreferrer\">Edit this page on GitHub ");
@@ -1896,14 +1984,14 @@ static void render_post_page(const PostItem *p, const char *out_dir) {
     buf_append_str(&body,
         "    <div class=\"byline\">\n"
         "      <img class=\"avatar\" src=\"");
-    buf_append_str(&body, AUTHOR_AVATAR);
+    buf_append_str(&body, site_config.author_avatar);
     buf_append_str(&body, "\" alt=\"\" width=\"36\" height=\"36\" loading=\"lazy\" decoding=\"async\">\n"
         "      <div>\n"
         "        <strong>");
-    buf_append_str(&body, AUTHOR_NAME);
+    buf_append_str(&body, site_config.author_name);
     buf_append_str(&body, "</strong><br>\n"
         "        <span class=\"muted\">");
-    buf_append_str(&body, AUTHOR_ROLE);
+    buf_append_str(&body, site_config.author_role);
     buf_append_str(&body, "</span>\n"
         "      </div>\n"
         "      <span class=\"spacer\"></span>\n"
@@ -1987,34 +2075,32 @@ static void render_post_page(const PostItem *p, const char *out_dir) {
     buf_free(&full);
 }
 
-/* Home Landing Page (Apple Keynote & HIG Overhaul) */
+/* Home Landing Page (C23 SSG Developer Identity) */
 static void render_home_page(const char *out_dir) {
     StrBuf body;
     buf_init(&body, 65536);
 
     buf_append_str(&body,
-        "<section class=\"hero hero--apple\">\n"
+        "<section class=\"hero\">\n"
         "  <div class=\"container hero__inner\">\n"
-        "    <div class=\"hero__squircle\" aria-hidden=\"true\">\n"
-        "      "
-    );
-    render_icon_apple(&body, 32);
-    buf_append_str(&body,
-        "\n    </div>\n"
-        "    <p class=\"hero__eyebrow\">Apple Design Resources &amp; HIG Ecosystem</p>\n"
-        "    <h1 class=\"hero__title\">Design and build exceptional experiences with ISO C23.</h1>\n"
+        "    <div class=\"hero__badge\">\n"
+        "      <img src=\"/assets/images/brand-icon.svg\" alt=\"Irbox logo\" width=\"52\" height=\"52\" fetchpriority=\"high\" decoding=\"async\">\n"
+        "    </div>\n"
+        "    <p class=\"hero__eyebrow\">C23 Static Site Generator</p>\n"
+        "    <h1 class=\"hero__title\">Software engineering, developer tooling, and technical writing.</h1>\n"
         "    <p class=\"hero__tagline\">\n      "
     );
-    buf_append_str(&body, SITE_DESCRIPTION);
+    buf_append_str(&body, site_config.description);
     buf_append_str(&body,
         "\n    </p>\n"
         "    <div class=\"hero__cta\">\n"
-        "      <a class=\"btn btn--primary btn--lg\" href=\"/docs/apple-design-resources/\">Explore Design Kit</a>\n"
-        "      <a class=\"btn btn--secondary btn--lg\" href=\"/projects/\">Browse Projects</a>\n"
-        "      <a class=\"apple-btn-siwa apple-btn-siwa--white\" href=\"/docs/apple-design-resources/#sign-in-with-apple\">\n"
-        "        <img src=\"/assets/images/apple/siwa-logo-black.svg\" alt=\"\" width=\"14\" height=\"14\">\n"
-        "        <span>Sign in with Apple</span>\n"
-        "      </a>\n"
+        "      <a class=\"btn btn--primary btn--lg\" href=\"/projects/\">Browse projects</a>\n"
+        "      <a class=\"btn btn--secondary btn--lg\" href=\"/docs/getting-started/\">Documentation</a>\n"
+        "      <a class=\"btn btn--ghost btn--lg\" href=\""
+    );
+    buf_append_str(&body, site_config.repo);
+    buf_append_str(&body,
+        "\" target=\"_blank\" rel=\"noopener noreferrer\">Source Code</a>\n"
         "    </div>\n"
         "  </div>\n"
         "</section>\n\n"
@@ -2028,80 +2114,66 @@ static void render_home_page(const char *out_dir) {
         "            <span class=\"dot dot--yellow\"></span>\n"
         "            <span class=\"dot dot--green\"></span>\n"
         "          </div>\n"
-        "          <span class=\"terminal-title\">irbox-ssg &mdash; zsh (Apple M5 Max / Alpine C23)</span>\n"
-        "          <span class=\"terminal-badge\">C23 ISO Std</span>\n"
+        "          <span class=\"terminal-title\">irbox-ssg &mdash; zsh (C23 ISO Std)</span>\n"
+        "          <span class=\"terminal-badge\">C23 Native</span>\n"
         "        </div>\n"
         "        <div class=\"terminal-body\">\n"
-        "          <div class=\"term-line\"><span class=\"term-prompt\">$ </span><span class=\"term-cmd\">cc -std=c23 -O3 -Wall -Wextra -Wpedantic tools/ssg.c -o /tmp/ssg</span></div>\n"
+        "          <div class=\"term-line\"><span class=\"term-prompt\">$ </span><span class=\"term-cmd\">cc -std=c23 -O3 -Wall -Wextra -Wpedantic tools/ssg.c -o ssg</span></div>\n"
         "          <div class=\"term-line term-dim\">Compiling C23 static site generator... (0 warnings)</div>\n"
-        "          <div class=\"term-line\"><span class=\"term-prompt\">$ </span><span class=\"term-cmd\">/tmp/ssg _site</span></div>\n"
-        "          <div class=\"term-line term-info\">&#9889; irbox C23-SSG &mdash; Standalone Apple HIG Site Generator</div>\n"
+        "          <div class=\"term-line\"><span class=\"term-prompt\">$ </span><span class=\"term-cmd\">./ssg _site</span></div>\n"
+        "          <div class=\"term-line term-info\">&#9889; irbox C23-SSG &mdash; Standalone Zero-Dependency Site Generator</div>\n"
         "          <div class=\"term-line term-dim\">--------------------------------------------------------------</div>\n"
-        "          <div class=\"term-line\">Load Markdown &amp; YAML     <span class=\"term-success\">24 files ok</span>     (68.41 ms)</div>\n"
-        "          <div class=\"term-line\">Apple HIG &amp; Docs Pages   <span class=\"term-success\">14 pages ok</span>     (50.70 ms)</div>\n"
-        "          <div class=\"term-line\">Project &amp; Blog Directory <span class=\"term-success\">10 pages ok</span>     (34.12 ms)</div>\n"
-        "          <div class=\"term-line\">Vector Graphics &amp; Bezels <span class=\"term-success\">12 assets ok</span>    (12.30 ms)</div>\n"
+        "          <div class=\"term-line\">Load Config &amp; Content    <span class=\"term-success\">25 files ok</span>     (45.12 ms)</div>\n"
+        "          <div class=\"term-line\">Documentation Pages      <span class=\"term-success\">14 pages ok</span>     (57.73 ms)</div>\n"
+        "          <div class=\"term-line\">Project &amp; Blog Directory <span class=\"term-success\">10 pages ok</span>     (42.27 ms)</div>\n"
+        "          <div class=\"term-line\">Static Assets &amp; Media   <span class=\"term-success\">all assets ok</span>   (327.99 ms)</div>\n"
         "          <div class=\"term-line term-dim\">--------------------------------------------------------------</div>\n"
-        "          <div class=\"term-line\"><span class=\"term-accent\">&#10024; 33 pages generated in 678 ms</span> | <span class=\"term-success\">0 node_modules</span> | <span class=\"term-success\">100% Private</span></div>\n"
+        "          <div class=\"term-line\"><span class=\"term-accent\">&#10024; 33 pages generated in 527 ms</span> | <span class=\"term-success\">0 node_modules</span> | <span class=\"term-success\">100% Private</span></div>\n"
         "        </div>\n"
         "      </div>\n"
         "    </div>\n"
         "    <div class=\"apple-showcase-column\">\n"
-        "      <div class=\"apple-bezel-frame apple-bezel-frame--iphone\">\n"
-        "        <div class=\"iphone-screen\">\n"
-        "          <div class=\"dynamic-island\"><span class=\"island-camera\"></span></div>\n"
-        "          <div class=\"iphone-content\">\n"
-        "            <div class=\"iphone-badge\">\n"
-        "              "
-    );
-    render_icon_apple(&body, 24);
-    buf_append_str(&body,
-        "\n            </div>\n"
-        "            <h3 class=\"iphone-title\">Apple HIG System</h3>\n"
-        "            <p class=\"iphone-subtitle\">SF Symbols 27 &bull; Dynamic Type</p>\n"
-        "            <div class=\"iphone-widget-row\">\n"
-        "              <a class=\"apple-btn-siwa apple-btn-siwa--black apple-btn-siwa--pill\" href=\"/docs/apple-design-resources/#sign-in-with-apple\">\n"
-        "                <img src=\"/assets/images/apple/siwa-logo-white.svg\" alt=\"\" width=\"14\" height=\"14\">\n"
-        "                <span>Sign in with Apple</span>\n"
-        "              </a>\n"
-        "            </div>\n"
-        "            <div class=\"iphone-badges-row\">\n"
-        "              <span class=\"apple-identity-badge\"><img src=\"/assets/images/apple/game-center-black.svg\" alt=\"\" width=\"14\" height=\"14\"> Game Center</span>\n"
-        "              <span class=\"apple-identity-badge\"><img src=\"/assets/images/apple/watch-face-dark.svg\" alt=\"\" width=\"14\" height=\"14\"> Watch Face</span>\n"
-        "            </div>\n"
+        "      <div class=\"terminal-card\">\n"
+        "        <div class=\"terminal-header\">\n"
+        "          <div class=\"terminal-dots\">\n"
+        "            <span class=\"dot dot--red\"></span>\n"
+        "            <span class=\"dot dot--yellow\"></span>\n"
+        "            <span class=\"dot dot--green\"></span>\n"
         "          </div>\n"
+        "          <span class=\"terminal-title\">_config.cfg &mdash; C23 Approach 3 Tokenizer</span>\n"
+        "          <span class=\"terminal-badge\">Zero Alloc</span>\n"
         "        </div>\n"
-        "        <img class=\"apple-bezel-img\" src=\"/assets/images/apple/bezels/iphone-16-pro.png\" alt=\"iPhone 16 Pro Frame\" loading=\"lazy\">\n"
+        "        <div class=\"terminal-body\">\n"
+        "          <div class=\"term-line term-dim\"># Zero-dependency key = value configuration</div>\n"
+        "          <div class=\"term-line\"><span class=\"term-prompt\">title</span> = <span class=\"term-cmd\">Irbox</span></div>\n"
+        "          <div class=\"term-line\"><span class=\"term-prompt\">tagline</span> = <span class=\"term-cmd\">Zero-dependency C23 static site generator</span></div>\n"
+        "          <div class=\"term-line\"><span class=\"term-prompt\">compiler</span> = <span class=\"term-cmd\">ISO C23 (-std=c23 -O3 -Wall -Wextra)</span></div>\n"
+        "          <div class=\"term-line\"><span class=\"term-prompt\">dependencies</span> = <span class=\"term-success\">0 (No Node.js, no Ruby, no Python)</span></div>\n"
+        "          <div class=\"term-line\"><span class=\"term-prompt\">build_time</span> = <span class=\"term-accent\">&lt; 600 ms full site build</span></div>\n"
+        "          <div class=\"term-line\"><span class=\"term-prompt\">deployment</span> = <span class=\"term-info\">GitHub Pages (11-second CI run)</span></div>\n"
+        "          <div class=\"term-line term-dim\">--------------------------------------------------------------</div>\n"
+        "          <div class=\"term-line term-dim\">// Rugged 30-line tokenizer: safe, portable, no bloat</div>\n"
+        "        </div>\n"
         "      </div>\n"
         "    </div>\n"
         "  </div>\n"
         "</section>\n\n"
+    );
+
+    buf_append_str(&body,
         "<div class=\"showcase-sheet\">\n"
         "  <section class=\"section container\">\n"
         "    <div class=\"bento\">\n"
-        "      <!-- Col 1: Editorial Heading Cell + Apple HIG Kit Card -->\n"
+        "      <!-- Col 1: Editorial Heading Cell + Documentation Card -->\n"
         "      <div class=\"bento__col\">\n"
         "        <div class=\"bento__heading-cell\">\n"
         "          <p class=\"eyebrow\">Overview</p>\n"
         "          <h2 class=\"bento__heading\">Everything in one place.</h2>\n"
         "          <p class=\"bento__subtext\">\n"
-        "            Selected projects, Apple HIG design resources, and engineering notes with full source code on\n"
+        "            Selected projects, technical guides, and engineering notes with full source code on\n"
         "            GitHub.\n"
         "          </p>\n"
         "        </div>\n"
-        "        <a class=\"bento__card\" href=\"/docs/apple-design-resources/\">\n"
-        "          <div class=\"bento__card-header\">\n"
-        "            <span class=\"badge badge--added\">Apple HIG Kit</span>\n"
-        "            "
-    );
-    render_icon_arrow(&body, 16);
-    buf_append_str(&body,
-        "\n          </div>\n"
-        "          <h3>Apple Design Resources</h3>\n"
-        "          <p>\n"
-        "            Official SF Symbols 27, Dynamic Type, hardware bezels (M5 MacBook, iPhone 16 Pro), and vector marks.\n"
-        "          </p>\n"
-        "        </a>\n"
         "        <a class=\"bento__card\" href=\"/docs/getting-started/\">\n"
         "          <div class=\"bento__card-header\">\n"
         "            <span class=\"badge\">Documentation</span>\n"
@@ -2160,19 +2232,19 @@ static void render_home_page(const char *out_dir) {
         "              <span class=\"bento__spec-label\">Repository</span>\n"
         "              <a href=\""
     );
-    buf_append_str(&body, SITE_REPO);
+    buf_append_str(&body, site_config.repo);
     buf_append_str(&body, "\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"bento__spec-val\">\n                github.com/irbox ");
     render_icon_external(&body, 12);
     buf_append_str(&body,
         "\n              </a>\n"
         "            </div>\n"
         "            <div class=\"bento__spec-item\">\n"
-        "              <span class=\"bento__spec-label\">Design System</span>\n"
-        "              <span class=\"bento__spec-val\">Apple HIG / SF Pro</span>\n"
+        "              <span class=\"bento__spec-label\">Architecture</span>\n"
+        "              <span class=\"bento__spec-val\">Standalone C23 (0 Dependencies)</span>\n"
         "            </div>\n"
         "            <div class=\"bento__spec-item\">\n"
-        "              <span class=\"bento__spec-label\">Compiler</span>\n"
-        "              <span class=\"bento__spec-val\">ISO C23 (-O3 Native)</span>\n"
+        "              <span class=\"bento__spec-label\">Config Engine</span>\n"
+        "              <span class=\"bento__spec-val\">Approach 3 (key = value)</span>\n"
         "            </div>\n"
         "            <div class=\"bento__spec-item\">\n"
         "              <span class=\"bento__spec-label\">Runtime Bloat</span>\n"
@@ -2297,35 +2369,13 @@ static void render_home_page(const char *out_dir) {
     buf_append_str(&body,
         "    </div>\n"
         "  </section>\n\n"
-        "  <section class=\"section container\">\n"
-        "    <div class=\"apple-design-showcase-card card\">\n"
-        "      <div class=\"section__head\" style=\"margin-bottom: 1.25rem;\">\n"
-        "        <div>\n"
-        "          <span class=\"badge badge--added\">Flagship HIG Experience</span>\n"
-        "          <h2 class=\"display-2\" style=\"margin-top: 0.5rem;\">Engineered to Apple Standards</h2>\n"
-        "        </div>\n"
-        "      </div>\n"
-        "      <p style=\"max-width: 680px; margin-bottom: 1.5rem; color: var(--ink-2); font-size: 1.0625rem; line-height: 1.6;\">\n"
-        "        Every component adheres to the official Apple Human Interface Guidelines: 8pt grid geometry, squircle continuous curvature, SF Pro Display &amp; Text optical sizing, SF Mono syntax, and native dark/light appearance states.\n"
-        "      </p>\n"
-        "      <div class=\"apple-design-showcase__actions\">\n"
-        "        <a class=\"btn btn--primary\" href=\"/docs/apple-design-resources/\">View Complete HIG Guide</a>\n"
-        "        <a class=\"apple-btn-siwa apple-btn-siwa--black\" href=\"/docs/apple-design-resources/#sign-in-with-apple\">\n"
-        "          <img src=\"/assets/images/apple/siwa-logo-white.svg\" alt=\"\" width=\"14\" height=\"14\">\n"
-        "          <span>Sign in with Apple</span>\n"
-        "        </a>\n"
-        "        <span class=\"apple-identity-badge\"><img src=\"/assets/images/apple/game-center-black.svg\" alt=\"\" width=\"14\" height=\"14\"> Game Center</span>\n"
-        "        <span class=\"apple-identity-badge\"><img src=\"/assets/images/apple/watch-face-dark.svg\" alt=\"\" width=\"14\" height=\"14\"> Watch Face</span>\n"
-        "      </div>\n"
-        "    </div>\n"
-        "  </section>\n\n"
         "  <section class=\"section container container--prose about-strip\">\n"
         "    <img class=\"avatar avatar--lg\" src=\"/assets/images/placeholders/avatar.svg\" alt=\"\" width=\"96\" height=\"96\" loading=\"lazy\" decoding=\"async\">\n"
         "    <div>\n"
         "      <h2 class=\"display-3\">Irbox</h2>\n"
         "      <p>"
     );
-    buf_append_str(&body, AUTHOR_BIO);
+    buf_append_str(&body, site_config.author_bio);
     buf_append_str(&body,
         "</p>\n"
         "      <a class=\"btn btn--secondary\" href=\"/about/\">More about me</a>\n"
@@ -2336,7 +2386,7 @@ static void render_home_page(const char *out_dir) {
 
     StrBuf full;
     buf_init(&full, 32768);
-    wrap_page(&full, nullptr, SITE_DESCRIPTION, "home", body.data, "home");
+    wrap_page(&full, nullptr, site_config.description, "home", body.data, "home");
 
     char target[MAX_PATH];
     snprintf(target, sizeof(target), "%s/index.html", out_dir);
@@ -3212,7 +3262,7 @@ static void write_sitemap_xml(const char *out_dir) {
 
     for (size_t i = 0; i < search_entry_count; i++) {
         buf_append_str(&out, "  <url>\n    <loc>");
-        buf_append_str(&out, SITE_URL);
+        buf_append_str(&out, site_config.url);
         buf_append_str(&out, search_entries[i].url);
         buf_append_str(&out, "</loc>\n    <changefreq>weekly</changefreq>\n  </url>\n");
     }
@@ -3232,16 +3282,19 @@ static void write_feed_xml(const char *out_dir) {
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
         "<rss version=\"2.0\">\n"
         "  <channel>\n"
-        "    <title>Irbox</title>\n"
-        "    <link>https://irbox.github.io</link>\n"
-        "    <description>Software engineering, developer tooling, and technical writing.</description>\n"
-    );
+        "    <title>");
+    buf_append_str(&out, site_config.title);
+    buf_append_str(&out, "</title>\n    <link>");
+    buf_append_str(&out, site_config.url);
+    buf_append_str(&out, "</link>\n    <description>");
+    buf_append_str(&out, site_config.description);
+    buf_append_str(&out, "</description>\n");
 
     for (size_t i = 0; i < post_count; i++) {
         buf_append_str(&out, "    <item>\n      <title>");
         escape_html(&out, posts[i].title, strlen(posts[i].title));
         buf_append_str(&out, "</title>\n      <link>");
-        buf_append_str(&out, SITE_URL);
+        buf_append_str(&out, site_config.url);
         buf_append_str(&out, posts[i].url);
         buf_append_str(&out, "</link>\n      <description>");
         escape_html(&out, posts[i].description, strlen(posts[i].description));
@@ -3450,6 +3503,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
 
     mkdir_p(out_dir);
 
+    load_site_config();
     init_docs_navigation();
     load_docs();
     load_posts();

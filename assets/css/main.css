@@ -5035,15 +5035,15 @@ body.reader-page main#main {
 
 .apple-showcase-grid {
   display: grid;
-  grid-template-columns: 1.35fr 0.9fr;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
   gap: var(--space-6);
-  align-items: center;
+  align-items: stretch;
 }
 
 @media (max-width: 900px) {
   .apple-showcase-grid {
     grid-template-columns: 1fr;
-    gap: var(--space-8);
+    gap: var(--space-6);
   }
 }
 
@@ -5143,105 +5143,6 @@ body.reader-page main#main {
 
 .term-accent {
   color: var(--warning);
-}
-
-.iphone-screen {
-  position: absolute;
-  top: 2%;
-  left: 4%;
-  right: 4%;
-  bottom: 2%;
-  background: var(--bg-surface);
-  border-radius: 46px;
-  overflow: hidden;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.dynamic-island {
-  position: absolute;
-  top: 14px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 110px;
-  height: 28px;
-  background: #000000;
-  border-radius: 20px;
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding-right: 12px;
-}
-
-.island-camera {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #111a2e;
-  border: 1px solid #1c2b48;
-}
-
-.iphone-content {
-  padding: 3.25rem 1.25rem 1.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  text-align: center;
-}
-
-.iphone-badge {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #0071e3, #5e5ce6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  margin-bottom: 12px;
-  box-shadow: 0 4px 14px rgba(0, 113, 227, 0.35);
-}
-
-.iphone-title {
-  font-size: 1.125rem;
-  font-weight: 700;
-  margin: 0 0 4px;
-  color: var(--ink);
-}
-
-.iphone-subtitle {
-  font-size: 0.75rem;
-  color: var(--ink-2);
-  margin: 0 0 16px;
-}
-
-.iphone-widget-row {
-  margin-bottom: 12px;
-  width: 100%;
-}
-
-.iphone-widget-row .apple-btn-siwa {
-  width: 100%;
-  justify-content: center;
-  font-size: 0.8125rem;
-  padding: 8px 12px;
-}
-
-.iphone-badges-row {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
-}
-
-.iphone-badges-row .apple-identity-badge {
-  font-size: 0.75rem;
-  padding: 6px 10px;
-  justify-content: center;
 }
 
 /* Apple Design Showcase Card */

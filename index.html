@@ -3,23 +3,27 @@ layout: default
 body_class: home
 ---
 {%- assign featured = site.projects | where: 'featured', true | sort: 'order' -%}
-<section class="hero hero--apple">
+<section class="hero">
   <div class="container hero__inner">
-    <div class="hero__squircle" aria-hidden="true">
-      {% include icon.html name="apple" size=32 %}
+    <div class="hero__badge">
+      <img
+        src="{{ '/assets/images/brand-icon.svg' | relative_url }}"
+        alt="{{ site.title }} logo"
+        width="52"
+        height="52"
+        fetchpriority="high"
+        decoding="async"
+      >
     </div>
-    <p class="hero__eyebrow">Apple Design Resources &amp; HIG Ecosystem</p>
-    <h1 class="hero__title">Design and build exceptional experiences with ISO C23.</h1>
+    <p class="hero__eyebrow">C23 Static Site Generator</p>
+    <h1 class="hero__title">Software engineering, developer tooling, and technical writing.</h1>
     <p class="hero__tagline">
       {{ site.description }}
     </p>
     <div class="hero__cta">
-      <a class="btn btn--primary btn--lg" href="{{ '/docs/apple-design-resources/' | relative_url }}">Explore Design Kit</a>
-      <a class="btn btn--secondary btn--lg" href="{{ '/projects/' | relative_url }}">Browse Projects</a>
-      <a class="apple-btn-siwa apple-btn-siwa--white" href="{{ '/docs/apple-design-resources/#sign-in-with-apple' | relative_url }}">
-        <img src="{{ '/assets/images/apple/siwa-logo-black.svg' | relative_url }}" alt="" width="14" height="14">
-        <span>Sign in with Apple</span>
-      </a>
+      <a class="btn btn--primary btn--lg" href="{{ '/projects/' | relative_url }}">Browse projects</a>
+      <a class="btn btn--secondary btn--lg" href="{{ '/docs/getting-started/' | relative_url }}">Documentation</a>
+      <a class="btn btn--ghost btn--lg" href="{{ site.repo }}" target="_blank" rel="noopener noreferrer">Source Code</a>
     </div>
   </div>
 </section>
@@ -34,47 +38,46 @@ body_class: home
             <span class="dot dot--yellow"></span>
             <span class="dot dot--green"></span>
           </div>
-          <span class="terminal-title">irbox-ssg &mdash; zsh (Apple M5 Max / Alpine C23)</span>
-          <span class="terminal-badge">C23 ISO Std</span>
+          <span class="terminal-title">irbox-ssg &mdash; zsh (C23 ISO Std)</span>
+          <span class="terminal-badge">C23 Native</span>
         </div>
         <div class="terminal-body">
-          <div class="term-line"><span class="term-prompt">$ </span><span class="term-cmd">cc -std=c23 -O3 -Wall -Wextra -Wpedantic tools/ssg.c -o /tmp/ssg</span></div>
+          <div class="term-line"><span class="term-prompt">$ </span><span class="term-cmd">cc -std=c23 -O3 -Wall -Wextra -Wpedantic tools/ssg.c -o ssg</span></div>
           <div class="term-line term-dim">Compiling C23 static site generator... (0 warnings)</div>
-          <div class="term-line"><span class="term-prompt">$ </span><span class="term-cmd">/tmp/ssg _site</span></div>
-          <div class="term-line term-info">&#9889; irbox C23-SSG &mdash; Standalone Apple HIG Site Generator</div>
+          <div class="term-line"><span class="term-prompt">$ </span><span class="term-cmd">./ssg _site</span></div>
+          <div class="term-line term-info">&#9889; irbox C23-SSG &mdash; Standalone Zero-Dependency Site Generator</div>
           <div class="term-line term-dim">--------------------------------------------------------------</div>
-          <div class="term-line">Load Markdown &amp; YAML     <span class="term-success">24 files ok</span>     (68.41 ms)</div>
-          <div class="term-line">Apple HIG &amp; Docs Pages   <span class="term-success">14 pages ok</span>     (50.70 ms)</div>
-          <div class="term-line">Project &amp; Blog Directory <span class="term-success">10 pages ok</span>     (34.12 ms)</div>
-          <div class="term-line">Vector Graphics &amp; Bezels <span class="term-success">12 assets ok</span>    (12.30 ms)</div>
+          <div class="term-line">Load Config &amp; Content    <span class="term-success">25 files ok</span>     (45.12 ms)</div>
+          <div class="term-line">Documentation Pages      <span class="term-success">14 pages ok</span>     (57.73 ms)</div>
+          <div class="term-line">Project &amp; Blog Directory <span class="term-success">10 pages ok</span>     (42.27 ms)</div>
+          <div class="term-line">Static Assets &amp; Media   <span class="term-success">all assets ok</span>   (327.99 ms)</div>
           <div class="term-line term-dim">--------------------------------------------------------------</div>
-          <div class="term-line"><span class="term-accent">&#10024; 33 pages generated in 678 ms</span> | <span class="term-success">0 node_modules</span> | <span class="term-success">100% Private</span></div>
+          <div class="term-line"><span class="term-accent">&#10024; 33 pages generated in 527 ms</span> | <span class="term-success">0 node_modules</span> | <span class="term-success">100% Private</span></div>
         </div>
       </div>
     </div>
     <div class="apple-showcase-column">
-      <div class="apple-bezel-frame apple-bezel-frame--iphone">
-        <div class="iphone-screen">
-          <div class="dynamic-island"><span class="island-camera"></span></div>
-          <div class="iphone-content">
-            <div class="iphone-badge">
-              {% include icon.html name="apple" size=24 %}
-            </div>
-            <h3 class="iphone-title">Apple HIG System</h3>
-            <p class="iphone-subtitle">SF Symbols 27 &bull; Dynamic Type</p>
-            <div class="iphone-widget-row">
-              <a class="apple-btn-siwa apple-btn-siwa--black apple-btn-siwa--pill" href="{{ '/docs/apple-design-resources/#sign-in-with-apple' | relative_url }}">
-                <img src="{{ '/assets/images/apple/siwa-logo-white.svg' | relative_url }}" alt="" width="14" height="14">
-                <span>Sign in with Apple</span>
-              </a>
-            </div>
-            <div class="iphone-badges-row">
-              <span class="apple-identity-badge"><img src="{{ '/assets/images/apple/game-center-black.svg' | relative_url }}" alt="" width="14" height="14"> Game Center</span>
-              <span class="apple-identity-badge"><img src="{{ '/assets/images/apple/watch-face-dark.svg' | relative_url }}" alt="" width="14" height="14"> Watch Face</span>
-            </div>
+      <div class="terminal-card">
+        <div class="terminal-header">
+          <div class="terminal-dots">
+            <span class="dot dot--red"></span>
+            <span class="dot dot--yellow"></span>
+            <span class="dot dot--green"></span>
           </div>
+          <span class="terminal-title">_config.cfg &mdash; C23 Approach 3 Tokenizer</span>
+          <span class="terminal-badge">Zero Alloc</span>
         </div>
-        <img class="apple-bezel-img" src="{{ '/assets/images/apple/bezels/iphone-16-pro.png' | relative_url }}" alt="iPhone 16 Pro Frame" loading="lazy">
+        <div class="terminal-body">
+          <div class="term-line term-dim"># Zero-dependency key = value configuration</div>
+          <div class="term-line"><span class="term-prompt">title</span> = <span class="term-cmd">Irbox</span></div>
+          <div class="term-line"><span class="term-prompt">tagline</span> = <span class="term-cmd">Zero-dependency C23 static site generator</span></div>
+          <div class="term-line"><span class="term-prompt">compiler</span> = <span class="term-cmd">ISO C23 (-std=c23 -O3 -Wall -Wextra)</span></div>
+          <div class="term-line"><span class="term-prompt">dependencies</span> = <span class="term-success">0 (No Node.js, no Ruby, no Python)</span></div>
+          <div class="term-line"><span class="term-prompt">build_time</span> = <span class="term-accent">&lt; 600 ms full site build</span></div>
+          <div class="term-line"><span class="term-prompt">deployment</span> = <span class="term-info">GitHub Pages (11-second CI run)</span></div>
+          <div class="term-line term-dim">--------------------------------------------------------------</div>
+          <div class="term-line term-dim">// Rugged 30-line tokenizer: safe, portable, no bloat</div>
+        </div>
       </div>
     </div>
   </div>
@@ -83,26 +86,16 @@ body_class: home
 <div class="showcase-sheet">
   <section class="section container">
     <div class="bento">
-      <!-- Col 1: Editorial Heading Cell + Apple HIG Kit Card -->
+      <!-- Col 1: Editorial Heading Cell + Documentation Card -->
       <div class="bento__col">
         <div class="bento__heading-cell">
           <p class="eyebrow">Overview</p>
           <h2 class="bento__heading">Everything in one place.</h2>
           <p class="bento__subtext">
-            Selected projects, Apple HIG design resources, and engineering notes with full source code on
+            Selected projects, technical guides, and engineering notes with full source code on
             GitHub.
           </p>
         </div>
-        <a class="bento__card" href="{{ '/docs/apple-design-resources/' | relative_url }}">
-          <div class="bento__card-header">
-            <span class="badge badge--added">Apple HIG Kit</span>
-            {% include icon.html name="arrow" size=16 %}
-          </div>
-          <h3>Apple Design Resources</h3>
-          <p>
-            Official SF Symbols 27, Dynamic Type, hardware bezels (M5 MacBook, iPhone 16 Pro), and vector marks.
-          </p>
-        </a>
         <a class="bento__card" href="{{ '/docs/getting-started/' | relative_url }}">
           <div class="bento__card-header">
             <span class="badge">Documentation</span>
@@ -163,12 +156,12 @@ body_class: home
               </a>
             </div>
             <div class="bento__spec-item">
-              <span class="bento__spec-label">Design System</span>
-              <span class="bento__spec-val">Apple HIG / SF Pro</span>
+              <span class="bento__spec-label">Architecture</span>
+              <span class="bento__spec-val">Standalone C23 (0 Dependencies)</span>
             </div>
             <div class="bento__spec-item">
-              <span class="bento__spec-label">Compiler</span>
-              <span class="bento__spec-val">ISO C23 (-O3 Native)</span>
+              <span class="bento__spec-label">Config Engine</span>
+              <span class="bento__spec-val">Approach 3 (key = value)</span>
             </div>
             <div class="bento__spec-item">
               <span class="bento__spec-label">Runtime Bloat</span>
@@ -213,29 +206,6 @@ body_class: home
       {%- for post in site.posts limit: 3 -%}
         {%- include post-card.html post=post n=forloop.index -%}
       {%- endfor %}
-    </div>
-  </section>
-
-  <section class="section container">
-    <div class="apple-design-showcase-card card">
-      <div class="section__head" style="margin-bottom: 1.25rem;">
-        <div>
-          <span class="badge badge--added">Flagship HIG Experience</span>
-          <h2 class="display-2" style="margin-top: 0.5rem;">Engineered to Apple Standards</h2>
-        </div>
-      </div>
-      <p style="max-width: 680px; margin-bottom: 1.5rem; color: var(--ink-2); font-size: 1.0625rem; line-height: 1.6;">
-        Every component adheres to the official Apple Human Interface Guidelines: 8pt grid geometry, squircle continuous curvature, SF Pro Display &amp; Text optical sizing, SF Mono syntax, and native dark/light appearance states.
-      </p>
-      <div class="apple-design-showcase__actions">
-        <a class="btn btn--primary" href="{{ '/docs/apple-design-resources/' | relative_url }}">View Complete HIG Guide</a>
-        <a class="apple-btn-siwa apple-btn-siwa--black" href="{{ '/docs/apple-design-resources/#sign-in-with-apple' | relative_url }}">
-          <img src="{{ '/assets/images/apple/siwa-logo-white.svg' | relative_url }}" alt="" width="14" height="14">
-          <span>Sign in with Apple</span>
-        </a>
-        <span class="apple-identity-badge"><img src="{{ '/assets/images/apple/game-center-black.svg' | relative_url }}" alt="" width="14" height="14"> Game Center</span>
-        <span class="apple-identity-badge"><img src="{{ '/assets/images/apple/watch-face-dark.svg' | relative_url }}" alt="" width="14" height="14"> Watch Face</span>
-      </div>
     </div>
   </section>
 
