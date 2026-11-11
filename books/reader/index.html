@@ -45,8 +45,7 @@
         type="button"
         class="btn btn--subtle reader-btn"
         id="reader-toc-toggle"
-        aria-expanded="false"
-        aria-controls="reader-toc-drawer"
+        popovertarget="reader-toc-drawer"
         title="Table of Contents"
       >
         <svg
@@ -74,8 +73,7 @@
         type="button"
         class="btn btn--subtle reader-btn"
         id="reader-settings-toggle"
-        aria-expanded="false"
-        aria-controls="reader-settings-popover"
+        popovertarget="reader-settings-popover"
         title="Reading appearance and fonts"
       >
         <svg
@@ -134,7 +132,7 @@
   <aside
     class="reader-settings-popover"
     id="reader-settings-popover"
-    hidden
+    popover
     aria-label="Reading appearance settings"
   >
     <div class="reader-settings-section">
@@ -218,13 +216,15 @@
   </aside>
 
   <!-- Table of Contents Drawer -->
-  <aside class="reader-toc-drawer" id="reader-toc-drawer" hidden aria-label="Table of Contents">
+  <aside class="reader-toc-drawer" id="reader-toc-drawer" popover aria-label="Table of Contents">
     <div class="reader-toc-header">
       <h2 class="display-3" style="font-size: 1.1rem; margin: 0;">Table of Contents</h2>
       <button
         type="button"
         class="btn btn--subtle"
         id="reader-toc-close"
+        popovertarget="reader-toc-drawer"
+        popovertargetaction="hide"
         aria-label="Close table of contents"
       >
         ✕

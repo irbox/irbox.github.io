@@ -399,7 +399,7 @@
         } else {
           await renderChapter(idx);
         }
-        closeToc();
+        try { tocDrawer?.hidePopover?.(); } catch(_) {}
       });
       li.appendChild(a);
       tocList.appendChild(li);
@@ -549,89 +549,23 @@
     progressPill.textContent = 'PDF Mode';
   }
 
-  // Toggle Controls
-  function toggleToc() {
-    const isHidden = tocDrawer.hasAttribute('hidden');
-    if (isHidden) {
-      tocDrawer.removeAttribute('hidden');
-      tocToggle.setAttribute('aria-expanded', 'true');
-      settingsPopover.setAttribute('hidden', '');
-      settingsToggle.setAttribute('aria-expanded', 'false');
+  // Native Fullscreen API
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(() => {});
     } else {
-      closeToc();
-    }
-  }
-
-  function closeToc() {
-    tocDrawer.setAttribute('hidden', '');
-    tocToggle.setAttribute('aria-expanded', 'false');
-  }
-
-  function toggleSettings() {
-    const isHidden = settingsPopover.hasAttribute('hidden');
-    if (isHidden) {
-      settingsPopover.removeAttribute('hidden');
-      settingsToggle.setAttribute('aria-expanded', 'true');
-      closeToc();
-    } else {
-      closeSettings();
-    }
-  }
-
-  function closeSettings() {
-    settingsPopover.setAttribute('hidden', '');
-    settingsToggle.setAttribute('aria-expanded', 'false');
-  }
-
-  function toggleFullscreen() {
-    const docEl = document.documentElement;
-    const fullscreenEl =
-      document.fullscreenElement ||
-      document.webkitFullscreenElement ||
-      document.mozFullScreenElement ||
-      document.msFullscreenElement;
-
-    if (!fullscreenEl) {
-      if (docEl.requestFullscreen) {
-        docEl.requestFullscreen().catch(() => {});
-      } else if (docEl.webkitRequestFullscreen) {
-        docEl.webkitRequestFullscreen();
-      } else if (docEl.mozRequestFullScreen) {
-        docEl.mozRequestFullScreen();
-      } else if (docEl.msRequestFullscreen) {
-        docEl.msRequestFullscreen();
-      }
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen().catch(() => {});
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-      } else if (document.mozCancelFullScreen) {
-        document.mozCancelFullScreen();
-      } else if (document.msExitFullscreen) {
-        document.msExitFullscreen();
-      }
-    }
-  }
-
-  const updateFullscreenUI = () => {
-    const isFs = Boolean(
-      document.fullscreenElement ||
-      document.webkitFullscreenElement ||
-      document.mozFullScreenElement ||
-      document.msFullscreenElement
-    );
-    if (fullscreenToggle) {
-      fullscreenToggle.setAttribute('aria-pressed', isFs ? 'true' : 'false');
-      fullscreenToggle.setAttribute('title', isFs ? 'Exit Fullscreen' : 'Toggle Fullscreen');
+      document.exitFullscreen().catch(() => {});
     }
   };
-  [
-    'fullscreenchange',
-    'webkitfullscreenchange',
-    'mozfullscreenchange',
-    'MSFullscreenChange',
-  ].forEach((evt) => document.addEventListener(evt, updateFullscreenUI));
+
+  const updateFullscreenUI = () => {
+    const isFs = Boolean(document.fullscreenElement);
+    if (fullscreenToggle) {
+      fullscreenToggle.setAttribute('aria-pressed', String(isFs));
+      fullscreenToggle.setAttribute('title', isFs ? 'Exit Fullscreen' : 'Toggle Fullscreen (F)');
+    }
+  };
+  document.addEventListener('fullscreenchange', updateFullscreenUI);
 
   // Event Listeners
   if (prevBtn) {
@@ -639,15 +573,6 @@
   }
   if (nextBtn) {
     nextBtn.addEventListener('click', () => renderChapter(currentChapterIndex + 1));
-  }
-  if (tocToggle) {
-    tocToggle.addEventListener('click', toggleToc);
-  }
-  if (tocClose) {
-    tocClose.addEventListener('click', closeToc);
-  }
-  if (settingsToggle) {
-    settingsToggle.addEventListener('click', toggleSettings);
   }
   if (fullscreenToggle) {
     fullscreenToggle.addEventListener('click', toggleFullscreen);
@@ -695,9 +620,6 @@
     } else if (e.key.toLowerCase() === 'f' && !e.ctrlKey && !e.metaKey) {
       e.preventDefault();
       toggleFullscreen();
-    } else if (e.key === 'Escape') {
-      closeToc();
-      closeSettings();
     }
   });
 
@@ -767,26 +689,7 @@
     });
   }
 
-  // Click outside to close popovers
-  document.addEventListener('click', (e) => {
-    if (
-      settingsPopover &&
-      settingsToggle &&
-      !settingsPopover.contains(e.target) &&
-      !settingsToggle.contains(e.target)
-    ) {
-      closeSettings();
-    }
-    if (
-      tocDrawer &&
-      tocToggle &&
-      !tocDrawer.contains(e.target) &&
-      !tocToggle.contains(e.target) &&
-      !tocDrawer.hasAttribute('hidden')
-    ) {
-      closeToc();
-    }
-  });
+
 
   // IndexedDB reader for large local books (avoids 5MB quota limits)
   async function getLocalBook() {

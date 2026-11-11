@@ -4,7 +4,9 @@
  * Generates semantic static HTML, RSS feeds, sitemap, and search index with sub-second performance.
  */
 
-#define _POSIX_C_SOURCE 202405L
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -17,6 +19,7 @@
 #include <time.h>
 #include <errno.h>
 #include <strings.h>
+#include <assert.h>
 
 #ifndef __cplusplus
 #include <stdbool.h>
@@ -1208,18 +1211,10 @@ static void render_head(StrBuf *out, const char *title, const char *desc, const 
         "  <script>\n"
         "    (function () {\n"
         "      try {\n"
-        "        var d = document.documentElement;\n"
-        "        d.classList.add('is-loading');\n"
         "        var t = localStorage.getItem('theme');\n"
-        "        var lightColor = '#faf8f5';\n"
-        "        var darkColor = '#0a0d12';\n"
         "        if (t === 'light' || t === 'dark') {\n"
-        "          d.setAttribute('data-theme', t);\n"
-        "          var c = t === 'dark' ? darkColor : lightColor;\n"
-        "          var metas = document.querySelectorAll('meta[name=\"theme-color\"]');\n"
-        "          for (var i = 0; i < metas.length; i++) {\n"
-        "            metas[i].setAttribute('content', c);\n"
-        "          }\n"
+        "          document.documentElement.setAttribute('data-theme', t);\n"
+        "          document.documentElement.style.colorScheme = t;\n"
         "        }\n"
         "      } catch (e) {}\n"
         "    })();\n"
@@ -1314,7 +1309,7 @@ static void render_header(StrBuf *out, const char *active_section) {
     render_icon_sun(out, 20);
     buf_append_str(out,
         "</span>\n      </button>\n"
-        "      <button class=\"icon-btn mobile-only\" type=\"button\" data-drawer-toggle aria-expanded=\"false\" aria-controls=\"drawer\" aria-label=\"Open menu\">\n"
+        "      <button class=\"icon-btn mobile-only\" type=\"button\" popovertarget=\"drawer\" aria-label=\"Toggle navigation menu\">\n"
         "        <span class=\"menu-icon menu-icon--open\">"
     );
     render_icon_menu(out, 22);
@@ -1324,8 +1319,7 @@ static void render_header(StrBuf *out, const char *active_section) {
         "</span>\n      </button>\n"
         "    </div>\n"
         "  </div>\n"
-        "  <div class=\"drawer\" id=\"drawer\" hidden>\n"
-        "    <nav aria-label=\"Mobile\">\n"
+        "  <nav class=\"drawer\" id=\"drawer\" popover aria-label=\"Mobile navigation\">\n"
     );
 
     for (int i = 0; i < 5; i++) {
@@ -1344,7 +1338,7 @@ static void render_header(StrBuf *out, const char *active_section) {
     buf_append_str(out, site_config.repo);
     buf_append_str(out, "\" target=\"_blank\" rel=\"noopener noreferrer\">");
     render_icon_github(out, 18);
-    buf_append_str(out, " GitHub</a>\n    </nav>\n  </div>\n</header>\n");
+    buf_append_str(out, " GitHub</a>\n  </nav>\n</header>\n");
 }
 
 static void render_footer(StrBuf *out) {
@@ -1409,11 +1403,11 @@ static void render_footer(StrBuf *out) {
     render_icon_search(out, 18);
     buf_append_str(out,
         "\n    <input type=\"search\" id=\"search-input\" placeholder=\"Search docs, projects and posts…\" autocomplete=\"off\" autocorrect=\"off\" autocapitalize=\"off\" spellcheck=\"false\" aria-label=\"Search\">\n"
-        "    <button class=\"icon-btn\" type=\"button\" data-search-close aria-label=\"Close search\">\n"
+        "    <form method=\"dialog\" style=\"display:contents\"><button class=\"icon-btn\" aria-label=\"Close search\">\n"
     );
     render_icon_close(out, 18);
     buf_append_str(out,
-        "\n    </button>\n"
+        "\n    </button></form>\n"
         "  </div>\n"
         "  <ul class=\"search__results\" id=\"search-results\" aria-label=\"Search results\"></ul>\n"
         "  <div class=\"sr-only\" aria-live=\"polite\" id=\"search-status\"></div>\n"
@@ -1428,11 +1422,11 @@ static void render_footer(StrBuf *out) {
     buf_append_str(out,
         "\n        <h2 class=\"shortcuts-dialog__title\">Keyboard Shortcuts</h2>\n"
         "      </div>\n"
-        "      <button class=\"icon-btn\" type=\"button\" data-shortcuts-close aria-label=\"Close shortcuts\">\n"
+        "      <form method=\"dialog\" style=\"display:contents\"><button class=\"icon-btn\" aria-label=\"Close shortcuts\">\n"
     );
     render_icon_close(out, 18);
     buf_append_str(out,
-        "\n      </button>\n"
+        "\n      </button></form>\n"
         "    </div>\n"
         "    <div class=\"shortcuts-dialog__content\">\n"
         "      <div class=\"shortcuts-group\">\n"

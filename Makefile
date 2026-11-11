@@ -24,7 +24,7 @@ build: $(BIN)
 	@echo "Build complete in $(OUT)/"
 
 check:
-	$(CC) -std=c23 -Wall -Wextra -Wpedantic -fsyntax-only $(SRC)
+	$(CC) $(C_STD) -Wall -Wextra -Wpedantic -fsyntax-only $(SRC)
 	@echo "C23 syntax check passed with 0 warnings."
 
 clean:
