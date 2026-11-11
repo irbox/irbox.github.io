@@ -25,6 +25,12 @@
 #include <stdbool.h>
 #endif
 
+#if defined(__GNUC__) || defined(__clang__)
+#define SSG_NODISCARD __attribute__((warn_unused_result))
+#else
+#define SSG_NODISCARD
+#endif
+
 #define MAX_PATH 1024
 #define MAX_ITEMS 256
 #define MAX_SECTIONS 16
@@ -217,7 +223,7 @@ static const size_t PROJECT_CATEGORY_COUNT = 4;
 /* ==========================================================================
    Utilities & String Helpers
    ========================================================================== */
-[[nodiscard]] static char *trim_whitespace(char *str) {
+SSG_NODISCARD static char *trim_whitespace(char *str) {
     if (str == NULL) return NULL;
     char *end;
     while (isspace((unsigned char)*str)) str++;
@@ -337,7 +343,7 @@ static void format_date_short(char *out, size_t out_sz, const char *ymd) {
     safe_strcpy(out, out_sz, ymd);
 }
 
-[[nodiscard]] static char *read_entire_file(const char *path) {
+SSG_NODISCARD static char *read_entire_file(const char *path) {
     FILE *f = fopen(path, "rb");
     if (f == NULL) return NULL;
     fseek(f, 0, SEEK_END);
@@ -380,7 +386,7 @@ static void copy_file(const char *src, const char *dst) {
     if (!in) return;
     FILE *out = fopen(dst, "wb");
     if (!out) { fclose(in); return; }
-    char buf[COPY_BUF_SIZE] = {};
+    char buf[COPY_BUF_SIZE] = {0};
     size_t n;
     while ((n = fread(buf, 1, sizeof(buf), in)) > 0) {
         fwrite(buf, 1, n, out);
@@ -1112,7 +1118,7 @@ static void render_head(StrBuf *out, const char *title, const char *desc, const 
         "  <meta name=\"robots\" content=\"index, follow, max-image-preview:large, noarchive\">\n"
         "  <meta http-equiv=\"X-Content-Type-Options\" content=\"nosniff\">\n"
         "  <meta http-equiv=\"Permissions-Policy\" content=\"interest-cohort=(), camera=(), microphone=(), geolocation=()\">\n"
-        "  <meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' [https://fonts.googleapis.com](https://fonts.googleapis.com); font-src 'self' [https://fonts.gstatic.com](https://fonts.gstatic.com); img-src 'self' data: https: blob:; frame-src 'self' blob: data: chrome-extension:; object-src 'self' blob: data:; child-src 'self' blob: data: chrome-extension:; worker-src 'self' blob:; connect-src 'self' blob: data:; base-uri 'self'; form-action 'self';\">\n"
+        "  <meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: https: blob:; frame-src 'self' blob: data: chrome-extension:; object-src 'self' blob: data:; child-src 'self' blob: data: chrome-extension:; worker-src 'self' blob:; connect-src 'self' blob: data:; base-uri 'self'; form-action 'self';\">\n"
     );
 
     const char *page_title = (title && strlen(title) > 0) ? title : site_config.title;
@@ -1168,7 +1174,7 @@ static void render_head(StrBuf *out, const char *title, const char *desc, const 
     buf_append_str(out, site_config.url);
     buf_append_str(out, "/assets/images/icon-512.png\">\n");
 
-    buf_append_str(out, "  <script type=\"application/ld+json\">\n  {\n    \"@context\": \"[https://schema.org](https://schema.org)\",\n");
+    buf_append_str(out, "  <script type=\"application/ld+json\">\n  {\n    \"@context\": \"https://schema.org\",\n");
     if (strcmp(type_val, "article") == 0) {
         buf_append_str(out, "    \"@type\": \"BlogPosting\",\n    \"headline\": \"");
         escape_html(out, page_title, strlen(page_title));
@@ -1219,9 +1225,6 @@ static void render_head(StrBuf *out, const char *title, const char *desc, const 
         "      } catch (e) {}\n"
         "    })();\n"
         "  </script>\n"
-        "  <link rel=\"preconnect\" href=\"[https://fonts.googleapis.com](https://fonts.googleapis.com)\">\n"
-        "  <link rel=\"preconnect\" href=\"[https://fonts.gstatic.com](https://fonts.gstatic.com)\" crossorigin>\n"
-        "  <link rel=\"stylesheet\" href=\"[https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap](https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap)\">\n"
         "  <link rel=\"stylesheet\" href=\"/assets/css/main.css\">\n"
         "  <link rel=\"alternate\" type=\"application/rss+xml\" title=\"Irbox\" href=\"/feed.xml\">\n"
         "  <script type=\"speculationrules\">\n"
@@ -2192,7 +2195,7 @@ static void render_home_page(const char *out_dir) {
         "              <a href=\""
     );
     buf_append_str(&body, site_config.repo);
-    buf_append_str(&body, "\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"bento__spec-val\">\n                [github.com/irbox](https://github.com/irbox) ");
+    buf_append_str(&body, "\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"bento__spec-val\">\n                github.com/irbox ");
     render_icon_external(&body, 12);
     buf_append_str(&body,
         "\n              </a>\n"
@@ -2581,7 +2584,7 @@ static void render_books_landing(const char *out_dir) {
         "  <section class=\"card book-dropzone\" id=\"book-dropzone\" aria-label=\"Quick in-browser book reader drop zone\">\n"
         "    <div class=\"book-dropzone__content\">\n"
         "      <div class=\"book-dropzone__icon\" aria-hidden=\"true\">\n"
-        "        <svg xmlns=\"[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)\" width=\"36\" height=\"36\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z\"></path><path d=\"M6 6h10\"></path><path d=\"M6 10h10\"></path><path d=\"M12 14l4 4m0-4l-4 4\"></path></svg>\n"
+        "        <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"36\" height=\"36\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z\"></path><path d=\"M6 6h10\"></path><path d=\"M6 10h10\"></path><path d=\"M12 14l4 4m0-4l-4 4\"></path></svg>\n"
         "      </div>\n"
         "      <div class=\"book-dropzone__text\">\n"
         "        <h2 class=\"display-3 book-dropzone__title\">Instant Web Book Reader</h2>\n"
@@ -2593,7 +2596,7 @@ static void render_books_landing(const char *out_dir) {
         "      </div>\n"
         "      <div class=\"book-dropzone__action\">\n"
         "        <label for=\"book-file-input\" class=\"btn btn--secondary\">\n"
-        "          <svg xmlns=\"[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"></path><polyline points=\"17 8 12 3 7 8\"></polyline><line x1=\"12\" y1=\"3\" x2=\"12\" y2=\"15\"></line></svg>\n"
+        "          <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"></path><polyline points=\"17 8 12 3 7 8\"></polyline><line x1=\"12\" y1=\"3\" x2=\"12\" y2=\"15\"></line></svg>\n"
         "          <span>Open local file</span>\n"
         "        </label>\n"
         "        <input type=\"file\" id=\"book-file-input\" accept=\".epub,.pdf,application/epub+zip,application/pdf\" style=\"display: none;\">\n"
@@ -2610,7 +2613,7 @@ static void render_books_landing(const char *out_dir) {
         "    </div>\n\n"
         "    <div class=\"books-search-box\">\n"
         "      <input type=\"search\" id=\"books-search\" class=\"input books-search-input\" placeholder=\"Filter shelf...\" aria-label=\"Filter books shelf by title, author, or keywords\">\n"
-        "      <svg class=\"books-search-icon\" xmlns=\"[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><circle cx=\"11\" cy=\"11\" r=\"8\"></circle><line x1=\"21\" y1=\"21\" x2=\"16.65\" y2=\"16.65\"></line></svg>\n"
+        "      <svg class=\"books-search-icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><circle cx=\"11\" cy=\"11\" r=\"8\"></circle><line x1=\"21\" y1=\"21\" x2=\"16.65\" y2=\"16.65\"></line></svg>\n"
         "    </div>\n"
         "  </div>\n\n"
         "  <div class=\"grid grid--cards\" id=\"books-grid\">\n"
@@ -2679,7 +2682,7 @@ static void render_books_landing(const char *out_dir) {
         "  <section class=\"card book-guide-card\">\n"
         "    <div class=\"book-guide-inner\">\n"
         "      <div class=\"book-guide__icon\" aria-hidden=\"true\">\n"
-        "        <svg xmlns=\"[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)\" width=\"28\" height=\"28\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><line x1=\"12\" y1=\"16\" x2=\"12\" y2=\"12\"></line><line x1=\"12\" y1=\"8\" x2=\"12.01\" y2=\"8\"></line></svg>\n"
+        "        <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"28\" height=\"28\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><line x1=\"12\" y1=\"16\" x2=\"12\" y2=\"12\"></line><line x1=\"12\" y1=\"8\" x2=\"12.01\" y2=\"8\"></line></svg>\n"
         "      </div>\n"
         "      <div>\n"
         "        <h2 class=\"display-3\" style=\"margin-top: 0; margin-bottom: 8px;\">How to add your own books (Layman's Guide)</h2>\n"
@@ -3182,7 +3185,7 @@ static void write_sitemap_xml(const char *out_dir) {
     buf_init(&out, 8192);
     buf_append_str(&out,
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-        "<urlset xmlns=\"[http://www.sitemaps.org/schemas/sitemap/0.9](http://www.sitemaps.org/schemas/sitemap/0.9)\">\n"
+        "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n"
     );
 
     for (size_t i = 0; i < search_entry_count; i++) {
@@ -3250,7 +3253,7 @@ static int project_order_cmp(const void *a, const void *b) {
     return pa->order - pb->order;
 }
 
-[[nodiscard]] static int calculate_reading_time(const char *text) {
+SSG_NODISCARD static int calculate_reading_time(const char *text) {
     if (text == NULL) return 1;
     size_t words = 0;
     bool in_word = false;
@@ -3284,13 +3287,13 @@ static void load_docs() {
         char *content = read_entire_file(path);
         if (!content) continue;
 
-        char slug[128] = {};
+        char slug[128] = {0};
         size_t copy_len = (len - 3 < sizeof(slug) - 1) ? (len - 3) : (sizeof(slug) - 1);
         safe_strcpy(slug, sizeof(slug), dir->d_name);
         slug[copy_len] = '\0';
 
         DocItem *item = &docs[doc_count++];
-        *item = (DocItem){};
+        *item = (DocItem){0};
         safe_strcpy(item->slug, sizeof(item->slug), slug);
         snprintf(item->url, sizeof(item->url), "/docs/%s/", slug);
         safe_strcpy(item->source_path, sizeof(item->source_path), path);
@@ -3325,13 +3328,13 @@ static void load_posts() {
         char *content = read_entire_file(path);
         if (!content) continue;
 
-        char raw_slug[128] = {};
+        char raw_slug[128] = {0};
         size_t copy_len = (len - 3 < sizeof(raw_slug) - 1) ? (len - 3) : (sizeof(raw_slug) - 1);
         safe_strcpy(raw_slug, sizeof(raw_slug), dir->d_name);
         raw_slug[copy_len] = '\0';
 
         PostItem *item = &posts[post_count++];
-        *item = (PostItem){};
+        *item = (PostItem){0};
 
         const char *s = raw_slug;
         if (strlen(s) > 11 &&
@@ -3397,13 +3400,13 @@ static void load_projects() {
         char *content = read_entire_file(path);
         if (!content) continue;
 
-        char slug[128] = {};
+        char slug[128] = {0};
         size_t copy_len = (len - 3 < sizeof(slug) - 1) ? (len - 3) : (sizeof(slug) - 1);
         safe_strcpy(slug, sizeof(slug), dir->d_name);
         slug[copy_len] = '\0';
 
         ProjectItem *item = &projects[project_count++];
-        *item = (ProjectItem){};
+        *item = (ProjectItem){0};
         safe_strcpy(item->slug, sizeof(item->slug), slug);
         snprintf(item->url, sizeof(item->url), "/projects/%s/", slug);
         safe_strcpy(item->source_path, sizeof(item->source_path), path);
@@ -3434,7 +3437,7 @@ static double get_diff_ms(struct timespec s, struct timespec e) {
 int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
     const char *out_dir = (argc >= 2) ? argv[1] : "_site";
 
-    struct timespec t_start = {}, t_load = {}, t_core = {}, t_docs = {}, t_posts = {}, t_proj = {}, t_assets = {}, t_feeds = {}, t_end = {};
+    struct timespec t_start = {0}, t_load = {0}, t_core = {0}, t_docs = {0}, t_posts = {0}, t_proj = {0}, t_assets = {0}, t_feeds = {0}, t_end = {0};
     clock_gettime(CLOCK_MONOTONIC, &t_start);
 
     mkdir_p(out_dir);
