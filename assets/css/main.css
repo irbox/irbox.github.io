@@ -5004,8 +5004,8 @@ body.reader-page main#main {
   border: 1px solid var(--border);
 }
 .btn--subtle:hover {
-  background: var(--bg-surface-raised);
-  border-color: var(--border-strong);
+  background: var(--bg-surface-elevated);
+  border-color: var(--border-glass);
 }
 .reader-settings-section {
   display: flex;
@@ -5040,7 +5040,7 @@ body.reader-page main#main {
   background: var(--bg-surface);
   color: var(--ink);
   outline: none;
-  transition: border-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 .input:focus {
   border-color: var(--brand);

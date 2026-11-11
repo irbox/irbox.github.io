@@ -49,15 +49,15 @@ Directly integrated from Apple's official artwork packages:
 Compliant with Apple Human Interface Guidelines button specifications:
 
 <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin: 1.5rem 0;">
-  <a class="apple-btn-siwa apple-btn-siwa--black" href="#siwa">
+  <a class="apple-btn-siwa apple-btn-siwa--black" href="#sign-in-with-apple">
     <img src="/assets/images/apple/siwa-btn-white.svg" alt="Apple logo" width="17" height="20">
     <span>Sign in with Apple</span>
   </a>
-  <a class="apple-btn-siwa apple-btn-siwa--white" href="#siwa">
+  <a class="apple-btn-siwa apple-btn-siwa--white" href="#sign-in-with-apple">
     <img src="/assets/images/apple/siwa-btn-black.svg" alt="Apple logo" width="17" height="20">
     <span>Sign in with Apple</span>
   </a>
-  <a class="apple-btn-siwa apple-btn-siwa--black apple-btn-siwa--pill" href="#siwa">
+  <a class="apple-btn-siwa apple-btn-siwa--black apple-btn-siwa--pill" href="#sign-in-with-apple">
     <img src="/assets/images/apple/siwa-btn-white.svg" alt="Apple logo" width="17" height="20">
     <span>Sign in with Apple</span>
   </a>
