@@ -1209,7 +1209,7 @@ static void init_docs_navigation() {
     nav_sections[2].count = 3;
     strcpy(nav_sections[2].slugs[0], "theming");
     strcpy(nav_sections[2].slugs[1], "announcement-banner");
-    strcpy(nav_sections[2].slugs[2], "apple-design-resources");
+    strcpy(nav_sections[2].slugs[2], "design-system");
 
     strcpy(nav_sections[3].title, "My projects");
     nav_sections[3].count = 2;
