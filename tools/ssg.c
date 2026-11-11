@@ -7,6 +7,9 @@
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
+#if defined(__clang__)
+#pragma clang diagnostic ignored "-Wdeprecated-octal-literals"
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -35,6 +38,7 @@
 #define MAX_ITEMS 256
 #define MAX_SECTIONS 16
 #define COPY_BUF_SIZE 8192
+#define SSG_DIR_MODE (S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH)
 
 static_assert(MAX_PATH >= 512, "MAX_PATH must be at least 512");
 static_assert(MAX_ITEMS >= 128, "MAX_ITEMS must support site collections");
@@ -56,6 +60,17 @@ typedef struct {
     char author_email[128];
     char author_avatar[256];
     char author_bio[512];
+
+    bool announcement_enabled;
+    char announcement_id[64];
+    char announcement_status[32];
+    char announcement_title[128];
+    char announcement_message[256];
+    char announcement_link_label[64];
+    char announcement_link_url[128];
+
+    char project_categories[16][64];
+    size_t project_category_count;
 } SiteConfig;
 
 static SiteConfig site_config = {
@@ -70,7 +85,16 @@ static SiteConfig site_config = {
     .author_role = "Software Engineer",
     .author_email = "189630825+irbox@users.noreply.github.com",
     .author_avatar = "/assets/images/placeholders/avatar.svg",
-    .author_bio = "Software engineer and open-source developer. Building web applications, developer tooling, and sharing notes on modern software engineering."
+    .author_bio = "Software engineer and open-source developer. Building web applications, developer tooling, and sharing notes on modern software engineering.",
+    .announcement_enabled = false,
+    .announcement_id = "2026-10-welcome",
+    .announcement_status = "warning",
+    .announcement_title = "You're viewing a work-in-progress site",
+    .announcement_message = "Some pages are still being written and may change. Thanks for your patience while things take shape.",
+    .announcement_link_label = "Read the changelog",
+    .announcement_link_url = "/changelog/",
+    .project_categories = { "Web Apps", "Libraries", "Tools & CLI", "Experiments" },
+    .project_category_count = 4
 };
 
 /* ==========================================================================
@@ -131,6 +155,11 @@ typedef struct {
 } GalleryItem;
 
 typedef struct {
+    char title[128];
+    char href[128];
+} RelatedDocItem;
+
+typedef struct {
     char slug[128];
     char title[256];
     char category[64];
@@ -139,6 +168,7 @@ typedef struct {
     char source_path[MAX_PATH];
     char *html_content;
     int order;
+    bool hide_announcement;
 } DocItem;
 
 typedef struct {
@@ -148,10 +178,14 @@ typedef struct {
     char description[512];
     char tags[128];
     char cover[128];
+    char cover_alt[128];
     char url[256];
     char source_path[MAX_PATH];
     char *html_content;
     int read_time;
+    bool hide_announcement;
+    RelatedDocItem related_docs[8];
+    size_t related_docs_count;
 } PostItem;
 
 typedef struct {
@@ -172,6 +206,7 @@ typedef struct {
     char *html_content;
     bool featured;
     int order;
+    bool hide_announcement;
 
     char features[16][128];
     size_t feature_count;
@@ -211,14 +246,6 @@ static size_t nav_section_count = 0;
 
 static SearchEntry search_entries[MAX_ITEMS * 2];
 static size_t search_entry_count = 0;
-
-static const char *PROJECT_CATEGORIES[] = {
-    "Web Apps",
-    "Libraries",
-    "Tools & CLI",
-    "Experiments"
-};
-static const size_t PROJECT_CATEGORY_COUNT = 4;
 
 /* ==========================================================================
    Utilities & String Helpers
@@ -304,6 +331,35 @@ static void parse_ssg_config(const char *filename) {
         } else if (strcmp(key, "author_bio") == 0 || (in_author_block && strcmp(key, "bio") == 0)) {
             if (strcmp(value, ">-") != 0 && strcmp(value, "|") != 0)
                 safe_strcpy(site_config.author_bio, sizeof(site_config.author_bio), value);
+        } else if (strcmp(key, "announcement_enabled") == 0) {
+            site_config.announcement_enabled = (strcmp(value, "true") == 0);
+        } else if (strcmp(key, "announcement_id") == 0) {
+            safe_strcpy(site_config.announcement_id, sizeof(site_config.announcement_id), value);
+        } else if (strcmp(key, "announcement_status") == 0) {
+            safe_strcpy(site_config.announcement_status, sizeof(site_config.announcement_status), value);
+        } else if (strcmp(key, "announcement_title") == 0) {
+            safe_strcpy(site_config.announcement_title, sizeof(site_config.announcement_title), value);
+        } else if (strcmp(key, "announcement_message") == 0) {
+            safe_strcpy(site_config.announcement_message, sizeof(site_config.announcement_message), value);
+        } else if (strcmp(key, "announcement_link_label") == 0) {
+            safe_strcpy(site_config.announcement_link_label, sizeof(site_config.announcement_link_label), value);
+        } else if (strcmp(key, "announcement_link_url") == 0) {
+            safe_strcpy(site_config.announcement_link_url, sizeof(site_config.announcement_link_url), value);
+        } else if (strcmp(key, "project_categories") == 0) {
+            site_config.project_category_count = 0;
+            char tmp_cats[512];
+            safe_strcpy(tmp_cats, sizeof(tmp_cats), value);
+            char *cat_save = NULL;
+            char *tok = strtok_r(tmp_cats, ",", &cat_save);
+            while (tok && site_config.project_category_count < 16) {
+                char *tc = trim_whitespace(tok);
+                strip_quotes(tc);
+                if (tc && tc[0] != '\0') {
+                    safe_strcpy(site_config.project_categories[site_config.project_category_count++],
+                                sizeof(site_config.project_categories[0]), tc);
+                }
+                tok = strtok_r(NULL, ",", &cat_save);
+            }
         }
     }
     fclose(file);
@@ -374,11 +430,11 @@ static void mkdir_p(const char *dir) {
     for (char *p = tmp + 1; *p; p++) {
         if (*p == '/') {
             *p = '\0';
-            mkdir(tmp, 0755);
+            mkdir(tmp, SSG_DIR_MODE);
             *p = '/';
         }
     }
-    mkdir(tmp, 0755);
+    mkdir(tmp, SSG_DIR_MODE);
 }
 
 static void copy_file(const char *src, const char *dst) {
@@ -899,8 +955,37 @@ static void markdown_to_html(StrBuf *out, const char *md) {
 }
 
 /* ==========================================================================
-   Frontmatter Extraction
+   Frontmatter Extraction & Tag Rendering
    ========================================================================== */
+static void render_tag_badges(StrBuf *out, const char *raw_tags, size_t max_tags) {
+    if (!raw_tags || raw_tags[0] == '\0') return;
+    char tmp[128];
+    safe_strcpy(tmp, sizeof(tmp), raw_tags);
+    char *p = tmp;
+    while (*p == ' ' || *p == '[' || *p == '\t') p++;
+    size_t len = strlen(p);
+    while (len > 0 && (p[len - 1] == ' ' || p[len - 1] == ']' || p[len - 1] == '\t')) {
+        p[len - 1] = '\0';
+        len--;
+    }
+    if (len == 0) return;
+
+    char *saveptr = NULL;
+    char *tok = strtok_r(p, ",", &saveptr);
+    size_t count = 0;
+    while (tok && (max_tags == 0 || count < max_tags)) {
+        char *t = trim_whitespace(tok);
+        strip_quotes(t);
+        if (t && t[0] != '\0') {
+            buf_append_str(out, "<span class=\"badge\">");
+            escape_html(out, t, strlen(t));
+            buf_append_str(out, "</span>\n");
+            count++;
+        }
+        tok = strtok_r(NULL, ",", &saveptr);
+    }
+}
+
 static const char *parse_frontmatter_block(const char *content, void *target, int type) {
     if (strncmp(content, "---", 3) != 0) return content;
     const char *start = content + 3;
@@ -911,21 +996,29 @@ static const char *parse_frontmatter_block(const char *content, void *target, in
 
     size_t fmlen = end - start;
     char *fm = (char *)malloc(fmlen + 1);
+    if (!fm) return content;
     memcpy(fm, start, fmlen);
     fm[fmlen] = '\0';
 
     int current_section = 0;
+    char *saveptr = NULL;
+    char *line = strtok_r(fm, "\r\n", &saveptr);
 
-    char *line = strtok(fm, "\r\n");
     while (line) {
+        bool is_indented = (line[0] == ' ' || line[0] == '\t');
         char *trimmed = trim_whitespace(line);
 
-        if (strncmp(trimmed, "features:", 9) == 0) { current_section = 1; line = strtok(NULL, "\r\n"); continue; }
-        if (strncmp(trimmed, "stack:", 6) == 0)    { current_section = 2; line = strtok(NULL, "\r\n"); continue; }
-        if (strncmp(trimmed, "gallery:", 8) == 0)  { current_section = 3; line = strtok(NULL, "\r\n"); continue; }
-        if (strncmp(trimmed, "links:", 6) == 0)    { current_section = 4; line = strtok(NULL, "\r\n"); continue; }
+        if (!is_indented && current_section != 0) {
+            current_section = 0;
+        }
 
-        if (type == 3) {
+        if (strncmp(trimmed, "features:", 9) == 0)     { current_section = 1; line = strtok_r(NULL, "\r\n", &saveptr); continue; }
+        if (strncmp(trimmed, "stack:", 6) == 0)        { current_section = 2; line = strtok_r(NULL, "\r\n", &saveptr); continue; }
+        if (strncmp(trimmed, "gallery:", 8) == 0)      { current_section = 3; line = strtok_r(NULL, "\r\n", &saveptr); continue; }
+        if (strncmp(trimmed, "links:", 6) == 0)        { current_section = 4; line = strtok_r(NULL, "\r\n", &saveptr); continue; }
+        if (strncmp(trimmed, "related_docs:", 13) == 0){ current_section = 5; line = strtok_r(NULL, "\r\n", &saveptr); continue; }
+
+        if (type == 3 && current_section > 0) {
             ProjectItem *pr = (ProjectItem *)target;
             if (current_section == 1 && strncmp(trimmed, "- ", 2) == 0) {
                 if (pr->feature_count < 16) {
@@ -933,7 +1026,7 @@ static const char *parse_frontmatter_block(const char *content, void *target, in
                     strip_quotes(feat);
                     safe_strcpy(pr->features[pr->feature_count++], sizeof(pr->features[0]), feat);
                 }
-                line = strtok(NULL, "\r\n");
+                line = strtok_r(NULL, "\r\n", &saveptr);
                 continue;
             }
             if (current_section == 2 && strstr(trimmed, "name:") != NULL) {
@@ -966,7 +1059,7 @@ static const char *parse_frontmatter_block(const char *content, void *target, in
                         pr->stack_count++;
                     }
                 }
-                line = strtok(NULL, "\r\n");
+                line = strtok_r(NULL, "\r\n", &saveptr);
                 continue;
             }
             if (current_section == 3 && strstr(trimmed, "caption:") != NULL) {
@@ -985,7 +1078,7 @@ static const char *parse_frontmatter_block(const char *content, void *target, in
                         pr->gallery_count++;
                     }
                 }
-                line = strtok(NULL, "\r\n");
+                line = strtok_r(NULL, "\r\n", &saveptr);
                 continue;
             }
             if (current_section == 4) {
@@ -998,14 +1091,56 @@ static const char *parse_frontmatter_block(const char *content, void *target, in
                     if (strcmp(k, "repo") == 0) safe_strcpy(pr->repo_url, sizeof(pr->repo_url), v);
                     else if (strcmp(k, "demo") == 0) safe_strcpy(pr->demo_url, sizeof(pr->demo_url), v);
                 }
-                line = strtok(NULL, "\r\n");
+                line = strtok_r(NULL, "\r\n", &saveptr);
                 continue;
             }
         }
 
+        if (type == 2 && current_section == 5) {
+            PostItem *p = (PostItem *)target;
+            if (p->related_docs_count < 8 && strstr(trimmed, "title:") != NULL && strstr(trimmed, "href:") != NULL) {
+                char *t_p = strstr(trimmed, "title:");
+                char *h_p = strstr(trimmed, "href:");
+                t_p += 6;
+                while (*t_p == ' ' || *t_p == '\'' || *t_p == '"') t_p++;
+                char *t_end = strchr(t_p, ',');
+                if (!t_end) t_end = strchr(t_p, '\'');
+                if (!t_end) t_end = strchr(t_p, '"');
+                if (t_end) {
+                    size_t tl = t_end - t_p;
+                    if (tl >= sizeof(p->related_docs[0].title)) tl = sizeof(p->related_docs[0].title) - 1;
+                    memcpy(p->related_docs[p->related_docs_count].title, t_p, tl);
+                    p->related_docs[p->related_docs_count].title[tl] = '\0';
+                    strip_quotes(p->related_docs[p->related_docs_count].title);
+                    char *tt = trim_whitespace(p->related_docs[p->related_docs_count].title);
+                    if (tt != p->related_docs[p->related_docs_count].title) {
+                        memmove(p->related_docs[p->related_docs_count].title, tt, strlen(tt) + 1);
+                    }
+                }
+                h_p += 5;
+                while (*h_p == ' ' || *h_p == '\'' || *h_p == '"') h_p++;
+                char *h_end = strchr(h_p, '}');
+                if (!h_end) h_end = strchr(h_p, '\'');
+                if (!h_end) h_end = strchr(h_p, '"');
+                if (h_end) {
+                    size_t hl = h_end - h_p;
+                    if (hl >= sizeof(p->related_docs[0].href)) hl = sizeof(p->related_docs[0].href) - 1;
+                    memcpy(p->related_docs[p->related_docs_count].href, h_p, hl);
+                    p->related_docs[p->related_docs_count].href[hl] = '\0';
+                    strip_quotes(p->related_docs[p->related_docs_count].href);
+                    char *th = trim_whitespace(p->related_docs[p->related_docs_count].href);
+                    if (th != p->related_docs[p->related_docs_count].href) {
+                        memmove(p->related_docs[p->related_docs_count].href, th, strlen(th) + 1);
+                    }
+                }
+                p->related_docs_count++;
+            }
+            line = strtok_r(NULL, "\r\n", &saveptr);
+            continue;
+        }
+
         char *colon = strchr(line, ':');
         if (colon) {
-            current_section = 0;
             *colon = '\0';
             char *key = trim_whitespace(line);
             char *val = trim_whitespace(colon + 1);
@@ -1017,6 +1152,7 @@ static const char *parse_frontmatter_block(const char *content, void *target, in
                 else if (strcmp(key, "description") == 0) safe_strcpy(d->description, sizeof(d->description), val);
                 else if (strcmp(key, "category") == 0) safe_strcpy(d->category, sizeof(d->category), val);
                 else if (strcmp(key, "order") == 0) d->order = atoi(val);
+                else if (strcmp(key, "announcement") == 0) d->hide_announcement = (strcmp(val, "false") == 0);
             } else if (type == 2) {
                 PostItem *p = (PostItem *)target;
                 if (strcmp(key, "title") == 0) safe_strcpy(p->title, sizeof(p->title), val);
@@ -1024,6 +1160,8 @@ static const char *parse_frontmatter_block(const char *content, void *target, in
                 else if (strcmp(key, "date") == 0) safe_strcpy(p->date, sizeof(p->date), val);
                 else if (strcmp(key, "tags") == 0) safe_strcpy(p->tags, sizeof(p->tags), val);
                 else if (strcmp(key, "cover") == 0) safe_strcpy(p->cover, sizeof(p->cover), val);
+                else if (strcmp(key, "cover_alt") == 0) safe_strcpy(p->cover_alt, sizeof(p->cover_alt), val);
+                else if (strcmp(key, "announcement") == 0) p->hide_announcement = (strcmp(val, "false") == 0);
             } else if (type == 3) {
                 ProjectItem *pr = (ProjectItem *)target;
                 if (strcmp(key, "title") == 0) safe_strcpy(pr->title, sizeof(pr->title), val);
@@ -1037,9 +1175,10 @@ static const char *parse_frontmatter_block(const char *content, void *target, in
                 else if (strcmp(key, "tags") == 0) safe_strcpy(pr->tags, sizeof(pr->tags), val);
                 else if (strcmp(key, "cover") == 0) safe_strcpy(pr->cover, sizeof(pr->cover), val);
                 else if (strcmp(key, "docs") == 0) safe_strcpy(pr->docs_slug, sizeof(pr->docs_slug), val);
+                else if (strcmp(key, "announcement") == 0) pr->hide_announcement = (strcmp(val, "false") == 0);
             }
         }
-        line = strtok(NULL, "\r\n");
+        line = strtok_r(NULL, "\r\n", &saveptr);
     }
     free(fm);
 
@@ -1118,7 +1257,7 @@ static void render_head(StrBuf *out, const char *title, const char *desc, const 
         "  <meta name=\"robots\" content=\"index, follow, max-image-preview:large, noarchive\">\n"
         "  <meta http-equiv=\"X-Content-Type-Options\" content=\"nosniff\">\n"
         "  <meta http-equiv=\"Permissions-Policy\" content=\"interest-cohort=(), camera=(), microphone=(), geolocation=()\">\n"
-        "  <meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: https: blob:; frame-src 'self' blob: data: chrome-extension:; object-src 'self' blob: data:; child-src 'self' blob: data: chrome-extension:; worker-src 'self' blob:; connect-src 'self' blob: data:; base-uri 'self'; form-action 'self';\">\n"
+        "  <meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; frame-src 'self' blob:; object-src 'self' blob:; child-src 'self' blob:; worker-src 'self' blob:; connect-src 'self' blob:; base-uri 'self'; form-action 'self';\">\n"
     );
 
     const char *page_title = (title && strlen(title) > 0) ? title : site_config.title;
@@ -1229,6 +1368,10 @@ static void render_head(StrBuf *out, const char *title, const char *desc, const 
         "          for (var i = 0; i < metas.length; i++) {\n"
         "            metas[i].setAttribute('content', c);\n"
         "          }\n"
+        "        }\n"
+        "        var a = localStorage.getItem('announcement-dismissed');\n"
+        "        if (a) {\n"
+        "          d.setAttribute('data-announcement-hidden', '');\n"
         "        }\n"
         "      } catch (e) {}\n"
         "    })();\n"
@@ -1468,7 +1611,51 @@ static void render_footer(StrBuf *out) {
     );
 }
 
-static void wrap_page_ext(StrBuf *out, const char *title, const char *desc, const char *active_sec, const char *body, const char *body_class, const char *url_path, const char *og_type, const char *date_pub) {
+static void render_announcement_banner(StrBuf *out, bool hide) {
+    if (!site_config.announcement_enabled || hide) return;
+
+    const char *status = site_config.announcement_status[0] ? site_config.announcement_status : "warning";
+    buf_append_str(out, "  <aside class=\"banner banner--");
+    buf_append_str(out, status);
+    buf_append_str(out, "\" data-announcement=\"");
+    escape_html(out, site_config.announcement_id, strlen(site_config.announcement_id));
+    buf_append_str(out, "\" role=\"region\" aria-label=\"Announcement\">\n"
+                        "    <div class=\"banner__icon\" aria-hidden=\"true\">\n");
+
+    if (strcmp(status, "warning") == 0) {
+        buf_append_str(out, "      <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z\"/><line x1=\"12\" y1=\"9\" x2=\"12\" y2=\"13\"/><line x1=\"12\" y1=\"17\" x2=\"12.01\" y2=\"17\"/></svg>\n");
+    } else if (strcmp(status, "danger") == 0) {
+        buf_append_str(out, "      <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><line x1=\"15\" y1=\"9\" x2=\"9\" y2=\"15\"/><line x1=\"9\" y1=\"9\" x2=\"15\" y2=\"15\"/></svg>\n");
+    } else {
+        buf_append_str(out, "      <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><line x1=\"12\" y1=\"16\" x2=\"12\" y2=\"12\"/><line x1=\"12\" y1=\"8\" x2=\"12.01\" y2=\"8\"/></svg>\n");
+    }
+
+    buf_append_str(out, "    </div>\n    <div class=\"banner__body\">\n");
+    if (site_config.announcement_title[0]) {
+        buf_append_str(out, "      <strong class=\"banner__title\">");
+        escape_html(out, site_config.announcement_title, strlen(site_config.announcement_title));
+        buf_append_str(out, "</strong>\n");
+    }
+    if (site_config.announcement_message[0]) {
+        buf_append_str(out, "      <span class=\"banner__text\">");
+        escape_html(out, site_config.announcement_message, strlen(site_config.announcement_message));
+        buf_append_str(out, "</span>\n");
+    }
+    if (site_config.announcement_link_url[0]) {
+        buf_append_str(out, "      <a class=\"banner__link\" href=\"");
+        escape_html(out, site_config.announcement_link_url, strlen(site_config.announcement_link_url));
+        buf_append_str(out, "\">");
+        const char *lbl = site_config.announcement_link_label[0] ? site_config.announcement_link_label : "Learn more";
+        escape_html(out, lbl, strlen(lbl));
+        buf_append_str(out, " &rarr;</a>\n");
+    }
+    buf_append_str(out, "    </div>\n"
+                        "    <button class=\"icon-btn banner__close\" type=\"button\" data-announcement-dismiss aria-label=\"Dismiss announcement\">\n");
+    render_icon_close(out, 16);
+    buf_append_str(out, "    </button>\n  </aside>\n");
+}
+
+static void wrap_page_ext(StrBuf *out, const char *title, const char *desc, const char *active_sec, const char *body, const char *body_class, const char *url_path, const char *og_type, const char *date_pub, bool hide_announcement) {
     buf_append_str(out,
         "<!doctype html>\n"
         "<html lang=\"en\" data-baseurl=\"\">\n"
@@ -1487,6 +1674,7 @@ static void wrap_page_ext(StrBuf *out, const char *title, const char *desc, cons
     );
 
     render_header(out, active_sec);
+    render_announcement_banner(out, hide_announcement);
 
     buf_append_str(out, "  <main id=\"main\" tabindex=\"-1\">\n");
     buf_append_str(out, body);
@@ -1497,7 +1685,7 @@ static void wrap_page_ext(StrBuf *out, const char *title, const char *desc, cons
 }
 
 static void wrap_page(StrBuf *out, const char *title, const char *desc, const char *active_sec, const char *body, const char *body_class, const char *url_path) {
-    wrap_page_ext(out, title, desc, active_sec, body, body_class, url_path, "website", NULL);
+    wrap_page_ext(out, title, desc, active_sec, body, body_class, url_path, "website", NULL, false);
 }
 
 /* ==========================================================================
@@ -1581,8 +1769,8 @@ static void render_projects_sidebar(StrBuf *out, const char *active_slug) {
     if (!active_slug || strlen(active_slug) == 0) buf_append_str(out, " class=\"is-active\" aria-current=\"page\"");
     buf_append_str(out, ">All projects</a></li>\n        </ul>\n      </div>\n");
 
-    for (size_t c = 0; c < PROJECT_CATEGORY_COUNT; c++) {
-        const char *cat = PROJECT_CATEGORIES[c];
+    for (size_t c = 0; c < site_config.project_category_count; c++) {
+        const char *cat = site_config.project_categories[c];
         bool has_items = false;
         for (size_t i = 0; i < project_count; i++) {
             if (strcmp(projects[i].category, cat) == 0) { has_items = true; break; }
@@ -1753,7 +1941,7 @@ static void render_docs_page(const DocItem *d, const char *out_dir) {
 
     StrBuf full;
     buf_init(&full, 16384);
-    wrap_page_ext(&full, d->title, d->description, "docs", body.data, "has-sidebar", d->url, "article", NULL);
+    wrap_page_ext(&full, d->title, d->description, "docs", body.data, "has-sidebar", d->url, "article", NULL, d->hide_announcement);
 
     char target_path[MAX_PATH];
     snprintf(target_path, sizeof(target_path), "%s%sindex.html", out_dir, d->url);
@@ -1802,6 +1990,12 @@ static void render_project_page(const ProjectItem *pr, const char *out_dir) {
         buf_append_str(&body, "          <p class=\"lead\">");
         escape_html(&body, pr->description, strlen(pr->description));
         buf_append_str(&body, "</p>\n");
+    }
+
+    if (pr->tags[0]) {
+        buf_append_str(&body, "          <div class=\"post-card__tags\" style=\"margin-bottom: 16px;\">\n");
+        render_tag_badges(&body, pr->tags, 0);
+        buf_append_str(&body, "          </div>\n");
     }
 
     buf_append_str(&body, "          <div class=\"project-actions\">\n");
@@ -1963,7 +2157,7 @@ static void render_project_page(const ProjectItem *pr, const char *out_dir) {
 
     StrBuf full;
     buf_init(&full, 16384);
-    wrap_page_ext(&full, pr->title, pr->description, "projects", body.data, "has-sidebar", pr->url, "article", NULL);
+    wrap_page_ext(&full, pr->title, pr->description, "projects", body.data, "has-sidebar", pr->url, "article", NULL, pr->hide_announcement);
 
     char target_path[MAX_PATH];
     snprintf(target_path, sizeof(target_path), "%s%sindex.html", out_dir, pr->url);
@@ -1987,19 +2181,17 @@ static void render_post_page(const PostItem *p, const char *out_dir) {
         "  <header class=\"post-header\">\n"
     );
 
+    if (p->cover[0]) {
+        buf_append_str(&body, "    <div class=\"post-cover\" style=\"margin-bottom: 24px;\">\n      <img class=\"thumb\" src=\"");
+        escape_html(&body, p->cover, strlen(p->cover));
+        buf_append_str(&body, "\" alt=\"");
+        escape_html(&body, p->cover_alt[0] ? p->cover_alt : p->title, strlen(p->cover_alt[0] ? p->cover_alt : p->title));
+        buf_append_str(&body, "\" loading=\"lazy\" decoding=\"async\" width=\"800\" height=\"450\">\n    </div>\n");
+    }
+
     if (p->tags[0]) {
         buf_append_str(&body, "    <div class=\"post-card__tags\">\n");
-        char tmp_tags[128];
-        safe_strcpy(tmp_tags, sizeof(tmp_tags), p->tags);
-        char *t = strtok(tmp_tags, ",[] \t");
-        while (t) {
-            if (strlen(t) > 0) {
-                buf_append_str(&body, "      <span class=\"badge\">");
-                escape_html(&body, t, strlen(t));
-                buf_append_str(&body, "</span>\n");
-            }
-            t = strtok(NULL, ",[] \t");
-        }
+        render_tag_badges(&body, p->tags, 0);
         buf_append_str(&body, "    </div>\n");
     }
 
@@ -2061,6 +2253,20 @@ static void render_post_page(const PostItem *p, const char *out_dir) {
     buf_append_str(&body, p->html_content);
     buf_append_str(&body, "\n  </div>\n");
 
+    if (p->related_docs_count > 0) {
+        buf_append_str(&body, "  <section class=\"related\" aria-label=\"Related documentation\">\n"
+                              "    <h2 class=\"display-3\">Related documentation</h2>\n"
+                              "    <ul>\n");
+        for (size_t r = 0; r < p->related_docs_count; r++) {
+            buf_append_str(&body, "      <li><a href=\"");
+            escape_html(&body, p->related_docs[r].href, strlen(p->related_docs[r].href));
+            buf_append_str(&body, "\">");
+            escape_html(&body, p->related_docs[r].title, strlen(p->related_docs[r].title));
+            buf_append_str(&body, "</a></li>\n");
+        }
+        buf_append_str(&body, "    </ul>\n  </section>\n");
+    }
+
     size_t cur_p = 0;
     for (size_t i = 0; i < post_count; i++) {
         if (&posts[i] == p) { cur_p = i; break; }
@@ -2095,7 +2301,7 @@ static void render_post_page(const PostItem *p, const char *out_dir) {
 
     StrBuf full;
     buf_init(&full, 16384);
-    wrap_page_ext(&full, p->title, p->description, "blog", body.data, "post-page", p->url, "article", p->date);
+    wrap_page_ext(&full, p->title, p->description, "blog", body.data, "post-page", p->url, "article", p->date, p->hide_announcement);
 
     char target_path[MAX_PATH];
     snprintf(target_path, sizeof(target_path), "%s%sindex.html", out_dir, p->url);
@@ -2301,17 +2507,7 @@ static void render_home_page(const char *out_dir) {
         char num[16]; snprintf(num, sizeof(num), "%d", card_idx); buf_append_str(&body, num);
         buf_append_str(&body, ".svg\" alt=\"\" loading=\"lazy\" decoding=\"async\" width=\"640\" height=\"400\">\n        </a>\n");
         buf_append_str(&body, "        <div class=\"post-card__body\">\n          <div class=\"post-card__tags\">\n");
-
-        if (posts[i].tags[0]) {
-            char tmp_t[128];
-            safe_strcpy(tmp_t, sizeof(tmp_t), posts[i].tags);
-            char *tag = strtok(tmp_t, ",[] \t");
-            if (tag) {
-                buf_append_str(&body, "            <span class=\"badge\">");
-                escape_html(&body, tag, strlen(tag));
-                buf_append_str(&body, "</span>\n");
-            }
-        }
+        render_tag_badges(&body, posts[i].tags, 2);
         buf_append_str(&body,
             "          </div>\n"
             "          <h3 class=\"post-card__title\">\n"
@@ -2379,19 +2575,19 @@ static void render_projects_landing(const char *out_dir) {
         "    <button class=\"chip is-active\" type=\"button\" data-filter=\"all\" aria-pressed=\"true\">All</button>\n"
     );
 
-    for (size_t c = 0; c < PROJECT_CATEGORY_COUNT; c++) {
+    for (size_t c = 0; c < site_config.project_category_count; c++) {
         buf_append_str(&body, "    <button class=\"chip\" type=\"button\" data-filter=\"");
-        escape_html(&body, PROJECT_CATEGORIES[c], strlen(PROJECT_CATEGORIES[c]));
+        escape_html(&body, site_config.project_categories[c], strlen(site_config.project_categories[c]));
         buf_append_str(&body, "\" aria-pressed=\"false\">");
-        escape_html(&body, PROJECT_CATEGORIES[c], strlen(PROJECT_CATEGORIES[c]));
+        escape_html(&body, site_config.project_categories[c], strlen(site_config.project_categories[c]));
         buf_append_str(&body, "</button>\n");
     }
 
     buf_append_str(&body, "  </div>\n\n");
 
     int card_counter = 0;
-    for (size_t c = 0; c < PROJECT_CATEGORY_COUNT; c++) {
-        const char *cat = PROJECT_CATEGORIES[c];
+    for (size_t c = 0; c < site_config.project_category_count; c++) {
+        const char *cat = site_config.project_categories[c];
         bool has_items = false;
         for (size_t i = 0; i < project_count; i++) {
             if (strcmp(projects[i].category, cat) == 0) { has_items = true; break; }
@@ -2471,20 +2667,7 @@ static void render_blog_landing(const char *out_dir) {
         escape_html(&body, posts[0].title, strlen(posts[0].title));
         buf_append_str(&body, "\">\n      <img class=\"thumb\" src=\"/assets/images/placeholders/cover-1.svg\" alt=\"\" loading=\"lazy\" decoding=\"async\" width=\"640\" height=\"400\">\n    </a>\n");
         buf_append_str(&body, "    <div class=\"feature-card__body\">\n      <div class=\"post-card__tags\">\n");
-
-        if (posts[0].tags[0]) {
-            char tmp_t[128];
-            safe_strcpy(tmp_t, sizeof(tmp_t), posts[0].tags);
-            char *tag = strtok(tmp_t, ",[] \t");
-            while (tag) {
-                if (strlen(tag) > 0) {
-                    buf_append_str(&body, "        <span class=\"badge\">");
-                    escape_html(&body, tag, strlen(tag));
-                    buf_append_str(&body, "</span>\n");
-                }
-                tag = strtok(NULL, ",[] \t");
-            }
-        }
+        render_tag_badges(&body, posts[0].tags, 3);
         buf_append_str(&body,
             "      </div>\n"
             "      <h2 class=\"display-2\">\n"
@@ -2524,17 +2707,7 @@ static void render_blog_landing(const char *out_dir) {
             char num[16]; snprintf(num, sizeof(num), "%d", card_idx); buf_append_str(&body, num);
             buf_append_str(&body, ".svg\" alt=\"\" loading=\"lazy\" decoding=\"async\" width=\"640\" height=\"400\">\n      </a>\n");
             buf_append_str(&body, "      <div class=\"post-card__body\">\n        <div class=\"post-card__tags\">\n");
-
-            if (posts[i].tags[0]) {
-                char tmp_t[128];
-                safe_strcpy(tmp_t, sizeof(tmp_t), posts[i].tags);
-                char *tag = strtok(tmp_t, ",[] \t");
-                if (tag) {
-                    buf_append_str(&body, "          <span class=\"badge\">");
-                    escape_html(&body, tag, strlen(tag));
-                    buf_append_str(&body, "</span>\n");
-                }
-            }
+            render_tag_badges(&body, posts[i].tags, 2);
             buf_append_str(&body,
                 "        </div>\n"
                 "        <h3 class=\"post-card__title\">\n"
@@ -2708,6 +2881,9 @@ static void render_books_landing(const char *out_dir) {
         "    </div>\n"
         "  </section>\n"
         "</div>\n\n"
+    );
+
+    buf_append_str(&body,
         "<script>\n"
         "  (function () {\n"
         "    const grid = document.getElementById('books-grid');\n"
@@ -2761,6 +2937,9 @@ static void render_books_landing(const char *out_dir) {
         "        filterBooks();\n"
         "      });\n"
         "    });\n\n"
+    );
+
+    buf_append_str(&body,
         "    const bookDb = {\n"
         "      open: () =>\n"
         "        new Promise((resolve, reject) => {\n"
@@ -2900,6 +3079,8 @@ static void render_changelog_page(const char *out_dir) {
         "          <hr class=\"divider\">\n"
         "        </header>\n"
         "        <div class=\"prose\" data-prose>\n"
+    );
+    buf_append_str(&body,
         "          <section class=\"release\">\n"
         "            <h2 id=\"v1-2-0\">\n"
         "              Standalone C23 Engine &amp; Zero-Dependency Architecture\n"
@@ -2926,6 +3107,8 @@ static void render_changelog_page(const char *out_dir) {
         "              </li>\n"
         "            </ul>\n"
         "          </section>\n\n"
+    );
+    buf_append_str(&body,
         "          <section class=\"release\">\n"
         "            <h2 id=\"v1-1-0\">\n"
         "              Performance &amp; Polish Release\n"
@@ -2955,6 +3138,8 @@ static void render_changelog_page(const char *out_dir) {
         "              </li>\n"
         "            </ul>\n"
         "          </section>\n\n"
+    );
+    buf_append_str(&body,
         "          <section class=\"release\">\n"
         "            <h2 id=\"v1-0-0\">\n"
         "              Site launch\n"
@@ -2978,6 +3163,8 @@ static void render_changelog_page(const char *out_dir) {
         "              </li>\n"
         "            </ul>\n"
         "          </section>\n\n"
+    );
+    buf_append_str(&body,
         "          <section class=\"release\">\n"
         "            <h2 id=\"v0-9-0\">\n"
         "              Beta\n"
@@ -3427,7 +3614,15 @@ static void load_projects() {
         item->html_content = html.data;
         free(content);
 
-        add_search(item->title, item->url, "Project", item->description, item->category);
+        char search_tags[256];
+        if (item->tags[0] && item->category[0]) {
+            snprintf(search_tags, sizeof(search_tags), "%s, %s", item->category, item->tags);
+        } else if (item->tags[0]) {
+            safe_strcpy(search_tags, sizeof(search_tags), item->tags);
+        } else {
+            safe_strcpy(search_tags, sizeof(search_tags), item->category);
+        }
+        add_search(item->title, item->url, "Project", item->description, search_tags);
     }
     closedir(d);
 

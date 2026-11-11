@@ -9,7 +9,8 @@ else
   CFLAGS ?= -O3 -Wall -Wextra -Wpedantic $(C_STD) $(LTO) $(HARDENING)
 endif
 SRC = tools/ssg.c
-BIN ?= /tmp/irbox-ssg
+TMP_DIR := $(if $(TMPDIR),$(TMPDIR),$(if $(wildcard /tmp),/tmp,.))
+BIN ?= $(TMP_DIR)/irbox-ssg
 OUT ?= _site
 
 .PHONY: all build clean check
@@ -28,5 +29,5 @@ check:
 	@echo "C23 syntax check passed with 0 warnings."
 
 clean:
-	rm -rf $(BIN) $(OUT)
+	rm -rf $(BIN) $(OUT) ./ssg
 

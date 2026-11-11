@@ -3,7 +3,7 @@
    Resilient offline-first caching for static assets & intelligent navigation
    ========================================================================== */
 
-const CACHE_NAME = 'irbox-v1.4.1';
+const CACHE_NAME = 'irbox-v1.5.0';
 const OFFLINE_URL = '/offline.html';
 
 const PRECACHE_ASSETS = [
@@ -56,23 +56,17 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-/* Network interceptor with Navigation Preload, Stale-While-Revalidate and Offline Fallback */
+/* Network interceptor: Strict origin privacy, Navigation Preload, Stale-While-Revalidate and Offline Fallback */
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
 
   const url = new URL(req.url);
 
-  // Ignore cross-origin non-asset requests
-  if (
-    url.origin !== self.location.origin &&
-    !url.hostname.includes('gstatic.com') &&
-    !url.hostname.includes('googleapis.com')
-  ) {
-    return;
-  }
+  // Guarantee zero external calls: strictly process same-origin requests
+  if (url.origin !== self.location.origin) return;
 
-  // 1. Navigation requests (HTML pages) -> Use Navigation Preload if available, else network-first
+  // 1. Navigation requests (HTML pages) -> Navigation Preload / Network-first -> Cache -> Offline Fallback
   if (req.mode === 'navigate') {
     event.respondWith(
       (async () => {
@@ -99,10 +93,8 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 2. Static assets (CSS, JS, WebFonts, SVGs, Images, E-Books, Manifests) -> Stale-While-Revalidate
+  // 2. Static assets -> Stale-While-Revalidate
   const isStatic =
-    url.hostname.includes('gstatic.com') ||
-    url.hostname.includes('googleapis.com') ||
     url.pathname.endsWith('.css') ||
     url.pathname.endsWith('.js') ||
     url.pathname.endsWith('.woff2') ||

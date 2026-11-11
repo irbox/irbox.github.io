@@ -494,7 +494,7 @@
 
     const heads = $$('[data-prose] :is(h2,h3)[id]').filter((h) => !h.closest('[hidden]'));
     const list = $('ul', aside);
-    list.innerHTML = '';
+    list.replaceChildren();
 
     if (heads.length < 2) {
       aside.setAttribute('hidden', '');
@@ -534,7 +534,7 @@
 
     if (mobile) {
       mobile.removeAttribute('hidden');
-      mobile.innerHTML = '';
+      mobile.replaceChildren();
       const select = doc.createElement('select');
       select.setAttribute('aria-label', 'On this page');
 
@@ -748,70 +748,84 @@
         : 'No results found';
     }
 
-    const escapeHtml = (str) =>
-      String(str || '').replace(
-        /[&<>"'`]/g,
-        (c) =>
-          ({
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#39;',
-            '`': '&#96;',
-          })[c]
-      );
-
-    const sanitizeUrl = (u) => {
-      const s = String(u || '').trim();
-      return /^(javascript|data|vbscript):/i.test(s) ? '#' : escapeHtml(s);
-    };
-
-    const highlight = (text, queryWords) => {
+    const appendHighlighted = (parent, text, queryWords) => {
       const str = String(text || '');
-      if (!queryWords || !queryWords.length) return escapeHtml(str);
+      if (!queryWords || !queryWords.length) {
+        parent.appendChild(doc.createTextNode(str));
+        return;
+      }
       const validWords = queryWords
         .filter(Boolean)
         .map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
         .sort((a, b) => b.length - a.length);
-      if (!validWords.length) return escapeHtml(str);
+      if (!validWords.length) {
+        parent.appendChild(doc.createTextNode(str));
+        return;
+      }
 
       const combinedRegex = new RegExp(`(${validWords.join('|')})`, 'gi');
-      let result = '';
       let lastIndex = 0;
       let match;
 
       while ((match = combinedRegex.exec(str)) !== null) {
         if (match.index > lastIndex) {
-          result += escapeHtml(str.slice(lastIndex, match.index));
+          parent.appendChild(doc.createTextNode(str.slice(lastIndex, match.index)));
         }
-        result += `<mark>${escapeHtml(match[0])}</mark>`;
+        const mark = doc.createElement('mark');
+        mark.textContent = match[0];
+        parent.appendChild(mark);
         lastIndex = combinedRegex.lastIndex;
         if (match.index === combinedRegex.lastIndex) {
           combinedRegex.lastIndex++;
         }
       }
       if (lastIndex < str.length) {
-        result += escapeHtml(str.slice(lastIndex));
+        parent.appendChild(doc.createTextNode(str.slice(lastIndex)));
       }
-      return result;
     };
 
-    searchResults.innerHTML = hits.length
-      ? hits
-          .map((h, idx) => {
-            const e = h.item;
-            return (
-              `<li><a href="${sanitizeUrl(e.url)}"${idx === 0 ? ' class="is-selected"' : ''}>` +
-              `<span class="meta">${escapeHtml(e.type)}</span><strong>${highlight(e.title, words)}</strong>` +
-              (e.description
-                ? `<span class="desc">${highlight(e.description, words)}</span>`
-                : '') +
-              '</a></li>'
-            );
-          })
-          .join('')
-      : '<li class="search__empty">No results found</li>';
+    const sanitizeUrl = (u) => {
+      const s = String(u || '').trim();
+      return /^(javascript|data|vbscript):/i.test(s) ? '#' : s;
+    };
+
+    if (!hits.length) {
+      const emptyLi = doc.createElement('li');
+      emptyLi.className = 'search__empty';
+      emptyLi.textContent = 'No results found';
+      searchResults.replaceChildren(emptyLi);
+      return;
+    }
+
+    const frag = doc.createDocumentFragment();
+    hits.forEach((h, idx) => {
+      const e = h.item;
+      const li = doc.createElement('li');
+      const a = doc.createElement('a');
+      a.href = sanitizeUrl(e.url);
+      if (idx === 0) a.className = 'is-selected';
+
+      const meta = doc.createElement('span');
+      meta.className = 'meta';
+      meta.textContent = String(e.type || '');
+      a.appendChild(meta);
+
+      const strong = doc.createElement('strong');
+      appendHighlighted(strong, e.title, words);
+      a.appendChild(strong);
+
+      if (e.description) {
+        const desc = doc.createElement('span');
+        desc.className = 'desc';
+        appendHighlighted(desc, e.description, words);
+        a.appendChild(desc);
+      }
+
+      li.appendChild(a);
+      frag.appendChild(li);
+    });
+
+    searchResults.replaceChildren(frag);
   };
 
   const openSearch = () => {
@@ -820,8 +834,15 @@
     if (!searchDlg.open) searchDlg.showModal();
     searchInput.value = '';
     if (!searchIndex) {
-      searchResults.innerHTML =
-        '<li class="search__loading"><span class="spinner" aria-hidden="true"></span><span>Loading search index…</span></li>';
+      const loadingLi = doc.createElement('li');
+      loadingLi.className = 'search__loading';
+      const spinner = doc.createElement('span');
+      spinner.className = 'spinner';
+      spinner.setAttribute('aria-hidden', 'true');
+      const msg = doc.createElement('span');
+      msg.textContent = 'Loading search index…';
+      loadingLi.append(spinner, msg);
+      searchResults.replaceChildren(loadingLi);
     }
     loadSearchIndex().then(() => renderSearchResults(''));
     searchInput.focus();

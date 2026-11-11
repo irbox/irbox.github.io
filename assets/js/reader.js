@@ -383,7 +383,7 @@
 
   function buildTocUI() {
     if (!tocList) return;
-    tocList.innerHTML = '';
+    tocList.replaceChildren();
     epubToc.forEach((entry, idx) => {
       const li = document.createElement('li');
       const a = document.createElement('a');
@@ -421,7 +421,12 @@
     const chapterItem = epubSpine[index];
     const chapterBytes = await readZipEntry(chapterItem.fullPath);
     if (!chapterBytes) {
-      canvas.innerHTML = `<div class="card center muted"><p>Could not load chapter content (${chapterItem.href}).</p></div>`;
+      const errCard = document.createElement('div');
+      errCard.className = 'card center muted';
+      const p = document.createElement('p');
+      p.textContent = `Could not load chapter content (${chapterItem.href}).`;
+      errCard.appendChild(p);
+      canvas.replaceChildren(errCard);
       return;
     }
 
@@ -474,12 +479,28 @@
       }
     }
 
-    // Strip external scripts for security
-    doc.querySelectorAll('script').forEach((s) => s.remove());
+    // Strip executable scripts and embedded frames for strict reader security
+    doc.querySelectorAll('script, link[rel="stylesheet"], iframe, object, embed, meta').forEach((s) => s.remove());
 
-    // Extract body contents
-    const bodyContent = doc.body ? doc.body.innerHTML : chapterHtml;
-    canvas.innerHTML = bodyContent;
+    // Sanitize all elements: strip inline event handlers (on*) and dangerous URIs
+    const allEls = doc.querySelectorAll('*');
+    for (let i = 0; i < allEls.length; i++) {
+      const el = allEls[i];
+      const attrs = Array.from(el.attributes);
+      for (let j = 0; j < attrs.length; j++) {
+        const attrName = attrs[j].name.toLowerCase();
+        const attrVal = attrs[j].value.trim().toLowerCase();
+        if (attrName.startsWith('on')) {
+          el.removeAttribute(attrs[j].name);
+        } else if ((attrName === 'href' || attrName === 'src' || attrName === 'xlink:href') &&
+                   (attrVal.startsWith('javascript:') || attrVal.startsWith('vbscript:') || attrVal.startsWith('data:text/html'))) {
+          el.removeAttribute(attrs[j].name);
+        }
+      }
+    }
+
+    // Mount sanitized nodes directly using safe DOM APIs (no raw innerHTML)
+    canvas.replaceChildren(...(doc.body ? Array.from(doc.body.childNodes) : []));
 
     // Update Pagination & Progress UI
     const total = epubSpine.length;
