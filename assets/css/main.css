@@ -72,14 +72,14 @@
   --space-module: 48px;
   --space-section: 96px;
 
-  /* Radii */
-  --radius-xs: 4px;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 22px;
-  --radius-container: 16px;
-  --radius-full: 9999px;
+  /* Radii: Pure POSIX Standard (Zero Rounded Corners Everywhere) */
+  --radius-xs: 0;
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+  --radius-container: 0;
+  --radius-full: 0;
 
   /* Spacing */
   --space-1: 4px;
@@ -145,8 +145,8 @@
   --shadow-lg: none;
   --shadow-xl: none;
 
-  --backdrop-blur: blur(20px);
-  --backdrop-glass: blur(20px) saturate(180%);
+  --backdrop-blur: none;
+  --backdrop-glass: none;
 }
 
 /* Dark Theme (Minimalist Obsidian & Anti-Inversion) */
@@ -222,6 +222,21 @@
   --shadow-md: none;
   --shadow-lg: none;
   --shadow-xl: none;
+}
+
+/* ==========================================================================
+   Pure POSIX Architecture: Strictly Zero Rounded Corners & Zero Blur Anywhere
+   ========================================================================== */
+*,
+*::before,
+*::after {
+  border-radius: 0 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+[id] {
+  scroll-margin-top: calc(var(--header-height) + 20px);
 }
 
 /* ---------- 3. Modern Reset & Base Styles ---------- */
@@ -406,9 +421,7 @@ button, input, select, textarea {
   top: 0;
   z-index: 100;
   height: var(--header-height);
-  background: var(--bg-overlay);
-  backdrop-filter: var(--backdrop-glass);
-  -webkit-backdrop-filter: var(--backdrop-glass);
+  background: var(--bg-body);
   border-bottom: 1px solid var(--border);
   transition: background var(--dur-base) ease, border-color var(--dur-base) ease;
 }
@@ -531,10 +544,8 @@ button, input, select, textarea {
   top: var(--header-height);
   inset-inline: 0;
   bottom: 0;
-  background: var(--bg-body);
+  background: var(--bg-surface);
   border-top: 1px solid var(--border);
-  backdrop-filter: var(--backdrop-blur);
-  -webkit-backdrop-filter: var(--backdrop-blur);
   z-index: 150;
   padding: var(--space-6) var(--space-4);
   display: none;
@@ -1482,11 +1493,14 @@ div.highlight pre {
 .avatar {
   width: 32px;
   height: 32px;
-  border-radius: var(--radius-full);
+  border: 1px solid var(--border);
+  object-fit: cover;
 }
 .avatar--lg {
   width: 54px;
   height: 54px;
+  border: 1px solid var(--border);
+  object-fit: cover;
 }
 .thumb {
   border-radius: var(--radius-sm);
@@ -1979,20 +1993,20 @@ body.reader-page main#main {
 
 /* ---------- 11. Command Palette & Shortcuts Dialogs ---------- */
 dialog {
-  border: none;
-  border-radius: var(--radius-xl);
-  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-strong);
+  border-radius: 0;
+  background: var(--bg-surface);
   color: var(--ink);
-  box-shadow: var(--shadow-xl);
+  box-shadow: none;
   padding: 0;
-  max-width: 600px;
+  max-width: 640px;
   width: calc(100% - 32px);
   margin: auto;
 }
 dialog::backdrop {
-  background: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(11, 15, 23, 0.70);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 /* Search Dialog */
@@ -2055,7 +2069,7 @@ dialog.search {
 .search__results mark {
   background: var(--brand-subtle);
   color: var(--brand);
-  border-radius: 2px;
+  border-radius: 0;
 }
 .search__hint {
   padding: var(--space-2) var(--space-4);
@@ -2570,6 +2584,18 @@ dialog.search {
 .hero--editorial {
   padding-block: var(--space-8);
   border-bottom: 1px solid var(--border);
+  display: block;
+  text-align: left;
+}
+
+.hero--editorial .hero__inner {
+  display: block;
+  max-width: var(--content-max-w);
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+  text-align: left;
+  align-items: flex-start;
 }
 
 .hero__architectural-lockup {
@@ -2615,10 +2641,18 @@ dialog.search {
 
 .workbench {
   display: grid;
-  grid-template-columns: 68% 32%;
+  grid-template-columns: minmax(0, 68fr) minmax(0, 32fr);
   gap: var(--space-8);
   margin-top: var(--space-8);
   align-items: start;
+}
+
+.workbench__spec-value,
+.flagship-card__spec-val,
+.bento__spec-val,
+.data-table td,
+time {
+  font-variant-numeric: tabular-nums;
 }
 
 .workbench__main {

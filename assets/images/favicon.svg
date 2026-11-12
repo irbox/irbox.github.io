@@ -17,7 +17,7 @@
       <stop offset="100%" stop-color="#A5B4FC" stop-opacity="0.60"/>
     </linearGradient>
   </defs>
-  <rect width="32" height="32" rx="8" fill="url(#irbox-fav-bg)"/>
+  <rect width="32" height="32" fill="url(#irbox-fav-bg)"/>
   <path d="M16 6.5L24.5 11.2L16 15.9L7.5 11.2Z" fill="url(#irbox-fav-top)"/>
   <path d="M7.5 12.4L15.3 16.7V25.2L7.5 20.8Z" fill="url(#irbox-fav-left)"/>
   <path d="M16.7 16.7L24.5 12.4V20.8L16.7 25.2Z" fill="url(#irbox-fav-right)"/>
