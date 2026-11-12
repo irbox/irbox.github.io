@@ -1469,7 +1469,7 @@ static void render_header(StrBuf *out, const char *active_section) {
     escape_html(out, site_config.title, strlen(site_config.title));
     buf_append_str(out, "</span>\n"
         "    </a>\n"
-        "    <nav class=\"topnav__links\" aria-label=\"Primary\">\n"
+        "    <nav class=\"topnav__links desktop-only\" aria-label=\"Primary\">\n"
     );
 
     const char *sections[] = { "docs", "projects", "blog", "books", "about" };
@@ -1527,13 +1527,14 @@ static void render_header(StrBuf *out, const char *active_section) {
         "</span>\n      </button>\n"
         "    </div>\n"
         "  </div>\n"
-        "  <div class=\"drawer\" id=\"drawer\" hidden>\n"
-        "    <nav aria-label=\"Mobile\">\n"
+        "</header>\n"
+        "<div class=\"drawer\" id=\"drawer\" hidden>\n"
+        "  <nav aria-label=\"Mobile\">\n"
     );
 
     for (int i = 0; i < 5; i++) {
         bool is_act = (strcmp(active_section, sections[i]) == 0);
-        buf_append_str(out, "      <a href=\"");
+        buf_append_str(out, "    <a href=\"");
         buf_append_str(out, urls[i]);
         buf_append_str(out, "\" class=\"drawer__link");
         if (is_act) buf_append_str(out, " is-active\" aria-current=\"page\"");
@@ -1543,11 +1544,11 @@ static void render_header(StrBuf *out, const char *active_section) {
         buf_append_str(out, "</a>\n");
     }
 
-    buf_append_str(out, "      <a class=\"drawer__link\" href=\"");
+    buf_append_str(out, "    <a class=\"drawer__link\" href=\"");
     buf_append_str(out, site_config.repo);
     buf_append_str(out, "\" target=\"_blank\" rel=\"noopener noreferrer\">");
     render_icon_github(out, 18);
-    buf_append_str(out, " GitHub</a>\n    </nav>\n  </div>\n</header>\n");
+    buf_append_str(out, " GitHub</a>\n  </nav>\n</div>\n");
 }
 
 static void render_footer(StrBuf *out) {

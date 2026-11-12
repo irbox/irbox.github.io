@@ -209,6 +209,7 @@ html {
   font-size: 16px;
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -222,6 +223,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background-color var(--dur-base) ease, color var(--dur-base) ease;
+  overflow-x: hidden;
 }
 
 img, svg, video {
@@ -387,6 +389,9 @@ button, input, select, textarea {
   align-items: center;
   justify-content: space-between;
   height: 100%;
+  max-width: var(--content-max-w);
+  margin-inline: auto;
+  padding-inline: var(--space-4);
 }
 .brand {
   display: flex;
@@ -395,6 +400,7 @@ button, input, select, textarea {
   font-weight: 600;
   font-size: var(--text-base);
   color: var(--ink);
+  flex-shrink: 0;
 }
 .brand img, .brand svg {
   width: 24px;
@@ -497,10 +503,11 @@ button, input, select, textarea {
   top: var(--header-height);
   inset-inline: 0;
   bottom: 0;
-  background: var(--bg-overlay);
+  background: var(--bg-body);
+  border-top: 1px solid var(--border);
   backdrop-filter: var(--backdrop-blur);
   -webkit-backdrop-filter: var(--backdrop-blur);
-  z-index: 99;
+  z-index: 150;
   padding: var(--space-6) var(--space-4);
   display: none;
   overflow-y: auto;
@@ -868,17 +875,22 @@ button, input, select, textarea {
 .bento__spec-item {
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-3);
   font-size: var(--text-sm);
   padding-bottom: var(--space-1);
   border-bottom: 1px solid var(--border);
 }
 .bento__spec-label {
   color: var(--ink-2);
+  flex-shrink: 0;
 }
 .bento__spec-val {
   font-weight: 500;
   font-family: var(--font-mono);
   color: var(--ink);
+  text-align: right;
+  word-break: break-word;
 }
 .bento__tags {
   display: flex;
@@ -1280,17 +1292,35 @@ div.highlight pre {
   display: block;
 }
 .facts {
+  list-style: none;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: var(--space-3);
   padding: var(--space-4);
   background: var(--bg-surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   margin-bottom: var(--space-6);
 }
+.facts li {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.facts span {
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-muted);
+}
+.facts strong {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--ink);
+}
 .project-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--space-3);
   margin-top: var(--space-6);
 }
@@ -2133,6 +2163,19 @@ dialog.search {
   .mobile-only {
     display: inline-flex !important;
   }
+  .topnav__links {
+    display: none !important;
+  }
+  .search-trigger {
+    padding: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+  }
+  .search-trigger__label,
+  .search-trigger kbd {
+    display: none !important;
+  }
   .shell {
     flex-direction: column;
   }
@@ -2150,7 +2193,13 @@ dialog.search {
   .sidebar.is-open {
     display: block;
   }
+  .sidebar-toggle {
+    display: inline-flex;
+    align-self: flex-start;
+    margin-bottom: var(--space-4);
+  }
   .shell__main {
+    flex-direction: column;
     padding: var(--space-6) var(--space-4);
   }
   .outline {
@@ -2168,6 +2217,9 @@ dialog.search {
   .shortcuts-list {
     grid-template-columns: 1fr;
   }
+  .reader-pdf-toolbar {
+    display: none !important;
+  }
   .reader-pdf-frame {
     display: none;
   }
@@ -2177,6 +2229,18 @@ dialog.search {
     align-items: center;
     padding: var(--space-8);
     text-align: center;
+  }
+  .reader-title-wrap {
+    flex: 1;
+    min-width: 0;
+    max-width: none;
+  }
+  .reader-btn-label {
+    display: none !important;
+  }
+  .reader-toolbar {
+    padding-inline: var(--space-2);
+    gap: var(--space-2);
   }
 }
 
@@ -2222,7 +2286,7 @@ dialog.search {
   border-radius: var(--radius-xl);
 }
 .sidebar-toggle {
-  display: inline-flex;
+  display: none;
 }
 .doc {
   flex: 1;

@@ -219,7 +219,7 @@
         }
       });
       doc.addEventListener('click', (e) => {
-        if (drawer.classList.contains('is-open') && !e.target.closest('#topnav')) {
+        if (drawer.classList.contains('is-open') && !e.target.closest('#topnav') && !e.target.closest('#drawer')) {
           setDrawer(false);
         }
       });

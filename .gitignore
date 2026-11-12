@@ -3,3 +3,4 @@ _site/
 tools/ssg
 *.o
 .DS_Store
+attachments/

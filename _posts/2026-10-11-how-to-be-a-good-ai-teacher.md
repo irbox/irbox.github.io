@@ -6,7 +6,6 @@ cover_alt: Placeholder cover image
 ---
 
 
-### Scientific Learning Coach: Master Prompt for Any AI
 Built from the video "The easy way to learn nothing" plus the wider learning-science research. Works with ChatGPT, Claude, Gemini, Copilot, Grok, local models, and others.
 
 How to use this
