@@ -802,6 +802,7 @@ static void markdown_to_html(StrBuf *out, const char *md) {
     char *copy = strdup(md);
     if (!copy) return;
     bool in_code = false, in_ul = false, in_ol = false, in_p = false, in_table = false;
+    int code_indent = 0;
     
     char *cursor = copy;
     while (*cursor) {
@@ -819,16 +820,20 @@ static void markdown_to_html(StrBuf *out, const char *md) {
             cursor += strlen(cursor);
         }
 
-        if (strncmp(line, "```", 3) == 0) {
+        int indent = 0;
+        while (line[indent] == ' ' || line[indent] == '\t') indent++;
+
+        if (strncmp(line + indent, "```", 3) == 0) {
             if (in_code) {
                 buf_append_str(out, "</code></pre>\n");
                 in_code = false;
+                code_indent = 0;
             } else {
                 if (in_p)     { buf_append_str(out, "</p>\n"); in_p = false; }
                 if (in_ul)    { buf_append_str(out, "</ul>\n"); in_ul = false; }
                 if (in_ol)    { buf_append_str(out, "</ol>\n"); in_ol = false; }
                 if (in_table) { buf_append_str(out, "      </tbody>\n    </table>\n  </div>\n"); in_table = false; }
-                char *lang = trim_whitespace(line + 3);
+                char *lang = trim_whitespace(line + indent + 3);
                 buf_append_str(out, "<pre><code");
                 if (strlen(lang) > 0) {
                     buf_append_str(out, " class=\"language-");
@@ -837,12 +842,17 @@ static void markdown_to_html(StrBuf *out, const char *md) {
                 }
                 buf_append_str(out, ">");
                 in_code = true;
+                code_indent = indent;
             }
             continue;
         }
 
         if (in_code) {
-            escape_html(out, line, strlen(line));
+            const char *content_line = line;
+            for (int k = 0; k < code_indent && *content_line == ' '; k++) {
+                content_line++;
+            }
+            escape_html(out, content_line, strlen(content_line));
             buf_append_char(out, '\n');
             continue;
         }
@@ -978,7 +988,17 @@ static void markdown_to_html(StrBuf *out, const char *md) {
                 if (all_digits && (dot - trimmed) <= 9) {
                     if (in_p)  { buf_append_str(out, "</p>\n"); in_p = false; }
                     if (in_ul) { buf_append_str(out, "</ul>\n"); in_ul = false; }
-                    if (!in_ol) { buf_append_str(out, "<ol>\n"); in_ol = true; }
+                    if (!in_ol) {
+                        long start_num = strtol(trimmed, NULL, 10);
+                        if (start_num > 1) {
+                            char ol_buf[64];
+                            snprintf(ol_buf, sizeof(ol_buf), "<ol start=\"%ld\">\n", start_num);
+                            buf_append_str(out, ol_buf);
+                        } else {
+                            buf_append_str(out, "<ol>\n");
+                        }
+                        in_ol = true;
+                    }
                     buf_append_str(out, "  <li>");
                     parse_inline(out, trim_whitespace(dot + 1));
                     buf_append_str(out, "</li>\n");
@@ -2125,7 +2145,7 @@ static void render_project_page(const ProjectItem *pr, const char *out_dir) {
     buf_append_str(&body,
         "        </div>\n\n"
         "        <div class=\"outline-mobile\" data-outline-mobile hidden></div>\n\n"
-        "        <section class=\"tab-panel\" data-panel=\"overview\" aria-label=\"Overview\" role=\"tabpanel\">\n"
+        "        <section class=\"tab-panel is-active\" data-panel=\"overview\" aria-label=\"Overview\" role=\"tabpanel\">\n"
         "          <div class=\"prose\" data-prose>\n"
     );
 
@@ -2144,7 +2164,7 @@ static void render_project_page(const ProjectItem *pr, const char *out_dir) {
 
     if (pr->stack_count > 0) {
         buf_append_str(&body,
-            "        <section class=\"tab-panel\" data-panel=\"stack\" aria-label=\"Tech stack\" role=\"tabpanel\">\n"
+            "        <section class=\"tab-panel\" data-panel=\"stack\" aria-label=\"Tech stack\" role=\"tabpanel\" hidden>\n"
             "          <div class=\"prose\" data-prose>\n"
             "            <h2 id=\"tech-stack\">Tech stack</h2>\n"
             "            <div class=\"table-wrap\">\n"
@@ -2169,7 +2189,7 @@ static void render_project_page(const ProjectItem *pr, const char *out_dir) {
 
     if (pr->gallery_count > 0) {
         buf_append_str(&body,
-            "        <section class=\"tab-panel\" data-panel=\"gallery\" aria-label=\"Gallery\" role=\"tabpanel\">\n"
+            "        <section class=\"tab-panel\" data-panel=\"gallery\" aria-label=\"Gallery\" role=\"tabpanel\" hidden>\n"
             "          <div class=\"prose\" data-prose><h2 id=\"gallery\">Gallery</h2></div>\n"
             "          <div class=\"gallery\">\n"
         );

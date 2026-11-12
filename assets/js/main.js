@@ -603,6 +603,7 @@
       $$('.tab-panel').forEach((p) => {
         const on = p.getAttribute('data-panel') === name;
         p.toggleAttribute('hidden', !on);
+        p.classList.toggle('is-active', on);
         if (on) {
           p.classList.remove('is-animating');
           void p.offsetWidth;

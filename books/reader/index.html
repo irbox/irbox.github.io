@@ -10,6 +10,7 @@
         href="/books/"
         class="btn btn--subtle reader-btn"
         title="Back to library shelf"
+        aria-label="Back to library shelf"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -291,13 +292,13 @@
           >
             <polyline points="15 18 9 12 15 6"></polyline>
           </svg>
-          <span>Previous Chapter</span>
+          <span>Previous<span class="desktop-only"> Chapter</span></span>
         </button>
 
         <span class="muted" id="reader-chapter-count-bottom"></span>
 
         <button type="button" class="btn btn--primary" id="reader-next-chapter">
-          <span>Next Chapter</span>
+          <span>Next<span class="desktop-only"> Chapter</span></span>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="18"
