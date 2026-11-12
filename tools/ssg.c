@@ -867,7 +867,7 @@ static void markdown_to_html(StrBuf *out, const char *md) {
 
         if (strncmp(line + indent, "```", 3) == 0) {
             if (in_code) {
-                buf_append_str(out, "</code></pre>\n");
+                buf_append_str(out, "</code><button type=\"button\" class=\"code-copy-btn\" aria-label=\"Copy code\">Copy</button></pre>\n");
                 in_code = false;
                 code_indent = 0;
             } else {
@@ -979,11 +979,15 @@ static void markdown_to_html(StrBuf *out, const char *md) {
                     }
                 }
 
-                char tag_open[256], tag_close[16];
+                char tag_open[256];
                 snprintf(tag_open, sizeof(tag_open), "<h%d id=\"%s\">", level, anchor);
-                snprintf(tag_close, sizeof(tag_close), "</h%d>\n", level);
                 buf_append_str(out, tag_open);
                 parse_inline(out, h_text);
+                buf_append_str(out, "<a class=\"anchor\" href=\"#");
+                buf_append_str(out, anchor);
+                buf_append_str(out, "\" aria-label=\"Anchor link to section\">#</a>");
+                char tag_close[16];
+                snprintf(tag_close, sizeof(tag_close), "</h%d>\n", level);
                 buf_append_str(out, tag_close);
                 continue;
             }
@@ -1811,6 +1815,162 @@ static void wrap_page(StrBuf *out, const char *title, const char *desc, const ch
 /* ==========================================================================
    Page Renderers
    ========================================================================== */
+typedef struct {
+    char id[128];
+    char title[256];
+    int level;
+} OutlineItem;
+
+static void render_outline_from_html(StrBuf *out, const char *html) {
+    if (!html) return;
+    OutlineItem items[64];
+    size_t count = 0;
+
+    const char *p = html;
+    while (*p && count < 64) {
+        if (p[0] == '<' && p[1] == 'h' && (p[2] == '2' || p[2] == '3') && strncmp(p + 3, " id=\"", 5) == 0) {
+            int level = p[2] - '0';
+            const char *id_start = p + 8;
+            const char *id_end = strchr(id_start, '"');
+            if (id_end && (id_end - id_start) < 120) {
+                const char *tag_close = strchr(id_end, '>');
+                if (tag_close) {
+                    tag_close++;
+                    char close_tag[8];
+                    snprintf(close_tag, sizeof(close_tag), "</h%d>", level);
+                    const char *end_text = strstr(tag_close, close_tag);
+                    if (end_text) {
+                        size_t id_len = (size_t)(id_end - id_start);
+                        memcpy(items[count].id, id_start, id_len);
+                        items[count].id[id_len] = '\0';
+                        items[count].level = level;
+
+                        char raw_title[512];
+                        size_t t_len = (size_t)(end_text - tag_close);
+                        if (t_len >= sizeof(raw_title)) t_len = sizeof(raw_title) - 1;
+                        memcpy(raw_title, tag_close, t_len);
+                        raw_title[t_len] = '\0';
+
+                        char clean[256];
+                        size_t ci = 0;
+                        bool in_tag = false;
+                        for (size_t i = 0; raw_title[i] && ci < 250; i++) {
+                            if (raw_title[i] == '<') { in_tag = true; continue; }
+                            if (raw_title[i] == '>') { in_tag = false; continue; }
+                            if (!in_tag) {
+                                if (raw_title[i] == '#' && (raw_title[i+1] == '\0' || raw_title[i+1] == '<')) continue;
+                                clean[ci++] = raw_title[i];
+                            }
+                        }
+                        while (ci > 0 && isspace((unsigned char)clean[ci - 1])) ci--;
+                        clean[ci] = '\0';
+                        char *trimmed_clean = trim_whitespace(clean);
+                        safe_strcpy(items[count].title, sizeof(items[count].title), trimmed_clean);
+                        count++;
+                    }
+                }
+            }
+        }
+        p++;
+    }
+
+    if (count < 2) {
+        buf_append_str(out, "      <aside class=\"outline\" aria-label=\"On this page\" data-outline hidden>\n        <p class=\"outline__title\">On this page</p>\n        <ul></ul>\n      </aside>\n");
+        return;
+    }
+
+    buf_append_str(out, "      <aside class=\"outline\" aria-label=\"On this page\" data-outline>\n");
+    buf_append_str(out, "        <p class=\"outline__title\">On this page</p>\n");
+    buf_append_str(out, "        <ul>\n");
+    for (size_t i = 0; i < count; i++) {
+        buf_append_str(out, "          <li><a href=\"#");
+        buf_append_str(out, items[i].id);
+        buf_append_str(out, "\"");
+        if (items[i].level == 3) {
+            buf_append_str(out, " class=\"is-sub\"");
+        }
+        buf_append_str(out, ">");
+        escape_html(out, items[i].title, strlen(items[i].title));
+        buf_append_str(out, "</a></li>\n");
+    }
+    buf_append_str(out, "        </ul>\n");
+    buf_append_str(out, "      </aside>\n");
+}
+
+static void render_outline_mobile_from_html(StrBuf *out, const char *html) {
+    if (!html) return;
+    OutlineItem items[64];
+    size_t count = 0;
+
+    const char *p = html;
+    while (*p && count < 64) {
+        if (p[0] == '<' && p[1] == 'h' && (p[2] == '2' || p[2] == '3') && strncmp(p + 3, " id=\"", 5) == 0) {
+            int level = p[2] - '0';
+            const char *id_start = p + 8;
+            const char *id_end = strchr(id_start, '"');
+            if (id_end && (id_end - id_start) < 120) {
+                const char *tag_close = strchr(id_end, '>');
+                if (tag_close) {
+                    tag_close++;
+                    char close_tag[8];
+                    snprintf(close_tag, sizeof(close_tag), "</h%d>", level);
+                    const char *end_text = strstr(tag_close, close_tag);
+                    if (end_text) {
+                        size_t id_len = (size_t)(id_end - id_start);
+                        memcpy(items[count].id, id_start, id_len);
+                        items[count].id[id_len] = '\0';
+                        items[count].level = level;
+
+                        char raw_title[512];
+                        size_t t_len = (size_t)(end_text - tag_close);
+                        if (t_len >= sizeof(raw_title)) t_len = sizeof(raw_title) - 1;
+                        memcpy(raw_title, tag_close, t_len);
+                        raw_title[t_len] = '\0';
+
+                        char clean[256];
+                        size_t ci = 0;
+                        bool in_tag = false;
+                        for (size_t i = 0; raw_title[i] && ci < 250; i++) {
+                            if (raw_title[i] == '<') { in_tag = true; continue; }
+                            if (raw_title[i] == '>') { in_tag = false; continue; }
+                            if (!in_tag) {
+                                if (raw_title[i] == '#' && (raw_title[i+1] == '\0' || raw_title[i+1] == '<')) continue;
+                                clean[ci++] = raw_title[i];
+                            }
+                        }
+                        while (ci > 0 && isspace((unsigned char)clean[ci - 1])) ci--;
+                        clean[ci] = '\0';
+                        char *trimmed_clean = trim_whitespace(clean);
+                        safe_strcpy(items[count].title, sizeof(items[count].title), trimmed_clean);
+                        count++;
+                    }
+                }
+            }
+        }
+        p++;
+    }
+
+    if (count < 2) {
+        buf_append_str(out, "        <div class=\"outline-mobile\" data-outline-mobile hidden></div>\n");
+        return;
+    }
+
+    buf_append_str(out, "        <div class=\"outline-mobile\" data-outline-mobile>\n");
+    buf_append_str(out, "          <select aria-label=\"Jump to section\" onchange=\"if(this.value)location.hash=this.value;\">\n");
+    buf_append_str(out, "            <option value=\"\">Jump to section...</option>\n");
+    for (size_t i = 0; i < count; i++) {
+        buf_append_str(out, "            <option value=\"#");
+        buf_append_str(out, items[i].id);
+        buf_append_str(out, "\">");
+        if (items[i].level == 3) {
+            buf_append_str(out, "&nbsp;&nbsp;");
+        }
+        escape_html(out, items[i].title, strlen(items[i].title));
+        buf_append_str(out, "</option>\n");
+    }
+    buf_append_str(out, "          </select>\n        </div>\n");
+}
+
 static void render_docs_sidebar(StrBuf *out, const char *active_slug) {
     buf_append_str(out,
         "  <aside class=\"sidebar\" aria-label=\"Docs navigation\" id=\"sidebar\">\n"
@@ -1976,7 +2136,9 @@ static void render_docs_page(const DocItem *d, const char *out_dir) {
         "          </div>\n"
         "          <hr class=\"divider\">\n"
         "        </header>\n"
-        "        <div class=\"outline-mobile\" data-outline-mobile hidden></div>\n"
+    );
+    render_outline_mobile_from_html(&body, d->html_content);
+    buf_append_str(&body,
         "        <div class=\"prose\" data-prose>\n"
     );
 
@@ -2050,10 +2212,9 @@ static void render_docs_page(const DocItem *d, const char *out_dir) {
         "</a>\n"
         "        </p>\n"
         "      </article>\n"
-        "      <aside class=\"outline\" aria-label=\"On this page\" data-outline hidden>\n"
-        "        <p class=\"outline__title\">On this page</p>\n"
-        "        <ul></ul>\n"
-        "      </aside>\n"
+    );
+    render_outline_from_html(&body, body.data);
+    buf_append_str(&body,
         "    </div>\n"
         "  </div>\n"
         "</div>\n"
@@ -2192,7 +2353,9 @@ static void render_project_page(const ProjectItem *pr, const char *out_dir) {
     }
     buf_append_str(&body,
         "        </div>\n\n"
-        "        <div class=\"outline-mobile\" data-outline-mobile hidden></div>\n\n"
+    );
+    render_outline_mobile_from_html(&body, pr->html_content);
+    buf_append_str(&body,
         "        <section class=\"tab-panel is-active\" data-panel=\"overview\" aria-label=\"Overview\" role=\"tabpanel\">\n"
         "          <div class=\"prose\" data-prose>\n"
     );
@@ -2263,10 +2426,9 @@ static void render_project_page(const ProjectItem *pr, const char *out_dir) {
         "</a>\n"
         "        </p>\n"
         "      </article>\n"
-        "      <aside class=\"outline\" aria-label=\"On this page\" data-outline hidden>\n"
-        "        <p class=\"outline__title\">On this page</p>\n"
-        "        <ul></ul>\n"
-        "      </aside>\n"
+    );
+    render_outline_from_html(&body, body.data);
+    buf_append_str(&body,
         "    </div>\n"
         "  </div>\n"
         "</div>\n"
@@ -3220,10 +3382,9 @@ static void render_changelog_page(const char *out_dir) {
         "          </section>\n"
         "        </div>\n"
         "      </article>\n"
-        "      <aside class=\"outline\" aria-label=\"On this page\" data-outline hidden>\n"
-        "        <p class=\"outline__title\">On this page</p>\n"
-        "        <ul></ul>\n"
-        "      </aside>\n"
+    );
+    render_outline_from_html(&body, body.data);
+    buf_append_str(&body,
         "    </div>\n"
         "  </div>\n"
         "</div>\n"

@@ -140,62 +140,54 @@
     });
   }
 
-  /* ---- 6. Prose Enhancements (Copy & Anchors) ---- */
+  /* ---- 6. Code Copy & Outline Spy ---- */
   const copyText = async (text) => {
     if (navigator.clipboard?.writeText) {
       try { await navigator.clipboard.writeText(text); return true; } catch {}
     }
     const ta = doc.createElement('textarea');
     ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity = '0';
+    ta.style.cssText = 'position:fixed;opacity:0';
     doc.body.appendChild(ta);
     ta.select();
-    try { doc.execCommand('copy'); return true; } finally { doc.body.removeChild(ta); }
+    try { return doc.execCommand('copy'); } finally { ta.remove(); }
   };
 
-  $$('[data-prose] pre, .prose pre').forEach((pre) => {
-    if (pre.dataset.hasCopyBtn || pre.classList.contains('lineno')) return;
-    pre.dataset.hasCopyBtn = 'true';
-    const b = doc.createElement('button');
-    b.type = 'button';
-    b.className = 'copy-btn';
-    b.setAttribute('aria-label', 'Copy code to clipboard');
-    b.innerHTML = '<span class="copy-btn__text">Copy</span>';
-    b.addEventListener('click', async () => {
-      const code = pre.querySelector('code')?.innerText || pre.innerText;
-      if (await copyText(code.replace(/\n$/, ''))) {
-        b.classList.add('is-copied');
-        b.querySelector('.copy-btn__text').textContent = 'Copied!';
-        setTimeout(() => {
-          b.classList.remove('is-copied');
-          b.querySelector('.copy-btn__text').textContent = 'Copy';
-        }, 1800);
-      }
+  doc.addEventListener('click', async (e) => {
+    const b = e.target.closest('.code-copy-btn, .copy-btn');
+    if (!b) return;
+    const pre = b.closest('pre');
+    const code = pre?.querySelector('code')?.innerText || pre?.innerText || '';
+    if (await copyText(code.replace(/\n$/, ''))) {
+      const orig = b.textContent;
+      b.classList.add('is-copied');
+      b.textContent = 'Copied!';
+      setTimeout(() => {
+        b.classList.remove('is-copied');
+        b.textContent = orig;
+      }, 1800);
+    }
+  });
+
+  const outlineLinks = $$('.outline a');
+  if (outlineLinks.length && 'IntersectionObserver' in window) {
+    const headingMap = new Map(outlineLinks.map((a) => [a.getAttribute('href').slice(1), a]));
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const a = headingMap.get(entry.target.id);
+          if (a) {
+            outlineLinks.forEach((l) => l.classList.remove('is-active'));
+            a.classList.add('is-active');
+          }
+        }
+      });
+    }, { rootMargin: '0px 0px -70% 0px' });
+    headingMap.forEach((_, id) => {
+      const el = doc.getElementById(id);
+      if (el) obs.observe(el);
     });
-    pre.appendChild(b);
-  });
-
-  $$('[data-prose] :is(h2,h3,h4)[id], .prose :is(h2,h3,h4)[id]').forEach((h) => {
-    if (!h.querySelector('.anchor')) {
-      const a = doc.createElement('a');
-      a.className = 'anchor';
-      a.href = '#' + h.id;
-      a.setAttribute('aria-label', 'Anchor link to section');
-      a.textContent = '#';
-      h.appendChild(a);
-    }
-  });
-
-  $$('[data-prose] table, .prose table').forEach((tbl) => {
-    if (!tbl.parentElement.classList.contains('table-wrap')) {
-      const wrap = doc.createElement('div');
-      wrap.className = 'table-wrap';
-      wrap.tabIndex = 0;
-      tbl.parentNode.insertBefore(wrap, tbl);
-      wrap.appendChild(tbl);
-    }
-  });
+  }
 
   /* ---- 7. Project Tabs ---- */
   const tabs = $$('[data-tabs] [data-tab]');
@@ -374,9 +366,9 @@
     }
   });
 
-  /* ---- 11. Reading Progress Bar ---- */
+  /* ---- 11. Reading Progress Bar (Fallback) ---- */
   const readingBar = $('.reading-progress');
-  if (readingBar) {
+  if (readingBar && !(window.CSS?.supports?.('animation-timeline', 'scroll()'))) {
     let ticking = false;
     const updateReading = () => {
       const max = root.scrollHeight - window.innerHeight;

@@ -310,6 +310,18 @@ button, input, select, textarea {
   opacity: 0;
   transition: width 0.2s ease, opacity 0.4s ease 0.2s;
 }
+@supports (animation-timeline: scroll()) {
+  .reading-progress {
+    width: 100%;
+    transform-origin: 0 50%;
+    animation: reading-progress linear;
+    animation-timeline: scroll();
+  }
+  @keyframes reading-progress {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+}
 
 /* Accessibility: Skip Link */
 .skip-link {
@@ -1274,12 +1286,33 @@ div.highlight pre {
   opacity: 0;
   transition: all var(--dur-fast) ease;
 }
-.code-wrap:hover .code-copy-btn {
+.code-wrap:hover .code-copy-btn,
+pre:hover .code-copy-btn,
+.code-copy-btn:focus-visible {
   opacity: 1;
 }
 .code-copy-btn:hover {
   color: var(--ink);
   border-color: var(--border-strong);
+}
+.code-copy-btn.is-copied {
+  opacity: 1;
+  color: var(--brand);
+  border-color: var(--brand);
+}
+
+.anchor {
+  margin-left: 0.35em;
+  color: var(--ink-muted);
+  text-decoration: none;
+  font-weight: 400;
+  opacity: 0;
+  transition: opacity var(--dur-fast) ease, color var(--dur-fast) ease;
+}
+:is(h1, h2, h3, h4):hover .anchor,
+.anchor:focus-visible {
+  opacity: 1;
+  color: var(--brand);
 }
 
 /* Syntax Highlighting Tokens (One Light / One Dark Compliant) */
