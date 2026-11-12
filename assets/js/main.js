@@ -1,7 +1,7 @@
-/* ==========================================================================
-   Irbox — Core Client Architecture
-   Modular, dependency-free enhancements adhering to modern ECMAScript (ES2026).
-   ========================================================================== */
+/**
+ * Irbox — High-Performance Zero-Bloat Client Architecture
+ * Strictly POSIX standards compliant, dependency-free ECMAScript.
+ */
 (() => {
   'use strict';
 
@@ -9,1165 +9,409 @@
   const root = doc.documentElement;
   root.classList.add('js');
 
-  /* ---- Module 1: DOM & Storage Helpers ---- */
-  const $ = (selector, context = doc) => context.querySelector(selector);
-  const $$ = (selector, context = doc) => Array.from(context.querySelectorAll(selector));
+  const $ = (s, c = doc) => c.querySelector(s);
+  const $$ = (s, c = doc) => Array.from(c.querySelectorAll(s));
   const store = {
-    get: (key) => {
-      try {
-        return localStorage.getItem(key);
-      } catch {
-        return null;
-      }
-    },
-    set: (key, value) => {
-      try {
-        localStorage.setItem(key, value);
-      } catch {}
-    },
+    get: (k) => { try { return localStorage.getItem(k); } catch { return null; } },
+    set: (k, v) => { try { localStorage.setItem(k, v); } catch {} }
   };
 
-  const onReady = () => {
-    requestAnimationFrame(() => {
-      root.classList.remove('is-loading');
-    });
-  };
-  if (doc.readyState === 'loading') {
-    doc.addEventListener('DOMContentLoaded', onReady);
-  } else {
-    onReady();
-  }
-
-  /* ---- Module 2: Page Navigation Progress Indicator ---- */
-  const initPageProgress = () => {
-    const progress = $('#page-progress');
-    if (!progress) return;
-
-    const resetProgress = () => {
+  /* ---- 1. Page Progress Indicator ---- */
+  const progress = $('#page-progress');
+  if (progress) {
+    const done = () => {
       progress.classList.remove('is-loading');
       progress.classList.add('is-done');
-      setTimeout(() => {
-        progress.classList.remove('is-done');
-      }, 400);
+      setTimeout(() => progress.classList.remove('is-done'), 350);
     };
-
-    window.addEventListener('pageshow', resetProgress);
-    window.addEventListener('popstate', resetProgress);
-
+    window.addEventListener('pageshow', done);
+    window.addEventListener('popstate', done);
     doc.addEventListener('click', (e) => {
-      const link = e.target.closest('a');
-      if (!link || !link.href || link.target === '_blank' || link.hasAttribute('download')) return;
+      const a = e.target.closest('a');
+      if (!a || !a.href || a.target === '_blank' || a.hasAttribute('download')) return;
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.defaultPrevented) return;
-
-      const href = link.getAttribute('href');
-      if (
-        !href ||
-        href.startsWith('#') ||
-        href.startsWith('mailto:') ||
-        href.startsWith('tel:') ||
-        href.startsWith('javascript:')
-      ) {
-        return;
-      }
-
-      // Ignore downloadable binary and data files that trigger browser file downloads rather than document navigations
-      if (/\.(epub|pdf|zip|tar|gz|br|xml|json|rss|txt)$/i.test(link.pathname)) return;
-
-      let url;
+      const href = a.getAttribute('href');
+      if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+      if (/\.(epub|pdf|zip|tar|gz|xml|json|rss|txt)$/i.test(a.pathname)) return;
       try {
-        url = new URL(link.href, location.href);
-      } catch {
-        return;
-      }
-      if (url.origin !== location.origin) return;
-      if (url.pathname === location.pathname && url.search === location.search) return;
-
-      progress.classList.remove('is-done');
-      progress.classList.add('is-loading');
-    });
-  };
-
-  /* ---- Module 3: Image Load Transitions ---- */
-  const initImageTransitions = () => {
-    $$('img.thumb, img.avatar').forEach((img) => {
-      if (img.complete && img.naturalWidth > 0) {
-        img.classList.add('is-loaded');
-      } else {
-        const markLoaded = () => img.classList.add('is-loaded');
-        img.addEventListener('load', markLoaded, { once: true });
-        img.addEventListener('error', markLoaded, { once: true });
-      }
-    });
-  };
-
-  /* ---- Module 4: Theme Toggle Controller ---- */
-  const initThemeToggle = () => {
-    const themeBtns = $$('[data-theme-toggle]');
-    const lightColor = '#ffffff';
-    const darkColor = '#0b0d11';
-
-    const updateThemeMeta = (theme) => {
-      const metas = $$('meta[name="theme-color"]');
-      let targetColor;
-      if (theme === 'light') {
-        targetColor = lightColor;
-      } else if (theme === 'dark') {
-        targetColor = darkColor;
-      } else {
-        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        targetColor = isDark ? darkColor : lightColor;
-      }
-      metas.forEach((meta) => meta.setAttribute('content', targetColor));
-    };
-
-    const updateAria = (currentTheme) => {
-      const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      const label = `Switch to ${nextTheme} theme (or press T)`;
-      themeBtns.forEach((btn) => {
-        btn.setAttribute('aria-label', label);
-        btn.setAttribute('title', label);
-      });
-    };
-
-    const getActiveTheme = () => {
-      return (
-        root.getAttribute('data-theme') ||
-        (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-      );
-    };
-
-    // Initialize aria labels and meta sync on mount
-    const initialTheme = getActiveTheme();
-    updateAria(initialTheme);
-    if (root.getAttribute('data-theme')) {
-      updateThemeMeta(initialTheme);
-    }
-
-    themeBtns.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const current = getActiveTheme();
-        const next = current === 'dark' ? 'light' : 'dark';
-        root.setAttribute('data-theme', next);
-        store.set('theme', next);
-        updateThemeMeta(next);
-        updateAria(next);
-      });
-    });
-
-    // Synchronize if system OS color scheme changes and user has not set an explicit override
-    try {
-      const colorMedia = window.matchMedia('(prefers-color-scheme: dark)');
-      colorMedia.addEventListener('change', () => {
-        if (!store.get('theme')) {
-          root.removeAttribute('data-theme');
-          const osTheme = colorMedia.matches ? 'dark' : 'light';
-          updateThemeMeta(null);
-          updateAria(osTheme);
+        const u = new URL(a.href, location.href);
+        if (u.origin === location.origin && (u.pathname !== location.pathname || u.search !== location.search)) {
+          progress.classList.remove('is-done');
+          progress.classList.add('is-loading');
         }
-      });
-    } catch {}
-
-    // Multi-tab synchronization
-    window.addEventListener('storage', (e) => {
-      if (e.key === 'theme') {
-        if (e.newValue === 'light' || e.newValue === 'dark') {
-          root.setAttribute('data-theme', e.newValue);
-          updateThemeMeta(e.newValue);
-          updateAria(e.newValue);
-        } else {
-          root.removeAttribute('data-theme');
-          updateThemeMeta(null);
-          updateAria(getActiveTheme());
-        }
-      }
-    });
-  };
-
-  /* ---- Module 5: Mobile Navigation (Drawer & Sidebar) ---- */
-  const initMobileNav = () => {
-    // Drawer
-    const drawerBtn = $('[data-drawer-toggle]');
-    const drawer = $('#drawer');
-    if (drawerBtn && drawer) {
-      const setDrawer = (open) => {
-        if (open) {
-          drawer.removeAttribute('hidden');
-          requestAnimationFrame(() => {
-            drawer.classList.add('is-open');
-          });
-        } else {
-          drawer.classList.remove('is-open');
-          setTimeout(() => {
-            if (!drawer.classList.contains('is-open')) {
-              drawer.setAttribute('hidden', '');
-            }
-          }, 240);
-        }
-        drawerBtn.setAttribute('aria-expanded', String(open));
-        drawerBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-      };
-      drawerBtn.addEventListener('click', () => {
-        setDrawer(!drawer.classList.contains('is-open'));
-      });
-      $$('a', drawer).forEach((link) => {
-        link.addEventListener('click', () => setDrawer(false));
-      });
-      doc.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && drawer.classList.contains('is-open')) {
-          setDrawer(false);
-          drawerBtn.focus();
-        }
-      });
-      doc.addEventListener('click', (e) => {
-        if (drawer.classList.contains('is-open') && !e.target.closest('#topnav') && !e.target.closest('#drawer')) {
-          setDrawer(false);
-        }
-      });
-      window.addEventListener(
-        'resize',
-        () => {
-          if (window.innerWidth > 767 && drawer.classList.contains('is-open')) {
-            setDrawer(false);
-          }
-        },
-        { passive: true }
-      );
-    }
-
-    // Sidebar
-    const sidebar = $('#sidebar');
-    const sideBtns = $$('[data-sidebar-toggle]');
-    if (sidebar) {
-      const setSidebar = (open) => {
-        sidebar.classList.toggle('is-open', open);
-        sideBtns.forEach((btn) => {
-          btn.setAttribute('aria-expanded', String(open));
-          btn.setAttribute('aria-label', open ? 'Close sidebar' : 'Open sidebar');
-        });
-      };
-      sideBtns.forEach((btn) => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          setSidebar(!sidebar.classList.contains('is-open'));
-        });
-      });
-      $$('a', sidebar).forEach((link) => {
-        link.addEventListener('click', () => {
-          if (window.innerWidth <= 767) {
-            setSidebar(false);
-          }
-        });
-      });
-      doc.addEventListener('click', (e) => {
-        if (sidebar.classList.contains('is-open')) {
-          if (!sidebar.contains(e.target) && !e.target.closest('[data-sidebar-toggle]')) {
-            setSidebar(false);
-          }
-        }
-      });
-      doc.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && sidebar.classList.contains('is-open')) {
-          setSidebar(false);
-          if (sideBtns[0]) sideBtns[0].focus();
-        }
-      });
-      window.addEventListener(
-        'resize',
-        () => {
-          if (window.innerWidth > 767 && sidebar.classList.contains('is-open')) {
-            setSidebar(false);
-          }
-        },
-        { passive: true }
-      );
-
-      // Restore and save scroll position
-      try {
-        const savedScroll = sessionStorage.getItem('sidebar-scroll');
-        if (savedScroll) sidebar.scrollTop = +savedScroll;
-        const activeItem = $('a.is-active', sidebar);
-        if (activeItem && !savedScroll) activeItem.scrollIntoView({ block: 'center' });
-        window.addEventListener('pagehide', () => {
-          sessionStorage.setItem('sidebar-scroll', sidebar.scrollTop);
-        });
       } catch {}
+    });
+  }
+
+  /* ---- 2. Image Loading Transitions ---- */
+  $$('img.thumb, img.avatar').forEach((img) => {
+    if (img.complete && img.naturalWidth > 0) img.classList.add('is-loaded');
+    else {
+      const ok = () => img.classList.add('is-loaded');
+      img.addEventListener('load', ok, { once: true });
+      img.addEventListener('error', ok, { once: true });
     }
-  };
+  });
 
-  /* ---- Module 6: Announcement Banner Controller ---- */
-  const initAnnouncement = () => {
-    const banner = $('[data-announcement]');
-    const dismiss = $('[data-announcement-dismiss]');
-    if (!banner || !dismiss) return;
-
-    dismiss.addEventListener('click', () => {
-      store.set('announcement-dismissed', banner.getAttribute('data-announcement'));
-      banner.classList.add('is-dismissing');
-      let finalized = false;
-      const finalize = () => {
-        if (finalized) return;
-        finalized = true;
-        root.setAttribute('data-announcement-hidden', '');
-      };
-      banner.addEventListener('transitionend', finalize, { once: true });
-      setTimeout(finalize, 280);
+  /* ---- 3. Theme Controller ---- */
+  const themeBtns = $$('[data-theme-toggle]');
+  const metas = $$('meta[name="theme-color"]');
+  const getTheme = () => root.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  const syncTheme = (t) => {
+    const isDark = t === 'dark';
+    const color = isDark ? '#0b0f17' : '#ffffff';
+    metas.forEach((m) => m.setAttribute('content', color));
+    const next = isDark ? 'light' : 'dark';
+    themeBtns.forEach((b) => {
+      b.setAttribute('aria-label', `Switch to ${next} theme (or press T)`);
+      b.setAttribute('title', `Switch to ${next} theme (T)`);
     });
   };
+  syncTheme(getTheme());
+  themeBtns.forEach((b) => {
+    b.addEventListener('click', () => {
+      const next = getTheme() === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      store.set('theme', next);
+      syncTheme(next);
+    });
+  });
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'theme') {
+      if (e.newValue) root.setAttribute('data-theme', e.newValue);
+      else root.removeAttribute('data-theme');
+      syncTheme(getTheme());
+    }
+  });
+  try {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (m) => {
+      if (!store.get('theme')) syncTheme(m.matches ? 'dark' : 'light');
+    });
+  } catch {}
 
-  /* ---- Module 7: Prose (Heading Anchors & Copy Buttons) ---- */
+  /* ---- 4. Mobile Navigation & Sidebar ---- */
+  const drawerBtn = $('[data-drawer-toggle]');
+  const drawer = $('#drawer');
+  if (drawerBtn && drawer) {
+    const setDrawer = (open) => {
+      drawer.classList.toggle('is-open', open);
+      if (open) drawer.removeAttribute('hidden');
+      else setTimeout(() => { if (!drawer.classList.contains('is-open')) drawer.setAttribute('hidden', ''); }, 200);
+      drawerBtn.setAttribute('aria-expanded', String(open));
+      drawerBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    };
+    drawerBtn.addEventListener('click', () => setDrawer(!drawer.classList.contains('is-open')));
+    $$('a', drawer).forEach((a) => a.addEventListener('click', () => setDrawer(false)));
+    doc.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && drawer.classList.contains('is-open')) setDrawer(false);
+    });
+    doc.addEventListener('click', (e) => {
+      if (drawer.classList.contains('is-open') && !e.target.closest('#topnav') && !e.target.closest('#drawer')) setDrawer(false);
+    });
+  }
+
+  const sidebar = $('#sidebar');
+  const sideBtns = $$('[data-sidebar-toggle]');
+  if (sidebar && sideBtns.length) {
+    const setSidebar = (open) => {
+      sidebar.classList.toggle('is-open', open);
+      sideBtns.forEach((b) => b.setAttribute('aria-expanded', String(open)));
+    };
+    sideBtns.forEach((b) => b.addEventListener('click', (e) => {
+      e.stopPropagation();
+      setSidebar(!sidebar.classList.contains('is-open'));
+    }));
+    $$('a', sidebar).forEach((a) => a.addEventListener('click', () => { if (window.innerWidth <= 767) setSidebar(false); }));
+    doc.addEventListener('click', (e) => {
+      if (sidebar.classList.contains('is-open') && !sidebar.contains(e.target) && !e.target.closest('[data-sidebar-toggle]')) setSidebar(false);
+    });
+    doc.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && sidebar.classList.contains('is-open')) setSidebar(false);
+    });
+  }
+
+  /* ---- 5. Announcement Banner ---- */
+  const banner = $('[data-announcement]');
+  const bannerDismiss = $('[data-announcement-dismiss]');
+  if (banner && bannerDismiss) {
+    bannerDismiss.addEventListener('click', () => {
+      store.set('announcement-dismissed', banner.dataset.announcement);
+      root.setAttribute('data-announcement-hidden', '');
+    });
+  }
+
+  /* ---- 6. Prose Enhancements (Copy & Anchors) ---- */
   const copyText = async (text) => {
-    if (navigator.clipboard && window.isSecureContext) {
-      try {
-        await navigator.clipboard.writeText(text);
-        return true;
-      } catch (_) {
-        // Fallback to execCommand below
-      }
+    if (navigator.clipboard?.writeText) {
+      try { await navigator.clipboard.writeText(text); return true; } catch {}
     }
     const ta = doc.createElement('textarea');
     ta.value = text;
-    ta.setAttribute('readonly', '');
-    ta.style.contain = 'strict';
     ta.style.position = 'fixed';
-    ta.style.left = '-9999px';
-    ta.style.top = '0';
     ta.style.opacity = '0';
     doc.body.appendChild(ta);
     ta.select();
-    ta.setSelectionRange(0, ta.value.length);
-    try {
-      const ok = doc.execCommand('copy');
-      if (!ok) throw new Error('Copy failed');
-      return true;
-    } finally {
-      doc.body.removeChild(ta);
-    }
+    try { doc.execCommand('copy'); return true; } finally { doc.body.removeChild(ta); }
   };
 
-  const initProse = () => {
-    // Responsive table wrappers
-    $$('[data-prose] table, .prose table').forEach((table) => {
-      if (!table.parentElement.classList.contains('table-wrap')) {
-        const wrap = doc.createElement('div');
-        wrap.className = 'table-wrap';
-        wrap.tabIndex = 0;
-        wrap.setAttribute('role', 'region');
-        wrap.setAttribute('aria-label', 'Scrollable table');
-        table.parentNode.insertBefore(wrap, table);
-        wrap.appendChild(table);
+  $$('[data-prose] pre, .prose pre').forEach((pre) => {
+    if (pre.dataset.hasCopyBtn || pre.classList.contains('lineno')) return;
+    pre.dataset.hasCopyBtn = 'true';
+    const b = doc.createElement('button');
+    b.type = 'button';
+    b.className = 'copy-btn';
+    b.setAttribute('aria-label', 'Copy code to clipboard');
+    b.innerHTML = '<span class="copy-btn__text">Copy</span>';
+    b.addEventListener('click', async () => {
+      const code = pre.querySelector('code')?.innerText || pre.innerText;
+      if (await copyText(code.replace(/\n$/, ''))) {
+        b.classList.add('is-copied');
+        b.querySelector('.copy-btn__text').textContent = 'Copied!';
+        setTimeout(() => {
+          b.classList.remove('is-copied');
+          b.querySelector('.copy-btn__text').textContent = 'Copy';
+        }, 1800);
       }
     });
+    pre.appendChild(b);
+  });
 
-    // Heading anchor links
-    $$('[data-prose] :is(h2,h3,h4)[id], .prose :is(h2,h3,h4)[id]').forEach((h) => {
-      if (!h.querySelector('.anchor')) {
-        const a = doc.createElement('a');
-        a.className = 'anchor';
-        a.href = '#' + h.id;
-        a.setAttribute('aria-label', 'Link to this section');
-        a.textContent = '#';
-        h.appendChild(a);
-      }
-    });
-
-    // Code copy buttons with dedicated non-scrolling wrapper
-    $$('[data-prose] pre, .prose pre').forEach((pre) => {
-      if (pre.classList.contains('lineno') || pre.closest('.rouge-gutter')) return;
-      if (pre.dataset.hasCopyBtn) return;
-      pre.dataset.hasCopyBtn = 'true';
-
-      // Ensure pre is enclosed in a wrapper so copy button stays fixed
-      let container = pre.parentElement;
-      if (!container.classList.contains('code-block-wrap')) {
-        const wrap = doc.createElement('div');
-        wrap.className = 'code-block-wrap';
-        pre.parentNode.insertBefore(wrap, pre);
-        wrap.appendChild(pre);
-        container = wrap;
-      }
-
-      const b = doc.createElement('button');
-      b.type = 'button';
-      b.className = 'copy-btn';
-      b.setAttribute('aria-label', 'Copy code to clipboard');
-      b.innerHTML = `
-        <svg class="copy-btn__icon copy-btn__icon--copy" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-          <rect x="9" y="9" width="13" height="13"></rect>
-          <path d="M5 15H3V3h11v2"></path>
-        </svg>
-        <svg class="copy-btn__icon copy-btn__icon--check" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-          <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-        <span class="copy-btn__text">Copy</span>
-      `;
-
-      b.addEventListener('click', async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        let text = '';
-        const rougeCode = pre.querySelector('td.rouge-code');
-        if (rougeCode) {
-          text = rougeCode.textContent;
-        } else {
-          const code = pre.querySelector('code');
-          text = (code || pre).textContent;
-        }
-        text = text.replace(/\r\n/g, '\n').replace(/\n$/, '');
-
-        const textSpan = b.querySelector('.copy-btn__text');
-        try {
-          await copyText(text);
-          b.classList.add('is-copied');
-          b.setAttribute('aria-label', 'Code copied to clipboard');
-          if (textSpan) textSpan.textContent = 'Copied';
-          setTimeout(() => {
-            b.classList.remove('is-copied');
-            b.setAttribute('aria-label', 'Copy code to clipboard');
-            if (textSpan) textSpan.textContent = 'Copy';
-          }, 1800);
-        } catch {
-          b.classList.add('is-error');
-          b.setAttribute('aria-label', 'Failed to copy');
-          if (textSpan) textSpan.textContent = 'Failed';
-          setTimeout(() => {
-            b.classList.remove('is-error');
-            b.setAttribute('aria-label', 'Copy code to clipboard');
-            if (textSpan) textSpan.textContent = 'Copy';
-          }, 1800);
-        }
-      });
-
-      container.appendChild(b);
-    });
-
-    // One Dark Pro Syntax Highlighting for code blocks
-    $$('[data-prose] pre code, .prose pre code').forEach((code) => {
-      if (code.dataset.highlighted) return;
-      code.dataset.highlighted = 'true';
-      code.classList.add('highlight');
-
-      const raw = code.textContent;
-      if (!raw || raw.length > 50000) return;
-
-      const escapeHtml = (s) =>
-        s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
-      const tokenRegex =
-        /(\/\*[\s\S]*?\*\/|\/\/[^\n]*|#[^\n]*)|("(?:\\[\s\S]|[^"\\])*"|'(?:\\[\s\S]|[^'\\])*'|`(?:\\[\s\S]|[^`\\])*`)|(\b(?:0x[0-9a-fA-F]+|0b[01]+|\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)\b)|(\b(?:const|constexpr|auto|static|struct|typedef|void|int|char|size_t|bool|true|false|nullptr|if|else|for|while|return|switch|case|break|continue|default|import|export|from|function|class|async|await|try|catch|new|this|let|var|package|echo|cd|make|git|mkdir|rm)\b)|(\b[a-zA-Z_]\w*(?=\s*\())|(==|!=|<=|>=|=>|->|\+\+|--|&&|\|\||[+\-*\/%&|^!<>]=?)/g;
-
-      let html = '';
-      let pos = 0;
-      let match;
-
-      while ((match = tokenRegex.exec(raw)) !== null) {
-        if (match.index > pos) {
-          html += escapeHtml(raw.slice(pos, match.index));
-        }
-        const token = match[0];
-        let cls = 'o';
-        if (match[1]) cls = 'c';
-        else if (match[2]) cls = 's';
-        else if (match[3]) cls = 'm';
-        else if (match[4]) cls = 'k';
-        else if (match[5]) cls = 'nf';
-        else if (match[6]) cls = 'o';
-
-        html += `<span class="${cls}">${escapeHtml(token)}</span>`;
-        pos = tokenRegex.lastIndex;
-      }
-
-      if (pos < raw.length) {
-        html += escapeHtml(raw.slice(pos));
-      }
-
-      code.innerHTML = html;
-    });
-  };
-
-  /* ---- Module 8: Project Tabs & View Transitions ---- */
-  let outlineObserver;
-  const updateOutline = () => {
-    const aside = $('[data-outline]');
-    const mobile = $('[data-outline-mobile]');
-    if (!aside) return;
-
-    const heads = $$('[data-prose] :is(h2,h3)[id]').filter((h) => !h.closest('[hidden]'));
-    const list = $('ul', aside);
-    list.replaceChildren();
-
-    if (heads.length < 2) {
-      aside.setAttribute('hidden', '');
-      if (mobile) mobile.setAttribute('hidden', '');
-      return;
-    }
-
-    aside.removeAttribute('hidden');
-    const getCleanTitle = (heading) => {
-      const clone = heading.cloneNode(true);
-      const anchor = clone.querySelector('.anchor');
-      if (anchor) anchor.remove();
-      return clone.textContent.trim();
-    };
-
-    const links = heads.map((h) => {
-      const li = doc.createElement('li');
+  $$('[data-prose] :is(h2,h3,h4)[id], .prose :is(h2,h3,h4)[id]').forEach((h) => {
+    if (!h.querySelector('.anchor')) {
       const a = doc.createElement('a');
+      a.className = 'anchor';
       a.href = '#' + h.id;
-      a.textContent = getCleanTitle(h);
-      if (h.tagName === 'H3') a.className = 'is-sub';
-      a.addEventListener('click', (e) => {
-        e.preventDefault();
-        const target = doc.getElementById(h.id);
-        if (target) {
-          const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-          target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
-          if (history.replaceState) {
-            history.replaceState(null, '', '#' + h.id);
-          }
-        }
-      });
-      li.appendChild(a);
-      list.appendChild(li);
-      return a;
-    });
-
-    if (mobile) {
-      mobile.removeAttribute('hidden');
-      mobile.replaceChildren();
-      const select = doc.createElement('select');
-      select.setAttribute('aria-label', 'On this page');
-
-      const defaultOpt = doc.createElement('option');
-      defaultOpt.value = '';
-      defaultOpt.textContent = 'On this page…';
-      select.appendChild(defaultOpt);
-
-      heads.forEach((h) => {
-        const opt = doc.createElement('option');
-        opt.value = h.id;
-        opt.textContent = (h.tagName === 'H3' ? '— ' : '') + getCleanTitle(h);
-        select.appendChild(opt);
-      });
-
-      select.addEventListener('change', (e) => {
-        if (e.target.value) {
-          const target = doc.getElementById(e.target.value);
-          if (target) {
-            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
-            if (history.replaceState) {
-              history.replaceState(null, '', '#' + e.target.value);
-            }
-          }
-        }
-      });
-      mobile.appendChild(select);
+      a.setAttribute('aria-label', 'Anchor link to section');
+      a.textContent = '#';
+      h.appendChild(a);
     }
+  });
 
-    if (outlineObserver) outlineObserver.disconnect();
-    if ('IntersectionObserver' in window) {
-      outlineObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              links.forEach((link) => {
-                link.classList.toggle(
-                  'is-active',
-                  link.getAttribute('href') === '#' + entry.target.id
-                );
-              });
-              if (mobile) {
-                const sel = $('select', mobile);
-                if (sel) sel.value = entry.target.id;
-              }
-            }
-          });
-        },
-        { rootMargin: '-80px 0px -70% 0px' }
-      );
-      heads.forEach((h) => outlineObserver.observe(h));
+  $$('[data-prose] table, .prose table').forEach((tbl) => {
+    if (!tbl.parentElement.classList.contains('table-wrap')) {
+      const wrap = doc.createElement('div');
+      wrap.className = 'table-wrap';
+      wrap.tabIndex = 0;
+      tbl.parentNode.insertBefore(wrap, tbl);
+      wrap.appendChild(tbl);
     }
-  };
+  });
 
-  const initProjectTabs = () => {
-    const tabs = $$('[data-tabs] [data-tab]');
-    if (!tabs.length) return;
-
-    const applyTab = (name) => {
+  /* ---- 7. Project Tabs ---- */
+  const tabs = $$('[data-tabs] [data-tab]');
+  if (tabs.length) {
+    const selectTab = (name, updateUrl) => {
       tabs.forEach((t) => {
-        const on = t.getAttribute('data-tab') === name;
+        const on = t.dataset.tab === name;
         t.classList.toggle('is-active', on);
         t.setAttribute('aria-selected', String(on));
       });
       $$('.tab-panel').forEach((p) => {
-        const on = p.getAttribute('data-panel') === name;
+        const on = p.dataset.panel === name;
         p.toggleAttribute('hidden', !on);
         p.classList.toggle('is-active', on);
-        if (on) {
-          p.classList.remove('is-animating');
-          void p.offsetWidth;
-          p.classList.add('is-animating');
-        }
       });
-      updateOutline();
+      if (updateUrl && history.replaceState) history.replaceState(null, '', '#' + name);
     };
+    tabs.forEach((t) => t.addEventListener('click', () => selectTab(t.dataset.tab, true)));
+    const hash = location.hash.replace('#', '');
+    if (hash && tabs.some((t) => t.dataset.tab === hash)) selectTab(hash, false);
+  }
 
-    const showTab = (name, updateUrl) => {
-      if (
-        doc.startViewTransition &&
-        !window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      ) {
-        doc.startViewTransition(() => applyTab(name));
-      } else {
-        applyTab(name);
-      }
-      if (updateUrl && history.replaceState) {
-        history.replaceState(null, '', '#' + name);
-      }
-    };
-
-    tabs.forEach((t) => {
-      t.addEventListener('click', () => showTab(t.getAttribute('data-tab'), true));
-    });
-
-    window.addEventListener('hashchange', () => {
-      const hashTab = location.hash.replace('#', '');
-      if ($(`[data-tab="${hashTab}"]`)) {
-        showTab(hashTab, false);
-      }
-    });
-
-    let initialTab = 'overview';
-    if (location.hash) {
-      const hashTab = location.hash.replace('#', '');
-      if ($(`[data-tab="${hashTab}"]`)) initialTab = hashTab;
-    }
-    showTab(initialTab, false);
-  };
-
-  /* ---- Module 9: Project Filter Chips Controller ---- */
-  const initFilterChips = () => {
-    const chips = $$('[data-filter]');
-    if (!chips.length) return;
-
-    chips.forEach((chip) => {
-      chip.addEventListener('click', (e) => {
-        const filter = chip.getAttribute('data-filter');
-        chips.forEach((x) => {
-          const on = x === chip;
-          x.classList.toggle('is-active', on);
-          x.setAttribute('aria-pressed', String(on));
+  /* ---- 8. Project Filter Chips ---- */
+  const chips = $$('[data-filter-chips] [data-filter]');
+  if (chips.length) {
+    chips.forEach((c) => {
+      c.addEventListener('click', () => {
+        const f = c.dataset.filter;
+        chips.forEach((b) => {
+          const on = b === c;
+          b.classList.toggle('is-active', on);
+          b.setAttribute('aria-pressed', String(on));
         });
-        $$('[data-category-section]').forEach((section) => {
-          const match =
-            filter === 'all' || section.getAttribute('data-category-section') === filter;
-          section.classList.toggle('is-hidden', !match);
-          if (match) {
-            section.classList.remove('is-animating');
-            void section.offsetWidth;
-            section.classList.add('is-animating');
-          }
+        $$('.category[data-category-section]').forEach((sec) => {
+          sec.hidden = f !== 'all' && sec.dataset.categorySection !== f;
         });
-        if (e?.isTrusted && history.replaceState) {
-          history.replaceState(null, '', filter === 'all' ? location.pathname : '#' + filter);
-        }
+        $$('.project-card[data-category]').forEach((card) => {
+          card.hidden = f !== 'all' && card.dataset.category !== f;
+        });
       });
     });
+  }
 
-    window.addEventListener('hashchange', () => {
-      const targetFilter = location.hash.replace('#', '') || 'all';
-      const match = $(`[data-filter="${targetFilter}"]`);
-      if (match && !match.classList.contains('is-active')) {
-        match.click();
-      }
-    });
-
-    if (location.hash) {
-      const targetFilter = location.hash.replace('#', '');
-      const match = $(`[data-filter="${targetFilter}"]`);
-      if (match) match.click();
-    }
-  };
-
-  /* ---- Module 10: Search Dialog Controller ---- */
+  /* ---- 9. Search Dialog Controller ---- */
   const searchDlg = $('#search-dialog');
   const searchInput = $('#search-input');
   const searchResults = $('#search-results');
   let searchIndex = null;
   let searchSelected = -1;
-  let searchLastFocus = null;
-  let searchDebounceTimer = null;
+  let searchDebounce = null;
 
-  const loadSearchIndex = () => {
+  const loadSearch = () => {
     if (searchIndex) return Promise.resolve(searchIndex);
-    const indexPath = searchDlg.getAttribute('data-index') || '/search.json';
-    return fetch(indexPath)
-      .then((r) => {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.json();
-      })
-      .then(
-        (data) => {
-          searchIndex = data;
-          return data;
-        },
-        (err) => {
-          searchIndex = null;
-          const errLi = doc.createElement('li');
-          errLi.className = 'search__empty search__empty--error';
-          errLi.textContent = 'Search index unavailable (' + (err.message || 'Offline') + '). Static directory navigation active.';
-          searchResults.replaceChildren(errLi);
-          throw err;
+    const path = searchDlg?.getAttribute('data-index') || '/search.json';
+    return fetch(path)
+      .then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then((data) => { searchIndex = data; return data; })
+      .catch((err) => {
+        searchIndex = null;
+        if (searchResults) {
+          const li = doc.createElement('li');
+          li.className = 'search__empty search__empty--error';
+          li.textContent = `Search index unavailable (${err.message}).`;
+          searchResults.replaceChildren(li);
         }
-      );
+        throw err;
+      });
   };
 
-  const renderSearchResults = (query) => {
-    query = query.trim().toLowerCase();
-    const words = query.split(/\s+/).filter(Boolean);
-    const hits = (searchIndex || [])
-      .map((item) => {
-        const title = String(item.title || '').toLowerCase();
-        const desc = String(item.description || '').toLowerCase();
-        const tags = (
-          Array.isArray(item.tags) ? item.tags.join(' ') : String(item.tags || '')
-        ).toLowerCase();
-        let score = 0;
-        if (!words.length) return { item, score: 1 };
-        for (let i = 0; i < words.length; i++) {
-          const w = words[i];
-          if (title.indexOf(w) === 0) score += 8;
-          else if (title.indexOf(w) > -1) score += 5;
-          else if (tags.indexOf(w) > -1) score += 3;
-          else if (desc.indexOf(w) > -1) score += 1;
-          else return { item, score: 0 };
-        }
-        return { item, score };
-      })
-      .filter((h) => h.score > 0)
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 8);
-
-    searchSelected = hits.length ? 0 : -1;
-    const status = $('#search-status');
-    if (status) {
-      status.textContent = hits.length
-        ? `${hits.length} result${hits.length === 1 ? '' : 's'} found`
-        : 'No results found';
+  const renderSearch = (q) => {
+    if (!searchResults) return;
+    q = q.trim().toLowerCase();
+    const words = q.split(/\s+/).filter(Boolean);
+    if (!words.length) {
+      searchResults.replaceChildren();
+      return;
     }
-
-    const appendHighlighted = (parent, text, queryWords) => {
-      const str = String(text || '');
-      if (!queryWords || !queryWords.length) {
-        parent.appendChild(doc.createTextNode(str));
-        return;
-      }
-      const validWords = queryWords
-        .filter(Boolean)
-        .map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
-        .sort((a, b) => b.length - a.length);
-      if (!validWords.length) {
-        parent.appendChild(doc.createTextNode(str));
-        return;
-      }
-
-      const combinedRegex = new RegExp(`(${validWords.join('|')})`, 'gi');
-      let lastIndex = 0;
-      let match;
-
-      while ((match = combinedRegex.exec(str)) !== null) {
-        if (match.index > lastIndex) {
-          parent.appendChild(doc.createTextNode(str.slice(lastIndex, match.index)));
-        }
-        const mark = doc.createElement('mark');
-        mark.textContent = match[0];
-        parent.appendChild(mark);
-        lastIndex = combinedRegex.lastIndex;
-        if (match.index === combinedRegex.lastIndex) {
-          combinedRegex.lastIndex++;
-        }
-      }
-      if (lastIndex < str.length) {
-        parent.appendChild(doc.createTextNode(str.slice(lastIndex)));
-      }
-    };
-
-    const sanitizeUrl = (u) => {
-      const s = String(u || '').trim();
-      return /^(javascript|data|vbscript):/i.test(s) ? '#' : s;
-    };
+    const hits = (searchIndex || []).filter((item) => {
+      const text = `${item.title || ''} ${item.description || ''} ${item.url || ''}`.toLowerCase();
+      return words.every((w) => text.includes(w));
+    });
 
     if (!hits.length) {
-      const emptyLi = doc.createElement('li');
-      emptyLi.className = 'search__empty';
-      emptyLi.textContent = 'No results found';
-      searchResults.replaceChildren(emptyLi);
+      const li = doc.createElement('li');
+      li.className = 'search__empty';
+      li.textContent = 'No matching entries found.';
+      searchResults.replaceChildren(li);
       return;
     }
 
     const frag = doc.createDocumentFragment();
-    hits.forEach((h, idx) => {
-      const e = h.item;
+    hits.slice(0, 10).forEach((item, idx) => {
       const li = doc.createElement('li');
       const a = doc.createElement('a');
-      a.href = sanitizeUrl(e.url);
+      a.href = item.url;
       if (idx === 0) a.className = 'is-selected';
-
-      const meta = doc.createElement('span');
-      meta.className = 'meta';
-      meta.textContent = String(e.type || '');
-      a.appendChild(meta);
-
-      const strong = doc.createElement('strong');
-      appendHighlighted(strong, e.title, words);
-      a.appendChild(strong);
-
-      if (e.description) {
-        const desc = doc.createElement('span');
-        desc.className = 'desc';
-        appendHighlighted(desc, e.description, words);
-        a.appendChild(desc);
-      }
-
+      a.innerHTML = `<span class="meta">${item.type || 'Page'}</span><strong>${item.title || ''}</strong>` +
+        (item.description ? `<span class="desc">${item.description}</span>` : '');
       li.appendChild(a);
       frag.appendChild(li);
     });
-
     searchResults.replaceChildren(frag);
+    searchSelected = 0;
   };
 
   const openSearch = () => {
     if (!searchDlg?.showModal) return;
-    searchLastFocus = doc.activeElement;
     if (!searchDlg.open) searchDlg.showModal();
-    searchInput.value = '';
-    if (!searchIndex) {
-      const loadingLi = doc.createElement('li');
-      loadingLi.className = 'search__loading';
-      const spinner = doc.createElement('span');
-      spinner.className = 'spinner';
-      spinner.setAttribute('aria-hidden', 'true');
-      const msg = doc.createElement('span');
-      msg.textContent = 'Loading search index…';
-      loadingLi.append(spinner, msg);
-      searchResults.replaceChildren(loadingLi);
+    if (searchInput) {
+      searchInput.value = '';
+      searchInput.focus();
     }
-    loadSearchIndex().then(() => renderSearchResults(''));
-    searchInput.focus();
+    loadSearch().then(() => renderSearch(''));
   };
 
   const closeSearch = () => {
-    if (searchDlg?.open) {
-      searchDlg.close();
-      if (searchLastFocus && typeof searchLastFocus.focus === 'function') {
-        searchLastFocus.focus();
-        searchLastFocus = null;
-      }
-    }
+    if (searchDlg?.open) searchDlg.close();
   };
 
-  const moveSearchSelection = (delta) => {
+  $$('[data-search-open]').forEach((b) => b.addEventListener('click', openSearch));
+  $$('[data-search-close]').forEach((b) => b.addEventListener('click', closeSearch));
+  searchDlg?.addEventListener('click', (e) => { if (e.target === searchDlg) closeSearch(); });
+
+  searchInput?.addEventListener('input', () => {
+    clearTimeout(searchDebounce);
+    searchDebounce = setTimeout(() => {
+      loadSearch().then(() => renderSearch(searchInput.value)).catch(() => {});
+    }, 40);
+  });
+
+  searchInput?.addEventListener('keydown', (e) => {
     const items = $$('a', searchResults);
     if (!items.length) return;
-    items.forEach((a) => a.classList.remove('is-selected'));
-    searchSelected = (searchSelected + delta + items.length) % items.length;
-    items[searchSelected].classList.add('is-selected');
-    items[searchSelected].scrollIntoView({ block: 'nearest' });
-  };
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      items.forEach((a) => a.classList.remove('is-selected'));
+      searchSelected = (searchSelected + (e.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length;
+      items[searchSelected].classList.add('is-selected');
+      items[searchSelected].scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'Enter' && items[searchSelected]) {
+      e.preventDefault();
+      items[searchSelected].click();
+    }
+  });
 
-  const initSearch = () => {
-    if (!searchDlg) return;
-
-    const isMac = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform || navigator.userAgent);
-    const kbd = $('.search-trigger kbd');
-    if (kbd && isMac) kbd.textContent = '⌘K';
-
-    let isBackdrop = false;
-    $$('[data-search-open]').forEach((btn) => btn.addEventListener('click', openSearch));
-    $$('[data-search-close]').forEach((btn) => btn.addEventListener('click', closeSearch));
-    searchDlg.addEventListener('pointerdown', (e) => {
-      isBackdrop = e.target === searchDlg;
-    });
-    searchDlg.addEventListener('click', (e) => {
-      if (e.target === searchDlg && isBackdrop) closeSearch();
-    });
-    searchDlg.addEventListener('close', () => {
-      if (searchLastFocus && typeof searchLastFocus.focus === 'function') {
-        searchLastFocus.focus();
-        searchLastFocus = null;
-      }
-    });
-
-    searchInput.addEventListener('input', () => {
-      clearTimeout(searchDebounceTimer);
-      searchDebounceTimer = setTimeout(() => {
-        loadSearchIndex().then(() => renderSearchResults(searchInput.value));
-      }, 40);
-    });
-
-    searchInput.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        moveSearchSelection(1);
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        moveSearchSelection(-1);
-      } else if (e.key === 'Home') {
-        e.preventDefault();
-        const items = $$('a', searchResults);
-        if (items.length) {
-          items.forEach((a) => a.classList.remove('is-selected'));
-          searchSelected = 0;
-          items[0].classList.add('is-selected');
-          items[0].scrollIntoView({ block: 'nearest' });
-        }
-      } else if (e.key === 'End') {
-        e.preventDefault();
-        const items = $$('a', searchResults);
-        if (items.length) {
-          items.forEach((a) => a.classList.remove('is-selected'));
-          searchSelected = items.length - 1;
-          items[searchSelected].classList.add('is-selected');
-          items[searchSelected].scrollIntoView({ block: 'nearest' });
-        }
-      } else if (e.key === 'Enter') {
-        e.preventDefault();
-        const selectedItem = $$('a', searchResults)[searchSelected];
-        if (selectedItem) {
-          closeSearch();
-          location.href = selectedItem.href;
-        }
-      }
-    });
-
-    searchResults.addEventListener('mousemove', (e) => {
-      const targetLink = e.target.closest('a');
-      if (!targetLink) return;
-      const items = $$('a', searchResults);
-      const idx = items.indexOf(targetLink);
-      if (idx !== -1 && idx !== searchSelected) {
-        items.forEach((el) => el.classList.remove('is-selected'));
-        searchSelected = idx;
-        targetLink.classList.add('is-selected');
-      }
-    });
-
-    doc.addEventListener('keydown', (e) => {
-      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && !e.altKey && e.key.toLowerCase() === 'k') {
-        e.preventDefault();
-        searchDlg.open ? closeSearch() : openSearch();
-      }
-    });
-  };
-
-  /* ---- Module 11: Shortcuts Dialog & Global Quick Keys ---- */
+  /* ---- 10. Shortcuts Dialog & Hotkeys ---- */
   const shortcutsDlg = $('#shortcuts-dialog');
-  let shortcutsLastFocus = null;
-  const openShortcuts = () => {
-    if (!shortcutsDlg?.showModal) return;
-    shortcutsLastFocus = doc.activeElement;
-    if (!shortcutsDlg.open) shortcutsDlg.showModal();
-  };
-  const closeShortcuts = () => {
-    if (shortcutsDlg?.open) {
-      shortcutsDlg.close();
-      if (shortcutsLastFocus && typeof shortcutsLastFocus.focus === 'function') {
-        shortcutsLastFocus.focus();
-        shortcutsLastFocus = null;
-      }
+  const openShortcuts = () => { if (shortcutsDlg?.showModal && !shortcutsDlg.open) shortcutsDlg.showModal(); };
+  $$('[data-shortcuts-open]').forEach((b) => b.addEventListener('click', openShortcuts));
+  $$('[data-shortcuts-close]').forEach((b) => b.addEventListener('click', () => shortcutsDlg?.close()));
+  shortcutsDlg?.addEventListener('click', (e) => { if (e.target === shortcutsDlg) shortcutsDlg.close(); });
+
+  doc.addEventListener('keydown', (e) => {
+    const tag = e.target.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || e.target.isContentEditable) return;
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      openSearch();
+      return;
     }
-  };
-
-  const initShortcuts = () => {
-    if (shortcutsDlg) {
-      let isBackdrop = false;
-      $$('[data-shortcuts-open]').forEach((b) => b.addEventListener('click', openShortcuts));
-      $$('[data-shortcuts-close]').forEach((b) => b.addEventListener('click', closeShortcuts));
-      shortcutsDlg.addEventListener('pointerdown', (e) => {
-        isBackdrop = e.target === shortcutsDlg;
-      });
-      shortcutsDlg.addEventListener('click', (e) => {
-        if (e.target === shortcutsDlg && isBackdrop) closeShortcuts();
-      });
-      shortcutsDlg.addEventListener('close', () => {
-        if (shortcutsLastFocus && typeof shortcutsLastFocus.focus === 'function') {
-          shortcutsLastFocus.focus();
-          shortcutsLastFocus = null;
-        }
-      });
-      const isMac = /(Mac|iPhone|iPod|iPad)/i.test(navigator.platform || navigator.userAgent);
-      if (isMac) {
-        $$('kbd', shortcutsDlg).forEach((kbd) => {
-          if (kbd.textContent.trim() === 'Ctrl') kbd.textContent = '⌘';
-        });
+    if (!e.metaKey && !e.ctrlKey && !e.altKey) {
+      const k = e.key.toLowerCase();
+      if (k === '/') { e.preventDefault(); openSearch(); }
+      else if (k === '?') { e.preventDefault(); openShortcuts(); }
+      else if (k === 't') {
+        const next = getTheme() === 'dark' ? 'light' : 'dark';
+        root.setAttribute('data-theme', next);
+        store.set('theme', next);
+        syncTheme(next);
       }
+      else if (k === 'h') location.href = '/';
+      else if (k === 'd') location.href = '/docs/getting-started/';
+      else if (k === 'p') location.href = '/projects/';
+      else if (k === 'b') location.href = '/blog/';
+      else if (k === 'l') location.href = '/books/';
     }
+  });
 
-    doc.addEventListener('keydown', (e) => {
-      const isInput = Boolean(
-        e.target?.closest?.('input, textarea, select, [contenteditable="true"]') ||
-        e.target?.isContentEditable
-      );
-      const isModalOpen = Boolean(searchDlg?.open || shortcutsDlg?.open);
-
-      // Search slash key '/'
-      if (!isInput && !isModalOpen && e.key === '/' && !e.metaKey && !e.ctrlKey && !e.altKey) {
-        e.preventDefault();
-        openSearch();
-        return;
-      }
-
-      // Question mark '?' for shortcuts sheet
-      if (!isInput && (e.key === '?' || (e.shiftKey && e.key === '/'))) {
-        e.preventDefault();
-        if (shortcutsDlg) {
-          shortcutsDlg.open ? closeShortcuts() : openShortcuts();
-        }
-        return;
-      }
-
-      // If any modal is open, don't execute single-character navigation hotkeys
-      if (isModalOpen || isInput) return;
-
-      // 't' or 'T' for theme toggle
-      if ((e.key === 't' || e.key === 'T') && !e.metaKey && !e.ctrlKey && !e.altKey) {
-        const firstThemeBtn = $('[data-theme-toggle]');
-        if (firstThemeBtn) firstThemeBtn.click();
-        return;
-      }
-
-      // Quick navigation: H (Home), D (Docs), P (Projects), B (Blog), L (Library/Books)
-      if (!e.metaKey && !e.ctrlKey && !e.altKey) {
-        const k = e.key.toLowerCase();
-        const base = root.getAttribute('data-baseurl') || '';
-        if (k === 'h') {
-          location.href = base || '/';
-        } else if (k === 'd') {
-          location.href = base + '/docs/getting-started/';
-        } else if (k === 'p') {
-          location.href = base + '/projects/';
-        } else if (k === 'b') {
-          location.href = base + '/blog/';
-        } else if (k === 'l') {
-          location.href = base + '/books/';
-        }
-      }
-    });
-  };
-
-  /* ---- Module 12: Demoted / Removed Spotlight Physics ---- */
-  const initBentoSpotlight = () => {};
-
-  /* ---- Module 13: Universal Reading Progress Fallback ---- */
-  const initReadingProgressFallback = () => {
-    const bar = $('.reading-progress');
-    if (!bar) return;
-    if (window.CSS && CSS.supports && CSS.supports('animation-timeline', 'scroll()')) return;
-
+  /* ---- 11. Reading Progress Bar ---- */
+  const readingBar = $('.reading-progress');
+  if (readingBar) {
     let ticking = false;
-    const updateProgress = () => {
-      const docHeight = root.scrollHeight - window.innerHeight;
-      const progress = docHeight > 0 ? window.scrollY / docHeight : 0;
-      bar.style.transform = `scaleX(${Math.min(1, Math.max(0, progress))})`;
+    const updateReading = () => {
+      const max = root.scrollHeight - window.innerHeight;
+      readingBar.style.transform = `scaleX(${max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0})`;
       ticking = false;
     };
+    window.addEventListener('scroll', () => {
+      if (!ticking) { requestAnimationFrame(updateReading); ticking = true; }
+    }, { passive: true });
+    updateReading();
+  }
 
-    const requestTick = () => {
-      if (!ticking) {
-        requestAnimationFrame(updateProgress);
-        ticking = true;
+  /* ---- 12. Back To Top ---- */
+  $('.footer__back-to-top')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  /* ---- 13. Web Share ---- */
+  $$('[data-share-btn]').forEach((b) => {
+    b.addEventListener('click', async () => {
+      if (navigator.share) {
+        try { await navigator.share({ title: doc.title, url: location.href }); return; } catch {}
       }
-    };
-
-    window.addEventListener('scroll', requestTick, { passive: true });
-    window.addEventListener('resize', requestTick, { passive: true });
-    updateProgress();
-  };
-
-  /* ---- Module 14: Back To Top Navigation ---- */
-  const initBackToTop = () => {
-    const topLink = $('.footer__back-to-top');
-    const mainEl = $('#main');
-    if (!topLink) return;
-
-    topLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
-      if (mainEl) {
-        mainEl.setAttribute('tabindex', '-1');
-        mainEl.focus({ preventScroll: true });
-      }
-      if (history.replaceState) {
-        history.replaceState(null, '', location.pathname + location.search);
-      }
+      copyText(location.href);
+      b.classList.add('is-copied');
+      setTimeout(() => b.classList.remove('is-copied'), 2000);
     });
-  };
+  });
 
-  /* ---- Module 15: Native Web Share & Fallback Clipboard Sharing ---- */
-  const initShare = () => {
-    $$('[data-share-btn]').forEach((btn) => {
-      btn.addEventListener('click', async () => {
-        const title = doc.title;
-        const url = location.href;
-        if (navigator.share) {
-          try {
-            await navigator.share({ title, url });
-            return;
-          } catch {}
-        }
-        try {
-          await copyText(url);
-          btn.classList.add('is-copied');
-          setTimeout(() => {
-            btn.classList.remove('is-copied');
-          }, 2000);
-        } catch {}
-      });
-    });
-  };
+  /* ---- 14. Service Worker & Print ---- */
+  if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
+  }
+  $$('[data-print-btn]').forEach((b) => b.addEventListener('click', () => window.print()));
 
-  /* ---- Module 16: Progressive Web App (PWA) Service Worker ---- */
-  const initServiceWorker = () => {
-    if (
-      'serviceWorker' in navigator &&
-      (location.protocol === 'https:' ||
-        location.hostname === 'localhost' ||
-        location.hostname === '127.0.0.1')
-    ) {
-      window.addEventListener('load', () => {
-        const base = root.getAttribute('data-baseurl') || '';
-        navigator.serviceWorker.register(base + '/sw.js').catch(() => {});
-      });
-    }
-  };
-
-  /* ---- Module 17: Publication Print Controller ---- */
-  const initPrint = () => {
-    $$('[data-print-btn]').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        window.print();
-      });
-    });
-  };
-
-  /* ---- Initialize All Controllers ---- */
-  initPageProgress();
-  initImageTransitions();
-  initThemeToggle();
-  initMobileNav();
-  initAnnouncement();
-  initProse();
-  initProjectTabs();
-  updateOutline();
-  initFilterChips();
-  initSearch();
-  initShortcuts();
-  initBentoSpotlight();
-  initReadingProgressFallback();
-  initBackToTop();
-  initShare();
-  initServiceWorker();
-  initPrint();
+  requestAnimationFrame(() => root.classList.remove('is-loading'));
 })();

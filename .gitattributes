@@ -1,0 +1,4 @@
+# GitHub Linguist Language Overrides
+# Vendoring browser client scripts and standalone reader keeps repository language stats focused on core C architecture
+*.js linguist-vendored
+books/reader/* linguist-vendored
