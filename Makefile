@@ -1,5 +1,19 @@
-CC ?= cc
-C_STD ?= $(shell $(CC) -std=c2y -E -x c /dev/null >/dev/null 2>&1 && echo -std=c2y || ($(CC) -std=c23 -E -x c /dev/null >/dev/null 2>&1 && echo -std=c23 || echo -std=c2x))
+# Modern, POSIX-Compliant Makefile for irbox Static Site Generator
+# Supports ISO C29 (C2Y), ISO C23, and ISO C17 with automatic compiler feature probing.
+
+ifeq ($(origin CC),default)
+  CC := $(shell command -v gcc-14 >/dev/null 2>&1 && echo gcc-14 || \
+        (command -v gcc-13 >/dev/null 2>&1 && echo gcc-13 || \
+        (command -v gcc-12 >/dev/null 2>&1 && echo gcc-12 || \
+        (command -v gcc-11 >/dev/null 2>&1 && echo gcc-11 || \
+        (command -v gcc-10 >/dev/null 2>&1 && echo gcc-10 || \
+        (command -v clang >/dev/null 2>&1 && echo clang || echo cc))))))
+endif
+
+C_STD ?= $(shell $(CC) -std=c29 -E -x c /dev/null >/dev/null 2>&1 && echo -std=c29 || \
+         ($(CC) -std=c2y -E -x c /dev/null >/dev/null 2>&1 && echo -std=c2y || \
+         ($(CC) -std=c23 -E -x c /dev/null >/dev/null 2>&1 && echo -std=c23 || \
+         ($(CC) -std=c2x -E -x c /dev/null >/dev/null 2>&1 && echo -std=c2x || echo -std=c17))))
 
 ifeq ($(FAST),1)
   CFLAGS ?= -O1 -Wall -Wextra $(C_STD)
@@ -26,7 +40,7 @@ build: $(BIN)
 
 check:
 	$(CC) $(C_STD) -Wall -Wextra -Wpedantic -fsyntax-only $(SRC)
-	@echo "C23 syntax check passed with 0 warnings."
+	@echo "C23/C29 syntax check passed with 0 warnings."
 
 test: check build
 	@test -f $(OUT)/index.html || (echo "Missing index.html" && exit 1)

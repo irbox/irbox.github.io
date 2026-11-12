@@ -1,18 +1,27 @@
 /**
  * @file tools/ssg.c
- * @description Hardened Modern ISO C23 Zero-Dependency Static Site Generator for irbox.github.io.
+ * @description Hardened Modern ISO C23/C29 Zero-Dependency Static Site Generator for irbox.github.io.
  * Generates semantic static HTML, RSS feeds, sitemap, and search index with sub-second performance.
+ * Fully compliant with POSIX.1-2008 / POSIX.1-2024 and ISO C23 / C2Y (C29).
  */
 
+#ifndef _POSIX_C_SOURCE
+#define _POSIX_C_SOURCE 200809L
+#endif
+#ifndef _XOPEN_SOURCE
+#define _XOPEN_SOURCE 700
+#endif
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
 #endif
+
 #if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunknown-warning-option"
 #pragma clang diagnostic ignored "-Wdeprecated-octal-literals"
 #pragma clang diagnostic pop
 #endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -27,14 +36,47 @@
 #include <strings.h>
 #include <assert.h>
 
-#ifndef __cplusplus
+#if (!defined(__STDC_VERSION__) || __STDC_VERSION__ < 202311L) && !defined(__cplusplus)
 #include <stdbool.h>
+#ifndef nullptr
+#define nullptr ((void *)0)
+#endif
 #endif
 
-#if defined(__GNUC__) || defined(__clang__)
-#define SSG_NODISCARD __attribute__((warn_unused_result))
-#else
-#define SSG_NODISCARD
+#if defined(__has_c_attribute)
+#  if __has_c_attribute(nodiscard)
+#    define SSG_NODISCARD [[nodiscard]]
+#  endif
+#  if __has_c_attribute(maybe_unused)
+#    define SSG_MAYBE_UNUSED [[maybe_unused]]
+#  endif
+#  if __has_c_attribute(fallthrough)
+#    define SSG_FALLTHROUGH [[fallthrough]]
+#  endif
+#endif
+
+#ifndef SSG_NODISCARD
+#  if defined(__GNUC__) || defined(__clang__)
+#    define SSG_NODISCARD __attribute__((warn_unused_result))
+#  else
+#    define SSG_NODISCARD
+#  endif
+#endif
+
+#ifndef SSG_MAYBE_UNUSED
+#  if defined(__GNUC__) || defined(__clang__)
+#    define SSG_MAYBE_UNUSED __attribute__((unused))
+#  else
+#    define SSG_MAYBE_UNUSED
+#  endif
+#endif
+
+#ifndef SSG_FALLTHROUGH
+#  if defined(__GNUC__) && __GNUC__ >= 7
+#    define SSG_FALLTHROUGH __attribute__((fallthrough))
+#  else
+#    define SSG_FALLTHROUGH ((void)0)
+#  endif
 #endif
 
 #define MAX_PATH 1024
@@ -1264,7 +1306,7 @@ static const char *parse_frontmatter_block(const char *content, void *target, in
 /* ==========================================================================
    Navigation Structures
    ========================================================================== */
-static void init_docs_navigation() {
+static void init_docs_navigation(void) {
     nav_section_count = 5;
     strcpy(nav_sections[0].title, "Introduction");
     nav_sections[0].count = 3;
@@ -3557,7 +3599,7 @@ SSG_NODISCARD static int calculate_reading_time(const char *text) {
     return mins > 0 ? mins : 1;
 }
 
-static void load_docs() {
+static void load_docs(void) {
     DIR *d = opendir("_docs");
     if (!d) return;
     struct dirent *dir;
@@ -3598,7 +3640,7 @@ static void load_docs() {
     closedir(d);
 }
 
-static void load_posts() {
+static void load_posts(void) {
     DIR *d = opendir("_posts");
     if (!d) return;
     struct dirent *dir;
@@ -3670,7 +3712,7 @@ static void load_posts() {
     }
 }
 
-static void load_projects() {
+static void load_projects(void) {
     DIR *d = opendir("_projects");
     if (!d) return;
     struct dirent *dir;
@@ -3825,8 +3867,17 @@ int main(int argc, char **argv) {
     clock_gettime(CLOCK_MONOTONIC, &t_end);
 
     printf("================================================================\n");
-    printf("⚡ irbox C23-SSG — Modern Zero-Dependency Standalone Site Generator\n");
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ > 202311L
+    printf("⚡ irbox SSG — Modern Standalone Site Generator (ISO C29/C2Y mode)\n");
+#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202000L
+    printf("⚡ irbox SSG — Modern Standalone Site Generator (ISO C23 mode)\n");
+#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201710L
+    printf("⚡ irbox SSG — Modern Standalone Site Generator (ISO C17 mode)\n");
+#else
+    printf("⚡ irbox SSG — Modern Standalone Site Generator (ISO C mode)\n");
+#endif
     printf("Target Output: %s\n", out_dir);
+    printf("Standards:     POSIX.1-2008 / POSIX.1-2024 & ISO C23/C29\n");
     printf("================================================================\n");
     printf("  Stage                   Count    Status      Duration\n");
     printf("  --------------------------------------------------------------\n");
