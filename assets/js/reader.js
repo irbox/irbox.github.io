@@ -117,17 +117,23 @@
 
     // Update theme buttons
     document.querySelectorAll('[data-set-theme]').forEach((btn) => {
-      btn.classList.toggle('is-active', btn.getAttribute('data-set-theme') === prefs.theme);
+      const active = btn.getAttribute('data-set-theme') === prefs.theme;
+      btn.classList.toggle('is-active', active);
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
     });
 
     // Update font buttons
     document.querySelectorAll('[data-set-font]').forEach((btn) => {
-      btn.classList.toggle('is-active', btn.getAttribute('data-set-font') === prefs.font);
+      const active = btn.getAttribute('data-set-font') === prefs.font;
+      btn.classList.toggle('is-active', active);
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
     });
 
     // Update line height buttons
     document.querySelectorAll('[data-set-lh]').forEach((btn) => {
-      btn.classList.toggle('is-active', btn.getAttribute('data-set-lh') === prefs.lh);
+      const active = btn.getAttribute('data-set-lh') === prefs.lh;
+      btn.classList.toggle('is-active', active);
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
     });
   }
 

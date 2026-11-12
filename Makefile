@@ -13,7 +13,7 @@ TMP_DIR := $(if $(TMPDIR),$(TMPDIR),$(if $(wildcard /tmp),/tmp,.))
 BIN ?= $(TMP_DIR)/irbox-ssg
 OUT ?= _site
 
-.PHONY: all build clean check
+.PHONY: all build clean check test
 
 all: $(BIN)
 
@@ -27,6 +27,16 @@ build: $(BIN)
 check:
 	$(CC) $(C_STD) -Wall -Wextra -Wpedantic -fsyntax-only $(SRC)
 	@echo "C23 syntax check passed with 0 warnings."
+
+test: check build
+	@test -f $(OUT)/index.html || (echo "Missing index.html" && exit 1)
+	@test -f $(OUT)/feed.xml || (echo "Missing feed.xml" && exit 1)
+	@test -f $(OUT)/sitemap.xml || (echo "Missing sitemap.xml" && exit 1)
+	@test -f $(OUT)/search.json || (echo "Missing search.json" && exit 1)
+	@test -f $(OUT)/manifest.webmanifest || (echo "Missing manifest.webmanifest" && exit 1)
+	@test -f $(OUT)/books/reader/index.html || (echo "Missing reader/index.html" && exit 1)
+	@test -f $(OUT)/.nojekyll || (echo "Missing .nojekyll" && exit 1)
+	@echo "All build verification tests passed successfully."
 
 clean:
 	rm -rf $(BIN) $(OUT) ./ssg

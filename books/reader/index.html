@@ -3,7 +3,6 @@
   <header
     class="reader-toolbar"
     id="reader-toolbar"
-    role="region"
     aria-label="Book reader controls"
   >
     <div class="reader-toolbar__left">
@@ -77,6 +76,7 @@
         aria-expanded="false"
         aria-controls="reader-settings-popover"
         title="Reading appearance and fonts"
+        aria-label="Reading appearance and fonts"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -95,7 +95,7 @@
           <line x1="9" y1="20" x2="15" y2="20"></line>
           <line x1="12" y1="4" x2="12" y2="20"></line>
         </svg>
-        <span class="reader-btn-label">Aa</span>
+        <span class="reader-btn-label" aria-hidden="true">Aa</span>
       </button>
 
       <!-- Fullscreen button -->
@@ -104,6 +104,7 @@
         class="btn btn--subtle reader-btn"
         id="reader-fullscreen-toggle"
         title="Toggle fullscreen reading (F)"
+        aria-label="Toggle fullscreen reading"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -139,9 +140,10 @@
   >
     <div class="reader-settings-section">
       <span class="reader-settings-label">Reading Theme</span>
-      <div class="reader-theme-switcher" role="radiogroup" aria-label="Theme">
+      <div class="reader-theme-switcher" role="group" aria-label="Theme">
         <button
           type="button"
+          aria-pressed="false"
           class="reader-theme-btn reader-theme-btn--light"
           data-set-theme="light"
           title="Light paper"
@@ -150,6 +152,7 @@
         </button>
         <button
           type="button"
+          aria-pressed="true"
           class="reader-theme-btn reader-theme-btn--sepia is-active"
           data-set-theme="sepia"
           title="Warm Sepia"
@@ -158,6 +161,7 @@
         </button>
         <button
           type="button"
+          aria-pressed="false"
           class="reader-theme-btn reader-theme-btn--dark"
           data-set-theme="dark"
           title="Dark mode"
@@ -166,6 +170,7 @@
         </button>
         <button
           type="button"
+          aria-pressed="false"
           class="reader-theme-btn reader-theme-btn--black"
           data-set-theme="black"
           title="OLED Black"
@@ -177,10 +182,10 @@
 
     <div class="reader-settings-section">
       <span class="reader-settings-label">Font Family</span>
-      <div class="reader-font-switcher" role="radiogroup" aria-label="Font">
-        <button type="button" class="chip is-active" data-set-font="serif">Libron Serif</button>
-        <button type="button" class="chip" data-set-font="sans">Sans-serif</button>
-        <button type="button" class="chip" data-set-font="mono">Mono</button>
+      <div class="reader-font-switcher" role="group" aria-label="Font">
+        <button type="button" aria-pressed="true" class="chip is-active" data-set-font="serif">Libron Serif</button>
+        <button type="button" aria-pressed="false" class="chip" data-set-font="sans">Sans-serif</button>
+        <button type="button" aria-pressed="false" class="chip" data-set-font="mono">Mono</button>
       </div>
     </div>
 
@@ -209,10 +214,10 @@
 
     <div class="reader-settings-section">
       <span class="reader-settings-label">Line Spacing</span>
-      <div class="reader-line-switcher" role="radiogroup" aria-label="Line spacing">
-        <button type="button" class="chip" data-set-lh="compact">Compact</button>
-        <button type="button" class="chip is-active" data-set-lh="normal">Normal</button>
-        <button type="button" class="chip" data-set-lh="relaxed">Relaxed</button>
+      <div class="reader-line-switcher" role="group" aria-label="Line spacing">
+        <button type="button" aria-pressed="false" class="chip" data-set-lh="compact">Compact</button>
+        <button type="button" aria-pressed="true" class="chip is-active" data-set-lh="normal">Normal</button>
+        <button type="button" aria-pressed="false" class="chip" data-set-lh="relaxed">Relaxed</button>
       </div>
     </div>
   </aside>
@@ -354,14 +359,15 @@
         id="reader-pdf-object"
         class="reader-pdf-frame"
         type="application/pdf"
-        data=""
+        data="about:blank"
         title="PDF Document Viewer"
       >
         <embed
           id="reader-pdf-embed"
           class="reader-pdf-frame"
           type="application/pdf"
-          src=""
+          src="about:blank"
+          title="PDF Document Embed"
         >
         <!-- Native object fallback if plugin fails to load inside object -->
         <div class="reader-pdf-fallback" id="reader-pdf-fallback">

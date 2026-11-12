@@ -3,7 +3,7 @@
    Resilient offline-first caching for static assets & intelligent navigation
    ========================================================================== */
 
-const CACHE_NAME = 'irbox-v1.5.0';
+const CACHE_NAME = 'irbox-v1.5.1';
 const OFFLINE_URL = '/offline.html';
 
 const PRECACHE_ASSETS = [
@@ -121,7 +121,7 @@ self.addEventListener('fetch', (event) => {
             }
             return networkRes;
           })
-          .catch(() => cachedRes);
+          .catch(() => cachedRes || new Response('', { status: 408, statusText: 'Request Timeout' }));
 
         return cachedRes || fetchPromise;
       })

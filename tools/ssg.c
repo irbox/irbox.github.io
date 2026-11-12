@@ -8,7 +8,10 @@
 #define _GNU_SOURCE
 #endif
 #if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunknown-warning-option"
 #pragma clang diagnostic ignored "-Wdeprecated-octal-literals"
+#pragma clang diagnostic pop
 #endif
 #include <stdio.h>
 #include <stdlib.h>
@@ -903,9 +906,9 @@ static void markdown_to_html(StrBuf *out, const char *md) {
                 if (in_ol) { buf_append_str(out, "</ol>\n"); in_ol = false; }
                 char *h_text = trim_whitespace(trimmed + level);
 
-                char anchor[128];
+                char anchor[160];
                 size_t ai = 0;
-                for (size_t k = 0; h_text[k] && ai < sizeof(anchor) - 1; k++) {
+                for (size_t k = 0; h_text[k] && ai < 120; k++) {
                     if (isalnum((unsigned char)h_text[k])) {
                         anchor[ai++] = tolower((unsigned char)h_text[k]);
                     } else if (h_text[k] == ' ' || h_text[k] == '-') {
@@ -913,8 +916,16 @@ static void markdown_to_html(StrBuf *out, const char *md) {
                     }
                 }
                 while (ai > 0 && anchor[ai - 1] == '-') anchor[--ai] = '\0';
-                if (ai == 0) snprintf(anchor, sizeof(anchor), "section-%d", level);
-                else anchor[ai] = '\0';
+                if (ai == 0) {
+                    snprintf(anchor, sizeof(anchor), "section-%d", level);
+                } else {
+                    anchor[ai] = '\0';
+                    if (!isalpha((unsigned char)anchor[0])) {
+                        char tmp[256];
+                        snprintf(tmp, sizeof(tmp), "sec-%s", anchor);
+                        safe_strcpy(anchor, sizeof(anchor), tmp);
+                    }
+                }
 
                 char tag_open[256], tag_close[16];
                 snprintf(tag_open, sizeof(tag_open), "<h%d id=\"%s\">", level, anchor);
@@ -1312,13 +1323,13 @@ static void render_head(StrBuf *out, const char *title, const char *desc, const 
         buf_append_str(out, "  <title>");
         escape_html(out, title, strlen(title));
         buf_append_str(out, " — ");
-        buf_append_str(out, site_config.title);
+        escape_html(out, site_config.title, strlen(site_config.title));
         buf_append_str(out, "</title>\n");
     } else {
         buf_append_str(out, "  <title>");
-        buf_append_str(out, site_config.title);
+        escape_html(out, site_config.title, strlen(site_config.title));
         buf_append_str(out, " — ");
-        buf_append_str(out, site_config.tagline);
+        escape_html(out, site_config.tagline, strlen(site_config.tagline));
         buf_append_str(out, "</title>\n");
     }
 
@@ -1333,7 +1344,7 @@ static void render_head(StrBuf *out, const char *title, const char *desc, const 
     buf_append_str(out, "\">\n");
 
     buf_append_str(out, "  <meta property=\"og:site_name\" content=\"");
-    buf_append_str(out, site_config.title);
+    escape_html(out, site_config.title, strlen(site_config.title));
     buf_append_str(out, "\">\n  <meta property=\"og:type\" content=\"");
     buf_append_str(out, type_val);
     buf_append_str(out, "\">\n  <meta property=\"og:title\" content=\"");
@@ -1359,9 +1370,9 @@ static void render_head(StrBuf *out, const char *title, const char *desc, const 
     buf_append_str(out, "  <script type=\"application/ld+json\">\n  {\n    \"@context\": \"https://schema.org\",\n");
     if (strcmp(type_val, "article") == 0) {
         buf_append_str(out, "    \"@type\": \"BlogPosting\",\n    \"headline\": \"");
-        escape_html(out, page_title, strlen(page_title));
+        escape_json(out, page_title);
         buf_append_str(out, "\",\n    \"description\": \"");
-        escape_html(out, page_desc, strlen(page_desc));
+        escape_json(out, page_desc);
         buf_append_str(out, "\",\n    \"url\": \"");
         buf_append_str(out, site_config.url);
         buf_append_str(out, full_url_path);
@@ -1372,15 +1383,15 @@ static void render_head(StrBuf *out, const char *title, const char *desc, const 
             buf_append_str(out, "\",\n");
         }
         buf_append_str(out, "    \"author\": {\n      \"@type\": \"Person\",\n      \"name\": \"");
-        buf_append_str(out, site_config.author_name);
+        escape_json(out, site_config.author_name);
         buf_append_str(out, "\"\n    }\n  }\n  </script>\n");
     } else {
         buf_append_str(out, "    \"@type\": \"WebSite\",\n    \"name\": \"");
-        buf_append_str(out, site_config.title);
+        escape_json(out, site_config.title);
         buf_append_str(out, "\",\n    \"url\": \"");
         buf_append_str(out, site_config.url);
         buf_append_str(out, "/\",\n    \"description\": \"");
-        escape_html(out, page_desc, strlen(page_desc));
+        escape_json(out, page_desc);
         buf_append_str(out, "\"\n  }\n  </script>\n");
     }
 
@@ -1450,12 +1461,12 @@ static void render_header(StrBuf *out, const char *active_section) {
         "  <div class=\"topnav__inner\">\n"
         "    <a class=\"brand\" href=\"/\" aria-label=\""
     );
-    buf_append_str(out, site_config.title);
+    escape_html(out, site_config.title, strlen(site_config.title));
     buf_append_str(out, " home\">\n"
         "      <img src=\"/assets/images/brand-icon.svg\" alt=\"\" width=\"24\" height=\"24\" decoding=\"async\">\n"
         "      <span>"
     );
-    buf_append_str(out, site_config.title);
+    escape_html(out, site_config.title, strlen(site_config.title));
     buf_append_str(out, "</span>\n"
         "    </a>\n"
         "    <nav class=\"topnav__links\" aria-label=\"Primary\">\n"
@@ -1547,12 +1558,12 @@ static void render_footer(StrBuf *out) {
         "    <div class=\"footer__row\">\n"
         "      <a class=\"brand\" href=\"/\" aria-label=\""
     );
-    buf_append_str(out, site_config.title);
+    escape_html(out, site_config.title, strlen(site_config.title));
     buf_append_str(out, " Home\">\n"
         "        <img src=\"/assets/images/brand-icon.svg\" alt=\"\" width=\"20\" height=\"20\" loading=\"lazy\" decoding=\"async\">\n"
         "        <span>"
     );
-    buf_append_str(out, site_config.title);
+    escape_html(out, site_config.title, strlen(site_config.title));
     buf_append_str(out, "</span>\n"
         "      </a>\n"
         "      <nav class=\"footer__links\" aria-label=\"Footer\">\n"
@@ -1583,7 +1594,7 @@ static void render_footer(StrBuf *out) {
         "      <p class=\"footer__legal\">\n"
         "        © 2026 "
     );
-    buf_append_str(out, site_config.title);
+    escape_html(out, site_config.title, strlen(site_config.title));
     buf_append_str(out, ".\n"
         "      </p>\n"
         "      <a class=\"footer__back-to-top\" href=\"#main\" aria-label=\"Back to top\">\n"
@@ -1595,7 +1606,7 @@ static void render_footer(StrBuf *out) {
         "    </div>\n"
         "  </div>\n"
         "</footer>\n"
-        "<dialog class=\"search\" id=\"search-dialog\" aria-label=\"Search the site\" data-index=\"/search.json\" closedby=\"any\">\n"
+        "<dialog class=\"search\" id=\"search-dialog\" aria-label=\"Search the site\" data-index=\"/search.json\">\n"
         "  <div class=\"search__box\">\n"
     );
     render_icon_search(out, 18);
@@ -1611,7 +1622,7 @@ static void render_footer(StrBuf *out) {
         "  <div class=\"sr-only\" aria-live=\"polite\" id=\"search-status\"></div>\n"
         "  <p class=\"search__hint\">↑↓ to navigate · Enter to open · Esc to close</p>\n"
         "</dialog>\n"
-        "<dialog class=\"shortcuts-dialog\" id=\"shortcuts-dialog\" aria-label=\"Keyboard Shortcuts\" closedby=\"any\">\n"
+        "<dialog class=\"shortcuts-dialog\" id=\"shortcuts-dialog\" aria-label=\"Keyboard Shortcuts\">\n"
         "  <div class=\"shortcuts-dialog__inner\">\n"
         "    <div class=\"shortcuts-dialog__header\">\n"
         "      <div class=\"shortcuts-dialog__title-group\">\n"
@@ -1700,7 +1711,7 @@ static void render_announcement_banner(StrBuf *out, bool hide) {
 
 static void wrap_page_ext(StrBuf *out, const char *title, const char *desc, const char *active_sec, const char *body, const char *body_class, const char *url_path, const char *og_type, const char *date_pub, bool hide_announcement) {
     buf_append_str(out,
-        "<!doctype html>\n"
+        "<!DOCTYPE html>\n"
         "<html lang=\"en\" data-baseurl=\"\">\n"
     );
     render_head(out, title, desc, url_path, og_type, date_pub);
@@ -1750,7 +1761,7 @@ static void render_docs_sidebar(StrBuf *out, const char *active_slug) {
 
     for (size_t s = 0; s < nav_section_count; s++) {
         buf_append_str(out, "      <div class=\"sidebar__group\">\n        <p class=\"sidebar__title\">");
-        buf_append_str(out, nav_sections[s].title);
+        escape_html(out, nav_sections[s].title, strlen(nav_sections[s].title));
         buf_append_str(out, "</p>\n        <ul>\n");
 
         for (size_t k = 0; k < nav_sections[s].count; k++) {
@@ -1821,7 +1832,7 @@ static void render_projects_sidebar(StrBuf *out, const char *active_slug) {
         if (!has_items) continue;
 
         buf_append_str(out, "      <div class=\"sidebar__group\">\n        <p class=\"sidebar__title\">");
-        buf_append_str(out, cat);
+        escape_html(out, cat, strlen(cat));
         buf_append_str(out, "</p>\n        <ul>\n");
 
         for (size_t i = 0; i < project_count; i++) {
@@ -2094,23 +2105,21 @@ static void render_project_page(const ProjectItem *pr, const char *out_dir) {
     buf_append_str(&body, "        </header>\n\n");
 
     int img_idx = ((pr->order > 0 ? pr->order - 1 : 0) % 4) + 1;
-    char stage_buf[512];
-    snprintf(stage_buf, sizeof(stage_buf),
-        "        <div class=\"stage\">\n"
-        "          <img class=\"thumb\" src=\"/assets/images/placeholders/cover-%d.svg\" alt=\"%s\" loading=\"lazy\" decoding=\"async\" width=\"640\" height=\"400\">\n"
-        "        </div>\n\n",
-        img_idx, pr->title);
-    buf_append_str(&body, stage_buf);
+    buf_append_str(&body, "        <div class=\"stage\">\n          <img class=\"thumb\" src=\"/assets/images/placeholders/cover-");
+    char num[16]; snprintf(num, sizeof(num), "%d", img_idx); buf_append_str(&body, num);
+    buf_append_str(&body, ".svg\" alt=\"");
+    escape_html(&body, pr->title, strlen(pr->title));
+    buf_append_str(&body, "\" loading=\"lazy\" decoding=\"async\" width=\"640\" height=\"400\">\n        </div>\n\n");
 
     buf_append_str(&body,
         "        <div class=\"tabs\" role=\"tablist\" aria-label=\"Project sections\" data-tabs>\n"
-        "          <button role=\"tab\" class=\"tab is-active\" data-tab=\"overview\" aria-selected=\"true\">Overview</button>\n"
+        "          <button type=\"button\" role=\"tab\" class=\"tab is-active\" data-tab=\"overview\" aria-selected=\"true\">Overview</button>\n"
     );
     if (pr->stack_count > 0) {
-        buf_append_str(&body, "          <button role=\"tab\" class=\"tab\" data-tab=\"stack\" aria-selected=\"false\">Tech stack</button>\n");
+        buf_append_str(&body, "          <button type=\"button\" role=\"tab\" class=\"tab\" data-tab=\"stack\" aria-selected=\"false\">Tech stack</button>\n");
     }
     if (pr->gallery_count > 0) {
-        buf_append_str(&body, "          <button role=\"tab\" class=\"tab\" data-tab=\"gallery\" aria-selected=\"false\">Gallery</button>\n");
+        buf_append_str(&body, "          <button type=\"button\" role=\"tab\" class=\"tab\" data-tab=\"gallery\" aria-selected=\"false\">Gallery</button>\n");
     }
     buf_append_str(&body,
         "        </div>\n\n"
@@ -2165,14 +2174,13 @@ static void render_project_page(const ProjectItem *pr, const char *out_dir) {
         );
         for (size_t g = 0; g < pr->gallery_count; g++) {
             int g_idx = (int)((g % 4) + 1);
-            char fig[512];
-            snprintf(fig, sizeof(fig),
-                "            <figure>\n"
-                "              <img class=\"thumb\" src=\"/assets/images/placeholders/cover-%d.svg\" alt=\"%s\" loading=\"lazy\" decoding=\"async\" width=\"640\" height=\"400\">\n"
-                "              <figcaption>%s</figcaption>\n"
-                "            </figure>\n",
-                g_idx, pr->gallery[g].caption, pr->gallery[g].caption);
-            buf_append_str(&body, fig);
+            buf_append_str(&body, "            <figure>\n              <img class=\"thumb\" src=\"/assets/images/placeholders/cover-");
+            char gnum[16]; snprintf(gnum, sizeof(gnum), "%d", g_idx); buf_append_str(&body, gnum);
+            buf_append_str(&body, ".svg\" alt=\"");
+            escape_html(&body, pr->gallery[g].caption, strlen(pr->gallery[g].caption));
+            buf_append_str(&body, "\" loading=\"lazy\" decoding=\"async\" width=\"640\" height=\"400\">\n              <figcaption>");
+            escape_html(&body, pr->gallery[g].caption, strlen(pr->gallery[g].caption));
+            buf_append_str(&body, "</figcaption>\n            </figure>\n");
         }
         buf_append_str(&body, "          </div>\n        </section>\n\n");
     }
@@ -3204,7 +3212,7 @@ static void render_changelog_page(const char *out_dir) {
         "                <span class=\"badge badge--added\">added</span> Light/dark theme with a manual toggle.\n"
         "              </li>\n"
         "              <li>\n"
-        "                <span class=\"badge badge--added\">added</span> Command palette search (Ctrl/&⌘ + K).\n"
+        "                <span class=\"badge badge--added\">added</span> Command palette search (Ctrl/⌘ + K).\n"
         "              </li>\n"
         "              <li>\n"
         "                <span class=\"badge badge--added\">added</span> Config-driven announcement banner.\n"
@@ -3701,7 +3709,7 @@ static double get_diff_ms(struct timespec s, struct timespec e) {
 /* ==========================================================================
    Main Orchestrator
    ========================================================================== */
-int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
+int main(int argc, char **argv) {
     const char *out_dir = (argc >= 2) ? argv[1] : "_site";
 
     struct timespec t_start = {0}, t_load = {0}, t_core = {0}, t_docs = {0}, t_posts = {0}, t_proj = {0}, t_assets = {0}, t_feeds = {0}, t_end = {0};
