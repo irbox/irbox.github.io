@@ -1538,6 +1538,21 @@ div.highlight pre {
 }
 
 /* Distraction-Free E-Reader View */
+body.reader-page .topnav,
+body.reader-page .footer,
+body.reader-page .skip-link,
+body.reader-page .reading-progress,
+body.reader-page .page-progress,
+body.reader-page .announcement-banner {
+  display: none !important;
+}
+body.reader-page main#main {
+  margin: 0;
+  padding: 0;
+  max-width: none;
+  animation: none !important;
+}
+
 .reader-shell {
   --reader-bg: var(--bg-body);
   --reader-ink: var(--ink);

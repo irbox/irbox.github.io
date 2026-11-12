@@ -103,9 +103,9 @@
 
     // Synchronize meta theme-color with reader background
     const readerThemeColors = {
-      light: '#fcfbfa',
-      sepia: '#fbf1dc',
-      dark: '#12151c',
+      light: '#ffffff',
+      sepia: '#f8f1e3',
+      dark: '#111418',
       black: '#000000',
     };
     const activeColor = readerThemeColors[prefs.theme];

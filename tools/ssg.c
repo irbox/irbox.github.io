@@ -399,6 +399,27 @@ static void format_date_short(char *out, size_t out_sz, const char *ymd) {
     safe_strcpy(out, out_sz, ymd);
 }
 
+static void format_date_rfc822(char *out, size_t out_sz, const char *ymd) {
+    int y, m, d;
+    if (sscanf(ymd, "%d-%d-%d", &y, &m, &d) == 3) {
+        static const char *days[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+        static const char *months[] = {
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        };
+        if (m >= 1 && m <= 12 && d >= 1 && d <= 31) {
+            static const int t[] = {0, 3, 2, 5, 0, 3, 5, 1, 4, 6, 2, 4};
+            int ty = y;
+            if (m < 3) ty -= 1;
+            int dow = (ty + ty/4 - ty/100 + ty/400 + t[m-1] + d) % 7;
+            if (dow < 0) dow += 7;
+            snprintf(out, out_sz, "%s, %02d %s %04d 00:00:00 +0000", days[dow], d, months[m - 1], y);
+            return;
+        }
+    }
+    safe_strcpy(out, out_sz, ymd);
+}
+
 SSG_NODISCARD static char *read_entire_file(const char *path) {
     FILE *f = fopen(path, "rb");
     if (f == NULL) return NULL;
@@ -406,9 +427,9 @@ SSG_NODISCARD static char *read_entire_file(const char *path) {
     long size = ftell(f);
     fseek(f, 0, SEEK_SET);
     if (size < 0) { fclose(f); return NULL; }
-    char *buf = (char *)malloc(size + 1);
+    char *buf = (char *)malloc((size_t)size + 1);
     if (buf == NULL) { fclose(f); return NULL; }
-    size_t r = fread(buf, 1, size, f);
+    size_t r = fread(buf, 1, (size_t)size, f);
     buf[r] = '\0';
     fclose(f);
     return buf;
@@ -656,10 +677,12 @@ static void parse_inline(StrBuf *out, const char *text) {
                 buf_append_str(out, "<strong>");
                 size_t sublen = end - (text + i + 2);
                 char *sub = (char *)malloc(sublen + 1);
-                memcpy(sub, text + i + 2, sublen);
-                sub[sublen] = '\0';
-                parse_inline(out, sub);
-                free(sub);
+                if (sub) {
+                    memcpy(sub, text + i + 2, sublen);
+                    sub[sublen] = '\0';
+                    parse_inline(out, sub);
+                    free(sub);
+                }
                 buf_append_str(out, "</strong>");
                 i = end - text + 2;
                 continue;
@@ -672,10 +695,12 @@ static void parse_inline(StrBuf *out, const char *text) {
                 buf_append_str(out, "<em>");
                 size_t sublen = end - (text + i + 1);
                 char *sub = (char *)malloc(sublen + 1);
-                memcpy(sub, text + i + 1, sublen);
-                sub[sublen] = '\0';
-                parse_inline(out, sub);
-                free(sub);
+                if (sub) {
+                    memcpy(sub, text + i + 1, sublen);
+                    sub[sublen] = '\0';
+                    parse_inline(out, sub);
+                    free(sub);
+                }
                 buf_append_str(out, "</em>");
                 i = end - text + 1;
                 continue;
@@ -690,15 +715,16 @@ static void parse_inline(StrBuf *out, const char *text) {
                     size_t url_len = close_p - (close_b + 2);
                     char *alt = (char *)malloc(alt_len + 1);
                     char *url = (char *)malloc(url_len + 1);
-                    memcpy(alt, text + i + 2, alt_len); alt[alt_len] = '\0';
-                    memcpy(url, close_b + 2, url_len); url[url_len] = '\0';
+                    if (alt && url) {
+                        memcpy(alt, text + i + 2, alt_len); alt[alt_len] = '\0';
+                        memcpy(url, close_b + 2, url_len); url[url_len] = '\0';
 
-                    buf_append_str(out, "<img src=\"");
-                    escape_html(out, url, url_len);
-                    buf_append_str(out, "\" alt=\"");
-                    escape_html(out, alt, alt_len);
-                    buf_append_str(out, "\" loading=\"lazy\" decoding=\"async\">");
-
+                        buf_append_str(out, "<img src=\"");
+                        escape_html(out, url, url_len);
+                        buf_append_str(out, "\" alt=\"");
+                        escape_html(out, alt, alt_len);
+                        buf_append_str(out, "\" loading=\"lazy\" decoding=\"async\">");
+                    }
                     free(alt); free(url);
                     i = close_p - text + 1;
                     continue;
@@ -714,15 +740,16 @@ static void parse_inline(StrBuf *out, const char *text) {
                     size_t url_len = close_p - (close_b + 2);
                     char *label = (char *)malloc(label_len + 1);
                     char *url = (char *)malloc(url_len + 1);
-                    memcpy(label, text + i + 1, label_len); label[label_len] = '\0';
-                    memcpy(url, close_b + 2, url_len); url[url_len] = '\0';
+                    if (label && url) {
+                        memcpy(label, text + i + 1, label_len); label[label_len] = '\0';
+                        memcpy(url, close_b + 2, url_len); url[url_len] = '\0';
 
-                    buf_append_str(out, "<a href=\"");
-                    escape_html(out, url, url_len);
-                    buf_append_str(out, "\">");
-                    parse_inline(out, label);
-                    buf_append_str(out, "</a>");
-
+                        buf_append_str(out, "<a href=\"");
+                        escape_html(out, url, url_len);
+                        buf_append_str(out, "\">");
+                        parse_inline(out, label);
+                        buf_append_str(out, "</a>");
+                    }
                     free(label); free(url);
                     i = close_p - text + 1;
                     continue;
@@ -744,6 +771,7 @@ static void parse_table_row(StrBuf *out, const char *line, bool is_header) {
         const char *next_bar = strchr(p, '|');
         size_t cell_len = next_bar ? (size_t)(next_bar - p) : strlen(p);
         char *cell = (char *)malloc(cell_len + 1);
+        if (!cell) break;
         memcpy(cell, p, cell_len);
         cell[cell_len] = '\0';
         char *tcell = trim_whitespace(cell);
@@ -867,31 +895,35 @@ static void markdown_to_html(StrBuf *out, const char *md) {
         }
 
         if (trimmed[0] == '#') {
-            if (in_p)  { buf_append_str(out, "</p>\n"); in_p = false; }
-            if (in_ul) { buf_append_str(out, "</ul>\n"); in_ul = false; }
-            if (in_ol) { buf_append_str(out, "</ol>\n"); in_ol = false; }
             int level = 0;
             while (trimmed[level] == '#' && level < 6) level++;
-            char *h_text = trim_whitespace(trimmed + level);
+            if (trimmed[level] == ' ' || trimmed[level] == '\t') {
+                if (in_p)  { buf_append_str(out, "</p>\n"); in_p = false; }
+                if (in_ul) { buf_append_str(out, "</ul>\n"); in_ul = false; }
+                if (in_ol) { buf_append_str(out, "</ol>\n"); in_ol = false; }
+                char *h_text = trim_whitespace(trimmed + level);
 
-            char anchor[128];
-            size_t ai = 0;
-            for (size_t k = 0; h_text[k] && ai < sizeof(anchor) - 1; k++) {
-                if (isalnum((unsigned char)h_text[k])) {
-                    anchor[ai++] = tolower((unsigned char)h_text[k]);
-                } else if (h_text[k] == ' ' || h_text[k] == '-') {
-                    if (ai > 0 && anchor[ai - 1] != '-') anchor[ai++] = '-';
+                char anchor[128];
+                size_t ai = 0;
+                for (size_t k = 0; h_text[k] && ai < sizeof(anchor) - 1; k++) {
+                    if (isalnum((unsigned char)h_text[k])) {
+                        anchor[ai++] = tolower((unsigned char)h_text[k]);
+                    } else if (h_text[k] == ' ' || h_text[k] == '-') {
+                        if (ai > 0 && anchor[ai - 1] != '-') anchor[ai++] = '-';
+                    }
                 }
-            }
-            anchor[ai] = '\0';
+                while (ai > 0 && anchor[ai - 1] == '-') anchor[--ai] = '\0';
+                if (ai == 0) snprintf(anchor, sizeof(anchor), "section-%d", level);
+                else anchor[ai] = '\0';
 
-            char tag_open[256], tag_close[16];
-            snprintf(tag_open, sizeof(tag_open), "<h%d id=\"%s\">", level, anchor);
-            snprintf(tag_close, sizeof(tag_close), "</h%d>\n", level);
-            buf_append_str(out, tag_open);
-            parse_inline(out, h_text);
-            buf_append_str(out, tag_close);
-            continue;
+                char tag_open[256], tag_close[16];
+                snprintf(tag_open, sizeof(tag_open), "<h%d id=\"%s\">", level, anchor);
+                snprintf(tag_close, sizeof(tag_close), "</h%d>\n", level);
+                buf_append_str(out, tag_open);
+                parse_inline(out, h_text);
+                buf_append_str(out, tag_close);
+                continue;
+            }
         }
 
         if (strcmp(trimmed, "---") == 0 || strcmp(trimmed, "***") == 0) {
@@ -925,13 +957,22 @@ static void markdown_to_html(StrBuf *out, const char *md) {
         if (isdigit((unsigned char)trimmed[0])) {
             char *dot = strchr(trimmed, '.');
             if (dot && isspace((unsigned char)*(dot + 1))) {
-                if (in_p)  { buf_append_str(out, "</p>\n"); in_p = false; }
-                if (in_ul) { buf_append_str(out, "</ul>\n"); in_ul = false; }
-                if (!in_ol) { buf_append_str(out, "<ol>\n"); in_ol = true; }
-                buf_append_str(out, "  <li>");
-                parse_inline(out, trim_whitespace(dot + 2));
-                buf_append_str(out, "</li>\n");
-                continue;
+                bool all_digits = true;
+                for (const char *dp = trimmed; dp < dot; dp++) {
+                    if (!isdigit((unsigned char)*dp)) {
+                        all_digits = false;
+                        break;
+                    }
+                }
+                if (all_digits && (dot - trimmed) <= 9) {
+                    if (in_p)  { buf_append_str(out, "</p>\n"); in_p = false; }
+                    if (in_ul) { buf_append_str(out, "</ul>\n"); in_ul = false; }
+                    if (!in_ol) { buf_append_str(out, "<ol>\n"); in_ol = true; }
+                    buf_append_str(out, "  <li>");
+                    parse_inline(out, trim_whitespace(dot + 1));
+                    buf_append_str(out, "</li>\n");
+                    continue;
+                }
             }
         }
 
@@ -1182,7 +1223,9 @@ static const char *parse_frontmatter_block(const char *content, void *target, in
     }
     free(fm);
 
-    const char *body = end + 4;
+    const char *dash = strstr(end, "---");
+    const char *body = dash ? dash + 3 : end + 4;
+    while (*body == ' ' || *body == '\t') body++;
     while (*body == '\r' || *body == '\n') body++;
     return body;
 }
@@ -1252,7 +1295,7 @@ static void render_head(StrBuf *out, const char *title, const char *desc, const 
         "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content\">\n"
         "  <meta name=\"color-scheme\" content=\"light dark\">\n"
         "  <meta name=\"theme-color\" media=\"(prefers-color-scheme: light)\" content=\"#ffffff\">\n"
-        "  <meta name=\"theme-color\" media=\"(prefers-color-scheme: dark)\" content=\"#000000\">\n"
+        "  <meta name=\"theme-color\" media=\"(prefers-color-scheme: dark)\" content=\"#0b0d11\">\n"
         "  <meta name=\"referrer\" content=\"strict-origin-when-cross-origin\">\n"
         "  <meta name=\"robots\" content=\"index, follow, max-image-preview:large, noarchive\">\n"
         "  <meta http-equiv=\"X-Content-Type-Options\" content=\"nosniff\">\n"
@@ -1359,8 +1402,8 @@ static void render_head(StrBuf *out, const char *title, const char *desc, const 
         "        var d = document.documentElement;\n"
         "        d.classList.add('is-loading');\n"
         "        var t = localStorage.getItem('theme');\n"
-        "        var lightColor = '#faf8f5';\n"
-        "        var darkColor = '#0a0d12';\n"
+        "        var lightColor = '#ffffff';\n"
+        "        var darkColor = '#0b0d11';\n"
         "        if (t === 'light' || t === 'dark') {\n"
         "          d.setAttribute('data-theme', t);\n"
         "          var c = t === 'dark' ? darkColor : lightColor;\n"
@@ -3037,8 +3080,13 @@ static void render_reader_page(const char *out_dir) {
     const char *start = content;
     if (strncmp(start, "---", 3) == 0) {
         const char *end = strstr(start + 3, "\n---");
-        if (end) start = end + 4;
-        while (*start == '\r' || *start == '\n') start++;
+        if (!end) end = strstr(start + 3, "\r\n---");
+        if (end) {
+            const char *dash = strstr(end, "---");
+            start = dash ? dash + 3 : end + 4;
+            while (*start == ' ' || *start == '\t') start++;
+            while (*start == '\r' || *start == '\n') start++;
+        }
     }
 
     StrBuf full;
@@ -3404,16 +3452,18 @@ static void write_feed_xml(const char *out_dir) {
     buf_init(&out, 8192);
     buf_append_str(&out,
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-        "<rss version=\"2.0\">\n"
+        "<rss version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n"
         "  <channel>\n"
         "    <title>"
     );
-    buf_append_str(&out, site_config.title);
+    escape_html(&out, site_config.title, strlen(site_config.title));
     buf_append_str(&out, "</title>\n    <link>");
     buf_append_str(&out, site_config.url);
     buf_append_str(&out, "</link>\n    <description>");
-    buf_append_str(&out, site_config.description);
-    buf_append_str(&out, "</description>\n");
+    escape_html(&out, site_config.description, strlen(site_config.description));
+    buf_append_str(&out, "</description>\n    <atom:link href=\"");
+    buf_append_str(&out, site_config.url);
+    buf_append_str(&out, "/feed.xml\" rel=\"self\" type=\"application/rss+xml\" />\n");
 
     for (size_t i = 0; i < post_count; i++) {
         buf_append_str(&out, "    <item>\n      <title>");
@@ -3421,7 +3471,20 @@ static void write_feed_xml(const char *out_dir) {
         buf_append_str(&out, "</title>\n      <link>");
         buf_append_str(&out, site_config.url);
         buf_append_str(&out, posts[i].url);
-        buf_append_str(&out, "</link>\n      <description>");
+        buf_append_str(&out, "</link>\n      <guid isPermaLink=\"true\">");
+        buf_append_str(&out, site_config.url);
+        buf_append_str(&out, posts[i].url);
+        buf_append_str(&out, "</guid>\n");
+
+        if (posts[i].date[0] != '\0') {
+            char rfc_date[64];
+            format_date_rfc822(rfc_date, sizeof(rfc_date), posts[i].date);
+            buf_append_str(&out, "      <pubDate>");
+            buf_append_str(&out, rfc_date);
+            buf_append_str(&out, "</pubDate>\n");
+        }
+
+        buf_append_str(&out, "      <description>");
         escape_html(&out, posts[i].description, strlen(posts[i].description));
         buf_append_str(&out, "</description>\n    </item>\n");
     }
@@ -3750,6 +3813,10 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char **argv) {
     printf("📊 Search Index Entries:  %3zu\n", search_entry_count);
     printf("⏱️  Total Build Time:      %.2f ms\n", get_diff_ms(t_start, t_end));
     printf("================================================================\n");
+
+    for (size_t i = 0; i < doc_count; i++) free(docs[i].html_content);
+    for (size_t i = 0; i < post_count; i++) free(posts[i].html_content);
+    for (size_t i = 0; i < project_count; i++) free(projects[i].html_content);
 
     return 0;
 }

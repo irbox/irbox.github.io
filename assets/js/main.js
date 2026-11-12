@@ -103,8 +103,8 @@
   /* ---- Module 4: Theme Toggle Controller ---- */
   const initThemeToggle = () => {
     const themeBtns = $$('[data-theme-toggle]');
-    const lightColor = '#faf8f5';
-    const darkColor = '#0a0d12';
+    const lightColor = '#ffffff';
+    const darkColor = '#0b0d11';
 
     const updateThemeMeta = (theme) => {
       const metas = $$('meta[name="theme-color"]');
