@@ -701,16 +701,24 @@
 
   const loadSearchIndex = () => {
     if (searchIndex) return Promise.resolve(searchIndex);
-    return fetch(searchDlg.getAttribute('data-index'))
-      .then((r) => r.json())
+    const indexPath = searchDlg.getAttribute('data-index') || '/search.json';
+    return fetch(indexPath)
+      .then((r) => {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
       .then(
         (data) => {
           searchIndex = data;
           return data;
         },
-        () => {
-          searchIndex = [];
-          return searchIndex;
+        (err) => {
+          searchIndex = null;
+          const errLi = doc.createElement('li');
+          errLi.className = 'search__empty search__empty--error';
+          errLi.textContent = 'Search index unavailable (' + (err.message || 'Offline') + '). Static directory navigation active.';
+          searchResults.replaceChildren(errLi);
+          throw err;
         }
       );
   };
@@ -1048,27 +1056,8 @@
     });
   };
 
-  /* ---- Module 12: Bento Card Tactile Spotlight Physics ---- */
-  const initBentoSpotlight = () => {
-    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-
-    $$('.bento__card').forEach((card) => {
-      let rect = null;
-      card.addEventListener('pointerenter', () => {
-        rect = card.getBoundingClientRect();
-      });
-      card.addEventListener('pointermove', (e) => {
-        rect = card.getBoundingClientRect();
-        card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
-        card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
-      });
-      card.addEventListener('pointerleave', () => {
-        rect = null;
-        card.style.removeProperty('--mouse-x');
-        card.style.removeProperty('--mouse-y');
-      });
-    });
-  };
+  /* ---- Module 12: Demoted / Removed Spotlight Physics ---- */
+  const initBentoSpotlight = () => {};
 
   /* ---- Module 13: Universal Reading Progress Fallback ---- */
   const initReadingProgressFallback = () => {

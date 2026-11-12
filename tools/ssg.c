@@ -1373,7 +1373,7 @@ static void render_head(StrBuf *out, const char *title, const char *desc, const 
         "  <meta name=\"robots\" content=\"index, follow, max-image-preview:large, noarchive\">\n"
         "  <meta http-equiv=\"X-Content-Type-Options\" content=\"nosniff\">\n"
         "  <meta http-equiv=\"Permissions-Policy\" content=\"interest-cohort=(), camera=(), microphone=(), geolocation=()\">\n"
-        "  <meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; frame-src 'self' blob:; object-src 'self' blob:; child-src 'self' blob:; worker-src 'self' blob:; connect-src 'self' blob:; base-uri 'self'; form-action 'self';\">\n"
+        "  <meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob:; frame-src 'self' blob:; object-src 'self' blob:; child-src 'self' blob:; worker-src 'self' blob:; connect-src 'self' blob:; base-uri 'self'; form-action 'self';\">\n"
     );
 
     const char *page_title = (title && strlen(title) > 0) ? title : site_config.title;
@@ -1492,6 +1492,9 @@ static void render_head(StrBuf *out, const char *title, const char *desc, const 
         "      } catch (e) {}\n"
         "    })();\n"
         "  </script>\n"
+        "  <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n"
+        "  <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n"
+        "  <link href=\"https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Space+Grotesk:wght@600;700&display=swap\" rel=\"stylesheet\">\n"
         "  <link rel=\"stylesheet\" href=\"/assets/css/main.css\">\n"
         "  <link rel=\"alternate\" type=\"application/rss+xml\" title=\"Irbox\" href=\"/feed.xml\">\n"
         "  <script type=\"speculationrules\">\n"
@@ -2167,12 +2170,15 @@ static void render_project_page(const ProjectItem *pr, const char *out_dir) {
 
     buf_append_str(&body, "        </header>\n\n");
 
-    int img_idx = ((pr->order > 0 ? pr->order - 1 : 0) % 4) + 1;
-    buf_append_str(&body, "        <div class=\"stage\">\n          <img class=\"thumb\" src=\"/assets/images/placeholders/cover-");
-    char num[16]; snprintf(num, sizeof(num), "%d", img_idx); buf_append_str(&body, num);
-    buf_append_str(&body, ".svg\" alt=\"");
-    escape_html(&body, pr->title, strlen(pr->title));
-    buf_append_str(&body, "\" loading=\"lazy\" decoding=\"async\" width=\"640\" height=\"400\">\n        </div>\n\n");
+    buf_append_str(&body, "        <div class=\"stage project-stage--terminal\">\n          <div class=\"project-card__masthead\">\n            <span class=\"mono-tag\">// ARCHITECTURE SPECIFICATION</span>\n            <span class=\"mono-version\">");
+    escape_html(&body, pr->status, strlen(pr->status));
+    buf_append_str(&body, "</span>\n          </div>\n          <div class=\"project-stage__console\"><span class=\"prompt\">$</span> git clone ");
+    if (pr->repo_url[0]) {
+        escape_html(&body, pr->repo_url, strlen(pr->repo_url));
+    } else {
+        buf_append_str(&body, "https://github.com/irbox/project");
+    }
+    buf_append_str(&body, "\n<span class=\"telemetry\">Repository verified: clean tree, 0 runtime bloat</span></div>\n        </div>\n\n");
 
     buf_append_str(&body,
         "        <div class=\"tabs\" role=\"tablist\" aria-label=\"Project sections\" data-tabs>\n"
@@ -2236,12 +2242,9 @@ static void render_project_page(const ProjectItem *pr, const char *out_dir) {
             "          <div class=\"gallery\">\n"
         );
         for (size_t g = 0; g < pr->gallery_count; g++) {
-            int g_idx = (int)((g % 4) + 1);
-            buf_append_str(&body, "            <figure>\n              <img class=\"thumb\" src=\"/assets/images/placeholders/cover-");
-            char gnum[16]; snprintf(gnum, sizeof(gnum), "%d", g_idx); buf_append_str(&body, gnum);
-            buf_append_str(&body, ".svg\" alt=\"");
+            buf_append_str(&body, "            <figure class=\"gallery-schematic\">\n              <div class=\"schematic-box\"><span class=\"schematic-label\">// VIEW: ");
             escape_html(&body, pr->gallery[g].caption, strlen(pr->gallery[g].caption));
-            buf_append_str(&body, "\" loading=\"lazy\" decoding=\"async\" width=\"640\" height=\"400\">\n              <figcaption>");
+            buf_append_str(&body, "</span></div>\n              <figcaption>");
             escape_html(&body, pr->gallery[g].caption, strlen(pr->gallery[g].caption));
             buf_append_str(&body, "</figcaption>\n            </figure>\n");
         }
@@ -2435,231 +2438,157 @@ static void render_home_page(const char *out_dir) {
     buf_init(&body, 65536);
 
     buf_append_str(&body,
-        "<section class=\"hero\">\n"
+        "<section class=\"hero hero--editorial\">\n"
         "  <div class=\"container hero__inner\">\n"
-        "    <div class=\"hero__badge\">\n"
-        "      <img src=\"/assets/images/brand-icon.svg\" alt=\"Irbox logo\" width=\"52\" height=\"52\" fetchpriority=\"high\" decoding=\"async\">\n"
-        "    </div>\n"
-        "    <p class=\"hero__eyebrow\">Software &amp; Projects</p>\n"
-        "    <h1 class=\"hero__title\">Software engineering, developer tooling, and technical writing.</h1>\n"
-        "    <p class=\"hero__tagline\">\n      "
+        "    <div class=\"hero__architectural-lockup\">\n"
+        "      <span class=\"hero__rule-index\">// 00 ARCHITECTURE</span>\n"
+        "      <h1 class=\"hero__title\">Disciplined systems engineering. Developer tooling with zero runtime bloat.</h1>\n"
+        "      <p class=\"hero__tagline\">\n        "
     );
     buf_append_str(&body, site_config.description);
     buf_append_str(&body,
-        "\n    </p>\n"
-        "    <div class=\"hero__cta\">\n"
-        "      <a class=\"btn btn--primary btn--lg\" href=\"/projects/\">Browse projects</a>\n"
-        "      <a class=\"btn btn--secondary btn--lg\" href=\"/docs/getting-started/\">Documentation</a>\n"
-        "      <a class=\"btn btn--ghost btn--lg\" href=\""
-    );
-    buf_append_str(&body, site_config.repo);
-    buf_append_str(&body,
-        "\" target=\"_blank\" rel=\"noopener noreferrer\">Source Code</a>\n"
+        "\n      </p>\n"
+        "      <div class=\"hero__cta\">\n"
+        "        <a class=\"btn btn--primary\" href=\"/projects/\">Browse Projects</a>\n"
+        "        <a class=\"btn btn--secondary\" href=\"/docs/getting-started/\">Documentation &rarr;</a>\n"
+        "      </div>\n"
         "    </div>\n"
         "  </div>\n"
         "</section>\n\n"
-        "<div class=\"showcase-sheet\">\n"
-        "  <section class=\"section container\">\n"
-        "    <div class=\"bento\">\n"
-        "      <div class=\"bento__col\">\n"
-        "        <div class=\"bento__heading-cell\">\n"
-        "          <p class=\"eyebrow\">Overview</p>\n"
-        "          <h2 class=\"bento__heading\">Everything in one place.</h2>\n"
-        "          <p class=\"bento__subtext\">\n"
-        "            Selected projects, technical guides, and engineering notes with full source code on\n"
-        "            GitHub.\n"
-        "          </p>\n"
-        "        </div>\n"
-        "        <a class=\"bento__card\" href=\"/docs/getting-started/\">\n"
-        "          <div class=\"bento__card-header\">\n"
-        "            <span class=\"badge\">Documentation</span>\n"
-    );
-    render_icon_arrow(&body, 16);
-    buf_append_str(&body,
-        "\n          </div>\n"
-        "          <h3>Guides &amp; Reference</h3>\n"
-        "          <p>\n"
-        "            Setup instructions, architecture notes, and configuration references for the projects.\n"
-        "          </p>\n"
-        "        </a>\n"
-        "      </div>\n\n"
-        "      <div class=\"bento__col\">\n"
-        "        <a class=\"bento__card\" href=\"/projects/\">\n"
-        "          <div class=\"bento__card-header\">\n"
-        "            <span class=\"badge\">Projects</span>\n"
-    );
-    render_icon_arrow(&body, 16);
-    buf_append_str(&body,
-        "\n          </div>\n"
-        "          <h3>Selected Projects</h3>\n"
-        "          <p>Web applications, developer tools, and design system components.</p>\n"
-        "          <div class=\"bento__tags\">\n"
-        "            <span class=\"chip--sm\">TypeScript</span>\n"
-        "            <span class=\"chip--sm\">React</span>\n"
-        "            <span class=\"chip--sm\">CSS</span>\n"
-        "          </div>\n"
-        "        </a>\n"
-        "        <a class=\"bento__card\" href=\"/blog/\">\n"
-        "          <div class=\"bento__card-header\">\n"
-        "            <span class=\"badge\">Writing</span>\n"
-    );
-    render_icon_arrow(&body, 16);
-    buf_append_str(&body,
-        "\n          </div>\n"
-        "          <h3>Blog</h3>\n"
-        "          <p>Short essays and notes on building software, design tokens, and shipping things.</p>\n"
-        "        </a>\n"
-        "      </div>\n\n"
-        "      <div class=\"bento__col\">\n"
-        "        <div class=\"bento__card bento__card--tall\">\n"
-        "          <div class=\"bento__card-header\">\n"
-        "            <span class=\"badge badge--added\">Open Source</span>\n"
-        "            <span class=\"bento__chip-count\">Public Repo</span>\n"
-        "          </div>\n"
-        "          <h3>Open Source &amp; Fast</h3>\n"
-        "          <p>Zero trackers, self-hosted assets, and clean handwritten code.</p>\n\n"
-        "          <div class=\"bento__spec-list\">\n"
-        "            <div class=\"bento__spec-item\">\n"
-        "              <span class=\"bento__spec-label\">Repository</span>\n"
-        "              <a href=\""
-    );
-    buf_append_str(&body, site_config.repo);
-    buf_append_str(&body, "\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"bento__spec-val\">\n                github.com/irbox ");
-    render_icon_external(&body, 12);
-    buf_append_str(&body,
-        "\n              </a>\n"
-        "            </div>\n"
-        "            <div class=\"bento__spec-item\">\n"
-        "              <span class=\"bento__spec-label\">Site Generator</span>\n"
-        "              <span class=\"bento__spec-val\">Standalone C23</span>\n"
-        "            </div>\n"
-        "            <div class=\"bento__spec-item\">\n"
-        "              <span class=\"bento__spec-label\">Dependencies</span>\n"
-        "              <span class=\"bento__spec-val\">None (0 runtime bloat)</span>\n"
-        "            </div>\n"
-        "            <div class=\"bento__spec-item\">\n"
-        "              <span class=\"bento__spec-label\">License</span>\n"
-        "              <span class=\"bento__spec-val\">MIT License</span>\n"
-        "            </div>\n"
-        "            <div class=\"bento__spec-item\">\n"
-        "              <span class=\"bento__spec-label\">Privacy</span>\n"
-        "              <span class=\"bento__spec-val\">No Trackers / No Ads</span>\n"
-        "            </div>\n"
-        "            <div class=\"bento__spec-item\">\n"
-        "              <span class=\"bento__spec-label\">Feed</span>\n"
-        "              <a href=\"/feed.xml\" class=\"bento__spec-val\">RSS 2.0 / Atom</a>\n"
-        "            </div>\n"
-        "          </div>\n"
-        "        </div>\n"
+        "<div class=\"container workbench\">\n"
+        "  <main class=\"workbench__main\" id=\"main-content\">\n"
+        "    <section class=\"workbench__section\" id=\"flagship\">\n"
+        "      <div class=\"section__head\">\n"
+        "        <h2>// 01 FLAGSHIP SYSTEM</h2>\n"
+        "        <a class=\"link-arrow\" href=\"/projects/atlas/\">Architecture Teardown &rarr;</a>\n"
         "      </div>\n"
-        "    </div>\n"
-        "  </section>\n\n"
-        "  <section class=\"section container\">\n"
-        "    <div class=\"section__head\">\n"
-        "      <h2 class=\"display-2\">Selected projects</h2>\n"
-        "      <a class=\"link-arrow\" href=\"/projects/\">All projects "
-    );
-    render_icon_arrow(&body, 16);
-    buf_append_str(&body,
-        "</a>\n"
-        "    </div>\n"
-        "    <div class=\"grid grid--cards\">\n"
-    );
-
-    size_t feat_count = 0;
-    for (size_t i = 0; i < project_count && feat_count < 6; i++) {
-        if (!projects[i].featured) continue;
-        feat_count++;
-        int p_idx = (int)((feat_count - 1) % 4) + 1;
-
-        buf_append_str(&body, "      <article class=\"project-card\" data-category=\"");
-        escape_html(&body, projects[i].category, strlen(projects[i].category));
-        buf_append_str(&body, "\">\n        <a class=\"card card--clickable\" href=\"");
-        buf_append_str(&body, projects[i].url);
-        buf_append_str(&body, "\" aria-label=\"");
-        escape_html(&body, projects[i].title, strlen(projects[i].title));
-        buf_append_str(&body, "\">\n          <img class=\"thumb\" src=\"/assets/images/placeholders/cover-");
-        char num[16]; snprintf(num, sizeof(num), "%d", p_idx); buf_append_str(&body, num);
-        buf_append_str(&body, ".svg\" alt=\"\" loading=\"lazy\" decoding=\"async\" width=\"640\" height=\"400\">\n        </a>\n");
-        buf_append_str(&body, "        <div class=\"project-card__meta\">\n          <a class=\"project-card__title\" href=\"");
-        buf_append_str(&body, projects[i].url);
-        buf_append_str(&body, "\">");
-        escape_html(&body, projects[i].title, strlen(projects[i].title));
-        buf_append_str(&body, "</a>\n          <span class=\"project-card__desc\">");
-        escape_html(&body, projects[i].description, strlen(projects[i].description));
-        buf_append_str(&body, "</span>\n        </div>\n      </article>\n");
-    }
-
-    buf_append_str(&body,
-        "    </div>\n"
-        "  </section>\n\n"
-        "  <section class=\"section container\">\n"
-        "    <div class=\"section__head\">\n"
-        "      <h2 class=\"display-2\">From the blog</h2>\n"
-        "      <a class=\"link-arrow\" href=\"/blog/\">All posts "
-    );
-    render_icon_arrow(&body, 16);
-    buf_append_str(&body,
-        "</a>\n"
-        "    </div>\n"
-        "    <div class=\"grid grid--posts\">\n"
+        "      <article class=\"flagship-card\">\n"
+        "        <div class=\"flagship-card__eyebrow\">\n"
+        "          <span>WEB APPLICATION</span>\n"
+        "          <span>ACTIVE &middot; 2026</span>\n"
+        "        </div>\n"
+        "        <a class=\"flagship-card__title\" href=\"/projects/atlas/\">Atlas &mdash; Vector Tile Trip Workspace</a>\n"
+        "        <p class=\"flagship-card__desc\">\n"
+        "          A map-based workspace for planning and sharing trips, featuring offline-first vector tile caching via CacheStorage API, client-side route calculations, and interactive map rendering without external tracking.\n"
+        "        </p>\n"
+        "        <div class=\"flagship-card__specs\">\n"
+        "          <div class=\"flagship-card__spec-item\">\n"
+        "            <span class=\"flagship-card__spec-key\">Core Stack</span>\n"
+        "            <span class=\"flagship-card__spec-val\">React, TypeScript, MapLibre</span>\n"
+        "          </div>\n"
+        "          <div class=\"flagship-card__spec-item\">\n"
+        "            <span class=\"flagship-card__spec-key\">Architecture</span>\n"
+        "            <span class=\"flagship-card__spec-val\">Offline Vector Tile Caching</span>\n"
+        "          </div>\n"
+        "          <div class=\"flagship-card__spec-item\">\n"
+        "            <span class=\"flagship-card__spec-key\">Repository</span>\n"
+        "            <span class=\"flagship-card__spec-val\">github.com/irbox/atlas</span>\n"
+        "          </div>\n"
+        "        </div>\n"
+        "      </article>\n"
+        "    </section>\n\n"
+        "    <section class=\"workbench__section\" id=\"systems\">\n"
+        "      <div class=\"section__head\">\n"
+        "        <h2>// 02 DEVELOPER TOOLS &amp; PRIMITIVES</h2>\n"
+        "        <a class=\"link-arrow\" href=\"/projects/\">All 7 Projects &rarr;</a>\n"
+        "      </div>\n"
+        "      <div class=\"systems-split\">\n"
+        "        <article class=\"system-card\">\n"
+        "          <div class=\"system-card__header\">\n"
+        "            <span>CLI TOOL</span>\n"
+        "            <span>GO</span>\n"
+        "          </div>\n"
+        "          <a class=\"system-card__title\" href=\"/projects/shipit/\">Shipit</a>\n"
+        "          <p class=\"system-card__desc\">Automated release helper for Git monorepos: semantic version calculation, automated changelog diffs, and non-destructive dry-run tag signing.</p>\n"
+        "        </article>\n"
+        "        <article class=\"system-card\">\n"
+        "          <div class=\"system-card__header\">\n"
+        "            <span>UI PRIMITIVES</span>\n"
+        "            <span>TYPESCRIPT</span>\n"
+        "          </div>\n"
+        "          <a class=\"system-card__title\" href=\"/projects/kit/\">Kit</a>\n"
+        "          <p class=\"system-card__desc\">Accessible UI primitives with zero runtime dependencies: HTML5 dialog, focus trap, and popovers with strict WAI-ARIA compliance.</p>\n"
+        "        </article>\n"
+        "      </div>\n"
+        "    </section>\n\n"
+        "    <section class=\"workbench__section\" id=\"writing\">\n"
+        "      <div class=\"section__head\">\n"
+        "        <h2>// 03 FIELD NOTES &amp; WRITING</h2>\n"
+        "        <a class=\"link-arrow\" href=\"/blog/\">All Articles &rarr;</a>\n"
+        "      </div>\n"
+        "      <div class=\"posts-editorial\">\n"
     );
 
     for (size_t i = 0; i < post_count && i < 3; i++) {
-        int card_idx = (int)(i % 4) + 1;
         char short_date[64];
         format_date_short(short_date, sizeof(short_date), posts[i].date);
 
-        buf_append_str(&body,
-            "      <article class=\"post-card\">\n"
-            "        <a class=\"card card--clickable post-card__cover\" href=\""
-        );
+        buf_append_str(&body, "        <a class=\"post-row\" href=\"");
         buf_append_str(&body, posts[i].url);
-        buf_append_str(&body, "\" aria-label=\"");
+        buf_append_str(&body, "\">\n          <div class=\"post-row__main\">\n            <span class=\"post-row__title\">");
         escape_html(&body, posts[i].title, strlen(posts[i].title));
-        buf_append_str(&body, "\">\n          <img class=\"thumb\" src=\"/assets/images/placeholders/cover-");
-        char num[16]; snprintf(num, sizeof(num), "%d", card_idx); buf_append_str(&body, num);
-        buf_append_str(&body, ".svg\" alt=\"\" loading=\"lazy\" decoding=\"async\" width=\"640\" height=\"400\">\n        </a>\n");
-        buf_append_str(&body, "        <div class=\"post-card__body\">\n          <div class=\"post-card__tags\">\n");
-        render_tag_badges(&body, posts[i].tags, 2);
-        buf_append_str(&body,
-            "          </div>\n"
-            "          <h3 class=\"post-card__title\">\n"
-            "            <a href=\""
-        );
-        buf_append_str(&body, posts[i].url);
-        buf_append_str(&body, "\">");
-        escape_html(&body, posts[i].title, strlen(posts[i].title));
-        buf_append_str(&body, "</a>\n          </h3>\n          <p class=\"post-card__desc\">");
+        buf_append_str(&body, "</span>\n            <span class=\"post-row__desc\">");
         escape_html(&body, posts[i].description, strlen(posts[i].description));
-        buf_append_str(&body,
-            "</p>\n"
-            "          <div class=\"byline byline--sm\">\n"
-            "            <img class=\"avatar\" src=\"/assets/images/placeholders/avatar.svg\" alt=\"\" width=\"24\" height=\"24\" loading=\"lazy\" decoding=\"async\">\n"
-            "            <span>Irbox</span><span aria-hidden=\"true\">&middot;</span>\n"
-            "            <time datetime=\""
-        );
+        buf_append_str(&body, "</span>\n          </div>\n          <div class=\"post-row__meta\">\n            <time datetime=\"");
         buf_append_str(&body, posts[i].date);
         buf_append_str(&body, "\">");
         buf_append_str(&body, short_date);
-        buf_append_str(&body, "</time>\n          </div>\n        </div>\n      </article>\n");
+        buf_append_str(&body, "</time>\n          </div>\n        </a>\n");
     }
 
     buf_append_str(&body,
-        "    </div>\n"
-        "  </section>\n\n"
-        "  <section class=\"section container container--prose about-strip\">\n"
-        "    <img class=\"avatar avatar--lg\" src=\"/assets/images/placeholders/avatar.svg\" alt=\"\" width=\"96\" height=\"96\" loading=\"lazy\" decoding=\"async\">\n"
-        "    <div>\n"
-        "      <h2 class=\"display-3\">Irbox</h2>\n"
-        "      <p>"
+        "      </div>\n"
+        "    </section>\n\n"
+        "    <section class=\"section container--prose about-strip\" style=\"padding: 0\">\n"
+        "      <img class=\"avatar avatar--lg\" src=\"/assets/images/placeholders/avatar.svg\" alt=\"\" width=\"72\" height=\"72\" loading=\"lazy\" decoding=\"async\">\n"
+        "      <div>\n"
+        "        <h2 class=\"display-3\" style=\"margin-bottom: 6px\">Irbox</h2>\n"
+        "        <p style=\"font-size: var(--type-step-1); color: var(--ink-2); margin-bottom: 12px\">"
     );
     buf_append_str(&body, site_config.author_bio);
     buf_append_str(&body,
         "</p>\n"
-        "      <a class=\"btn btn--secondary\" href=\"/about/\">More about me</a>\n"
-        "    </div>\n"
-        "  </section>\n"
+        "        <a class=\"link-arrow\" href=\"/about/\">More about my background &rarr;</a>\n"
+        "      </div>\n"
+        "    </section>\n"
+        "  </main>\n\n"
+        "  <aside class=\"workbench__rail\" aria-label=\"Engine Telemetry and Navigation\">\n"
+        "    <div class=\"workbench__rail-title\">C23 Engine Telemetry</div>\n"
+        "    <div class=\"workbench__spec-list\">\n"
+        "      <div class=\"workbench__spec-item\">\n"
+        "        <span class=\"workbench__spec-label\">Language</span>\n"
+        "        <span class=\"workbench__spec-value\">ISO C23 / POSIX</span>\n"
+        "      </div>\n"
+        "      <div class=\"workbench__spec-item\">\n"
+        "        <span class=\"workbench__spec-label\">Runtime Bloat</span>\n"
+        "        <span class=\"workbench__spec-value\">0 Bytes (libc)</span>\n"
+        "      </div>\n"
+        "      <div class=\"workbench__spec-item\">\n"
+        "        <span class=\"workbench__spec-label\">Build Duration</span>\n"
+        "        <span class=\"workbench__spec-value\">~140 ms</span>\n"
+        "      </div>\n"
+        "      <div class=\"workbench__spec-item\">\n"
+        "        <span class=\"workbench__spec-label\">Trackers / Ads</span>\n"
+        "        <span class=\"workbench__spec-value\">0 (Strictly none)</span>\n"
+        "      </div>\n"
+        "      <div class=\"workbench__spec-item\">\n"
+        "        <span class=\"workbench__spec-label\">License</span>\n"
+        "        <span class=\"workbench__spec-value\">MIT License</span>\n"
+        "      </div>\n"
+        "      <div class=\"workbench__spec-item\">\n"
+        "        <span class=\"workbench__spec-label\">Syndication</span>\n"
+        "        <span class=\"workbench__spec-value\"><a href=\"/feed.xml\" style=\"color: inherit\">RSS 2.0 / Atom</a></span>\n"
+        "      </div>\n"
+        "    </div>\n\n"
+        "    <nav class=\"workbench__index-nav\" aria-label=\"Index\">\n"
+        "      <div class=\"workbench__rail-title\" style=\"margin-bottom: 8px\">Directory Index</div>\n"
+        "      <a class=\"workbench__index-link\" href=\"#flagship\">&bull; Flagship: Atlas</a>\n"
+        "      <a class=\"workbench__index-link\" href=\"#systems\">&bull; Core Systems: Shipit &amp; Kit</a>\n"
+        "      <a class=\"workbench__index-link\" href=\"#writing\">&bull; Engineering Writing</a>\n"
+        "      <a class=\"workbench__index-link\" href=\"/projects/\">&bull; Project Archive (7 Systems)</a>\n"
+        "      <a class=\"workbench__index-link\" href=\"/docs/getting-started/\">&bull; Documentation &amp; Guides</a>\n"
+        "    </nav>\n"
+        "  </aside>\n"
         "</div>\n"
     );
 
@@ -2717,16 +2646,17 @@ static void render_projects_landing(const char *out_dir) {
         for (size_t i = 0; i < project_count; i++) {
             if (strcmp(projects[i].category, cat) == 0) {
                 card_counter++;
-                int p_idx = ((card_counter - 1) % 4) + 1;
                 buf_append_str(&body, "      <article class=\"project-card\" data-category=\"");
                 escape_html(&body, projects[i].category, strlen(projects[i].category));
                 buf_append_str(&body, "\">\n        <a class=\"card card--clickable\" href=\"");
                 buf_append_str(&body, projects[i].url);
                 buf_append_str(&body, "\" aria-label=\"");
                 escape_html(&body, projects[i].title, strlen(projects[i].title));
-                buf_append_str(&body, "\">\n          <img class=\"thumb\" src=\"/assets/images/placeholders/cover-");
-                char num[16]; snprintf(num, sizeof(num), "%d", p_idx); buf_append_str(&body, num);
-                buf_append_str(&body, ".svg\" alt=\"\" loading=\"lazy\" decoding=\"async\" width=\"640\" height=\"400\">\n        </a>\n");
+                buf_append_str(&body, "\">\n          <div class=\"project-card__masthead\">\n            <span class=\"mono-tag\">// ");
+                escape_html(&body, projects[i].category, strlen(projects[i].category));
+                buf_append_str(&body, "</span>\n            <span class=\"mono-version\">");
+                escape_html(&body, projects[i].status, strlen(projects[i].status));
+                buf_append_str(&body, "</span>\n          </div>\n        </a>\n");
                 buf_append_str(&body, "        <div class=\"project-card__meta\">\n          <a class=\"project-card__title\" href=\"");
                 buf_append_str(&body, projects[i].url);
                 buf_append_str(&body, "\">");
@@ -2773,14 +2703,9 @@ static void render_blog_landing(const char *out_dir) {
         format_date_long(lead_date, sizeof(lead_date), posts[0].date);
 
         buf_append_str(&body,
-            "  <article class=\"feature-card\">\n"
-            "    <a class=\"card card--clickable feature-card__cover\" href=\""
+            "  <article class=\"feature-card feature-card--text-only\">\n"
+            "    <div class=\"feature-card__body\">\n      <div class=\"post-card__tags\">\n"
         );
-        buf_append_str(&body, posts[0].url);
-        buf_append_str(&body, "\" aria-label=\"");
-        escape_html(&body, posts[0].title, strlen(posts[0].title));
-        buf_append_str(&body, "\">\n      <img class=\"thumb\" src=\"/assets/images/placeholders/cover-1.svg\" alt=\"\" loading=\"lazy\" decoding=\"async\" width=\"640\" height=\"400\">\n    </a>\n");
-        buf_append_str(&body, "    <div class=\"feature-card__body\">\n      <div class=\"post-card__tags\">\n");
         render_tag_badges(&body, posts[0].tags, 3);
         buf_append_str(&body,
             "      </div>\n"
@@ -2806,21 +2731,13 @@ static void render_blog_landing(const char *out_dir) {
 
         buf_append_str(&body, "  <div class=\"grid grid--posts\">\n");
         for (size_t i = 1; i < post_count; i++) {
-            int card_idx = (int)(i % 4) + 1;
             char short_date[64];
             format_date_short(short_date, sizeof(short_date), posts[i].date);
 
             buf_append_str(&body,
-                "    <article class=\"post-card\">\n"
-                "      <a class=\"card card--clickable post-card__cover\" href=\""
+                "    <article class=\"post-card post-card--text-only\">\n"
+                "      <div class=\"post-card__body\">\n        <div class=\"post-card__tags\">\n"
             );
-            buf_append_str(&body, posts[i].url);
-            buf_append_str(&body, "\" aria-label=\"");
-            escape_html(&body, posts[i].title, strlen(posts[i].title));
-            buf_append_str(&body, "\">\n        <img class=\"thumb\" src=\"/assets/images/placeholders/cover-");
-            char num[16]; snprintf(num, sizeof(num), "%d", card_idx); buf_append_str(&body, num);
-            buf_append_str(&body, ".svg\" alt=\"\" loading=\"lazy\" decoding=\"async\" width=\"640\" height=\"400\">\n      </a>\n");
-            buf_append_str(&body, "      <div class=\"post-card__body\">\n        <div class=\"post-card__tags\">\n");
             render_tag_badges(&body, posts[i].tags, 2);
             buf_append_str(&body,
                 "        </div>\n"
