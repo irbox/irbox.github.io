@@ -1,0 +1,82 @@
+-- Nature Theme for Neovim
+-- Grounded in Retinal Neurobiology & Myopia Research (Aleman et al., 2018)
+
+local M = {}
+
+function M.setup()
+  vim.cmd("hi clear")
+  if vim.fn.exists("syntax_on") then
+    vim.cmd("syntax reset")
+  end
+
+  vim.g.colors_name = "nature"
+  vim.o.background = "dark"
+
+  local c = {
+    bg = "#111613",
+    bg_surface = "#171e19",
+    bg_raised = "#1e2721",
+    bg_elevated = "#26322b",
+    fg = "#dce5d8",
+    fg_secondary = "#a9bba9",
+    comment = "#728877",
+    border = "#3d4e41",
+    keyword = "#cf9a68",
+    string = "#9dc297",
+    func = "#82bba8",
+    number = "#dbab79",
+    type = "#a8c9b8",
+    constant = "#d6a27e",
+    operator = "#b0a898",
+    accent = "#82bba8",
+    danger = "#d47864",
+    selection = "#263e32"
+  }
+
+  local highlights = {
+    Normal = { fg = c.fg, bg = c.bg },
+    NormalFloat = { fg = c.fg, bg = c.bg_surface },
+    FloatBorder = { fg = c.border, bg = c.bg_surface },
+    Cursor = { fg = c.bg, bg = c.keyword },
+    CursorLine = { bg = c.bg_surface },
+    LineNr = { fg = c.border },
+    CursorLineNr = { fg = c.accent, bold = true },
+    SignColumn = { bg = c.bg },
+    Visual = { bg = c.selection },
+    Search = { fg = c.bg, bg = c.number },
+    IncSearch = { fg = c.bg, bg = c.keyword },
+    StatusLine = { fg = c.fg, bg = c.bg_surface },
+    StatusLineNC = { fg = c.comment, bg = c.bg },
+    VertSplit = { fg = c.border },
+    WinSeparator = { fg = c.border },
+    Pmenu = { fg = c.fg, bg = c.bg_surface },
+    PmenuSel = { fg = c.bg, bg = c.accent },
+
+    -- Syntax
+    Comment = { fg = c.comment, italic = true },
+    Constant = { fg = c.constant },
+    String = { fg = c.string },
+    Character = { fg = c.string },
+    Number = { fg = c.number },
+    Boolean = { fg = c.number, bold = true },
+    Identifier = { fg = c.fg },
+    Function = { fg = c.func },
+    Statement = { fg = c.keyword, bold = true },
+    Conditional = { fg = c.keyword, bold = true },
+    Repeat = { fg = c.keyword, bold = true },
+    Operator = { fg = c.operator },
+    Keyword = { fg = c.keyword, bold = true },
+    PreProc = { fg = c.type },
+    Type = { fg = c.type },
+    Special = { fg = c.constant },
+    Underlined = { underline = true },
+    Error = { fg = c.danger, bold = true },
+    Todo = { fg = c.bg, bg = c.keyword, bold = true }
+  }
+
+  for group, opts in pairs(highlights) do
+    vim.api.nvim_set_hl(0, group, opts)
+  end
+end
+
+return M

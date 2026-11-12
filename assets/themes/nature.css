@@ -1,0 +1,106 @@
+/**
+ * Nature Theme — Design Tokens & Syntax Classes
+ * Grounded in Retinal Neurobiology & Myopia Research (Aleman et al., 2018)
+ */
+
+[data-theme='nature'] {
+  color-scheme: dark;
+  --bg-body: #111613;
+  --bg-surface: #171e19;
+  --bg-surface-raised: #1e2721;
+  --bg-surface-elevated: #26322b;
+  --bg-muted: #212c24;
+  --bg-overlay: rgba(17, 22, 19, 0.96);
+
+  --ink: #dce5d8;
+  --ink-2: #a9bba9;
+  --ink-muted: #788d7b;
+  --ink-faint: #3d4e41;
+
+  --border: rgba(220, 229, 216, 0.10);
+  --border-strong: rgba(220, 229, 216, 0.20);
+
+  --brand: #82bba8;
+  --brand-hover: #9ecbbd;
+  --brand-subtle: rgba(130, 187, 168, 0.12);
+
+  --accent: #cf9a68;
+  --accent-subtle: rgba(207, 154, 104, 0.12);
+  --warning: #dbab79;
+  --warning-subtle: rgba(219, 171, 121, 0.12);
+  --danger: #d47864;
+  --danger-subtle: rgba(212, 120, 100, 0.12);
+  --success: #9dc297;
+  --success-subtle: rgba(157, 194, 151, 0.12);
+}
+
+[data-theme='nature-light'] {
+  color-scheme: light;
+  --bg-body: #f0f2eb;
+  --bg-surface: #e5e9e0;
+  --bg-surface-raised: #dbe0d5;
+  --bg-surface-elevated: #ffffff;
+  --bg-muted: #d4dad0;
+  --bg-overlay: rgba(240, 242, 235, 0.96);
+
+  --ink: #19241c;
+  --ink-2: #354538;
+  --ink-muted: #5a6d5f;
+  --ink-faint: #a9b8ab;
+
+  --border: rgba(25, 36, 28, 0.10);
+  --border-strong: rgba(25, 36, 28, 0.22);
+
+  --brand: #2d6139;
+  --brand-hover: #1e4a29;
+  --brand-subtle: rgba(45, 97, 57, 0.10);
+
+  --accent: #8a481e;
+  --accent-subtle: rgba(138, 72, 30, 0.10);
+  --warning: #85531d;
+  --warning-subtle: rgba(133, 83, 29, 0.10);
+  --danger: #943825;
+  --danger-subtle: rgba(148, 56, 37, 0.10);
+  --success: #265e3b;
+  --success-subtle: rgba(38, 94, 59, 0.10);
+}
+
+/* Syntax Highlighting for Nature Dark */
+[data-theme='nature'] .highlight .c,
+[data-theme='nature'] .highlight .c1,
+[data-theme='nature'] .highlight .cm { color: #728877; font-style: italic; }
+[data-theme='nature'] .highlight .k,
+[data-theme='nature'] .highlight .kd,
+[data-theme='nature'] .highlight .kn { color: #cf9a68; font-weight: 500; }
+[data-theme='nature'] .highlight .s,
+[data-theme='nature'] .highlight .s1,
+[data-theme='nature'] .highlight .s2 { color: #9dc297; }
+[data-theme='nature'] .highlight .nf,
+[data-theme='nature'] .highlight .nc { color: #82bba8; }
+[data-theme='nature'] .highlight .o,
+[data-theme='nature'] .highlight .ow { color: #b0a898; }
+[data-theme='nature'] .highlight .m,
+[data-theme='nature'] .highlight .mi,
+[data-theme='nature'] .highlight .mf { color: #dbab79; }
+[data-theme='nature'] .highlight .nt { color: #cf9a68; }
+[data-theme='nature'] .highlight .na { color: #a8c9b8; }
+
+/* Syntax Highlighting for Nature Light */
+[data-theme='nature-light'] .highlight .c,
+[data-theme='nature-light'] .highlight .c1,
+[data-theme='nature-light'] .highlight .cm { color: #687e6e; font-style: italic; }
+[data-theme='nature-light'] .highlight .k,
+[data-theme='nature-light'] .highlight .kd,
+[data-theme='nature-light'] .highlight .kn { color: #8a481e; font-weight: 500; }
+[data-theme='nature-light'] .highlight .s,
+[data-theme='nature-light'] .highlight .s1,
+[data-theme='nature-light'] .highlight .s2 { color: #2d6139; }
+[data-theme='nature-light'] .highlight .nf,
+[data-theme='nature-light'] .highlight .nc { color: #1e5e54; }
+[data-theme='nature-light'] .highlight .o,
+[data-theme='nature-light'] .highlight .ow { color: #4a594e; }
+[data-theme='nature-light'] .highlight .m,
+[data-theme='nature-light'] .highlight .mi,
+[data-theme='nature-light'] .highlight .mf { color: #85531d; }
+[data-theme='nature-light'] .highlight .nt { color: #8a481e; }
+[data-theme='nature-light'] .highlight .na { color: #2b5c4b; }

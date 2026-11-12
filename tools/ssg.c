@@ -634,6 +634,14 @@ static void render_icon_moon(StrBuf *out, int size) {
     buf_append_str(out, buf);
 }
 
+static void render_icon_leaf(StrBuf *out, int size) {
+    char buf[1024];
+    snprintf(buf, sizeof(buf),
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"%d\" height=\"%d\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z\"/><path d=\"M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12\"/></svg>",
+        size, size);
+    buf_append_str(out, buf);
+}
+
 static void render_icon_menu(StrBuf *out, int size) {
     char buf[1024];
     snprintf(buf, sizeof(buf),
@@ -1479,11 +1487,9 @@ static void render_head(StrBuf *out, const char *title, const char *desc, const 
         "        var d = document.documentElement;\n"
         "        d.classList.add('is-loading');\n"
         "        var t = localStorage.getItem('theme');\n"
-        "        var lightColor = '#ffffff';\n"
-        "        var darkColor = '#0b0d11';\n"
-        "        if (t === 'light' || t === 'dark') {\n"
+        "        if (t === 'light' || t === 'dark' || t === 'nature' || t === 'nature-light') {\n"
         "          d.setAttribute('data-theme', t);\n"
-        "          var c = t === 'dark' ? darkColor : lightColor;\n"
+        "          var c = t === 'dark' ? '#0b0f17' : (t === 'nature' ? '#111613' : (t === 'nature-light' ? '#f0f2eb' : '#ffffff'));\n"
         "          var metas = document.querySelectorAll('meta[name=\"theme-color\"]');\n"
         "          for (var i = 0; i < metas.length; i++) {\n"
         "            metas[i].setAttribute('content', c);\n"
@@ -1582,6 +1588,10 @@ static void render_header(StrBuf *out, const char *active_section) {
         "        <span class=\"theme-icon theme-icon--moon\">"
     );
     render_icon_moon(out, 20);
+    buf_append_str(out, "</span>\n        <span class=\"theme-icon theme-icon--nature\">");
+    render_icon_leaf(out, 20);
+    buf_append_str(out, "</span>\n        <span class=\"theme-icon theme-icon--nature-light\">");
+    render_icon_leaf(out, 20);
     buf_append_str(out, "</span>\n        <span class=\"theme-icon theme-icon--sun\">");
     render_icon_sun(out, 20);
     buf_append_str(out,

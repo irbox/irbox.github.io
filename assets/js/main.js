@@ -54,28 +54,34 @@
   });
 
   /* ---- 3. Theme Controller ---- */
+  const themes = ['light', 'dark', 'nature', 'nature-light'];
+  const themeColors = { light: '#ffffff', dark: '#0b0f17', nature: '#111613', 'nature-light': '#f0f2eb' };
+  const themeNames = { light: 'Light', dark: 'Dark', nature: 'Nature (dark)', 'nature-light': 'Nature (sunlight)' };
   const themeBtns = $$('[data-theme-toggle]');
   const metas = $$('meta[name="theme-color"]');
   const getTheme = () => root.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  const getNextTheme = (t) => {
+    const idx = themes.indexOf(t);
+    return themes[(idx + 1) % themes.length];
+  };
   const syncTheme = (t) => {
-    const isDark = t === 'dark';
-    const color = isDark ? '#0b0f17' : '#ffffff';
+    const color = themeColors[t] || '#ffffff';
     metas.forEach((m) => m.setAttribute('content', color));
-    const next = isDark ? 'light' : 'dark';
+    const next = getNextTheme(t);
+    const label = `Switch to ${themeNames[next]} theme (or press T)`;
     themeBtns.forEach((b) => {
-      b.setAttribute('aria-label', `Switch to ${next} theme (or press T)`);
-      b.setAttribute('title', `Switch to ${next} theme (T)`);
+      b.setAttribute('aria-label', label);
+      b.setAttribute('title', label);
     });
   };
+  const cycleTheme = () => {
+    const next = getNextTheme(getTheme());
+    root.setAttribute('data-theme', next);
+    store.set('theme', next);
+    syncTheme(next);
+  };
   syncTheme(getTheme());
-  themeBtns.forEach((b) => {
-    b.addEventListener('click', () => {
-      const next = getTheme() === 'dark' ? 'light' : 'dark';
-      root.setAttribute('data-theme', next);
-      store.set('theme', next);
-      syncTheme(next);
-    });
-  });
+  themeBtns.forEach((b) => b.addEventListener('click', cycleTheme));
   window.addEventListener('storage', (e) => {
     if (e.key === 'theme') {
       if (e.newValue) root.setAttribute('data-theme', e.newValue);
@@ -352,12 +358,7 @@
       const k = e.key.toLowerCase();
       if (k === '/') { e.preventDefault(); openSearch(); }
       else if (k === '?') { e.preventDefault(); openShortcuts(); }
-      else if (k === 't') {
-        const next = getTheme() === 'dark' ? 'light' : 'dark';
-        root.setAttribute('data-theme', next);
-        store.set('theme', next);
-        syncTheme(next);
-      }
+      else if (k === 't') cycleTheme();
       else if (k === 'h') location.href = '/';
       else if (k === 'd') location.href = '/docs/getting-started/';
       else if (k === 'p') location.href = '/projects/';

@@ -224,6 +224,80 @@
   --shadow-xl: none;
 }
 
+/* Nature Dark Theme (Retinal ON-Pathway & Low LCA Bio-Ergonomics) */
+[data-theme='nature'] {
+  color-scheme: dark;
+  --bg-body: #111613;
+  --bg-surface: #171e19;
+  --bg-surface-raised: #1e2721;
+  --bg-surface-elevated: #26322b;
+  --bg-muted: #212c24;
+  --bg-overlay: rgba(17, 22, 19, 0.96);
+
+  --ink: #dce5d8;
+  --ink-2: #a9bba9;
+  --ink-muted: #788d7b;
+  --ink-faint: #3d4e41;
+
+  --border: rgba(220, 229, 216, 0.10);
+  --border-strong: rgba(220, 229, 216, 0.20);
+
+  --brand: #82bba8;
+  --brand-hover: #9ecbbd;
+  --brand-subtle: rgba(130, 187, 168, 0.12);
+
+  --accent: #cf9a68;
+  --accent-subtle: rgba(207, 154, 104, 0.12);
+  --warning: #dbab79;
+  --warning-subtle: rgba(219, 171, 121, 0.12);
+  --danger: #d47864;
+  --danger-subtle: rgba(212, 120, 100, 0.12);
+  --success: #9dc297;
+  --success-subtle: rgba(157, 194, 151, 0.12);
+
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-xl: none;
+}
+
+/* Nature Light Theme (Daylight & Window-Sunlight Glare Resistance) */
+[data-theme='nature-light'] {
+  color-scheme: light;
+  --bg-body: #f0f2eb;
+  --bg-surface: #e5e9e0;
+  --bg-surface-raised: #dbe0d5;
+  --bg-surface-elevated: #ffffff;
+  --bg-muted: #d4dad0;
+  --bg-overlay: rgba(240, 242, 235, 0.96);
+
+  --ink: #19241c;
+  --ink-2: #354538;
+  --ink-muted: #5a6d5f;
+  --ink-faint: #a9b8ab;
+
+  --border: rgba(25, 36, 28, 0.10);
+  --border-strong: rgba(25, 36, 28, 0.22);
+
+  --brand: #2d6139;
+  --brand-hover: #1e4a29;
+  --brand-subtle: rgba(45, 97, 57, 0.10);
+
+  --accent: #8a481e;
+  --accent-subtle: rgba(138, 72, 30, 0.10);
+  --warning: #85531d;
+  --warning-subtle: rgba(133, 83, 29, 0.10);
+  --danger: #943825;
+  --danger-subtle: rgba(148, 56, 37, 0.10);
+  --success: #265e3b;
+  --success-subtle: rgba(38, 94, 59, 0.10);
+
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-xl: none;
+}
+
 /* ==========================================================================
    Pure POSIX Architecture: Strictly Zero Rounded Corners & Zero Blur Anywhere
    ========================================================================== */
@@ -507,14 +581,21 @@ button, input, select, textarea {
   border-color: var(--border);
 }
 .theme-icon {
+  display: none;
+}
+[data-theme='light'] .theme-icon--moon,
+:root:not([data-theme]) .theme-icon--moon {
   display: inline-flex;
 }
-[data-theme='light'] .theme-icon--sun { display: none; }
-[data-theme='light'] .theme-icon--moon { display: inline-flex; }
-[data-theme='dark'] .theme-icon--sun { display: inline-flex; }
-[data-theme='dark'] .theme-icon--moon { display: none; }
-:root:not([data-theme]) .theme-icon--sun { display: none; }
-:root:not([data-theme]) .theme-icon--moon { display: inline-flex; }
+[data-theme='dark'] .theme-icon--nature {
+  display: inline-flex;
+}
+[data-theme='nature'] .theme-icon--nature-light {
+  display: inline-flex;
+}
+[data-theme='nature-light'] .theme-icon--sun {
+  display: inline-flex;
+}
 
 /* Search Trigger in Navbar */
 .search-trigger {
@@ -1333,6 +1414,46 @@ pre:hover .code-copy-btn,
 [data-theme='dark'] .highlight .o { color: #a78bfa; }
 [data-theme='dark'] .highlight .m { color: #fbbf24; }
 
+/* Nature Dark Syntax Tokens (515nm - 590nm Low LCA Band) */
+[data-theme='nature'] .highlight .c,
+[data-theme='nature'] .highlight .c1,
+[data-theme='nature'] .highlight .cm { color: #728877; font-style: italic; }
+[data-theme='nature'] .highlight .k,
+[data-theme='nature'] .highlight .kd,
+[data-theme='nature'] .highlight .kn { color: #cf9a68; font-weight: 500; }
+[data-theme='nature'] .highlight .s,
+[data-theme='nature'] .highlight .s1,
+[data-theme='nature'] .highlight .s2 { color: #9dc297; }
+[data-theme='nature'] .highlight .nf,
+[data-theme='nature'] .highlight .nc { color: #82bba8; }
+[data-theme='nature'] .highlight .o,
+[data-theme='nature'] .highlight .ow { color: #b0a898; }
+[data-theme='nature'] .highlight .m,
+[data-theme='nature'] .highlight .mi,
+[data-theme='nature'] .highlight .mf { color: #dbab79; }
+[data-theme='nature'] .highlight .nt { color: #cf9a68; }
+[data-theme='nature'] .highlight .na { color: #a8c9b8; }
+
+/* Nature Light Syntax Tokens (Sunlight High Ambient Reading) */
+[data-theme='nature-light'] .highlight .c,
+[data-theme='nature-light'] .highlight .c1,
+[data-theme='nature-light'] .highlight .cm { color: #687e6e; font-style: italic; }
+[data-theme='nature-light'] .highlight .k,
+[data-theme='nature-light'] .highlight .kd,
+[data-theme='nature-light'] .highlight .kn { color: #8a481e; font-weight: 500; }
+[data-theme='nature-light'] .highlight .s,
+[data-theme='nature-light'] .highlight .s1,
+[data-theme='nature-light'] .highlight .s2 { color: #2d6139; }
+[data-theme='nature-light'] .highlight .nf,
+[data-theme='nature-light'] .highlight .nc { color: #1e5e54; }
+[data-theme='nature-light'] .highlight .o,
+[data-theme='nature-light'] .highlight .ow { color: #4a594e; }
+[data-theme='nature-light'] .highlight .m,
+[data-theme='nature-light'] .highlight .mi,
+[data-theme='nature-light'] .highlight .mf { color: #85531d; }
+[data-theme='nature-light'] .highlight .nt { color: #8a481e; }
+[data-theme='nature-light'] .highlight .na { color: #2b5c4b; }
+
 /* ---------- 9. Projects & Blog Showcases ---------- */
 /* Project Page */
 .stage {
@@ -1711,6 +1832,18 @@ body.reader-page main#main {
   --reader-border: rgba(255, 255, 255, 0.12);
   --reader-accent: #3b82f6;
 }
+.reader-shell[data-theme='nature'] {
+  --reader-bg: #111613;
+  --reader-ink: #dce5d8;
+  --reader-border: rgba(220, 229, 216, 0.12);
+  --reader-accent: #82bba8;
+}
+.reader-shell[data-theme='nature-light'] {
+  --reader-bg: #f0f2eb;
+  --reader-ink: #19241c;
+  --reader-border: rgba(25, 36, 28, 0.12);
+  --reader-accent: #2d6139;
+}
 .reader-shell[data-font='serif'] { --reader-font: var(--font-serif); }
 .reader-shell[data-font='sans'] { --reader-font: var(--font-sans); }
 .reader-shell[data-font='mono'] { --reader-font: var(--font-mono); }
@@ -1906,6 +2039,8 @@ body.reader-page main#main {
 .reader-theme-btn--sepia { background: #f8f1e3; color: #3b2c1d; }
 .reader-theme-btn--dark { background: #111418; color: #eee; }
 .reader-theme-btn--black { background: #000000; color: #eee; }
+.reader-theme-btn--nature { background: #111613; color: #dce5d8; border-color: #3d4e41; }
+.reader-theme-btn--nature-light { background: #f0f2eb; color: #19241c; border-color: #a9b8ab; }
 .reader-size-controls {
   display: flex;
   align-items: center;

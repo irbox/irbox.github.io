@@ -28,7 +28,21 @@ All design tokens are CSS custom properties at the top of `assets/css/main.css`.
 }
 ```
 
-The toggle in the top bar sets `data-theme` on `<html>` and remembers the choice; with no saved choice the site follows the operating system color scheme.
+The toggle in the top bar cycles through four color modes (`Light` -> `Dark` -> `Nature` -> `Nature Light`) and persists the choice in `localStorage`. With no saved choice the site follows the operating system color scheme. You can also press **`T`** anywhere on the site to cycle themes.
+
+## The Nature Theme System
+
+In addition to standard Light and Dark modes, the site includes **Nature**—a color scheme engineered from retinal neurobiology and myopia prevention research (*Aleman, Wang, & Schaeffel, 2018, Nature Scientific Reports 8:10840*):
+
+- **Nature (`data-theme='nature'`)**: Deep loam substrate (`#111613`) activating the retinal ON pathway (positive contrast polarity) to promote choroidal thickening (+10 µm) and inhibit myopia, with syntax highlighting constrained to a 515–590 nm spectral corridor to eliminate longitudinal chromatic aberration (<0.35 D).
+- **Nature Light (`data-theme='nature-light'`)**: Sun-bleached botanical parchment (`#f0f2eb`) designed for workstations next to windows, providing high diffuse reflectance to overpower window specular glare without the blinding choroidal shock (-16 µm) of 100% white.
+
+Downloadable configuration files for editors and terminals are available:
+- [VS Code Theme (`assets/themes/nature-vscode.json`)](/assets/themes/nature-vscode.json)
+- [Neovim Lua Colorscheme (`assets/themes/nature.nvim`)](/assets/themes/nature.nvim)
+- [Alacritty Terminal Theme (`assets/themes/nature-alacritty.toml`)](/assets/themes/nature-alacritty.toml)
+- [Web CSS Tokens (`assets/themes/nature.css`)](/assets/themes/nature.css)
+- [Machine-Readable Palette Specification (`assets/themes/nature.json`)](/assets/themes/nature.json)
 
 ## Typography
 

@@ -107,6 +107,8 @@
       sepia: '#f8f1e3',
       dark: '#111418',
       black: '#000000',
+      nature: '#111613',
+      'nature-light': '#f0f2eb',
     };
     const activeColor = readerThemeColors[prefs.theme];
     if (activeColor) {

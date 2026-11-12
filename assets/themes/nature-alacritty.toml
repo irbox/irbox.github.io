@@ -1,0 +1,34 @@
+# Nature Theme for Alacritty
+# Grounded in Retinal Neurobiology & Myopia Research (Aleman et al., 2018)
+
+[colors.primary]
+background = "#111613"
+foreground = "#dce5d8"
+
+[colors.cursor]
+text = "#111613"
+cursor = "#cf9a68"
+
+[colors.selection]
+text = "#ffffff"
+background = "#263e32"
+
+[colors.normal]
+black = "#171e19"
+red = "#d47864"
+green = "#9dc297"
+yellow = "#dbab79"
+blue = "#82bba8"
+magenta = "#cf9a68"
+cyan = "#a8c9b8"
+white = "#dce5d8"
+
+[colors.bright]
+black = "#46594c"
+red = "#e08d7a"
+green = "#b4d6ae"
+yellow = "#ecc294"
+blue = "#9ecbbd"
+magenta = "#e0b084"
+cyan = "#c0ded0"
+white = "#ffffff"
