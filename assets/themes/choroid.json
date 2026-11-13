@@ -1,10 +1,14 @@
 {
   "name": "Choroid",
-  "version": "4.0",
+  "version": "3.0.0",
   "type": "dark",
-  "basis": "Aleman, Wang & Schaeffel 2018, Sci Rep 8:10840, plus follow-up literature to 2025. Not medical advice.",
+  "basis": "Aleman, Wang & Schaeffel 2018, Sci Rep 8:10840; Swiatczak & Schaeffel 2022, TVST; Ingrassia et al. 2024, Vision Res; plus follow-up literature to 2025. Not medical advice.",
   "variants": {
     "deep": {
+      "name": "Choroid Deep",
+      "contrast_polarity": "positive",
+      "contrast_ratio_wcag": "16.48:1 (base) / 15.33:1 (raised)",
+      "apca_lc_raised": -95.3,
       "color": {
         "background": {
           "base": "#0A0F14",
@@ -15,52 +19,56 @@
         },
         "text": {
           "primary": "#E9EEF3",
-          "secondary": "#B4C0CB",
-          "muted": "#74889A"
+          "secondary": "#B8C4CF",
+          "muted": "#8C9DAB"
         },
         "accent": {
-          "red": "#F2736D",
-          "orange": "#F29E5C",
+          "red": "#F69B96",
+          "orange": "#F3A76A",
           "yellow": "#F2CC6B",
           "green": "#8FD694",
-          "teal": "#4FD1C5",
-          "blue": "#6CB6FF",
-          "purple": "#B392F0",
-          "pink": "#F28BB8"
+          "teal": "#56D6CA",
+          "blue": "#79BDFF",
+          "purple": "#C2A8F3",
+          "pink": "#F49BC1"
         }
       },
       "syntax_roles": {
-        "comment": "#74889A",
-        "keyword": "#B392F0",
+        "comment": "#8C9DAB",
+        "keyword": "#79BDFF",
         "string": "#8FD694",
-        "number": "#F29E5C",
-        "function": "#6CB6FF",
-        "type": "#F2CC6B",
+        "number": "#F3A76A",
+        "function": "#F2CC6B",
+        "type": "#56D6CA",
         "variable": "#E9EEF3",
-        "parameter": "#B4C0CB",
-        "tag": "#F28BB8",
-        "attribute": "#F29E5C",
-        "constant": "#4FD1C5",
-        "operator": "#B4C0CB",
-        "error": "#F2736D",
+        "parameter": "#F3A76A",
+        "tag": "#F49BC1",
+        "attribute": "#F3A76A",
+        "constant": "#C2A8F3",
+        "operator": "#B8C4CF",
+        "error": "#F69B96",
         "warning": "#F2CC6B",
-        "info": "#6CB6FF",
-        "link": "#6CB6FF"
+        "info": "#79BDFF",
+        "link": "#79BDFF"
       },
       "terminal_ansi": {
-        "black": "#22313D",
-        "red": "#F2736D",
+        "black": "#101820",
+        "red": "#F69B96",
         "green": "#8FD694",
         "yellow": "#F2CC6B",
-        "blue": "#6CB6FF",
-        "magenta": "#B392F0",
-        "cyan": "#4FD1C5",
-        "white": "#B4C0CB",
-        "bright_black": "#74889A",
+        "blue": "#79BDFF",
+        "magenta": "#C2A8F3",
+        "cyan": "#56D6CA",
+        "white": "#B8C4CF",
+        "bright_black": "#8C9DAB",
         "bright_white": "#E9EEF3"
       }
     },
     "soft": {
+      "name": "Choroid Soft",
+      "contrast_polarity": "positive",
+      "contrast_ratio_wcag": "13.55:1 (base) / 12.44:1 (raised)",
+      "apca_lc_raised": -86.9,
       "color": {
         "background": {
           "base": "#121A22",
@@ -71,52 +79,56 @@
         },
         "text": {
           "primary": "#DCE3EA",
-          "secondary": "#AEBBC7",
-          "muted": "#8497A8"
+          "secondary": "#B4C1CD",
+          "muted": "#8EA0AF"
         },
         "accent": {
-          "red": "#F4817B",
-          "orange": "#EEA062",
+          "red": "#F79E99",
+          "orange": "#F0AB73",
           "yellow": "#EBCB75",
           "green": "#92D298",
-          "teal": "#55CBC0",
-          "blue": "#74B5F5",
-          "purple": "#B59BF2",
-          "pink": "#EE90B8"
+          "teal": "#5AD0C5",
+          "blue": "#84BEF6",
+          "purple": "#C0ABF4",
+          "pink": "#F09FC1"
         }
       },
       "syntax_roles": {
-        "comment": "#8497A8",
-        "keyword": "#B59BF2",
+        "comment": "#8EA0AF",
+        "keyword": "#84BEF6",
         "string": "#92D298",
-        "number": "#EEA062",
-        "function": "#74B5F5",
-        "type": "#EBCB75",
+        "number": "#F0AB73",
+        "function": "#EBCB75",
+        "type": "#5AD0C5",
         "variable": "#DCE3EA",
-        "parameter": "#AEBBC7",
-        "tag": "#EE90B8",
-        "attribute": "#EEA062",
-        "constant": "#55CBC0",
-        "operator": "#AEBBC7",
-        "error": "#F4817B",
+        "parameter": "#F0AB73",
+        "tag": "#F09FC1",
+        "attribute": "#F0AB73",
+        "constant": "#C0ABF4",
+        "operator": "#B4C1CD",
+        "error": "#F79E99",
         "warning": "#EBCB75",
-        "info": "#74B5F5",
-        "link": "#74B5F5"
+        "info": "#84BEF6",
+        "link": "#84BEF6"
       },
       "terminal_ansi": {
-        "black": "#2A3946",
-        "red": "#F4817B",
+        "black": "#18222C",
+        "red": "#F79E99",
         "green": "#92D298",
         "yellow": "#EBCB75",
-        "blue": "#74B5F5",
-        "magenta": "#B59BF2",
-        "cyan": "#55CBC0",
-        "white": "#AEBBC7",
-        "bright_black": "#8497A8",
+        "blue": "#84BEF6",
+        "magenta": "#C0ABF4",
+        "cyan": "#5AD0C5",
+        "white": "#B4C1CD",
+        "bright_black": "#8EA0AF",
         "bright_white": "#DCE3EA"
       }
     },
     "lumen": {
+      "name": "Choroid Lumen",
+      "contrast_polarity": "negative",
+      "contrast_ratio_wcag": "16.34:1 (base) / 15.22:1 (raised)",
+      "apca_lc_raised": 94.7,
       "color": {
         "background": {
           "base": "#F5F7F9",
@@ -128,7 +140,7 @@
         "text": {
           "primary": "#121A22",
           "secondary": "#3B4856",
-          "muted": "#5F6E7D"
+          "muted": "#586776"
         },
         "accent": {
           "red": "#A81E14",
@@ -142,17 +154,17 @@
         }
       },
       "syntax_roles": {
-        "comment": "#5F6E7D",
-        "keyword": "#5F3DB5",
+        "comment": "#586776",
+        "keyword": "#1A55A3",
         "string": "#1A6B33",
         "number": "#8F4106",
-        "function": "#1A55A3",
-        "type": "#6E4C08",
+        "function": "#6E4C08",
+        "type": "#0B6A63",
         "variable": "#121A22",
-        "parameter": "#3B4856",
+        "parameter": "#8F4106",
         "tag": "#A3244F",
         "attribute": "#8F4106",
-        "constant": "#0B6A63",
+        "constant": "#5F3DB5",
         "operator": "#3B4856",
         "error": "#A81E14",
         "warning": "#6E4C08",
@@ -168,7 +180,7 @@
         "magenta": "#5F3DB5",
         "cyan": "#0B6A63",
         "white": "#3B4856",
-        "bright_black": "#5F6E7D",
+        "bright_black": "#586776",
         "bright_white": "#121A22"
       }
     }
@@ -192,37 +204,38 @@
       "basis": "500 to 1000 lux thickened the choroid versus darkness in young adults. How this combines with dark themes is untested (inference)."
     },
     "outdoor_time": "About 2 hours a day for children; the best-supported protective measure (IMI 2025).",
-    "screen_brightness": "Moderate. The key studies matched screens at 35 to 86 cd/m2.",
+    "screen_brightness": "Moderate (35 to 86 cd/m2).",
     "small_screens": "Phone-size text was the condition with no significant effect. Hold phones 40 cm or more, enlarge text, prefer larger screens for long reading.",
-    "under_3_years": "No screens (China MOE 2025; WHO and AAP guidance).",
+    "under_3_years": "No screens (WHO, AAP, and Nov 2025 public health guidance).",
     "pseudomyopia": "If distance vision is blurry after near work and recovers over minutes to hours, or comes with headaches, see an eye doctor for a cycloplegic exam. A palette cannot treat accommodative spasm."
   },
   "age_guidance": {
-    "children": "Outdoor time (about 2 h/day), distance of 30 cm or more and regular breaks are the best-supported measures. Dark-mode benefit is unproven in children. Deep or Soft with large text is an optional extra.",
-    "teens_and_young_adults": "Highest-risk group for adult-onset progression (students, high myopes). Deep or Soft, large text, regular distance breaks, outdoor time.",
-    "adults_25_to_40": "Progression usually slows (<0.1 D/yr). Benefit of inverted contrast is uncertain; choose by comfort (Soft or Lumen).",
-    "adults_40_to_60": "Check presbyopia and astigmatism correction first. Choose by legibility; Soft or Lumen.",
-    "adults_60_plus": "Lens scatter, small pupils, cataract or AMD can flip the legibility advantage either way. Try Soft and Lumen and keep whichever reads best. Myopia relevance is mainly monitoring of high myopia.",
+    "under_3_years": "No screens (WHO, AAP, Nov 2025 guidance).",
+    "children_3_to_14": "Outdoor time (about 2 h/day), distance of 40 cm or more (22px cap / 29px x-height) and regular breaks are the best-supported measures. Dark-mode benefit is unproven in children. Deep or Soft with large text is an optional extra.",
+    "teens_and_young_adults_15_to_25": "Highest-risk group for adult-onset progression (students, high myopes). Deep (or Soft if astigmatic), 40-60 cm (22px-32px), stop continuous near work at 30 min for 5-min distance break, outdoor time.",
+    "adults_25_to_40": "Progression usually slows (<0.1 D/yr). Benefit of inverted contrast is uncertain; choose by comfort (Soft or Lumen); maintain 500-1000 lux room lighting.",
+    "adults_40_to_60": "Presbyopia and uncorrected astigmatism dominate comfort; prioritize accurate near-work lenses; Soft or Lumen (27px-38px).",
+    "older_adults_60_plus": "Clear lenses read better on Lumen; lens scatter or cataract often favours Soft dark polarity (22px-32px+).",
     "variant_roles": {
-      "deep": "max contrast, myopia-informed",
-      "soft": "reduced glare/halation, myopia-informed",
-      "lumen": "legibility fallback, NOT myopia-informed"
+      "deep": "max contrast (16.48:1), myopia-informed baseline",
+      "soft": "reduced glare/halation (13.55:1), astigmatism-friendly, myopia-informed",
+      "lumen": "legibility fallback (16.34:1), daylight reading and older eyes, NOT myopia-informed"
     }
   },
-  "evidence_status": "Short-term choroid/axial-length changes in small, mostly young-adult studies. IMI (2023) judged evidence insufficient to use short-term choroid thickening as a treatment biomarker. No long-term trial found.",
-  "reading_guidance": {
-    "polarity": "light text on dark background (inverted contrast)",
-    "note_text_size": "Only large text (cap height ~34 arcmin) gave significant eye shortening in the 2022 follow-up; ~14 arcmin did not.",
-    "font_size_px_for_large_text_by_viewing_distance_cm": {
-      "30": 16,
-      "35": 19,
-      "40": 22,
-      "50": 27,
-      "60": 32,
-      "70": 38
+  "typography_presets": {
+    "cap_height_0_70em": {
+      "30cm": "16.2px",
+      "40cm": "21.6px",
+      "50cm": "27.0px",
+      "60cm": "32.4px",
+      "70cm": "37.8px"
     },
-    "keep_body_text_neutral": "Avoid red/amber-only or heavily low-blue palettes for long reading.",
-    "red_use": "errors only",
-    "breaks": "Look at distance every 15 min (handheld) / 50 min (desktop); outdoor time remains the best-supported protective factor."
+    "x_height_0_52em": {
+      "30cm": "21.8px",
+      "40cm": "29.1px",
+      "50cm": "36.4px",
+      "60cm": "43.6px",
+      "70cm": "50.9px"
+    }
   }
 }

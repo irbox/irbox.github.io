@@ -1,0 +1,107 @@
+{
+  "$schema": "https://designtokens.org",
+  "meta": {
+    "name": "Choroid",
+    "version": "3.0.0",
+    "note": "Precautionary ergonomic defaults; no randomized long-term myopia trials exist.",
+    "protocol": {
+      "minDistanceCm": 30,
+      "preferredDistanceCm": 40,
+      "maxContinuousNearWorkMin": 30,
+      "distanceBreakMin": 5,
+      "roomIlluminanceLux": "500-1000",
+      "screenLuminanceCdM2": "35-86",
+      "dailyOutdoorHoursChildren": 2
+    }
+  },
+  "typography": {
+    "capHeight34Arcmin": {
+      "30cm": { "$value": "16.2px", "$type": "dimension" },
+      "40cm": { "$value": "21.6px", "$type": "dimension" },
+      "50cm": { "$value": "27.0px", "$type": "dimension" },
+      "60cm": { "$value": "32.4px", "$type": "dimension" },
+      "70cm": { "$value": "37.8px", "$type": "dimension" }
+    },
+    "xHeight34Arcmin": {
+      "30cm": { "$value": "21.8px", "$type": "dimension" },
+      "40cm": { "$value": "29.1px", "$type": "dimension" },
+      "50cm": { "$value": "36.4px", "$type": "dimension" },
+      "60cm": { "$value": "43.6px", "$type": "dimension" },
+      "70cm": { "$value": "50.9px", "$type": "dimension" }
+    }
+  },
+  "modes": {
+    "deep": {
+      "background": {
+        "base": { "$value": "#0A0F14", "$type": "color" },
+        "raised": { "$value": "#101820", "$type": "color" },
+        "overlay": { "$value": "#17222C", "$type": "color" },
+        "highlight": { "$value": "#22313D", "$type": "color" },
+        "border": { "$value": "#2C3C49", "$type": "color" }
+      },
+      "text": {
+        "primary": { "$value": "#E9EEF3", "$type": "color" },
+        "secondary": { "$value": "#B8C4CF", "$type": "color" },
+        "muted": { "$value": "#8C9DAB", "$type": "color" }
+      },
+      "accent": {
+        "red": { "$value": "#F69B96", "$type": "color" },
+        "orange": { "$value": "#F3A76A", "$type": "color" },
+        "yellow": { "$value": "#F2CC6B", "$type": "color" },
+        "green": { "$value": "#8FD694", "$type": "color" },
+        "teal": { "$value": "#56D6CA", "$type": "color" },
+        "blue": { "$value": "#79BDFF", "$type": "color" },
+        "purple": { "$value": "#C2A8F3", "$type": "color" },
+        "pink": { "$value": "#F49BC1", "$type": "color" }
+      }
+    },
+    "soft": {
+      "background": {
+        "base": { "$value": "#121A22", "$type": "color" },
+        "raised": { "$value": "#18222C", "$type": "color" },
+        "overlay": { "$value": "#1F2B36", "$type": "color" },
+        "highlight": { "$value": "#2A3946", "$type": "color" },
+        "border": { "$value": "#364857", "$type": "color" }
+      },
+      "text": {
+        "primary": { "$value": "#DCE3EA", "$type": "color" },
+        "secondary": { "$value": "#B4C1CD", "$type": "color" },
+        "muted": { "$value": "#8EA0AF", "$type": "color" }
+      },
+      "accent": {
+        "red": { "$value": "#F79E99", "$type": "color" },
+        "orange": { "$value": "#F0AB73", "$type": "color" },
+        "yellow": { "$value": "#EBCB75", "$type": "color" },
+        "green": { "$value": "#92D298", "$type": "color" },
+        "teal": { "$value": "#5AD0C5", "$type": "color" },
+        "blue": { "$value": "#84BEF6", "$type": "color" },
+        "purple": { "$value": "#C0ABF4", "$type": "color" },
+        "pink": { "$value": "#F09FC1", "$type": "color" }
+      }
+    },
+    "lumen": {
+      "background": {
+        "base": { "$value": "#F5F7F9", "$type": "color" },
+        "raised": { "$value": "#ECEFF3", "$type": "color" },
+        "overlay": { "$value": "#E2E7EC", "$type": "color" },
+        "highlight": { "$value": "#D3DAE2", "$type": "color" },
+        "border": { "$value": "#BFC8D2", "$type": "color" }
+      },
+      "text": {
+        "primary": { "$value": "#121A22", "$type": "color" },
+        "secondary": { "$value": "#3B4856", "$type": "color" },
+        "muted": { "$value": "#586776", "$type": "color" }
+      },
+      "accent": {
+        "red": { "$value": "#A81E14", "$type": "color" },
+        "orange": { "$value": "#8F4106", "$type": "color" },
+        "yellow": { "$value": "#6E4C08", "$type": "color" },
+        "green": { "$value": "#1A6B33", "$type": "color" },
+        "teal": { "$value": "#0B6A63", "$type": "color" },
+        "blue": { "$value": "#1A55A3", "$type": "color" },
+        "purple": { "$value": "#5F3DB5", "$type": "color" },
+        "pink": { "$value": "#A3244F", "$type": "color" }
+      }
+    }
+  }
+}

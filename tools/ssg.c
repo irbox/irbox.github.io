@@ -1548,9 +1548,13 @@ static void render_head(StrBuf *out, const char *title, const char *desc, const 
         "            metas[i].setAttribute('content', c);\n"
         "          }\n"
         "        }\n"
-        "        var dist = localStorage.getItem('reading-distance');\n"
-        "        if (dist) {\n"
-        "          d.setAttribute('data-reading-distance', dist + 'cm');\n"
+        "        var dist = localStorage.getItem('reading-distance') || '40';\n"
+        "        d.setAttribute('data-reading-distance', dist + 'cm');\n"
+        "        d.setAttribute('data-choroid-distance', dist + 'cm');\n"
+        "        var metric = localStorage.getItem('reading-metric');\n"
+        "        if (metric === 'x-height') {\n"
+        "          d.setAttribute('data-choroid-metric', 'x-height');\n"
+        "          d.setAttribute('data-reading-metric', 'x-height');\n"
         "        }\n"
         "        var a = localStorage.getItem('announcement-dismissed');\n"
         "        if (a) {\n"
@@ -1856,7 +1860,7 @@ static void wrap_page_ext(StrBuf *out, const char *title, const char *desc, cons
     buf_append_str(out, def_t);
     buf_append_str(out, "\" data-choroid=\"");
     buf_append_str(out, def_ch);
-    buf_append_str(out, "\" data-reading-distance=\"40cm\">\n");
+    buf_append_str(out, "\" data-reading-distance=\"40cm\" data-choroid-distance=\"40cm\">\n");
     render_head(out, title, desc, url_path, og_type, date_pub);
     buf_append_str(out, "<body");
     if (body_class && strlen(body_class) > 0) {
@@ -2154,12 +2158,14 @@ static void render_projects_sidebar(StrBuf *out, const char *active_slug) {
 
 static void render_reading_presets_bar(StrBuf *out) {
     buf_append_str(out,
-        "        <div class=\"reading-presets-bar\" role=\"group\" aria-label=\"Calibrated reading font size by viewing distance (~34 arcmin rule)\">\n"
-        "          <span class=\"reading-presets-bar__label\">Reading Distance:</span>\n"
-        "          <button class=\"reading-preset-btn\" data-distance=\"30\" type=\"button\" title=\"30 cm viewing distance (16px, ~34 arcmin)\">30cm</button>\n"
-        "          <button class=\"reading-preset-btn is-active\" data-distance=\"40\" type=\"button\" title=\"40 cm preferred viewing distance (22px, ~34 arcmin)\">40cm</button>\n"
-        "          <button class=\"reading-preset-btn\" data-distance=\"50\" type=\"button\" title=\"50 cm viewing distance (27px, ~34 arcmin)\">50cm</button>\n"
-        "          <button class=\"reading-preset-btn\" data-distance=\"60\" type=\"button\" title=\"60 cm monitor viewing distance (32px, ~34 arcmin)\">60cm</button>\n"
+        "        <div class=\"reading-presets-bar\" role=\"group\" aria-label=\"Calibrated reading font size by viewing distance (~34.4 arcmin rule)\">\n"
+        "          <span class=\"reading-presets-bar__label\">Distance:</span>\n"
+        "          <button class=\"reading-preset-btn\" data-distance=\"30\" type=\"button\" title=\"30 cm viewing distance (16.2px cap / 21.8px x-h, ~34.4 arcmin)\">30cm</button>\n"
+        "          <button class=\"reading-preset-btn is-active\" data-distance=\"40\" type=\"button\" title=\"40 cm preferred viewing distance (21.6px cap / 29.1px x-h, ~34.4 arcmin)\">40cm</button>\n"
+        "          <button class=\"reading-preset-btn\" data-distance=\"50\" type=\"button\" title=\"50 cm viewing distance (27.0px cap / 36.4px x-h, ~34.4 arcmin)\">50cm</button>\n"
+        "          <button class=\"reading-preset-btn\" data-distance=\"60\" type=\"button\" title=\"60 cm monitor viewing distance (32.4px cap / 43.6px x-h, ~34.4 arcmin)\">60cm</button>\n"
+        "          <button class=\"reading-preset-btn\" data-distance=\"70\" type=\"button\" title=\"70 cm monitor viewing distance (37.8px cap / 50.9px x-h, ~34.4 arcmin)\">70cm</button>\n"
+        "          <button class=\"reading-preset-btn reading-preset-btn--metric\" data-metric-toggle type=\"button\" title=\"Toggle between Cap-height (0.70em) and Lowercase x-height (0.52em) 34.4 arcmin calibration\">Metric: Cap (0.70em)</button>\n"
         "        </div>\n"
     );
 }

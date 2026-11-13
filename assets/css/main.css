@@ -33,16 +33,17 @@
   src: url('/assets/fonts/libron/Libron-BoldItalic.woff2') format('woff2');
 }
 
-/* ---------- 2. Design Tokens & Color Schemes (Choroid v4.0 / Nature Architecture) ---------- */
+/* ---------- 2. Design Tokens & Color Schemes (Choroid v3.0 / Nature Architecture) ---------- */
 :root {
-  /* Reading Size Presets: Calibrated to cap height ~34 arcmin (Swiatczak & Schaeffel 2022) */
-  --choroid-size-30cm: 16px;
-  --choroid-size-35cm: 19px;
-  --choroid-size-40cm: 22px;
-  --choroid-size-50cm: 27px;
-  --choroid-size-60cm: 32px;
-  --choroid-size-70cm: 38px;
+  /* Reading Size Presets: Calibrated to cap height ~34.4 arcmin (0.70em cap-height basis) */
+  --choroid-size-30cm: 16.2px;
+  --choroid-size-35cm: 18.9px;
+  --choroid-size-40cm: 21.6px;
+  --choroid-size-50cm: 27.0px;
+  --choroid-size-60cm: 32.4px;
+  --choroid-size-70cm: 37.8px;
   --choroid-reading-size: var(--choroid-size-40cm);
+  --choroid-body-weight: 450;
 
   /* System & Engineered Typography Stacks */
   --font-heading: 'Space Grotesk', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
@@ -116,16 +117,27 @@
   --dur-slow: 350ms;
 }
 
-/* Dynamic Reading Distance Presets */
-[data-reading-distance="30cm"] { --choroid-reading-size: var(--choroid-size-30cm); }
-[data-reading-distance="35cm"] { --choroid-reading-size: var(--choroid-size-35cm); }
-[data-reading-distance="40cm"] { --choroid-reading-size: var(--choroid-size-40cm); }
-[data-reading-distance="50cm"] { --choroid-reading-size: var(--choroid-size-50cm); }
-[data-reading-distance="60cm"] { --choroid-reading-size: var(--choroid-size-60cm); }
-[data-reading-distance="70cm"] { --choroid-reading-size: var(--choroid-size-70cm); }
+/* Dynamic Reading Distance Presets (~34.4 arcmin Cap-Height Basis: 0.70em) */
+[data-reading-distance="30cm"], [data-choroid-distance="30cm"] { --choroid-reading-size: var(--choroid-size-30cm); }
+[data-reading-distance="35cm"], [data-choroid-distance="35cm"] { --choroid-reading-size: var(--choroid-size-35cm); }
+[data-reading-distance="40cm"], [data-choroid-distance="40cm"] { --choroid-reading-size: var(--choroid-size-40cm); }
+[data-reading-distance="50cm"], [data-choroid-distance="50cm"] { --choroid-reading-size: var(--choroid-size-50cm); }
+[data-reading-distance="60cm"], [data-choroid-distance="60cm"] { --choroid-reading-size: var(--choroid-size-60cm); }
+[data-reading-distance="70cm"], [data-choroid-distance="70cm"] { --choroid-reading-size: var(--choroid-size-70cm); }
+
+/* Optional Strict Lowercase x-Height Presets (~34.4 arcmin Basis: 0.52em) */
+:root[data-choroid-metric="x-height"],
+:root[data-reading-metric="x-height"] {
+  --choroid-size-30cm: 21.8px;
+  --choroid-size-35cm: 25.4px;
+  --choroid-size-40cm: 29.1px;
+  --choroid-size-50cm: 36.4px;
+  --choroid-size-60cm: 43.6px;
+  --choroid-size-70cm: 50.9px;
+}
 
 /* ==========================================================================
-   Variant 1: Choroid Deep (Nature Dark Baseline — Max Contrast 16.5:1, Myopia-Informed)
+   Variant 1: Choroid Deep (Nature Dark Baseline — Max Contrast 16.48:1, Myopia-Informed)
    Aleman, Wang & Schaeffel (2018) / Swiatczak & Schaeffel (2022, 2025)
    ========================================================================== */
 :root,
@@ -136,23 +148,24 @@
 [data-choroid='deep'] {
   color-scheme: dark;
 
-  /* Choroid Universal Tokens */
+  /* Choroid Universal Tokens (APCA |Lc| >= 60.6 on raised code blocks) */
   --choroid-background-base: #0A0F14;
   --choroid-background-raised: #101820;
   --choroid-background-overlay: #17222C;
   --choroid-background-highlight: #22313D;
   --choroid-background-border: #2C3C49;
   --choroid-text-primary: #E9EEF3;
-  --choroid-text-secondary: #B4C0CB;
-  --choroid-text-muted: #74889A;
-  --choroid-accent-red: #F2736D;
-  --choroid-accent-orange: #F29E5C;
-  --choroid-accent-yellow: #F2CC6B;
+  --choroid-text-secondary: #B8C4CF;
+  --choroid-text-muted: #8C9DAB;
+  --choroid-accent-red: #F69B96;     /* Strictly reserved for errors */
+  --choroid-accent-orange: #F3A76A;
+  --choroid-accent-yellow: #F2CC6B;  /* Lowest dark-mode visual fatigue */
   --choroid-accent-green: #8FD694;
-  --choroid-accent-teal: #4FD1C5;
-  --choroid-accent-blue: #6CB6FF;
-  --choroid-accent-purple: #B392F0;
-  --choroid-accent-pink: #F28BB8;
+  --choroid-accent-teal: #56D6CA;
+  --choroid-accent-blue: #79BDFF;
+  --choroid-accent-purple: #C2A8F3;
+  --choroid-accent-pink: #F49BC1;
+  --choroid-body-weight: 450;
 
   /* UI System Mappings */
   --bg-body: var(--choroid-background-base);
@@ -165,23 +178,25 @@
   --ink: var(--choroid-text-primary);
   --ink-2: var(--choroid-text-secondary);
   --ink-muted: var(--choroid-text-muted);
-  --ink-faint: #4A5C6B;
+  --ink-faint: #5A6D7C;
 
   --border: var(--choroid-background-border);
   --border-strong: rgba(233, 238, 243, 0.22);
 
   --brand: var(--choroid-accent-teal);
   --brand-hover: #72DED4;
-  --brand-subtle: rgba(79, 209, 197, 0.12);
+  --brand-subtle: rgba(86, 214, 202, 0.12);
 
   --accent: var(--choroid-accent-orange);
-  --accent-subtle: rgba(242, 158, 92, 0.12);
+  --accent-subtle: rgba(243, 167, 106, 0.12);
   --warning: var(--choroid-accent-yellow);
   --warning-subtle: rgba(242, 204, 107, 0.12);
   --danger: var(--choroid-accent-red); /* Strictly reserved for errors/critical alerts */
-  --danger-subtle: rgba(242, 115, 109, 0.12);
+  --danger-subtle: rgba(246, 155, 150, 0.12);
   --success: var(--choroid-accent-green);
   --success-subtle: rgba(143, 214, 148, 0.12);
+  --selection-fg: #F2CC6B;
+  --selection-bg: #22313D;
 
   --shadow-sm: none;
   --shadow-md: none;
@@ -193,7 +208,7 @@
 }
 
 /* ==========================================================================
-   Variant 2: Choroid Soft (Nature Soft — Reduced Glare & Halation 13.6:1, Astigmatism-Friendly)
+   Variant 2: Choroid Soft (Nature Soft — Reduced Glare & Halation 13.55:1, Astigmatism-Friendly)
    ========================================================================== */
 [data-theme='soft'],
 [data-choroid='soft'] {
@@ -205,16 +220,17 @@
   --choroid-background-highlight: #2A3946;
   --choroid-background-border: #364857;
   --choroid-text-primary: #DCE3EA;
-  --choroid-text-secondary: #AEBBC7;
-  --choroid-text-muted: #8497A8;
-  --choroid-accent-red: #F4817B;
-  --choroid-accent-orange: #EEA062;
+  --choroid-text-secondary: #B4C1CD;
+  --choroid-text-muted: #8EA0AF;
+  --choroid-accent-red: #F79E99;
+  --choroid-accent-orange: #F0AB73;
   --choroid-accent-yellow: #EBCB75;
   --choroid-accent-green: #92D298;
-  --choroid-accent-teal: #55CBC0;
-  --choroid-accent-blue: #74B5F5;
-  --choroid-accent-purple: #B59BF2;
-  --choroid-accent-pink: #EE90B8;
+  --choroid-accent-teal: #5AD0C5;
+  --choroid-accent-blue: #84BEF6;
+  --choroid-accent-purple: #C0ABF4;
+  --choroid-accent-pink: #F09FC1;
+  --choroid-body-weight: 450;
 
   --bg-body: var(--choroid-background-base);
   --bg-surface: var(--choroid-background-raised);
@@ -226,23 +242,25 @@
   --ink: var(--choroid-text-primary);
   --ink-2: var(--choroid-text-secondary);
   --ink-muted: var(--choroid-text-muted);
-  --ink-faint: #536879;
+  --ink-faint: #5F7385;
 
   --border: var(--choroid-background-border);
   --border-strong: rgba(220, 227, 234, 0.22);
 
   --brand: var(--choroid-accent-teal);
-  --brand-hover: #7BE3D9;
-  --brand-subtle: rgba(85, 203, 192, 0.12);
+  --brand-hover: #77DCD2;
+  --brand-subtle: rgba(90, 208, 197, 0.12);
 
   --accent: var(--choroid-accent-orange);
-  --accent-subtle: rgba(238, 160, 98, 0.12);
+  --accent-subtle: rgba(240, 171, 115, 0.12);
   --warning: var(--choroid-accent-yellow);
   --warning-subtle: rgba(235, 203, 117, 0.12);
   --danger: var(--choroid-accent-red);
-  --danger-subtle: rgba(244, 129, 123, 0.12);
+  --danger-subtle: rgba(247, 158, 153, 0.12);
   --success: var(--choroid-accent-green);
   --success-subtle: rgba(146, 210, 152, 0.12);
+  --selection-fg: #EBCB75;
+  --selection-bg: #2A3946;
 
   --shadow-sm: none;
   --shadow-md: none;
@@ -254,7 +272,7 @@
 }
 
 /* ==========================================================================
-   Variant 3: Choroid Lumen (Nature Light — High Ambient & Proofreading Fallback 16.3:1)
+   Variant 3: Choroid Lumen (Nature Light — High Ambient & Proofreading Fallback 16.34:1)
    Explicitly noted: NOT myopia-informed, provided for high-ambient daylight legibility
    ========================================================================== */
 [data-theme='light'],
@@ -270,7 +288,7 @@
   --choroid-background-border: #BFC8D2;
   --choroid-text-primary: #121A22;
   --choroid-text-secondary: #3B4856;
-  --choroid-text-muted: #5F6E7D;
+  --choroid-text-muted: #586776;
   --choroid-accent-red: #A81E14;
   --choroid-accent-orange: #8F4106;
   --choroid-accent-yellow: #6E4C08;
@@ -279,6 +297,7 @@
   --choroid-accent-blue: #1A55A3;
   --choroid-accent-purple: #5F3DB5;
   --choroid-accent-pink: #A3244F;
+  --choroid-body-weight: 400;
 
   --bg-body: var(--choroid-background-base);
   --bg-surface: var(--choroid-background-raised);
@@ -307,6 +326,8 @@
   --danger-subtle: rgba(168, 30, 20, 0.10);
   --success: var(--choroid-accent-green);
   --success-subtle: rgba(26, 107, 51, 0.10);
+  --selection-fg: #121A22;
+  --selection-bg: #D3DAE2;
 
   --shadow-sm: none;
   --shadow-md: none;
@@ -386,12 +407,15 @@ body {
   font-family: var(--font-sans);
   background-color: var(--bg-body);
   color: var(--ink);
-  line-height: 1.6;
+  font-weight: var(--choroid-body-weight, 450);
+  line-height: 1.65;
+  font-size-adjust: 0.52;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  -webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: auto;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   transition: background-color var(--dur-base) ease, color var(--dur-base) ease;
   overflow-x: hidden;
 }
@@ -404,15 +428,16 @@ img, svg, video {
 a {
   color: inherit;
   text-decoration: none;
+  text-underline-offset: 0.18em;
 }
 
 button, input, select, textarea {
   font: inherit;
 }
 
-::selection {
-  background: var(--brand-subtle);
-  color: var(--brand);
+mark, ::selection {
+  background: var(--selection-bg, var(--bg-surface-elevated));
+  color: var(--selection-fg, var(--warning));
 }
 
 /* Progress bar at top of page during navigations */
@@ -1319,11 +1344,12 @@ button, input, select, textarea {
   color: var(--ink);
   font-size: var(--choroid-reading-size, var(--text-base));
   line-height: 1.65;
-  max-width: 65ch;
-  letter-spacing: 0.01em;
+  max-width: 62ch;
+  letter-spacing: 0.012em;
+  word-spacing: 0.02em;
 }
 
-/* Choroid Reading Presets Bar (Calibrated to ~34 arcmin letter height) */
+/* Choroid Reading Presets Bar (Calibrated to ~34.4 arcmin letter height) */
 .reading-presets-bar {
   display: inline-flex;
   align-items: center;
@@ -1363,11 +1389,17 @@ button, input, select, textarea {
   border-color: var(--brand);
   font-weight: 600;
 }
+.reading-preset-btn--metric {
+  margin-left: 6px;
+  font-size: 0.7rem;
+  color: var(--brand);
+}
 .choroid-reading {
   font-size: var(--choroid-reading-size);
-  line-height: 1.6;
-  max-width: 65ch;
-  letter-spacing: 0.01em;
+  line-height: 1.65;
+  max-width: 62ch;
+  letter-spacing: 0.012em;
+  word-spacing: 0.02em;
 }
 .prose > * + * {
   margin-top: 1.5em;
@@ -1522,89 +1554,89 @@ pre:hover .code-copy-btn,
   color: var(--brand);
 }
 
-/* Syntax Highlighting Tokens (Choroid v4.0 / Nature System) */
+/* Syntax Highlighting Tokens (Choroid v3.0 / Nature System) */
 /* Deep Variant (Default Dark Baseline) */
 :root .highlight .c, :root .highlight .c1, :root .highlight .cm,
 [data-theme='dark'] .highlight .c, [data-theme='deep'] .highlight .c,
-[data-choroid='deep'] .highlight .c { color: #74889a; font-style: italic; }
+[data-choroid='deep'] .highlight .c { color: #8c9dab; font-style: italic; }
 :root .highlight .k, :root .highlight .kd, :root .highlight .kn,
 [data-theme='dark'] .highlight .k, [data-theme='deep'] .highlight .k,
-[data-choroid='deep'] .highlight .k { color: #b392f0; font-weight: 500; }
+[data-choroid='deep'] .highlight .k { color: #79bdff; font-weight: 500; }
 :root .highlight .s, :root .highlight .s1, :root .highlight .s2,
 [data-theme='dark'] .highlight .s, [data-theme='deep'] .highlight .s,
 [data-choroid='deep'] .highlight .s { color: #8fd694; }
 :root .highlight .nf,
 [data-theme='dark'] .highlight .nf, [data-theme='deep'] .highlight .nf,
-[data-choroid='deep'] .highlight .nf { color: #6cb6ff; }
+[data-choroid='deep'] .highlight .nf { color: #f2cc6b; }
 :root .highlight .nc,
 [data-theme='dark'] .highlight .nc, [data-theme='deep'] .highlight .nc,
-[data-choroid='deep'] .highlight .nc { color: #f2cc6b; }
+[data-choroid='deep'] .highlight .nc { color: #56d6ca; }
 :root .highlight .o, :root .highlight .ow,
 [data-theme='dark'] .highlight .o, [data-theme='deep'] .highlight .o,
-[data-choroid='deep'] .highlight .o { color: #b4c0cb; }
+[data-choroid='deep'] .highlight .o { color: #b8c4cf; }
 :root .highlight .m, :root .highlight .mi, :root .highlight .mf,
 [data-theme='dark'] .highlight .m, [data-theme='deep'] .highlight .m,
-[data-choroid='deep'] .highlight .m { color: #f29e5c; }
+[data-choroid='deep'] .highlight .m { color: #c2a8f3; }
 :root .highlight .nt,
 [data-theme='dark'] .highlight .nt, [data-theme='deep'] .highlight .nt,
-[data-choroid='deep'] .highlight .nt { color: #f28bb8; } /* Pink tag — Red reserved for errors */
+[data-choroid='deep'] .highlight .nt { color: #f49bc1; } /* Pink tag — Red strictly quarantined for errors */
 :root .highlight .na,
 [data-theme='dark'] .highlight .na, [data-theme='deep'] .highlight .na,
-[data-choroid='deep'] .highlight .na { color: #f29e5c; }
+[data-choroid='deep'] .highlight .na { color: #f3a76a; }
 :root .highlight .no, :root .highlight .nd,
 [data-theme='dark'] .highlight .no, [data-theme='deep'] .highlight .no,
-[data-choroid='deep'] .highlight .no { color: #4fd1c5; }
+[data-choroid='deep'] .highlight .no { color: #c2a8f3; }
 :root .highlight .err,
 [data-theme='dark'] .highlight .err, [data-theme='deep'] .highlight .err,
-[data-choroid='deep'] .highlight .err { color: #f2736d; }
+[data-choroid='deep'] .highlight .err { color: #f69b96; text-decoration: underline; }
 
-/* Soft Variant (Reduced Halation 13.6:1) */
+/* Soft Variant (Reduced Halation 13.55:1) */
 [data-theme='soft'] .highlight .c, [data-theme='soft'] .highlight .c1, [data-theme='soft'] .highlight .cm,
-[data-choroid='soft'] .highlight .c { color: #8497a8; font-style: italic; }
+[data-choroid='soft'] .highlight .c { color: #8ea0af; font-style: italic; }
 [data-theme='soft'] .highlight .k, [data-theme='soft'] .highlight .kd, [data-theme='soft'] .highlight .kn,
-[data-choroid='soft'] .highlight .k { color: #b59bf2; font-weight: 500; }
+[data-choroid='soft'] .highlight .k { color: #84bef6; font-weight: 500; }
 [data-theme='soft'] .highlight .s, [data-theme='soft'] .highlight .s1, [data-theme='soft'] .highlight .s2,
 [data-choroid='soft'] .highlight .s { color: #92d298; }
 [data-theme='soft'] .highlight .nf,
-[data-choroid='soft'] .highlight .nf { color: #74b5f5; }
+[data-choroid='soft'] .highlight .nf { color: #ebcb75; }
 [data-theme='soft'] .highlight .nc,
-[data-choroid='soft'] .highlight .nc { color: #ebcb75; }
+[data-choroid='soft'] .highlight .nc { color: #5ad0c5; }
 [data-theme='soft'] .highlight .o, [data-theme='soft'] .highlight .ow,
-[data-choroid='soft'] .highlight .o { color: #aebbc7; }
+[data-choroid='soft'] .highlight .o { color: #b4c1cd; }
 [data-theme='soft'] .highlight .m, [data-theme='soft'] .highlight .mi, [data-theme='soft'] .highlight .mf,
-[data-choroid='soft'] .highlight .m { color: #eea062; }
+[data-choroid='soft'] .highlight .m { color: #c0abf4; }
 [data-theme='soft'] .highlight .nt,
-[data-choroid='soft'] .highlight .nt { color: #ee90b8; }
+[data-choroid='soft'] .highlight .nt { color: #f09fc1; }
 [data-theme='soft'] .highlight .na,
-[data-choroid='soft'] .highlight .na { color: #eea062; }
+[data-choroid='soft'] .highlight .na { color: #f0ab73; }
 [data-theme='soft'] .highlight .no, [data-theme='soft'] .highlight .nd,
-[data-choroid='soft'] .highlight .no { color: #55cbc0; }
+[data-choroid='soft'] .highlight .no { color: #c0abf4; }
 [data-theme='soft'] .highlight .err,
-[data-choroid='soft'] .highlight .err { color: #f4817b; }
+[data-choroid='soft'] .highlight .err { color: #f79e99; text-decoration: underline; }
 
-/* Lumen Variant (Light Fallback 16.3:1) */
+/* Lumen Variant (Light Fallback 16.34:1) */
 [data-theme='light'] .highlight .c, [data-theme='light'] .highlight .c1, [data-theme='light'] .highlight .cm,
-[data-theme='lumen'] .highlight .c, [data-choroid='lumen'] .highlight .c { color: #5f6e7d; font-style: italic; }
+[data-theme='lumen'] .highlight .c, [data-choroid='lumen'] .highlight .c { color: #586776; font-style: italic; }
 [data-theme='light'] .highlight .k, [data-theme='light'] .highlight .kd, [data-theme='light'] .highlight .kn,
-[data-theme='lumen'] .highlight .k, [data-choroid='lumen'] .highlight .k { color: #5f3db5; font-weight: 500; }
+[data-theme='lumen'] .highlight .k, [data-choroid='lumen'] .highlight .k { color: #1a55a3; font-weight: 500; }
 [data-theme='light'] .highlight .s, [data-theme='light'] .highlight .s1, [data-theme='light'] .highlight .s2,
 [data-theme='lumen'] .highlight .s, [data-choroid='lumen'] .highlight .s { color: #1a6b33; }
 [data-theme='light'] .highlight .nf,
-[data-theme='lumen'] .highlight .nf, [data-choroid='lumen'] .highlight .nf { color: #1a55a3; }
+[data-theme='lumen'] .highlight .nf, [data-choroid='lumen'] .highlight .nf { color: #6e4c08; }
 [data-theme='light'] .highlight .nc,
-[data-theme='lumen'] .highlight .nc, [data-choroid='lumen'] .highlight .nc { color: #6e4c08; }
+[data-theme='lumen'] .highlight .nc, [data-choroid='lumen'] .highlight .nc { color: #0b6a63; }
 [data-theme='light'] .highlight .o, [data-theme='light'] .highlight .ow,
 [data-theme='lumen'] .highlight .o, [data-choroid='lumen'] .highlight .o { color: #3b4856; }
 [data-theme='light'] .highlight .m, [data-theme='light'] .highlight .mi, [data-theme='light'] .highlight .mf,
-[data-theme='lumen'] .highlight .m, [data-choroid='lumen'] .highlight .m { color: #8f4106; }
+[data-theme='lumen'] .highlight .m, [data-choroid='lumen'] .highlight .m { color: #5f3db5; }
 [data-theme='light'] .highlight .nt,
 [data-theme='lumen'] .highlight .nt, [data-choroid='lumen'] .highlight .nt { color: #a3244f; }
 [data-theme='light'] .highlight .na,
 [data-theme='lumen'] .highlight .na, [data-choroid='lumen'] .highlight .na { color: #8f4106; }
 [data-theme='light'] .highlight .no, [data-theme='light'] .highlight .nd,
-[data-theme='lumen'] .highlight .no, [data-choroid='lumen'] .highlight .no { color: #0b6a63; }
+[data-theme='lumen'] .highlight .no, [data-choroid='lumen'] .highlight .no { color: #5f3db5; }
 [data-theme='light'] .highlight .err,
-[data-theme='lumen'] .highlight .err, [data-choroid='lumen'] .highlight .err { color: #a81e14; }
+[data-theme='lumen'] .highlight .err, [data-choroid='lumen'] .highlight .err { color: #a81e14; text-decoration: underline; }
 
 /* ---------- 9. Projects & Blog Showcases ---------- */
 /* Project Page */

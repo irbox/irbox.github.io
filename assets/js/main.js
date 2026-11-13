@@ -100,19 +100,38 @@
     });
   } catch {}
 
-  /* ---- 3b. Reading Distance & Font Size Calibration (~34 arcmin rule) ---- */
+  /* ---- 3b. Reading Distance & Font Size Calibration (~34.4 arcmin rule) ---- */
   const distanceBtns = $$('[data-distance]');
+  const metricBtns = $$('[data-metric-toggle]');
   const syncDistance = (dist) => {
     const valid = ['30', '35', '40', '50', '60', '70'].includes(dist) ? dist : '40';
     root.setAttribute('data-reading-distance', valid + 'cm');
+    root.setAttribute('data-choroid-distance', valid + 'cm');
     distanceBtns.forEach((b) => {
       const isCur = b.getAttribute('data-distance') === valid;
       b.classList.toggle('is-active', isCur);
       b.setAttribute('aria-pressed', String(isCur));
     });
   };
+  const syncMetric = (m) => {
+    const metric = (m === 'x-height') ? 'x-height' : 'cap-height';
+    if (metric === 'x-height') {
+      root.setAttribute('data-choroid-metric', 'x-height');
+      root.setAttribute('data-reading-metric', 'x-height');
+    } else {
+      root.removeAttribute('data-choroid-metric');
+      root.removeAttribute('data-reading-metric');
+    }
+    metricBtns.forEach((b) => {
+      b.setAttribute('data-current-metric', metric);
+      b.textContent = (metric === 'x-height') ? 'Metric: x-height (0.52em)' : 'Metric: Cap (0.70em)';
+      b.setAttribute('aria-pressed', String(metric === 'x-height'));
+    });
+  };
   const initialDistance = store.get('reading-distance') || '40';
   syncDistance(initialDistance);
+  const initialMetric = store.get('reading-metric') || 'cap-height';
+  syncMetric(initialMetric);
   distanceBtns.forEach((b) => {
     b.addEventListener('click', () => {
       const dist = b.getAttribute('data-distance');
@@ -120,6 +139,14 @@
         store.set('reading-distance', dist);
         syncDistance(dist);
       }
+    });
+  });
+  metricBtns.forEach((b) => {
+    b.addEventListener('click', () => {
+      const cur = root.getAttribute('data-choroid-metric') === 'x-height' ? 'x-height' : 'cap-height';
+      const next = (cur === 'x-height') ? 'cap-height' : 'x-height';
+      store.set('reading-metric', next);
+      syncMetric(next);
     });
   });
 

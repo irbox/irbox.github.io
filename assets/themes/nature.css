@@ -1,16 +1,16 @@
 /**
- * Nature (Choroid v4.0) Theme — Design Tokens & Reading Presets
+ * Nature (Choroid v3.0.0) Theme — Design Tokens & Reading Presets
  * Grounded in Retinal Neurobiology & Myopia Research
- * (Aleman, Wang & Schaeffel 2018; Swiatczak & Schaeffel 2022; Ingrassia et al. 2024)
+ * (Aleman, Wang & Schaeffel 2018; Swiatczak & Schaeffel 2022; Ingrassia et al. 2024; Fan et al. 2024)
  * 
  * Three calibrated variants:
- * - Deep: Max contrast (16.5:1), myopia-informed baseline
- * - Soft: Reduced glare/halation (13.6:1), astigmatism-friendly
- * - Lumen: Daylight fallback (16.3:1) for proofreading and older eyes (NOT myopia-informed)
+ * - Deep: Max contrast (16.48:1 base / 15.33:1 raised), myopia-informed baseline
+ * - Soft: Reduced glare/halation (13.55:1 base / 12.44:1 raised), astigmatism-friendly
+ * - Lumen: Daylight fallback (16.34:1 base / 15.22:1 raised) for proofreading and older eyes (NOT myopia-informed)
  */
 
 /* ==========================================================================
-   1. Nature Deep (Choroid Deep) — Default Baseline
+   1. Nature Deep (Choroid v3 Deep) — Default Baseline
    ========================================================================== */
 :root,
 [data-theme='dark'],
@@ -28,54 +28,59 @@
   --bg-muted: #1A2530;
   --bg-overlay: rgba(10, 15, 20, 0.96);
 
-  /* Inks */
+  /* Inks (Cool-Neutral D65 preserving blue-channel LCA cues) */
   --ink: #E9EEF3;
-  --ink-2: #B4C0CB;
-  --ink-muted: #74889A;
-  --ink-faint: #4B5E70;
+  --ink-2: #B8C4CF;
+  --ink-muted: #8C9DAB;
+  --ink-faint: #5A6D7C;
 
   /* Structural Borders */
   --border: #2C3C49;
   --border-strong: rgba(233, 238, 243, 0.22);
 
-  /* Choroid Accents */
-  --brand: #4FD1C5;
+  /* Choroid v3 Accents (|Lc| >= 60.6 on raised pre/code surfaces) */
+  --brand: #56D6CA;
   --brand-hover: #72DED4;
-  --brand-subtle: rgba(79, 209, 197, 0.12);
+  --brand-subtle: rgba(86, 214, 202, 0.12);
 
-  --accent-teal: #4FD1C5;
+  --accent-teal: #56D6CA;
   --accent-green: #8FD694;
-  --accent-orange: #F29E5C;
+  --accent-orange: #F3A76A;
   --accent-yellow: #F2CC6B;
-  --accent-blue: #6CB6FF;
-  --accent-purple: #B392F0;
-  --accent-pink: #F28BB8;
-  --accent-red: #F2736D;
+  --accent-blue: #79BDFF;
+  --accent-purple: #C2A8F3;
+  --accent-pink: #F49BC1;
+  --accent-red: #F69B96;
 
-  --accent: #F29E5C;
+  /* Low visual fatigue priority */
+  --accent: #F3A76A;
   --warning: #F2CC6B;
-  --danger: #F2736D;
+  --danger: #F69B96;
   --success: #8FD694;
+  --selection-fg: #F2CC6B;
+  --selection-bg: #22313D;
+
+  --choroid-body-weight: 450;
 
   /* Syntax Roles */
-  --syn-comment: #74889A;
-  --syn-keyword: #B392F0;
+  --syn-comment: #8C9DAB;
+  --syn-keyword: #79BDFF;
   --syn-string: #8FD694;
-  --syn-number: #F29E5C;
-  --syn-function: #6CB6FF;
-  --syn-type: #F2CC6B;
+  --syn-number: #F3A76A;
+  --syn-function: #F2CC6B;
+  --syn-type: #56D6CA;
   --syn-variable: #E9EEF3;
-  --syn-parameter: #B4C0CB;
-  --syn-tag: #F28BB8;
-  --syn-attribute: #F29E5C;
-  --syn-constant: #4FD1C5;
-  --syn-operator: #B4C0CB;
-  --syn-error: #F2736D;
+  --syn-parameter: #F3A76A;
+  --syn-tag: #F49BC1;
+  --syn-attribute: #F3A76A;
+  --syn-constant: #C2A8F3;
+  --syn-operator: #B8C4CF;
+  --syn-error: #F69B96;
   --syn-warning: #F2CC6B;
 }
 
 /* ==========================================================================
-   2. Nature Soft (Choroid Soft) — Astigmatism & Halation Reduction
+   2. Nature Soft (Choroid v3 Soft) — Astigmatism & Halation Reduction
    ========================================================================== */
 [data-theme='soft'],
 [data-choroid='soft'] {
@@ -91,52 +96,56 @@
 
   /* Inks */
   --ink: #DCE3EA;
-  --ink-2: #AEBBC7;
-  --ink-muted: #8497A8;
-  --ink-faint: #576B7C;
+  --ink-2: #B4C1CD;
+  --ink-muted: #8EA0AF;
+  --ink-faint: #5F7385;
 
   /* Structural Borders */
   --border: #364857;
   --border-strong: rgba(220, 227, 234, 0.22);
 
-  /* Choroid Accents */
-  --brand: #55CBC0;
+  /* Choroid v3 Accents */
+  --brand: #5AD0C5;
   --brand-hover: #77DCD2;
-  --brand-subtle: rgba(85, 203, 192, 0.12);
+  --brand-subtle: rgba(90, 208, 197, 0.12);
 
-  --accent-teal: #55CBC0;
+  --accent-teal: #5AD0C5;
   --accent-green: #92D298;
-  --accent-orange: #EEA062;
+  --accent-orange: #F0AB73;
   --accent-yellow: #EBCB75;
-  --accent-blue: #74B5F5;
-  --accent-purple: #B59BF2;
-  --accent-pink: #EE90B8;
-  --accent-red: #F4817B;
+  --accent-blue: #84BEF6;
+  --accent-purple: #C0ABF4;
+  --accent-pink: #F09FC1;
+  --accent-red: #F79E99;
 
-  --accent: #EEA062;
+  --accent: #F0AB73;
   --warning: #EBCB75;
-  --danger: #F4817B;
+  --danger: #F79E99;
   --success: #92D298;
+  --selection-fg: #EBCB75;
+  --selection-bg: #2A3946;
+
+  --choroid-body-weight: 450;
 
   /* Syntax Roles */
-  --syn-comment: #8497A8;
-  --syn-keyword: #B59BF2;
+  --syn-comment: #8EA0AF;
+  --syn-keyword: #84BEF6;
   --syn-string: #92D298;
-  --syn-number: #EEA062;
-  --syn-function: #74B5F5;
-  --syn-type: #EBCB75;
+  --syn-number: #F0AB73;
+  --syn-function: #EBCB75;
+  --syn-type: #5AD0C5;
   --syn-variable: #DCE3EA;
-  --syn-parameter: #AEBBC7;
-  --syn-tag: #EE90B8;
-  --syn-attribute: #EEA062;
-  --syn-constant: #55CBC0;
-  --syn-operator: #AEBBC7;
-  --syn-error: #F4817B;
+  --syn-parameter: #F0AB73;
+  --syn-tag: #F09FC1;
+  --syn-attribute: #F0AB73;
+  --syn-constant: #C0ABF4;
+  --syn-operator: #B4C1CD;
+  --syn-error: #F79E99;
   --syn-warning: #EBCB75;
 }
 
 /* ==========================================================================
-   3. Nature Lumen (Choroid Lumen) — Daylight Proofreading Fallback
+   3. Nature Lumen (Choroid v3 Lumen) — Daylight Proofreading Fallback
    ========================================================================== */
 [data-theme='light'],
 [data-theme='lumen'],
@@ -155,14 +164,14 @@
   /* Inks */
   --ink: #121A22;
   --ink-2: #3B4856;
-  --ink-muted: #5F6E7D;
+  --ink-muted: #586776;
   --ink-faint: #8E9CA9;
 
   /* Structural Borders */
   --border: #BFC8D2;
   --border-strong: rgba(18, 26, 34, 0.22);
 
-  /* Choroid Accents */
+  /* Choroid v3 Accents */
   --brand: #0B6A63;
   --brand-hover: #074A45;
   --brand-subtle: rgba(11, 106, 99, 0.10);
@@ -180,66 +189,92 @@
   --warning: #6E4C08;
   --danger: #A81E14;
   --success: #1A6B33;
+  --selection-fg: #121A22;
+  --selection-bg: #D3DAE2;
+
+  --choroid-body-weight: 400;
 
   /* Syntax Roles */
-  --syn-comment: #5F6E7D;
-  --syn-keyword: #5F3DB5;
+  --syn-comment: #586776;
+  --syn-keyword: #1A55A3;
   --syn-string: #1A6B33;
   --syn-number: #8F4106;
-  --syn-function: #1A55A3;
-  --syn-type: #6E4C08;
+  --syn-function: #6E4C08;
+  --syn-type: #0B6A63;
   --syn-variable: #121A22;
-  --syn-parameter: #3B4856;
+  --syn-parameter: #8F4106;
   --syn-tag: #A3244F;
   --syn-attribute: #8F4106;
-  --syn-constant: #0B6A63;
+  --syn-constant: #5F3DB5;
   --syn-operator: #3B4856;
   --syn-error: #A81E14;
   --syn-warning: #6E4C08;
 }
 
 /* ==========================================================================
-   4. Reading Size Presets (~34 arcmin Cap Height Rule)
+   4. Reading Size Presets (~34.4 arcmin Basis)
    ========================================================================== */
+/* Cap-Height Basis (0.70em, Default) */
 :root {
-  --choroid-size-30cm: 16px;
-  --choroid-size-35cm: 19px;
-  --choroid-size-40cm: 22px;
-  --choroid-size-50cm: 27px;
-  --choroid-size-60cm: 32px;
-  --choroid-size-70cm: 38px;
+  --choroid-size-30cm: 16.2px;
+  --choroid-size-40cm: 21.6px;
+  --choroid-size-50cm: 27.0px;
+  --choroid-size-60cm: 32.4px;
+  --choroid-size-70cm: 37.8px;
   --choroid-reading-size: var(--choroid-size-40cm);
 }
 
-[data-reading-distance='30cm'] { --choroid-reading-size: var(--choroid-size-30cm); }
-[data-reading-distance='35cm'] { --choroid-reading-size: var(--choroid-size-35cm); }
-[data-reading-distance='40cm'] { --choroid-reading-size: var(--choroid-size-40cm); }
-[data-reading-distance='50cm'] { --choroid-reading-size: var(--choroid-size-50cm); }
-[data-reading-distance='60cm'] { --choroid-reading-size: var(--choroid-size-60cm); }
-[data-reading-distance='70cm'] { --choroid-reading-size: var(--choroid-size-70cm); }
+/* Optional Strict Lowercase x-height Basis (0.52em = 34.4 arcmin) */
+:root[data-choroid-metric="x-height"] {
+  --choroid-size-30cm: 21.8px;
+  --choroid-size-40cm: 29.1px;
+  --choroid-size-50cm: 36.4px;
+  --choroid-size-60cm: 43.6px;
+  --choroid-size-70cm: 50.9px;
+}
+
+/* Attribute Selectors for Distance */
+:root[data-choroid-distance='30cm'], :root[data-reading-distance='30cm'] { --choroid-reading-size: var(--choroid-size-30cm); }
+:root[data-choroid-distance='40cm'], :root[data-reading-distance='40cm'] { --choroid-reading-size: var(--choroid-size-40cm); }
+:root[data-choroid-distance='50cm'], :root[data-reading-distance='50cm'] { --choroid-reading-size: var(--choroid-size-50cm); }
+:root[data-choroid-distance='60cm'], :root[data-reading-distance='60cm'] { --choroid-reading-size: var(--choroid-size-60cm); }
+:root[data-choroid-distance='70cm'], :root[data-reading-distance='70cm'] { --choroid-reading-size: var(--choroid-size-70cm); }
+
+/* Typography and Subpixel Stem-Thinning Protection */
+body {
+  background-color: var(--bg-body);
+  color: var(--ink);
+  font-weight: var(--choroid-body-weight, 450);
+  line-height: 1.65;
+  font-size-adjust: 0.52;
+  -webkit-font-smoothing: auto;
+  text-rendering: optimizeLegibility;
+}
 
 .choroid-reading {
   font-size: var(--choroid-reading-size);
   line-height: 1.65;
-  max-width: 65ch;
-  letter-spacing: 0.01em;
+  max-width: 62ch;
+  letter-spacing: 0.012em;
+  word-spacing: 0.02em;
 }
 
-/* Base body and code bindings */
-body {
-  background: var(--bg-body);
+code, pre, kbd, samp {
+  background-color: var(--bg-surface);
   color: var(--ink);
-  line-height: 1.65;
-}
-
-code, pre {
-  background: var(--bg-surface);
+  border: 1px solid var(--border);
 }
 
 a {
   color: var(--brand);
+  text-underline-offset: 0.18em;
 }
 
-.error, .err {
+mark, ::selection {
+  background-color: var(--selection-bg);
+  color: var(--selection-fg);
+}
+
+.error, .err, [aria-invalid="true"] {
   color: var(--danger) !important;
 }
