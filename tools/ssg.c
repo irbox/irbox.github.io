@@ -892,10 +892,23 @@ static void parse_table_row(StrBuf *out, const char *line, bool is_header) {
     buf_append_str(out, "        </tr>\n");
 }
 
+static void close_bq_if_open(StrBuf *out, bool *in_bq, bool *in_callout) {
+    if (*in_bq) {
+        if (*in_callout) {
+            buf_append_str(out, "  </div>\n</div>\n");
+            *in_callout = false;
+        } else {
+            buf_append_str(out, "</blockquote>\n");
+        }
+        *in_bq = false;
+    }
+}
+
 static void markdown_to_html(StrBuf *out, const char *md) {
     char *copy = strdup(md);
     if (!copy) return;
     bool in_code = false, in_ul = false, in_ol = false, in_p = false, in_table = false;
+    bool in_bq = false, in_callout = false;
     int code_indent = 0;
     
     char *cursor = copy;
@@ -957,6 +970,7 @@ static void markdown_to_html(StrBuf *out, const char *md) {
             if (in_ul)    { buf_append_str(out, "</ul>\n"); in_ul = false; }
             if (in_ol)    { buf_append_str(out, "</ol>\n"); in_ol = false; }
             if (in_table) { buf_append_str(out, "      </tbody>\n    </table>\n  </div>\n"); in_table = false; }
+            close_bq_if_open(out, &in_bq, &in_callout);
             continue;
         }
 
@@ -965,6 +979,7 @@ static void markdown_to_html(StrBuf *out, const char *md) {
             if (in_ul)    { buf_append_str(out, "</ul>\n"); in_ul = false; }
             if (in_ol)    { buf_append_str(out, "</ol>\n"); in_ol = false; }
             if (in_table) { buf_append_str(out, "      </tbody>\n    </table>\n  </div>\n"); in_table = false; }
+            close_bq_if_open(out, &in_bq, &in_callout);
             buf_append_str(out, trimmed);
             buf_append_char(out, '\n');
             continue;
@@ -974,6 +989,7 @@ static void markdown_to_html(StrBuf *out, const char *md) {
             if (in_p)  { buf_append_str(out, "</p>\n"); in_p = false; }
             if (in_ul) { buf_append_str(out, "</ul>\n"); in_ul = false; }
             if (in_ol) { buf_append_str(out, "</ol>\n"); in_ol = false; }
+            close_bq_if_open(out, &in_bq, &in_callout);
 
             bool is_divider = true;
             for (size_t k = 0; trimmed[k]; k++) {
@@ -1008,6 +1024,7 @@ static void markdown_to_html(StrBuf *out, const char *md) {
                 if (in_p)  { buf_append_str(out, "</p>\n"); in_p = false; }
                 if (in_ul) { buf_append_str(out, "</ul>\n"); in_ul = false; }
                 if (in_ol) { buf_append_str(out, "</ol>\n"); in_ol = false; }
+                close_bq_if_open(out, &in_bq, &in_callout);
                 char *h_text = trim_whitespace(trimmed + level);
 
                 char anchor[160];
@@ -1049,6 +1066,7 @@ static void markdown_to_html(StrBuf *out, const char *md) {
             if (in_p)  { buf_append_str(out, "</p>\n"); in_p = false; }
             if (in_ul) { buf_append_str(out, "</ul>\n"); in_ul = false; }
             if (in_ol) { buf_append_str(out, "</ol>\n"); in_ol = false; }
+            close_bq_if_open(out, &in_bq, &in_callout);
             buf_append_str(out, "<hr class=\"divider\">\n");
             continue;
         }
@@ -1057,15 +1075,69 @@ static void markdown_to_html(StrBuf *out, const char *md) {
             if (in_p)  { buf_append_str(out, "</p>\n"); in_p = false; }
             if (in_ul) { buf_append_str(out, "</ul>\n"); in_ul = false; }
             if (in_ol) { buf_append_str(out, "</ol>\n"); in_ol = false; }
-            buf_append_str(out, "<blockquote><p>");
-            parse_inline(out, trim_whitespace(trimmed + 1));
-            buf_append_str(out, "</p></blockquote>\n");
+
+            char *bq_text = trim_whitespace(trimmed + 1);
+
+            if (!in_bq) {
+                const char *callout_class = NULL;
+                const char *callout_title = NULL;
+                const char *callout_icon = NULL;
+
+                if (strncasecmp(bq_text, "[!NOTE]", 7) == 0) {
+                    callout_class = "callout--note";
+                    callout_title = "Note";
+                    callout_icon = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><line x1=\"12\" y1=\"16\" x2=\"12\" y2=\"12\"/><line x1=\"12\" y1=\"8\" x2=\"12.01\" y2=\"8\"/></svg>";
+                } else if (strncasecmp(bq_text, "[!TIP]", 6) == 0) {
+                    callout_class = "callout--tip";
+                    callout_title = "Tip";
+                    callout_icon = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z\"/></svg>";
+                } else if (strncasecmp(bq_text, "[!IMPORTANT]", 12) == 0) {
+                    callout_class = "callout--important";
+                    callout_title = "Important";
+                    callout_icon = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><line x1=\"12\" y1=\"8\" x2=\"12\" y2=\"12\"/><line x1=\"12\" y1=\"16\" x2=\"12.01\" y2=\"16\"/></svg>";
+                } else if (strncasecmp(bq_text, "[!WARNING]", 10) == 0) {
+                    callout_class = "callout--warning";
+                    callout_title = "Warning";
+                    callout_icon = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z\"/><line x1=\"12\" y1=\"9\" x2=\"12\" y2=\"13\"/><line x1=\"12\" y1=\"17\" x2=\"12.01\" y2=\"17\"/></svg>";
+                } else if (strncasecmp(bq_text, "[!CAUTION]", 10) == 0) {
+                    callout_class = "callout--caution";
+                    callout_title = "Caution";
+                    callout_icon = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><polygon points=\"7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2\"/><line x1=\"12\" y1=\"8\" x2=\"12\" y2=\"12\"/><line x1=\"12\" y1=\"16\" x2=\"12.01\" y2=\"16\"/></svg>";
+                }
+
+                if (callout_class) {
+                    in_callout = true;
+                    char c_buf[2048];
+                    snprintf(c_buf, sizeof(c_buf),
+                        "<div class=\"callout %s\" role=\"region\" aria-label=\"%s\">\n"
+                        "  <div class=\"callout__title\">%s<span>%s</span></div>\n"
+                        "  <div class=\"callout__body\">\n",
+                        callout_class, callout_title, callout_icon, callout_title);
+                    buf_append_str(out, c_buf);
+                } else {
+                    in_callout = false;
+                    buf_append_str(out, "<blockquote class=\"blockquote\">\n");
+                    if (strlen(bq_text) > 0) {
+                        buf_append_str(out, "  <p>");
+                        parse_inline(out, bq_text);
+                        buf_append_str(out, "</p>\n");
+                    }
+                }
+                in_bq = true;
+            } else {
+                if (strlen(bq_text) > 0) {
+                    buf_append_str(out, "  <p>");
+                    parse_inline(out, bq_text);
+                    buf_append_str(out, "</p>\n");
+                }
+            }
             continue;
         }
 
         if ((trimmed[0] == '-' || trimmed[0] == '*') && isspace((unsigned char)trimmed[1])) {
             if (in_p)  { buf_append_str(out, "</p>\n"); in_p = false; }
             if (in_ol) { buf_append_str(out, "</ol>\n"); in_ol = false; }
+            close_bq_if_open(out, &in_bq, &in_callout);
             if (!in_ul) { buf_append_str(out, "<ul>\n"); in_ul = true; }
             buf_append_str(out, "  <li>");
             parse_inline(out, trim_whitespace(trimmed + 2));
@@ -1086,6 +1158,7 @@ static void markdown_to_html(StrBuf *out, const char *md) {
                 if (all_digits && (dot - trimmed) <= 9) {
                     if (in_p)  { buf_append_str(out, "</p>\n"); in_p = false; }
                     if (in_ul) { buf_append_str(out, "</ul>\n"); in_ul = false; }
+                    close_bq_if_open(out, &in_bq, &in_callout);
                     if (!in_ol) {
                         long start_num = strtol(trimmed, NULL, 10);
                         if (start_num > 1) {
@@ -1105,6 +1178,8 @@ static void markdown_to_html(StrBuf *out, const char *md) {
             }
         }
 
+        close_bq_if_open(out, &in_bq, &in_callout);
+
         if (!in_p) {
             if (in_ul) { buf_append_str(out, "</ul>\n"); in_ul = false; }
             if (in_ol) { buf_append_str(out, "</ol>\n"); in_ol = false; }
@@ -1121,6 +1196,7 @@ static void markdown_to_html(StrBuf *out, const char *md) {
     if (in_ul)    buf_append_str(out, "</ul>\n");
     if (in_ol)    buf_append_str(out, "</ol>\n");
     if (in_table) buf_append_str(out, "      </tbody>\n    </table>\n  </div>\n");
+    close_bq_if_open(out, &in_bq, &in_callout);
     free(copy);
 }
 

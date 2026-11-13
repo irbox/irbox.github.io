@@ -467,7 +467,7 @@ body {
   font-family: var(--font-sans);
   background-color: var(--bg-body);
   color: var(--ink);
-  font-weight: var(--choroid-body-weight, 450);
+  font-weight: var(--enature-body-weight, var(--choroid-body-weight, 450));
   line-height: 1.65;
   font-size-adjust: 0.52;
   min-height: 100vh;
@@ -1397,7 +1397,7 @@ mark, ::selection {
 /* ---------- 8. Prose & Syntax Highlighting ---------- */
 .prose {
   color: var(--ink);
-  font-size: var(--choroid-reading-size, var(--text-base));
+  font-size: var(--enature-reading-size, var(--choroid-reading-size, var(--text-base)));
   line-height: 1.65;
   max-width: 62ch;
   letter-spacing: 0.012em;
@@ -1459,24 +1459,41 @@ mark, ::selection {
 .prose > * + * {
   margin-top: 1.5em;
 }
+/* Gestalt Law of Proximity: Anchor headings to following text */
+.prose > :is(h1, h2, h3, h4) + * {
+  margin-top: 0.5em !important;
+}
 .prose h1, .prose h2, .prose h3, .prose h4 {
   color: var(--ink);
   font-weight: 600;
   line-height: 1.3;
   letter-spacing: -0.015em;
 }
+.prose h1 {
+  font-size: 2rem;
+  line-height: 1.2;
+  margin-top: 2.25em;
+  margin-bottom: 0.5em;
+}
 .prose h2 {
   font-size: 1.5rem;
-  margin-top: 2em;
-  padding-bottom: 0.3em;
+  line-height: 1.25;
+  margin-top: 2.25em;
+  margin-bottom: 0.5em;
+  padding-bottom: 0.35em;
   border-bottom: 1px solid var(--border);
 }
 .prose h3 {
   font-size: 1.25rem;
-  margin-top: 1.8em;
+  line-height: 1.35;
+  margin-top: 1.85em;
+  margin-bottom: 0.4em;
 }
 .prose h4 {
   font-size: 1.1rem;
+  line-height: 1.4;
+  margin-top: 1.5em;
+  margin-bottom: 0.35em;
 }
 .prose p {
   margin-bottom: 1.25em;
@@ -1491,24 +1508,112 @@ mark, ::selection {
 }
 .prose ul, .prose ol {
   padding-left: 1.5em;
-  margin-bottom: 1.25em;
+  margin-block: var(--space-4);
 }
 .prose li {
-  margin-bottom: 0.5em;
+  margin-bottom: 0.4em;
+  line-height: 1.6;
 }
-.prose blockquote {
-  padding: var(--space-3) var(--space-5);
+.prose li > ul,
+.prose li > ol {
+  margin-block: 0.3em;
+}
+.prose blockquote,
+blockquote.blockquote {
+  margin-block: var(--space-6);
+  padding: 12px 18px;
   border-left: 3px solid var(--border-strong);
   background: var(--bg-surface);
   color: var(--ink-2);
   font-style: italic;
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  border-radius: 0 !important;
 }
+.prose blockquote > p + p,
+blockquote.blockquote > p + p {
+  margin-top: 0.6em;
+}
+
+/* Callouts & Alert Boxes (GitHub Flavored Markdown Admonitions) */
+.callout {
+  margin-block: var(--space-6);
+  padding: 14px 18px;
+  background: var(--bg-surface);
+  border-left: 4px solid var(--border-strong);
+  border-top: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  border-radius: 0 !important;
+}
+.callout__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-2);
+}
+.callout__title svg {
+  flex-shrink: 0;
+}
+.callout__body {
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+.callout__body > p + p {
+  margin-top: 0.75em;
+}
+.callout__body strong {
+  color: var(--ink);
+}
+
+.callout--note {
+  border-left-color: var(--brand);
+  background: rgba(86, 214, 202, 0.05);
+}
+.callout--note .callout__title {
+  color: var(--brand);
+}
+
+.callout--tip {
+  border-left-color: var(--success);
+  background: rgba(143, 214, 148, 0.05);
+}
+.callout--tip .callout__title {
+  color: var(--success);
+}
+
+.callout--important {
+  border-left-color: var(--accent);
+  background: rgba(243, 167, 106, 0.05);
+}
+.callout--important .callout__title {
+  color: var(--accent);
+}
+
+.callout--warning {
+  border-left-color: var(--warning);
+  background: rgba(242, 204, 107, 0.06);
+}
+.callout--warning .callout__title {
+  color: var(--warning);
+}
+
+.callout--caution {
+  border-left-color: var(--danger);
+  background: rgba(246, 155, 150, 0.06);
+}
+.callout--caution .callout__title {
+  color: var(--danger);
+}
+
 .prose code:not(pre code) {
   font-family: var(--font-mono);
   font-size: 0.875em;
   padding: 2px 6px;
-  border-radius: var(--radius-xs);
+  border-radius: 0 !important;
   background: var(--bg-surface-raised);
   border: 1px solid var(--border);
   color: var(--ink);
@@ -1527,7 +1632,7 @@ mark, ::selection {
   -webkit-overflow-scrolling: touch;
   margin-block: var(--space-6);
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  border-radius: 0 !important;
 }
 .prose table {
   width: 100%;
@@ -1535,15 +1640,24 @@ mark, ::selection {
   border-collapse: collapse;
   font-size: var(--text-sm);
   text-align: left;
+  font-variant-numeric: tabular-nums;
 }
 .prose th, .prose td {
   padding: 10px 14px;
   border-bottom: 1px solid var(--border);
 }
 .prose th {
-  background: var(--bg-surface);
+  background: var(--bg-surface-raised);
   font-weight: 600;
   color: var(--ink);
+  letter-spacing: 0.02em;
+}
+.prose tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.02);
+}
+[data-theme='light'] .prose tbody tr:nth-child(even),
+[data-enature='light'] .prose tbody tr:nth-child(even) {
+  background: rgba(0, 0, 0, 0.02);
 }
 .prose tr:last-child td {
   border-bottom: none;
@@ -1556,11 +1670,13 @@ div.highlight pre {
   font-size: 0.875rem;
   line-height: 1.6;
   padding: var(--space-4) var(--space-5);
-  border-radius: var(--radius-md);
+  border-radius: 0 !important;
   background: var(--bg-surface);
   border: 1px solid var(--border);
   overflow-x: auto;
   position: relative;
+  tab-size: 2;
+  -moz-tab-size: 2;
 }
 .code-wrap {
   position: relative;
@@ -2158,8 +2274,10 @@ dialog.search {
   }
   .search-trigger {
     padding: 0;
-    width: 36px;
-    height: 36px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
     border-radius: var(--radius-sm);
     justify-content: center;
   }
@@ -2209,8 +2327,10 @@ dialog.search {
     min-height: 42px;
   }
   .icon-btn {
-    width: 38px;
-    height: 38px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
   }
   .code-copy-btn {
     opacity: 1;
@@ -2245,7 +2365,7 @@ dialog.search {
 
 @media (max-width: 480px) {
   .container {
-    padding-inline: var(--space-3);
+    padding-inline: 16px;
   }
   .hero__cta {
     flex-direction: column;
