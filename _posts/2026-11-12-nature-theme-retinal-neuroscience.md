@@ -271,9 +271,9 @@ For web authors and UI engineers:
 
 ## 8. Experience Nature Live on This Site
 
-The Nature theme is fully implemented into this website:
-- **Top Navigation:** Click the theme toggle icon in the top header (cycles: `Light` $\rightarrow$ `Dark` $\rightarrow$ `Nature` $\rightarrow$ `Nature Light`).
-- **Keyboard Shortcut:** Press **`T`** anywhere on the site to instantly cycle themes.
-- **In-Browser Reader:** The [Web Book Reader](/books/reader/) includes dedicated **Nature** and **Daylight** buttons in its typography drawer for distraction-free, bio-ergonomic longform reading.
+Nature is the original and default design system of this website:
+- **Top Navigation:** Click the theme toggle icon in the top header to switch between Nature Dark (the primary biological positive-contrast mode) and Nature Light (the high-ambient daylight mode).
+- **Keyboard Shortcut:** Press **`T`** anywhere on the site to instantly toggle between Nature Dark and Nature Light.
+- **Default State:** The site automatically serves Nature Dark for nocturnal / low-light focus and Nature Light for high-ambient daylight conditions.
 
 By aligning screen contrast with the evolutionary biology of human vision, we can write code and read documentation for hours without compromising our long-term ocular health.

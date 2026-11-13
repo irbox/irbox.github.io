@@ -53,29 +53,22 @@
     }
   });
 
-  /* ---- 3. Theme Controller ---- */
-  const themes = ['light', 'dark', 'nature', 'nature-light'];
-  const themeColors = { light: '#ffffff', dark: '#0b0f17', nature: '#111613', 'nature-light': '#f0f2eb' };
-  const themeNames = { light: 'Light', dark: 'Dark', nature: 'Nature (dark)', 'nature-light': 'Nature (sunlight)' };
+  /* ---- 3. Theme Controller (Nature Dark & Nature Light) ---- */
   const themeBtns = $$('[data-theme-toggle]');
   const metas = $$('meta[name="theme-color"]');
   const getTheme = () => root.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-  const getNextTheme = (t) => {
-    const idx = themes.indexOf(t);
-    return themes[(idx + 1) % themes.length];
-  };
   const syncTheme = (t) => {
-    const color = themeColors[t] || '#ffffff';
+    const isDark = t === 'dark';
+    const color = isDark ? '#0a0f14' : '#f0f2eb';
     metas.forEach((m) => m.setAttribute('content', color));
-    const next = getNextTheme(t);
-    const label = `Switch to ${themeNames[next]} theme (or press T)`;
+    const label = isDark ? 'Switch to Nature Light (Daylight) theme (or press T)' : 'Switch to Nature Dark theme (or press T)';
     themeBtns.forEach((b) => {
       b.setAttribute('aria-label', label);
       b.setAttribute('title', label);
     });
   };
   const cycleTheme = () => {
-    const next = getNextTheme(getTheme());
+    const next = getTheme() === 'dark' ? 'light' : 'dark';
     root.setAttribute('data-theme', next);
     store.set('theme', next);
     syncTheme(next);
@@ -363,7 +356,6 @@
       else if (k === 'd') location.href = '/docs/getting-started/';
       else if (k === 'p') location.href = '/projects/';
       else if (k === 'b') location.href = '/blog/';
-      else if (k === 'l') location.href = '/books/';
     }
   });
 

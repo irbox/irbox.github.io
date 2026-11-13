@@ -35,6 +35,19 @@ project_categories = Web Apps, Libraries, Tools & CLI, Experiments
 
 The order here dictates the display order of categories on `/projects/` and within the project navigation sidebar. A project's `category` in front matter matches one of these labels.
 
+## Modular Theme & Navigation Settings
+
+```ini
+# Modular Theme Configuration
+# Default color scheme: 'dark' (Nature Dark) or 'light' (Nature Light)
+default_theme = dark
+
+# Modular Navigation Configuration (Format: Label:URL:SectionKey)
+nav_items = Docs:/docs/getting-started/:docs, Projects:/projects/:projects, Blog:/blog/:blog, About:/about/:about
+```
+
+Navigation links in the desktop topbar, mobile drawer, and footer are fully modular and dynamically rendered based on `nav_items`. You can reorder, add, or customize links without modifying C source code.
+
 ## Announcement banner
 
 ```ini

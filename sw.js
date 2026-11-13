@@ -3,7 +3,7 @@
    Resilient offline-first caching for static assets & intelligent navigation
    ========================================================================== */
 
-const CACHE_NAME = 'irbox-v1.6.4';
+const CACHE_NAME = 'irbox-v2.0.0';
 const OFFLINE_URL = '/offline.html';
 
 const PRECACHE_ASSETS = [
@@ -11,7 +11,6 @@ const PRECACHE_ASSETS = [
   OFFLINE_URL,
   '/assets/css/main.css',
   '/assets/js/main.js',
-  '/assets/js/reader.js',
   '/assets/themes/nature.json',
   '/assets/images/brand-icon.svg',
   '/assets/images/favicon.svg',
@@ -20,8 +19,6 @@ const PRECACHE_ASSETS = [
   '/assets/fonts/libron/Libron-Regular.woff2',
   '/assets/fonts/libron/Libron-Bold.woff2',
   '/manifest.webmanifest',
-  '/assets/book.epub',
-  '/books/archive/irbox-docs.epub',
   '/search.json',
 ];
 

@@ -13,7 +13,7 @@ The typography architecture uses native high-fidelity system fonts combined with
 | Typeface Stack | Purpose & Scope | Font Stack | License |
 | :--- | :--- | :--- | :--- |
 | **System UI Sans** | UI labels, navigation, buttons, cards, headings | `system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif` | Native OS / Open |
-| **Libron Serif** | Editorial longform, book reader, literature | `'Libron', Charter, Georgia, serif` | SIL Open Font License |
+| **Libron Serif** | Editorial longform, documentation prose | `'Libron', Charter, Georgia, serif` | SIL Open Font License |
 | **Code Monospace** | Code blocks, technical specs, terminal logs | `ui-monospace, "Cascadia Code", "Fira Code", Menlo, monospace` | Native OS / Open |
 
 ```css

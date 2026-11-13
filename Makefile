@@ -48,7 +48,6 @@ test: check build
 	@test -f $(OUT)/sitemap.xml || (echo "Missing sitemap.xml" && exit 1)
 	@test -f $(OUT)/search.json || (echo "Missing search.json" && exit 1)
 	@test -f $(OUT)/manifest.webmanifest || (echo "Missing manifest.webmanifest" && exit 1)
-	@test -f $(OUT)/books/reader/index.html || (echo "Missing reader/index.html" && exit 1)
 	@test -f $(OUT)/.nojekyll || (echo "Missing .nojekyll" && exit 1)
 	@echo "All build verification tests passed successfully."
 

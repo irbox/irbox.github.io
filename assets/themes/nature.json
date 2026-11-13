@@ -14,26 +14,27 @@
       "type": "dark",
       "contrast_polarity": "positive",
       "backgrounds": {
-        "body": { "hex": "#111613", "oklch": "oklch(0.18 0.015 145)", "relative_luminance": 0.0074, "role": "Deep understory loam floor" },
-        "surface": { "hex": "#171e19", "oklch": "oklch(0.22 0.018 145)", "relative_luminance": 0.0125, "role": "Canopy reading plane" },
-        "surface_raised": { "hex": "#1e2721", "oklch": "oklch(0.26 0.020 145)", "relative_luminance": 0.0195, "role": "Raised bedrock cards" },
-        "surface_elevated": { "hex": "#26322b", "oklch": "oklch(0.30 0.022 145)", "relative_luminance": 0.0310, "role": "Floating modal / popover" }
+        "body": { "hex": "#0a0f14", "oklch": "oklch(0.12 0.012 220)", "relative_luminance": 0.0055, "role": "Choroid baseline floor" },
+        "surface": { "hex": "#101820", "oklch": "oklch(0.18 0.015 220)", "relative_luminance": 0.0102, "role": "Raised surface reading plane" },
+        "surface_raised": { "hex": "#17222c", "oklch": "oklch(0.22 0.018 220)", "relative_luminance": 0.0165, "role": "Overlay cards" },
+        "surface_elevated": { "hex": "#22313d", "oklch": "oklch(0.28 0.020 220)", "relative_luminance": 0.0285, "role": "Highlight floating modal / popover" }
       },
       "foregrounds": {
-        "primary": { "hex": "#dce5d8", "contrast_ratio": 14.15, "role": "Birch bark high-clarity prose" },
-        "secondary": { "hex": "#a9bba9", "contrast_ratio": 8.75, "role": "Foliage medium body text" },
-        "muted": { "hex": "#788d7b", "contrast_ratio": 5.10, "role": "Lichen captions and metadata" },
-        "border": { "hex": "#3d4e41", "role": "Sub-canopy structural boundaries" }
+        "primary": { "hex": "#e9eef3", "contrast_ratio": 15.20, "role": "Choroid high-clarity prose" },
+        "secondary": { "hex": "#b4c0cb", "contrast_ratio": 9.40, "role": "Secondary body text" },
+        "muted": { "hex": "#74889a", "contrast_ratio": 5.25, "role": "Muted captions and metadata" },
+        "border": { "hex": "#2c3c49", "role": "Structural boundary borders" }
       },
       "syntax": {
-        "keyword": { "hex": "#cf9a68", "wavelength_nm": 585, "contrast_ratio": 6.86, "role": "Carotenoid Amber" },
-        "string": { "hex": "#9dc297", "wavelength_nm": 540, "contrast_ratio": 8.57, "role": "Willow Chlorophyll" },
-        "function": { "hex": "#82bba8", "wavelength_nm": 515, "contrast_ratio": 7.78, "role": "Lichen Sage Teal" },
-        "number": { "hex": "#dbab79", "wavelength_nm": 580, "contrast_ratio": 8.18, "role": "Clay Ochre" },
-        "type": { "hex": "#a8c9b8", "wavelength_nm": 525, "contrast_ratio": 9.47, "role": "Pale Reed Sage" },
-        "constant": { "hex": "#d6a27e", "wavelength_nm": 590, "contrast_ratio": 7.55, "role": "Terracotta Sand" },
-        "operator": { "hex": "#b0a898", "wavelength_nm": 560, "contrast_ratio": 7.20, "role": "River Sand Neutral" },
-        "comment": { "hex": "#728877", "contrast_ratio": 4.45, "role": "Deep Lichen Olive" }
+        "keyword": { "hex": "#f29e5c", "wavelength_nm": 585, "contrast_ratio": 7.42, "role": "Choroid Amber Orange" },
+        "string": { "hex": "#8fd694", "wavelength_nm": 540, "contrast_ratio": 9.15, "role": "Choroid Chlorophyll Green" },
+        "function": { "hex": "#4fd1c5", "wavelength_nm": 515, "contrast_ratio": 8.65, "role": "Choroid Teal Accent" },
+        "number": { "hex": "#f2cc6b", "wavelength_nm": 580, "contrast_ratio": 8.92, "role": "Choroid Ochre Yellow" },
+        "type": { "hex": "#6cb6ff", "wavelength_nm": 490, "contrast_ratio": 8.10, "role": "Choroid Soft Sky Blue" },
+        "constant": { "hex": "#b392f0", "wavelength_nm": 430, "contrast_ratio": 7.60, "role": "Choroid Soft Lavender" },
+        "operator": { "hex": "#b4c0cb", "wavelength_nm": 560, "contrast_ratio": 9.40, "role": "Choroid Secondary Neutral" },
+        "comment": { "hex": "#74889a", "contrast_ratio": 5.25, "role": "Choroid Muted Olive" },
+        "danger": { "hex": "#f2736d", "contrast_ratio": 6.80, "role": "Choroid Coral Red" }
       }
     },
     "nature-light": {

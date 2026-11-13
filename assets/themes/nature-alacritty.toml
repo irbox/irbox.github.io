@@ -1,34 +1,34 @@
-# Nature Theme for Alacritty
-# Grounded in Retinal Neurobiology & Myopia Research (Aleman et al., 2018)
+# Nature (Choroid) Theme for Alacritty
+# Grounded in Retinal Neurobiology & Myopia Research (Aleman et al., 2018 / Claude Sonnet 5.5 High)
 
 [colors.primary]
-background = "#111613"
-foreground = "#dce5d8"
+background = "#0A0F14"
+foreground = "#E9EEF3"
 
 [colors.cursor]
-text = "#111613"
-cursor = "#cf9a68"
+text = "#0A0F14"
+cursor = "#4FD1C5"
 
 [colors.selection]
-text = "#ffffff"
-background = "#263e32"
+text = "#E9EEF3"
+background = "#1F4E5F"
 
 [colors.normal]
-black = "#171e19"
-red = "#d47864"
-green = "#9dc297"
-yellow = "#dbab79"
-blue = "#82bba8"
-magenta = "#cf9a68"
-cyan = "#a8c9b8"
-white = "#dce5d8"
+black = "#101820"
+red = "#F2736D"
+green = "#8FD694"
+yellow = "#F2CC6B"
+blue = "#6CB6FF"
+magenta = "#B392F0"
+cyan = "#4FD1C5"
+white = "#E9EEF3"
 
 [colors.bright]
-black = "#46594c"
-red = "#e08d7a"
-green = "#b4d6ae"
-yellow = "#ecc294"
-blue = "#9ecbbd"
-magenta = "#e0b084"
-cyan = "#c0ded0"
-white = "#ffffff"
+black = "#2C3C49"
+red = "#FF857F"
+green = "#A3E8A8"
+yellow = "#FFDE7D"
+blue = "#80C5FF"
+magenta = "#C5A8FF"
+cyan = "#68E5D9"
+white = "#FFFFFF"

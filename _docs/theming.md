@@ -1,43 +1,51 @@
 ---
 title: Theming
-description: Colors, fonts and light/dark mode.
+description: Nature color system, design tokens, and light/dark modes.
 category: Customizing
 ---
 
-All design tokens are CSS custom properties at the top of `assets/css/main.css`.
+**Nature** is the default and original theme system for this site. Grounded in retinal neurobiology and myopia prevention research (*Aleman, Wang, & Schaeffel, 2018, Scientific Reports 8:10840*), the design architecture features two scientifically calibrated modes:
+
+- **Nature Dark (`data-theme='dark'`)**: The primary biological baseline. Deep ocular substrate (`#0a0f14`) activating the retinal ON-pathway through positive contrast polarity, promoting choroidal thickening (+10 µm) and inhibiting axial elongation. Syntax highlighting is anchored in Claude Sonnet 5.5 High's low-LCA Choroid palette (`#4fd1c5` teal, `#8fd694` chlorophyll green, `#f29e5c` amber orange, `#f2cc6b` ochre yellow).
+- **Nature Light (`data-theme='light'`)**: The daylight and high-ambient reading mode. Sun-bleached botanical parchment (`#f0f2eb`) engineered for workstations next to windows, providing high diffuse reflectance to overpower specular glare without triggering the severe choroidal thinning (-16 µm) of 100% blinding white.
+
+## Design Tokens
+
+All tokens are standard CSS custom properties declared at the root of `assets/css/main.css`:
 
 ```css
-:root, [data-theme='light'] {
-  --bg-body: #ffffff;
-  --bg-surface: #fafafa;
-  --bg-muted: #f1f2f4;
-  --ink: #111827;
-  --ink-2: #4b5563;
-  --brand: #2563eb;
-  --radius-container: 16px;
+/* Nature Dark (Universal Biological Baseline) */
+:root, [data-theme='dark'] {
+  --bg-body: #0a0f14;
+  --bg-surface: #101820;
+  --bg-surface-raised: #17222c;
+  --bg-surface-elevated: #22313d;
+  --ink: #e9eef3;
+  --ink-2: #b4c0cb;
+  --ink-muted: #74889a;
+  --border: #2c3c49;
+  --brand: #4fd1c5;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) {
-    --bg-body: #0b0d11;
-    --bg-surface: #12151b;
-    --bg-muted: #1c212b;
-    --ink: #f9fafb;
-    --ink-2: #9ca3af;
-    --brand: #3b82f6;
-  }
+
+/* Nature Light (Daylight Glare-Resistant Reading) */
+[data-theme='light'] {
+  --bg-body: #f0f2eb;
+  --bg-surface: #e5e9e0;
+  --bg-surface-raised: #dbe0d5;
+  --bg-surface-elevated: #ffffff;
+  --ink: #19241c;
+  --ink-2: #354538;
+  --ink-muted: #5a6d5f;
+  --border: rgba(25, 36, 28, 0.12);
+  --brand: #2d6139;
 }
 ```
 
-The toggle in the top bar cycles through four color modes (`Light` -> `Dark` -> `Nature` -> `Nature Light`) and persists the choice in `localStorage`. With no saved choice the site follows the operating system color scheme. You can also press **`T`** anywhere on the site to cycle themes.
+The topbar button and the **`T`** keyboard shortcut toggle cleanly between Nature Dark and Nature Light, persisting preference in `localStorage`. Default theme behavior is also configurable in `_config.cfg` via `default_theme = dark`.
 
-## The Nature Theme System
+## Editor & Terminal Palette Exports
 
-In addition to standard Light and Dark modes, the site includes **Nature**—a color scheme engineered from retinal neurobiology and myopia prevention research (*Aleman, Wang, & Schaeffel, 2018, Nature Scientific Reports 8:10840*):
-
-- **Nature (`data-theme='nature'`)**: Deep loam substrate (`#111613`) activating the retinal ON pathway (positive contrast polarity) to promote choroidal thickening (+10 µm) and inhibit myopia, with syntax highlighting constrained to a 515–590 nm spectral corridor to eliminate longitudinal chromatic aberration (<0.35 D).
-- **Nature Light (`data-theme='nature-light'`)**: Sun-bleached botanical parchment (`#f0f2eb`) designed for workstations next to windows, providing high diffuse reflectance to overpower window specular glare without the blinding choroidal shock (-16 µm) of 100% white.
-
-Downloadable configuration files for editors and terminals are available:
+Standalone configuration files are available for download:
 - [VS Code Theme (`assets/themes/nature-vscode.json`)](/assets/themes/nature-vscode.json)
 - [Neovim Lua Colorscheme (`assets/themes/nature.nvim`)](/assets/themes/nature.nvim)
 - [Alacritty Terminal Theme (`assets/themes/nature-alacritty.toml`)](/assets/themes/nature-alacritty.toml)
@@ -46,10 +54,10 @@ Downloadable configuration files for editors and terminals are available:
 
 ## Typography
 
-The site uses a dual-typeface typographic system:
+The site uses an engineered typographic hierarchy:
 
 - **Headings & Reading Body**: Self-hosted [Libron](https://github.com/nicoverbruggen/libron) (SIL OFL 1.1) in WOFF2 format (`--font-serif`, `--font-heading`).
-- **UI Controls & Navigation**: Crisp sans-serif font stack (`--font-sans`).
-- **Code & Technical Specs**: Monospace font stack (`--font-mono`).
+- **UI Controls & Navigation**: Engineered sans-serif font stack (`--font-sans`).
+- **Code & Technical Specs**: High-legibility monospace font stack (`--font-mono`).
 
-Fonts are self-hosted with zero external tracking dependencies for maximum speed, privacy, and zero layout shift.
+Pure POSIX design rules are strictly enforced: zero rounded corners (`border-radius: 0 !important;`) and zero blur filters (`backdrop-filter: none !important;`).

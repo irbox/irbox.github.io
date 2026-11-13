@@ -42,6 +42,6 @@ This site serves three purposes:
 
 - **[Projects](/projects/)**: Selected software projects, libraries, and developer tools with source code and technical write-ups.
 - **[Documentation](/docs/getting-started/)**: Guides, architecture notes, and configuration references.
-- **[Books & Archive](/books/)**: A digital library shelf with an in-browser EPUB and PDF reader that works offline.
+- **[Blog](/blog/)**: Field notes on systems engineering, visual ergonomics, and software architecture.
 
 Thank you for visiting. All source code is openly hosted on [GitHub](https://github.com/irbox/irbox.github.io).

@@ -93,6 +93,12 @@ static_assert(sizeof(size_t) >= 4, "Architecture must be at least 32-bit");
    Site Identity & Metadata
    ========================================================================== */
 typedef struct {
+    char label[64];
+    char url[128];
+    char section[64];
+} NavItem;
+
+typedef struct {
     char title[128];
     char tagline[256];
     char description[512];
@@ -116,6 +122,10 @@ typedef struct {
 
     char project_categories[16][64];
     size_t project_category_count;
+
+    char default_theme[32];
+    NavItem nav_items[16];
+    size_t nav_item_count;
 } SiteConfig;
 
 static SiteConfig site_config = {
@@ -139,7 +149,15 @@ static SiteConfig site_config = {
     .announcement_link_label = "Read the changelog",
     .announcement_link_url = "/changelog/",
     .project_categories = { "Web Apps", "Libraries", "Tools & CLI", "Experiments" },
-    .project_category_count = 4
+    .project_category_count = 4,
+    .default_theme = "dark",
+    .nav_items = {
+        { "Docs", "/docs/getting-started/", "docs" },
+        { "Projects", "/projects/", "projects" },
+        { "Blog", "/blog/", "blog" },
+        { "About", "/about/", "about" }
+    },
+    .nav_item_count = 4
 };
 
 /* ==========================================================================
@@ -390,6 +408,48 @@ static void parse_ssg_config(const char *filename) {
             safe_strcpy(site_config.announcement_link_label, sizeof(site_config.announcement_link_label), value);
         } else if (strcmp(key, "announcement_link_url") == 0) {
             safe_strcpy(site_config.announcement_link_url, sizeof(site_config.announcement_link_url), value);
+        } else if (strcmp(key, "default_theme") == 0) {
+            safe_strcpy(site_config.default_theme, sizeof(site_config.default_theme), value);
+        } else if (strcmp(key, "nav_items") == 0) {
+            site_config.nav_item_count = 0;
+            char tmp_nav[512];
+            safe_strcpy(tmp_nav, sizeof(tmp_nav), value);
+            char *nav_save = NULL;
+            char *tok = strtok_r(tmp_nav, ",", &nav_save);
+            while (tok && site_config.nav_item_count < 16) {
+                char *nt = trim_whitespace(tok);
+                strip_quotes(nt);
+                if (nt && nt[0] != '\0') {
+                    char *c1 = strchr(nt, ':');
+                    if (c1) {
+                        *c1 = '\0';
+                        char *label = trim_whitespace(nt);
+                        char *rest = c1 + 1;
+                        char *c2 = strchr(rest, ':');
+                        char *url = trim_whitespace(rest);
+                        char *sec = "";
+                        if (c2) {
+                            *c2 = '\0';
+                            url = trim_whitespace(rest);
+                            sec = trim_whitespace(c2 + 1);
+                        }
+                        NavItem *item = &site_config.nav_items[site_config.nav_item_count++];
+                        safe_strcpy(item->label, sizeof(item->label), label);
+                        safe_strcpy(item->url, sizeof(item->url), url);
+                        if (sec && sec[0] != '\0') {
+                            safe_strcpy(item->section, sizeof(item->section), sec);
+                        } else {
+                            size_t slen = strlen(label);
+                            if (slen >= sizeof(item->section)) slen = sizeof(item->section) - 1;
+                            for (size_t si = 0; si < slen; si++) {
+                                item->section[si] = (char)tolower((unsigned char)label[si]);
+                            }
+                            item->section[slen] = '\0';
+                        }
+                    }
+                }
+                tok = strtok_r(NULL, ",", &nav_save);
+            }
         } else if (strcmp(key, "project_categories") == 0) {
             site_config.project_category_count = 0;
             char tmp_cats[512];
@@ -634,14 +694,6 @@ static void render_icon_moon(StrBuf *out, int size) {
     buf_append_str(out, buf);
 }
 
-static void render_icon_leaf(StrBuf *out, int size) {
-    char buf[1024];
-    snprintf(buf, sizeof(buf),
-        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"%d\" height=\"%d\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z\"/><path d=\"M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12\"/></svg>",
-        size, size);
-    buf_append_str(out, buf);
-}
-
 static void render_icon_menu(StrBuf *out, int size) {
     char buf[1024];
     snprintf(buf, sizeof(buf),
@@ -654,14 +706,6 @@ static void render_icon_close(StrBuf *out, int size) {
     char buf[1024];
     snprintf(buf, sizeof(buf),
         "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"%d\" height=\"%d\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><line x1=\"18\" y1=\"6\" x2=\"6\" y2=\"18\"/><line x1=\"6\" y1=\"6\" x2=\"18\" y2=\"18\"/></svg>",
-        size, size);
-    buf_append_str(out, buf);
-}
-
-static void render_icon_book(StrBuf *out, int size) {
-    char buf[1024];
-    snprintf(buf, sizeof(buf),
-        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"%d\" height=\"%d\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z\"/><path d=\"M6 6h10M6 10h10\"/></svg>",
         size, size);
     buf_append_str(out, buf);
 }
@@ -1327,11 +1371,10 @@ static void init_docs_navigation(void) {
     strcpy(nav_sections[0].slugs[2], "configuration");
 
     strcpy(nav_sections[1].title, "Writing content");
-    nav_sections[1].count = 4;
+    nav_sections[1].count = 3;
     strcpy(nav_sections[1].slugs[0], "writing-docs");
     strcpy(nav_sections[1].slugs[1], "writing-projects");
     strcpy(nav_sections[1].slugs[2], "writing-posts");
-    strcpy(nav_sections[1].slugs[3], "publishing-books");
 
     strcpy(nav_sections[2].title, "Customizing");
     nav_sections[2].count = 3;
@@ -1379,8 +1422,8 @@ static void render_head(StrBuf *out, const char *title, const char *desc, const 
         "  <meta charset=\"utf-8\">\n"
         "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content\">\n"
         "  <meta name=\"color-scheme\" content=\"light dark\">\n"
-        "  <meta name=\"theme-color\" media=\"(prefers-color-scheme: light)\" content=\"#ffffff\">\n"
-        "  <meta name=\"theme-color\" media=\"(prefers-color-scheme: dark)\" content=\"#0b0d11\">\n"
+        "  <meta name=\"theme-color\" media=\"(prefers-color-scheme: light)\" content=\"#f0f2eb\">\n"
+        "  <meta name=\"theme-color\" media=\"(prefers-color-scheme: dark)\" content=\"#0a0f14\">\n"
         "  <meta name=\"referrer\" content=\"strict-origin-when-cross-origin\">\n"
         "  <meta name=\"robots\" content=\"index, follow, max-image-preview:large, noarchive\">\n"
         "  <meta http-equiv=\"X-Content-Type-Options\" content=\"nosniff\">\n"
@@ -1489,7 +1532,7 @@ static void render_head(StrBuf *out, const char *title, const char *desc, const 
         "        var t = localStorage.getItem('theme');\n"
         "        if (t === 'light' || t === 'dark' || t === 'nature' || t === 'nature-light') {\n"
         "          d.setAttribute('data-theme', t);\n"
-        "          var c = t === 'dark' ? '#0b0f17' : (t === 'nature' ? '#111613' : (t === 'nature-light' ? '#f0f2eb' : '#ffffff'));\n"
+        "          var c = (t === 'light' || t === 'nature-light') ? '#f0f2eb' : '#0a0f14';\n"
         "          var metas = document.querySelectorAll('meta[name=\"theme-color\"]');\n"
         "          for (var i = 0; i < metas.length; i++) {\n"
         "            metas[i].setAttribute('content', c);\n"
@@ -1547,19 +1590,15 @@ static void render_header(StrBuf *out, const char *active_section) {
         "    <nav class=\"topnav__links desktop-only\" aria-label=\"Primary\">\n"
     );
 
-    const char *sections[] = { "docs", "projects", "blog", "books", "about" };
-    const char *labels[]   = { "Docs", "Projects", "Blog", "Books", "About" };
-    const char *urls[]     = { "/docs/getting-started/", "/projects/", "/blog/", "/books/", "/about/" };
-
-    for (int i = 0; i < 5; i++) {
-        bool is_act = (strcmp(active_section, sections[i]) == 0);
+    for (size_t i = 0; i < site_config.nav_item_count; i++) {
+        bool is_act = (strcmp(active_section, site_config.nav_items[i].section) == 0);
         buf_append_str(out, "      <a href=\"");
-        buf_append_str(out, urls[i]);
+        buf_append_str(out, site_config.nav_items[i].url);
         buf_append_str(out, "\" class=\"topnav__link");
         if (is_act) buf_append_str(out, " is-active\" aria-current=\"page\"");
         else buf_append_str(out, "\"");
         buf_append_str(out, ">");
-        buf_append_str(out, labels[i]);
+        escape_html(out, site_config.nav_items[i].label, strlen(site_config.nav_items[i].label));
         buf_append_str(out, "</a>\n");
     }
 
@@ -1588,10 +1627,6 @@ static void render_header(StrBuf *out, const char *active_section) {
         "        <span class=\"theme-icon theme-icon--moon\">"
     );
     render_icon_moon(out, 20);
-    buf_append_str(out, "</span>\n        <span class=\"theme-icon theme-icon--nature\">");
-    render_icon_leaf(out, 20);
-    buf_append_str(out, "</span>\n        <span class=\"theme-icon theme-icon--nature-light\">");
-    render_icon_leaf(out, 20);
     buf_append_str(out, "</span>\n        <span class=\"theme-icon theme-icon--sun\">");
     render_icon_sun(out, 20);
     buf_append_str(out,
@@ -1611,15 +1646,15 @@ static void render_header(StrBuf *out, const char *active_section) {
         "  <nav aria-label=\"Mobile\">\n"
     );
 
-    for (int i = 0; i < 5; i++) {
-        bool is_act = (strcmp(active_section, sections[i]) == 0);
+    for (size_t i = 0; i < site_config.nav_item_count; i++) {
+        bool is_act = (strcmp(active_section, site_config.nav_items[i].section) == 0);
         buf_append_str(out, "    <a href=\"");
-        buf_append_str(out, urls[i]);
+        buf_append_str(out, site_config.nav_items[i].url);
         buf_append_str(out, "\" class=\"drawer__link");
         if (is_act) buf_append_str(out, " is-active\" aria-current=\"page\"");
         else buf_append_str(out, "\"");
         buf_append_str(out, ">");
-        buf_append_str(out, labels[i]);
+        escape_html(out, site_config.nav_items[i].label, strlen(site_config.nav_items[i].label));
         buf_append_str(out, "</a>\n");
     }
 
@@ -1647,12 +1682,16 @@ static void render_footer(StrBuf *out) {
     buf_append_str(out, "</span>\n"
         "      </a>\n"
         "      <nav class=\"footer__links\" aria-label=\"Footer\">\n"
-        "        <a href=\"/docs/getting-started/\">Docs</a>\n"
-        "        <a href=\"/projects/\">Projects</a>\n"
-        "        <a href=\"/blog/\">Blog</a>\n"
-        "        <a href=\"/books/\">Books</a>\n"
+    );
+    for (size_t i = 0; i < site_config.nav_item_count; i++) {
+        buf_append_str(out, "        <a href=\"");
+        buf_append_str(out, site_config.nav_items[i].url);
+        buf_append_str(out, "\">");
+        escape_html(out, site_config.nav_items[i].label, strlen(site_config.nav_items[i].label));
+        buf_append_str(out, "</a>\n");
+    }
+    buf_append_str(out,
         "        <a href=\"/changelog/\">Changelog</a>\n"
-        "        <a href=\"/about/\">About</a>\n"
         "      </nav>\n"
         "      <div class=\"footer__social\">\n"
         "        <a class=\"icon-btn\" href=\""
@@ -1725,7 +1764,6 @@ static void render_footer(StrBuf *out) {
         "          <div class=\"shortcuts-item\"><dt><kbd>D</kbd></dt><dd>Documentation</dd></div>\n"
         "          <div class=\"shortcuts-item\"><dt><kbd>P</kbd></dt><dd>Projects</dd></div>\n"
         "          <div class=\"shortcuts-item\"><dt><kbd>B</kbd></dt><dd>Blog</dd></div>\n"
-        "          <div class=\"shortcuts-item\"><dt><kbd>L</kbd></dt><dd>Books &amp; Archive</dd></div>\n"
         "        </dl>\n"
         "      </div>\n"
         "      <div class=\"shortcuts-group\">\n"
@@ -1792,8 +1830,10 @@ static void render_announcement_banner(StrBuf *out, bool hide) {
 static void wrap_page_ext(StrBuf *out, const char *title, const char *desc, const char *active_sec, const char *body, const char *body_class, const char *url_path, const char *og_type, const char *date_pub, bool hide_announcement) {
     buf_append_str(out,
         "<!DOCTYPE html>\n"
-        "<html lang=\"en\" data-baseurl=\"\">\n"
+        "<html lang=\"en\" data-baseurl=\"\" data-theme=\""
     );
+    buf_append_str(out, (site_config.default_theme[0] != '\0') ? site_config.default_theme : "dark");
+    buf_append_str(out, "\">\n");
     render_head(out, title, desc, url_path, og_type, date_pub);
     buf_append_str(out, "<body");
     if (body_class && strlen(body_class) > 0) {
@@ -2125,12 +2165,6 @@ static void render_docs_page(const DocItem *d, const char *out_dir) {
 
     buf_append_str(&body,
         "          <div class=\"doc__actions\">\n"
-        "            <a class=\"btn btn--secondary btn--sm\" href=\"/assets/book.epub\" title=\"Download entire documentation as an EPUB e-book for Apple Books, Kindle or Kobo\">\n"
-    );
-    render_icon_book(&body, 14);
-    buf_append_str(&body,
-        " EPUB Book\n"
-        "            </a>\n"
         "            <button class=\"btn btn--secondary btn--sm\" type=\"button\" data-print-btn title=\"Print or Save as PDF\">\n"
     );
     render_icon_printer(&body, 14);
@@ -2953,317 +2987,6 @@ static void render_blog_landing(const char *out_dir) {
     buf_free(&full);
 }
 
-static void render_books_landing(const char *out_dir) {
-    StrBuf body;
-    buf_init(&body, 16384);
-
-    buf_append_str(&body,
-        "<div class=\"container section\">\n"
-        "  <header class=\"center page-header\">\n"
-        "    <h1 class=\"display-1\">Books &amp; Archive</h1>\n"
-        "    <p class=\"lead\">\n"
-        "      Personal digital shelf of books, field notes, and architectural manuals. Read them directly in\n"
-        "      your browser with our built-in reader, or download to your Kindle, Kobo, or mobile device.\n"
-        "    </p>\n"
-        "  </header>\n\n"
-        "  <section class=\"card book-dropzone\" id=\"book-dropzone\" aria-label=\"Quick in-browser book reader drop zone\">\n"
-        "    <div class=\"book-dropzone__content\">\n"
-        "      <div class=\"book-dropzone__icon\" aria-hidden=\"true\">\n"
-        "        <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"36\" height=\"36\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z\"></path><path d=\"M6 6h10\"></path><path d=\"M6 10h10\"></path><path d=\"M12 14l4 4m0-4l-4 4\"></path></svg>\n"
-        "      </div>\n"
-        "      <div class=\"book-dropzone__text\">\n"
-        "        <h2 class=\"display-3 book-dropzone__title\">Instant Web Book Reader</h2>\n"
-        "        <p class=\"muted book-dropzone__desc\">\n"
-        "          Drag and drop any <strong>.epub</strong> or <strong>.pdf</strong> file here to read\n"
-        "          instantly in your browser. 100% private, runs entirely on your device with no server\n"
-        "          upload.\n"
-        "        </p>\n"
-        "      </div>\n"
-        "      <div class=\"book-dropzone__action\">\n"
-        "        <label for=\"book-file-input\" class=\"btn btn--secondary\">\n"
-        "          <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"></path><polyline points=\"17 8 12 3 7 8\"></polyline><line x1=\"12\" y1=\"3\" x2=\"12\" y2=\"15\"></line></svg>\n"
-        "          <span>Open local file</span>\n"
-        "        </label>\n"
-        "        <input type=\"file\" id=\"book-file-input\" accept=\".epub,.pdf,application/epub+zip,application/pdf\" style=\"display: none;\">\n"
-        "      </div>\n"
-        "    </div>\n"
-        "  </section>\n\n"
-        "  <div class=\"books-toolbar\">\n"
-        "    <div class=\"chips\" role=\"group\" aria-label=\"Filter books by format\" id=\"books-format-filters\">\n"
-        "      <button class=\"chip is-active\" type=\"button\" data-format=\"all\" aria-pressed=\"true\">\n"
-        "        All Books\n"
-        "      </button>\n"
-        "      <button class=\"chip\" type=\"button\" data-format=\"epub\" aria-pressed=\"false\">EPUB</button>\n"
-        "      <button class=\"chip\" type=\"button\" data-format=\"pdf\" aria-pressed=\"false\">PDF</button>\n"
-        "    </div>\n\n"
-        "    <div class=\"books-search-box\">\n"
-        "      <input type=\"search\" id=\"books-search\" class=\"input books-search-input\" placeholder=\"Filter shelf...\" aria-label=\"Filter books shelf by title, author, or keywords\">\n"
-        "      <svg class=\"books-search-icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><circle cx=\"11\" cy=\"11\" r=\"8\"></circle><line x1=\"21\" y1=\"21\" x2=\"16.65\" y2=\"16.65\"></line></svg>\n"
-        "    </div>\n"
-        "  </div>\n\n"
-        "  <div class=\"grid grid--cards\" id=\"books-grid\">\n"
-    );
-
-    DIR *bd = opendir("books/archive");
-    if (bd) {
-        struct dirent *entry;
-        while ((entry = readdir(bd)) != NULL) {
-            if (entry->d_name[0] == '.') continue;
-            if (strcmp(entry->d_name, "README.md") == 0) continue;
-            size_t nlen = strlen(entry->d_name);
-            bool is_pdf  = (nlen > 4 && strcasecmp(entry->d_name + nlen - 4, ".pdf") == 0);
-            bool is_epub = (nlen > 5 && strcasecmp(entry->d_name + nlen - 5, ".epub") == 0);
-            if (!is_pdf && !is_epub) continue;
-
-            char full_p[MAX_PATH];
-            snprintf(full_p, sizeof(full_p), "books/archive/%s", entry->d_name);
-            struct stat st;
-            double kb = (stat(full_p, &st) == 0) ? (st.st_size / 1024.0) : 0.0;
-
-            const char *fmt_lower = is_pdf ? "pdf" : "epub";
-            const char *fmt_upper = is_pdf ? "PDF" : "EPUB";
-
-            buf_append_str(&body, "    <article class=\"card book-card\" data-format=\"");
-            buf_append_str(&body, fmt_lower);
-            buf_append_str(&body, "\" data-title=\"");
-            escape_html(&body, entry->d_name, nlen);
-            buf_append_str(&body, "\" data-author=\"");
-            escape_html(&body, site_config.author_name, strlen(site_config.author_name));
-            buf_append_str(&body, "\" data-desc=\"Archived book\">\n"
-                "      <div class=\"book-card__header\">\n"
-                "        <div class=\"book-card__badge-row\">\n"
-                "          <span class=\"badge badge--");
-            buf_append_str(&body, fmt_lower);
-            buf_append_str(&body, "\">");
-            buf_append_str(&body, fmt_upper);
-            buf_append_str(&body, "</span>\n          <span class=\"muted book-card__size\">");
-            char sz_buf[32];
-            snprintf(sz_buf, sizeof(sz_buf), "%.1f KB", kb);
-            buf_append_str(&body, sz_buf);
-            buf_append_str(&body, "</span>\n        </div>\n"
-                "        <h2 class=\"display-3 book-card__title\">\n"
-                "          <a href=\"/books/reader/?book=");
-            escape_html(&body, entry->d_name, nlen);
-            buf_append_str(&body, "\">");
-            escape_html(&body, entry->d_name, nlen);
-            buf_append_str(&body, "</a>\n        </h2>\n      </div>\n"
-                "      <div class=\"book-card__footer\">\n"
-                "        <a href=\"/books/reader/?book=");
-            escape_html(&body, entry->d_name, nlen);
-            buf_append_str(&body, "\" class=\"btn btn--primary book-card__action\"><span>Read Online</span></a>\n"
-                "        <a href=\"/books/archive/");
-            escape_html(&body, entry->d_name, nlen);
-            buf_append_str(&body, "\" class=\"btn btn--secondary\" download><span>Download</span></a>\n"
-                "      </div>\n    </article>\n");
-        }
-        closedir(bd);
-    }
-
-    buf_append_str(&body,
-        "  </div>\n\n"
-        "  <div id=\"books-empty-search\" class=\"card center muted book-empty-state\" style=\"display: none; margin-top: 24px;\">\n"
-        "    <p>No books matching your search query.</p>\n"
-        "  </div>\n\n"
-        "  <section class=\"card book-guide-card\">\n"
-        "    <div class=\"book-guide-inner\">\n"
-        "      <div class=\"book-guide__icon\" aria-hidden=\"true\">\n"
-        "        <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"28\" height=\"28\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><circle cx=\"12\" cy=\"12\" r=\"10\"></circle><line x1=\"12\" y1=\"16\" x2=\"12\" y2=\"12\"></line><line x1=\"12\" y1=\"8\" x2=\"12.01\" y2=\"8\"></line></svg>\n"
-        "      </div>\n"
-        "      <div>\n"
-        "        <h2 class=\"display-3\" style=\"margin-top: 0; margin-bottom: 8px;\">How to add your own books (Layman's Guide)</h2>\n"
-        "        <p class=\"muted\" style=\"margin-bottom: 16px;\">You don't need coding knowledge or database setups to publish or archive books here.</p>\n"
-        "        <ol style=\"padding-left: 20px; line-height: 1.7; margin-bottom: 16px;\">\n"
-        "          <li><strong>Add files:</strong> Place any <code>.epub</code> or <code>.pdf</code> book inside the folder <code>books/archive/</code>.</li>\n"
-        "          <li><strong>Build:</strong> Run <code>make build</code> in your terminal. Zero setup, zero external dependencies.</li>\n"
-        "          <li><strong>Instant reader:</strong> That's it! Your book automatically receives a card on this shelf, full-text reading controls, and chapter navigation.</li>\n"
-        "        </ol>\n"
-        "        <p style=\"margin: 0;\">\n"
-        "          <a href=\"/docs/publishing-books/\" class=\"btn btn--secondary\" style=\"font-size: 0.875rem;\">Read complete publishing documentation &rarr;</a>\n"
-        "        </p>\n"
-        "      </div>\n"
-        "    </div>\n"
-        "  </section>\n"
-        "</div>\n\n"
-    );
-
-    buf_append_str(&body,
-        "<script>\n"
-        "  (function () {\n"
-        "    const grid = document.getElementById('books-grid');\n"
-        "    const emptyMsg = document.getElementById('books-empty-search');\n"
-        "    const searchInput = document.getElementById('books-search');\n"
-        "    const filterButtons = document.querySelectorAll('#books-format-filters .chip');\n"
-        "    const dropzone = document.getElementById('book-dropzone');\n"
-        "    const fileInput = document.getElementById('book-file-input');\n\n"
-        "    let currentFormat = 'all';\n"
-        "    let currentQuery = '';\n\n"
-        "    function filterBooks() {\n"
-        "      const cards = grid.querySelectorAll('.book-card');\n"
-        "      let visibleCount = 0;\n\n"
-        "      cards.forEach((card) => {\n"
-        "        const format = card.getAttribute('data-format') || '';\n"
-        "        const title = card.getAttribute('data-title') || '';\n"
-        "        const author = card.getAttribute('data-author') || '';\n"
-        "        const desc = card.getAttribute('data-desc') || '';\n\n"
-        "        const matchesFormat = currentFormat === 'all' || format === currentFormat;\n"
-        "        const matchesQuery =\n"
-        "          !currentQuery ||\n"
-        "          title.includes(currentQuery) ||\n"
-        "          author.includes(currentQuery) ||\n"
-        "          desc.includes(currentQuery);\n\n"
-        "        if (matchesFormat && matchesQuery) {\n"
-        "          card.style.display = '';\n"
-        "          visibleCount++;\n"
-        "        } else {\n"
-        "          card.style.display = 'none';\n"
-        "        }\n"
-        "      });\n\n"
-        "      if (emptyMsg) {\n"
-        "        emptyMsg.style.display = visibleCount === 0 ? 'block' : 'none';\n"
-        "      }\n"
-        "    }\n\n"
-        "    if (searchInput) {\n"
-        "      searchInput.addEventListener('input', (e) => {\n"
-        "        currentQuery = e.target.value.toLowerCase().trim();\n"
-        "        filterBooks();\n"
-        "      });\n"
-        "    }\n\n"
-        "    filterButtons.forEach((btn) => {\n"
-        "      btn.addEventListener('click', () => {\n"
-        "        filterButtons.forEach((b) => {\n"
-        "          b.classList.remove('is-active');\n"
-        "          b.setAttribute('aria-pressed', 'false');\n"
-        "        });\n"
-        "        btn.classList.add('is-active');\n"
-        "        btn.setAttribute('aria-pressed', 'true');\n"
-        "        currentFormat = btn.getAttribute('data-format') || 'all';\n"
-        "        filterBooks();\n"
-        "      });\n"
-        "    });\n\n"
-    );
-
-    buf_append_str(&body,
-        "    const bookDb = {\n"
-        "      open: () =>\n"
-        "        new Promise((resolve, reject) => {\n"
-        "          if (!window.indexedDB) return reject(new Error('IndexedDB unavailable'));\n"
-        "          const req = indexedDB.open('irbox_books_db', 1);\n"
-        "          req.onupgradeneeded = (e) => {\n"
-        "            const db = e.target.result;\n"
-        "            if (!db.objectStoreNames.contains('books')) {\n"
-        "              db.createObjectStore('books', { keyPath: 'id' });\n"
-        "            }\n"
-        "          };\n"
-        "          req.onsuccess = (e) => resolve(e.target.result);\n"
-        "          req.onerror = (e) => reject(e.target.error);\n"
-        "        }),\n"
-        "      save: async (name, data) => {\n"
-        "        try {\n"
-        "          const db = await bookDb.open();\n"
-        "          return new Promise((resolve, reject) => {\n"
-        "            const tx = db.transaction('books', 'readwrite');\n"
-        "            tx.objectStore('books').put({ id: 'current', name, data, timestamp: Date.now() });\n"
-        "            tx.oncomplete = () => resolve();\n"
-        "            tx.onerror = (e) => reject(e.target.error);\n"
-        "          });\n"
-        "        } catch {\n"
-        "          sessionStorage.setItem('irbox_temp_book_name', name);\n"
-        "          sessionStorage.setItem('irbox_temp_book_data', data);\n"
-        "        }\n"
-        "      },\n"
-        "    };\n\n"
-        "    function openLocalFile(file) {\n"
-        "      if (!file) return;\n"
-        "      const readerUrl = '/books/reader/';\n"
-        "      const reader = new FileReader();\n"
-        "      reader.onload = async function (e) {\n"
-        "        try {\n"
-        "          await bookDb.save(file.name, e.target.result);\n"
-        "          sessionStorage.setItem('irbox_temp_book_name', file.name);\n"
-        "          sessionStorage.setItem('irbox_temp_book_data', e.target.result);\n"
-        "        } catch {}\n"
-        "        window.location.href = readerUrl + '?book=local';\n"
-        "      };\n"
-        "      reader.readAsDataURL(file);\n"
-        "    }\n\n"
-        "    if (fileInput) {\n"
-        "      fileInput.addEventListener('change', (e) => {\n"
-        "        const file = e.target.files[0];\n"
-        "        if (file) openLocalFile(file);\n"
-        "      });\n"
-        "    }\n\n"
-        "    if (dropzone) {\n"
-        "      ['dragenter', 'dragover'].forEach((eventName) => {\n"
-        "        dropzone.addEventListener(eventName, (e) => {\n"
-        "          e.preventDefault();\n"
-        "          e.stopPropagation();\n"
-        "          dropzone.classList.add('is-dragover');\n"
-        "        });\n"
-        "      });\n\n"
-        "      ['dragleave', 'drop'].forEach((eventName) => {\n"
-        "        dropzone.addEventListener(eventName, (e) => {\n"
-        "          e.preventDefault();\n"
-        "          e.stopPropagation();\n"
-        "          dropzone.classList.remove('is-dragover');\n"
-        "        });\n"
-        "      });\n\n"
-        "      dropzone.addEventListener('drop', (e) => {\n"
-        "        const files = e.dataTransfer?.files;\n"
-        "        if (files && files.length > 0) {\n"
-        "          openLocalFile(files[0]);\n"
-        "        }\n"
-        "      });\n"
-        "    }\n"
-        "  })();\n"
-        "</script>\n"
-    );
-
-    StrBuf full;
-    buf_init(&full, 32768);
-    wrap_page(&full, "Books & Archive", "Personal digital library and book archive. Read online or export to your e-reader.", "books", body.data, "books-landing", "/books/");
-
-    char target[MAX_PATH];
-    snprintf(target, sizeof(target), "%s/books/index.html", out_dir);
-    char dir[MAX_PATH];
-    snprintf(dir, sizeof(dir), "%s/books", out_dir);
-    mkdir_p(dir);
-    write_entire_file(target, full.data, full.len);
-
-    buf_free(&body);
-    buf_free(&full);
-}
-
-static void render_reader_page(const char *out_dir) {
-    char *content = read_entire_file("books/reader/index.html");
-    if (!content) return;
-
-    const char *start = content;
-    if (strncmp(start, "---", 3) == 0) {
-        const char *end = strstr(start + 3, "\n---");
-        if (!end) end = strstr(start + 3, "\r\n---");
-        if (end) {
-            const char *dash = strstr(end, "---");
-            start = dash ? dash + 3 : end + 4;
-            while (*start == ' ' || *start == '\t') start++;
-            while (*start == '\r' || *start == '\n') start++;
-        }
-    }
-
-    StrBuf full;
-    buf_init(&full, strlen(start) + 4096);
-    wrap_page(&full, "Web Book Reader", "Read digital EPUB and PDF books directly in your browser.", "books", start, "reader-page", "/books/reader/");
-
-    char target[MAX_PATH];
-    snprintf(target, sizeof(target), "%s/books/reader/index.html", out_dir);
-    char dir[MAX_PATH];
-    snprintf(dir, sizeof(dir), "%s/books/reader", out_dir);
-    mkdir_p(dir);
-    write_entire_file(target, full.data, full.len);
-
-    free(content);
-    buf_free(&full);
-}
-
 static void render_changelog_page(const char *out_dir) {
     StrBuf body;
     buf_init(&body, 8192);
@@ -3879,8 +3602,6 @@ int main(int argc, char **argv) {
     render_home_page(out_dir);
     render_blog_landing(out_dir);
     render_projects_landing(out_dir);
-    render_books_landing(out_dir);
-    render_reader_page(out_dir);
     render_changelog_page(out_dir);
     render_about_page(out_dir);
     render_404_page(out_dir);
@@ -3901,10 +3622,6 @@ int main(int argc, char **argv) {
         render_project_page(&projects[i], out_dir);
     }
     clock_gettime(CLOCK_MONOTONIC, &t_proj);
-
-    char books_arc_dst[MAX_PATH];
-    snprintf(books_arc_dst, sizeof(books_arc_dst), "%s/books/archive", out_dir);
-    copy_dir_recursive("books/archive", books_arc_dst);
 
     char sw_dst[MAX_PATH];
     snprintf(sw_dst, sizeof(sw_dst), "%s/sw.js", out_dir);
@@ -3944,8 +3661,6 @@ int main(int argc, char **argv) {
         fclose(fnj);
     }
     clock_gettime(CLOCK_MONOTONIC, &t_assets);
-
-    add_search("Web Book Reader", "/books/reader/", "Books", "Read digital EPUB and PDF books directly in your browser with offline support.", "books reader epub pdf viewer");
 
     write_search_json(out_dir);
     write_sitemap_xml(out_dir);
