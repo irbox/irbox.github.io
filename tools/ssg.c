@@ -2406,7 +2406,7 @@ static void render_project_page(const ProjectItem *pr, const char *out_dir) {
     }
 
     if (pr->tags[0]) {
-        buf_append_str(&body, "          <div class=\"post-card__tags\" style=\"margin-bottom: 16px;\">\n");
+        buf_append_str(&body, "          <div class=\"post-card__tags project-header__tags\">\n");
         render_tag_badges(&body, pr->tags, 0);
         buf_append_str(&body, "          </div>\n");
     }
@@ -2942,7 +2942,7 @@ static void render_projects_landing(const char *out_dir) {
                 card_counter++;
                 buf_append_str(&body, "      <article class=\"project-card\" data-category=\"");
                 escape_html(&body, projects[i].category, strlen(projects[i].category));
-                buf_append_str(&body, "\">\n        <a class=\"card card--clickable\" href=\"");
+                buf_append_str(&body, "\">\n        <a class=\"card card--clickable project-card__inner\" href=\"");
                 buf_append_str(&body, projects[i].url);
                 buf_append_str(&body, "\" aria-label=\"");
                 escape_html(&body, projects[i].title, strlen(projects[i].title));
@@ -2950,14 +2950,11 @@ static void render_projects_landing(const char *out_dir) {
                 escape_html(&body, projects[i].category, strlen(projects[i].category));
                 buf_append_str(&body, "</span>\n            <span class=\"mono-version\">");
                 escape_html(&body, projects[i].status, strlen(projects[i].status));
-                buf_append_str(&body, "</span>\n          </div>\n        </a>\n");
-                buf_append_str(&body, "        <div class=\"project-card__meta\">\n          <a class=\"project-card__title\" href=\"");
-                buf_append_str(&body, projects[i].url);
-                buf_append_str(&body, "\">");
+                buf_append_str(&body, "</span>\n          </div>\n          <div class=\"project-card__body\">\n            <h3 class=\"project-card__title\">");
                 escape_html(&body, projects[i].title, strlen(projects[i].title));
-                buf_append_str(&body, "</a>\n          <span class=\"project-card__desc\">");
+                buf_append_str(&body, "</h3>\n            <p class=\"project-card__desc\">");
                 escape_html(&body, projects[i].description, strlen(projects[i].description));
-                buf_append_str(&body, "</span>\n        </div>\n      </article>\n");
+                buf_append_str(&body, "</p>\n          </div>\n        </a>\n      </article>\n");
             }
         }
         buf_append_str(&body, "    </div>\n  </section>\n");
