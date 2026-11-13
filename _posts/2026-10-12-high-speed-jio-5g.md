@@ -1,13 +1,13 @@
 ---
 title: 'High-Speed Jio 5G APN & Network Configuration Guide'
-description: 'This guide optimizes mobile data throughput and forces network stabilization on Jio's True 5G network for your Xiaomi device.'
+description: "This guide optimizes mobile data throughput and forces network stabilization on Jio's True 5G network for your Xiaomi device."
 tags: [5G, Network, Internet, APN]
 cover_alt: Placeholder cover image
 ---
 
 
 ## Section 1: Optimized Jio 5G APN Profile
-Follow this path on your phone: **Settings** > **SIM cards & mobile networks** > **Jio SIM** > **Access Point Names (APN)**. 
+Follow this path on your phone: **Settings** > **SIM cards & mobile networks** > **Jio SIM** > **Access Point Names (APN)**.
 
 Tap **New APN** (or the `+` icon) and enter the parameters exactly as specified below:
 

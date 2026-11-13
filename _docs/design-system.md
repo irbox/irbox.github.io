@@ -43,13 +43,11 @@ All icons across the platform use lightweight, inline SVG geometry. With consist
 
 Versatile, tactile switcher for views, intervals, and filter states:
 
-<div style="margin: 1.5rem 0;">
-  <div class="segmented-control" role="tablist">
-    <button class="segment-btn is-active" type="button" role="tab" aria-selected="true">Daily</button>
-    <button class="segment-btn" type="button" role="tab" aria-selected="false">Weekly</button>
-    <button class="segment-btn" type="button" role="tab" aria-selected="false">Monthly</button>
-    <button class="segment-btn" type="button" role="tab" aria-selected="false">Yearly</button>
-  </div>
+<div class="segmented-control" role="tablist">
+  <button class="segment-btn is-active" type="button" role="tab" aria-selected="true">Daily</button>
+  <button class="segment-btn" type="button" role="tab" aria-selected="false">Weekly</button>
+  <button class="segment-btn" type="button" role="tab" aria-selected="false">Monthly</button>
+  <button class="segment-btn" type="button" role="tab" aria-selected="false">Yearly</button>
 </div>
 
 ```html
@@ -64,7 +62,7 @@ Versatile, tactile switcher for views, intervals, and filter states:
 
 Clean, rounded container for key-value data, metadata, and configuration options:
 
-<div class="grouped-list" style="margin: 1.5rem 0;">
+<div class="grouped-list">
   <div class="grouped-item">
     <div class="grouped-item__left">
       <strong>Theme Mode</strong>
@@ -107,21 +105,15 @@ Clean, rounded container for key-value data, metadata, and configuration options
 
 Structured callouts for notices, tips, and important technical context:
 
-<div class="callout callout--info" style="margin: 1.5rem 0;">
-  <div>
-    <strong>System Architecture</strong>: All fonts are self-hosted or native to the operating system, guaranteeing zero external latency, zero third-party tracking, and 100% offline availability.
-  </div>
-</div>
+> [!NOTE]
+> **System Architecture**: All fonts are self-hosted or native to the operating system, guaranteeing zero external latency, zero third-party tracking, and 100% offline availability.
 
-<div class="callout callout--success" style="margin: 1.5rem 0;">
-  <div>
-    <strong>Accessibility Standards</strong>: Meets WCAG AA contrast criteria across both Light and Dark modes with automatic OS appearance synchronization.
-  </div>
-</div>
+> [!TIP]
+> **Accessibility Standards**: Meets WCAG AA contrast criteria across both Light and Dark modes with automatic OS appearance synchronization.
 
 ## 4. Modern Button & Badge System
 
-<div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin: 1.5rem 0; align-items: center;">
+<div class="project-actions">
   <button class="btn btn--primary" type="button">Primary Button</button>
   <button class="btn btn--secondary" type="button">Secondary Button</button>
   <button class="btn btn--ghost" type="button">Ghost Button</button>

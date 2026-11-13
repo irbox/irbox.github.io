@@ -895,7 +895,7 @@ static void parse_table_row(StrBuf *out, const char *line, bool is_header) {
 static void close_bq_if_open(StrBuf *out, bool *in_bq, bool *in_callout) {
     if (*in_bq) {
         if (*in_callout) {
-            buf_append_str(out, "  </div>\n</div>\n");
+            buf_append_str(out, "  </div>\n</section>\n");
             *in_callout = false;
         } else {
             buf_append_str(out, "</blockquote>\n");
@@ -1109,7 +1109,7 @@ static void markdown_to_html(StrBuf *out, const char *md) {
                     in_callout = true;
                     char c_buf[2048];
                     snprintf(c_buf, sizeof(c_buf),
-                        "<div class=\"callout %s\" role=\"region\" aria-label=\"%s\">\n"
+                        "<section class=\"callout %s\" aria-label=\"%s\">\n"
                         "  <div class=\"callout__title\">%s<span>%s</span></div>\n"
                         "  <div class=\"callout__body\">\n",
                         callout_class, callout_title, callout_icon, callout_title);
@@ -2593,7 +2593,7 @@ static void render_post_page(const PostItem *p, const char *out_dir) {
     );
 
     if (p->cover[0]) {
-        buf_append_str(&body, "    <div class=\"post-cover\" style=\"margin-bottom: 24px;\">\n      <img class=\"thumb\" src=\"");
+        buf_append_str(&body, "    <div class=\"post-cover\">\n      <img class=\"thumb\" src=\"");
         escape_html(&body, p->cover, strlen(p->cover));
         buf_append_str(&body, "\" alt=\"");
         escape_html(&body, p->cover_alt[0] ? p->cover_alt : p->title, strlen(p->cover_alt[0] ? p->cover_alt : p->title));
@@ -2750,7 +2750,7 @@ static void render_home_page(const char *out_dir) {
         "  </div>\n"
         "</section>\n\n"
         "<div class=\"container workbench\">\n"
-        "  <main class=\"workbench__main\" id=\"main-content\">\n"
+        "  <div class=\"workbench__main\" id=\"main-content\">\n"
         "    <section class=\"workbench__section\" id=\"flagship\">\n"
         "      <div class=\"section__head\">\n"
         "        <h2>// 01 FLAGSHIP SYSTEM</h2>\n"
@@ -2833,11 +2833,11 @@ static void render_home_page(const char *out_dir) {
     buf_append_str(&body,
         "      </div>\n"
         "    </section>\n\n"
-        "    <section class=\"section container--prose about-strip\" style=\"padding: 0\">\n"
+        "    <section class=\"section container--prose about-strip about-strip--home\">\n"
         "      <img class=\"avatar avatar--lg\" src=\"/assets/images/placeholders/avatar.svg\" alt=\"\" width=\"72\" height=\"72\" loading=\"lazy\" decoding=\"async\">\n"
         "      <div>\n"
-        "        <h2 class=\"display-3\" style=\"margin-bottom: 6px\">Irbox</h2>\n"
-        "        <p style=\"font-size: var(--type-step-1); color: var(--ink-2); margin-bottom: 12px\">"
+        "        <h2 class=\"display-3 about-strip__name\">Irbox</h2>\n"
+        "        <p class=\"about-strip__bio\">"
     );
     buf_append_str(&body, site_config.author_bio);
     buf_append_str(&body,
@@ -2845,7 +2845,7 @@ static void render_home_page(const char *out_dir) {
         "        <a class=\"link-arrow\" href=\"/about/\">More about my background &rarr;</a>\n"
         "      </div>\n"
         "    </section>\n"
-        "  </main>\n\n"
+        "  </div>\n\n"
         "  <aside class=\"workbench__rail\" aria-label=\"Engine Telemetry and Navigation\">\n"
         "    <div class=\"workbench__rail-title\">C23 Engine Telemetry</div>\n"
         "    <div class=\"workbench__spec-list\">\n"
@@ -2871,11 +2871,11 @@ static void render_home_page(const char *out_dir) {
         "      </div>\n"
         "      <div class=\"workbench__spec-item\">\n"
         "        <span class=\"workbench__spec-label\">Syndication</span>\n"
-        "        <span class=\"workbench__spec-value\"><a href=\"/feed.xml\" style=\"color: inherit\">RSS 2.0 / Atom</a></span>\n"
+        "        <span class=\"workbench__spec-value\"><a class=\"workbench__spec-link\" href=\"/feed.xml\">RSS 2.0 / Atom</a></span>\n"
         "      </div>\n"
         "    </div>\n\n"
         "    <nav class=\"workbench__index-nav\" aria-label=\"Index\">\n"
-        "      <div class=\"workbench__rail-title\" style=\"margin-bottom: 8px\">Directory Index</div>\n"
+        "      <div class=\"workbench__rail-title workbench__rail-title--index\">Directory Index</div>\n"
         "      <a class=\"workbench__index-link\" href=\"#flagship\">&bull; Flagship: Atlas</a>\n"
         "      <a class=\"workbench__index-link\" href=\"#systems\">&bull; Core Systems: Shipit &amp; Kit</a>\n"
         "      <a class=\"workbench__index-link\" href=\"#writing\">&bull; Engineering Writing</a>\n"
@@ -3279,7 +3279,7 @@ static void render_404_page(const char *out_dir) {
         "  <p class=\"eyebrow\">404</p>\n"
         "  <h1 class=\"display-1\">Page not found</h1>\n"
         "  <p class=\"lead\">That page doesn't exist, or it moved.</p>\n"
-        "  <div style=\"margin: 28px 0; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;\">\n"
+        "  <div class=\"error-actions\">\n"
         "    <a class=\"btn btn--primary\" href=\"/\">Back home</a>\n"
         "    <button class=\"btn btn--secondary\" type=\"button\" data-search-open>Search the site</button>\n"
         "  </div>\n"
@@ -3303,7 +3303,7 @@ static void render_offline_page(const char *out_dir) {
     buf_init(&body, 4096);
     buf_append_str(&body,
         "<div class=\"container container--prose section center\">\n"
-        "  <div class=\"hero__badge\" style=\"margin-top: 32px\">\n"
+        "  <div class=\"hero__badge offline-badge\">\n"
     );
     render_icon_offline(&body, 36);
     buf_append_str(&body,
@@ -3313,18 +3313,18 @@ static void render_offline_page(const char *out_dir) {
         "    It looks like your internet connection is unavailable. The page you requested hasn't been cached\n"
         "    yet.\n"
         "  </p>\n\n"
-        "  <div style=\"margin: 32px 0; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap\">\n"
+        "  <div class=\"offline-actions\">\n"
         "    <button class=\"btn btn--primary\" type=\"button\" onclick=\"window.location.reload()\">\n"
         "      Retry connection\n"
         "    </button>\n"
         "    <a class=\"btn btn--secondary\" href=\"/\">Return home</a>\n"
         "  </div>\n\n"
-        "  <div class=\"card\" style=\"padding: 24px; text-align: left; margin-top: 40px\">\n"
-        "    <h2 class=\"display-3\" style=\"margin-top: 0\">Previously cached sections</h2>\n"
-        "    <p class=\"muted\" style=\"margin-bottom: 16px\">\n"
+        "  <div class=\"card offline-card\">\n"
+        "    <h2 class=\"display-3 offline-card__title\">Previously cached sections</h2>\n"
+        "    <p class=\"muted offline-card__desc\">\n"
         "      Pages you have already visited remain accessible offline:\n"
         "    </p>\n"
-        "    <ul style=\"margin: 0; padding-left: 20px; line-height: 1.8\">\n"
+        "    <ul class=\"offline-list\">\n"
         "      <li><a href=\"/docs/getting-started/\">Documentation overview</a></li>\n"
         "      <li><a href=\"/projects/\">Projects directory</a></li>\n"
         "      <li><a href=\"/blog/\">Blog archive</a></li>\n"
@@ -3730,7 +3730,7 @@ int main(int argc, char **argv) {
 
     char sec_dst[MAX_PATH];
     snprintf(sec_dst, sizeof(sec_dst), "%s/security.txt", out_dir);
-    copy_file("security.txt", sec_dst);
+    copy_file(".well-known/security.txt", sec_dst);
 
     char sec_dir[MAX_PATH];
     snprintf(sec_dir, sizeof(sec_dir), "%s/.well-known", out_dir);

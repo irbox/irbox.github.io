@@ -14,7 +14,7 @@ title = Irbox
 tagline = Portfolio, docs, projects and writing in one place.
 description = A personal showcase site: selected projects, documentation for the things I build, and a blog about how I build them.
 url = https://irbox.github.io
-baseurl = 
+baseurl =
 repo = https://github.com/irbox/irbox.github.io
 repo_branch = main
 

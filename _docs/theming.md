@@ -105,7 +105,7 @@ Aligned with the International Myopia Institute (IMI 2025 Clinical Digest):
 > [!WARNING]
 > **Accommodative Spasm ("Pseudomyopia"):**
 > If your distance vision becomes blurry following prolonged near work and recovers over minutes to hours, or if computer work is accompanied by frontal headaches and eyestrain, you may be experiencing **ciliary accommodative spasm (pseudomyopia)**.
-> 
+>
 > A color palette cannot treat or release accommodative spasm. Pseudomyopia requires a comprehensive eye examination by an optometrist or ophthalmologist, including **cycloplegic refraction** (eye drops that temporarily relax the ciliary muscle).
 
 ---
@@ -174,8 +174,6 @@ Download ready-to-use configurations for your workflow:
 - [**enature-vscode.json**](/assets/themes/enature-vscode.json) — VS Code / Cursor editor theme.
 - [**enature-alacritty.toml**](/assets/themes/enature-alacritty.toml) — Alacritty terminal configuration.
 - [**enature.nvim**](/assets/themes/enature.nvim) — Standalone Neovim Lua colorscheme.
-- [**nature.json**](/assets/themes/nature.json) — Extended specification.
-- [**nature.css**](/assets/themes/nature.css) — Extended CSS stylesheet.
 - [**choroid-v3.css**](/assets/themes/choroid-v3.css) — Legacy stylesheet with angular typography presets.
 - [**choroid-v3.tokens.json**](/assets/themes/choroid-v3.tokens.json) — W3C Design Tokens format.
 - [**choroid-v3-deep-color-theme.json**](/assets/themes/choroid-v3-deep-color-theme.json) — Legacy VS Code theme.

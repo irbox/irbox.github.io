@@ -11,7 +11,7 @@ const PRECACHE_ASSETS = [
   OFFLINE_URL,
   '/assets/css/main.css',
   '/assets/js/main.js',
-  '/assets/themes/nature.json',
+  '/assets/themes/enature.json',
   '/assets/images/brand-icon.svg',
   '/assets/images/favicon.svg',
   '/assets/images/icon-192.png',
