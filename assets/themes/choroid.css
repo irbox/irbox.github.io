@@ -1,0 +1,64 @@
+/* Choroid v2: universal palette. Default = Deep. Set data-choroid="soft" or "lumen" on <html> for the other variants. */
+:root {
+  --choroid-background-base: #0A0F14;
+  --choroid-background-raised: #101820;
+  --choroid-background-overlay: #17222C;
+  --choroid-background-highlight: #22313D;
+  --choroid-background-border: #2C3C49;
+  --choroid-text-primary: #E9EEF3;
+  --choroid-text-secondary: #B4C0CB;
+  --choroid-text-muted: #74889A;
+  --choroid-accent-red: #F2736D;
+  --choroid-accent-orange: #F29E5C;
+  --choroid-accent-yellow: #F2CC6B;
+  --choroid-accent-green: #8FD694;
+  --choroid-accent-teal: #4FD1C5;
+  --choroid-accent-blue: #6CB6FF;
+  --choroid-accent-purple: #B392F0;
+  --choroid-accent-pink: #F28BB8;
+}
+:root[data-choroid="soft"] {
+  --choroid-background-base: #121A22;
+  --choroid-background-raised: #18222C;
+  --choroid-background-overlay: #1F2B36;
+  --choroid-background-highlight: #2A3946;
+  --choroid-background-border: #364857;
+  --choroid-text-primary: #DCE3EA;
+  --choroid-text-secondary: #AEBBC7;
+  --choroid-text-muted: #8497A8;
+  --choroid-accent-red: #F4817B;
+  --choroid-accent-orange: #EEA062;
+  --choroid-accent-yellow: #EBCB75;
+  --choroid-accent-green: #92D298;
+  --choroid-accent-teal: #55CBC0;
+  --choroid-accent-blue: #74B5F5;
+  --choroid-accent-purple: #B59BF2;
+  --choroid-accent-pink: #EE90B8;
+}
+:root[data-choroid="lumen"] {
+  --choroid-background-base: #F5F7F9;
+  --choroid-background-raised: #ECEFF3;
+  --choroid-background-overlay: #E2E7EC;
+  --choroid-background-highlight: #D3DAE2;
+  --choroid-background-border: #BFC8D2;
+  --choroid-text-primary: #121A22;
+  --choroid-text-secondary: #3B4856;
+  --choroid-text-muted: #5F6E7D;
+  --choroid-accent-red: #A81E14;
+  --choroid-accent-orange: #8F4106;
+  --choroid-accent-yellow: #6E4C08;
+  --choroid-accent-green: #1A6B33;
+  --choroid-accent-teal: #0B6A63;
+  --choroid-accent-blue: #1A55A3;
+  --choroid-accent-purple: #5F3DB5;
+  --choroid-accent-pink: #A3244F;
+}
+
+/* Reading size presets: cap height ~34 arcmin (the 'large text' condition) at a given viewing distance */
+:root { --choroid-size-30cm: 16px; --choroid-size-40cm: 22px; --choroid-size-50cm: 27px; --choroid-size-60cm: 32px; --choroid-reading-size: var(--choroid-size-40cm); }
+.choroid-reading { font-size: var(--choroid-reading-size); line-height: 1.6; max-width: 65ch; letter-spacing: 0.01em; }
+
+body { background: var(--choroid-background-base); color: var(--choroid-text-primary); line-height: 1.6; }
+code, pre { background: var(--choroid-background-raised); }
+a { color: var(--choroid-accent-blue); }
+.error { color: var(--choroid-accent-red); }

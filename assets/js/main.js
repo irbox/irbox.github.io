@@ -53,22 +53,34 @@
     }
   });
 
-  /* ---- 3. Theme Controller (Nature Dark & Nature Light) ---- */
+  /* ---- 3. Theme Controller (Choroid v4.0 / Nature System: Deep, Soft, Lumen) ---- */
   const themeBtns = $$('[data-theme-toggle]');
   const metas = $$('meta[name="theme-color"]');
-  const getTheme = () => root.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  const getTheme = () => {
+    const t = root.getAttribute('data-theme') || root.getAttribute('data-choroid') || store.get('theme');
+    if (t === 'soft') return 'soft';
+    if (t === 'light' || t === 'lumen' || t === 'nature-light') return 'light';
+    return 'dark'; // Deep baseline
+  };
   const syncTheme = (t) => {
-    const isDark = t === 'dark';
-    const color = isDark ? '#0a0f14' : '#f0f2eb';
-    metas.forEach((m) => m.setAttribute('content', color));
-    const label = isDark ? 'Switch to Nature Light (Daylight) theme (or press T)' : 'Switch to Nature Dark theme (or press T)';
+    const choroidVariant = (t === 'light' || t === 'lumen') ? 'lumen' : (t === 'soft' ? 'soft' : 'deep');
+    root.setAttribute('data-theme', t);
+    root.setAttribute('data-choroid', choroidVariant);
+    const colors = { dark: '#0a0f14', soft: '#121a22', light: '#f5f7f9' };
+    const labels = {
+      dark: 'Current: Deep (Max contrast 16.5:1, myopia-informed). Click to switch to Soft (or press T)',
+      soft: 'Current: Soft (Reduced halation 13.6:1, astigmatism-friendly). Click to switch to Lumen (or press T)',
+      light: 'Current: Lumen (Daylight fallback 16.3:1). Click to switch to Deep (or press T)'
+    };
+    metas.forEach((m) => m.setAttribute('content', colors[t] || '#0a0f14'));
     themeBtns.forEach((b) => {
-      b.setAttribute('aria-label', label);
-      b.setAttribute('title', label);
+      b.setAttribute('aria-label', labels[t] || labels.dark);
+      b.setAttribute('title', labels[t] || labels.dark);
     });
   };
   const cycleTheme = () => {
-    const next = getTheme() === 'dark' ? 'light' : 'dark';
+    const cur = getTheme();
+    const next = (cur === 'dark') ? 'soft' : ((cur === 'soft') ? 'light' : 'dark');
     root.setAttribute('data-theme', next);
     store.set('theme', next);
     syncTheme(next);
@@ -87,6 +99,29 @@
       if (!store.get('theme')) syncTheme(m.matches ? 'dark' : 'light');
     });
   } catch {}
+
+  /* ---- 3b. Reading Distance & Font Size Calibration (~34 arcmin rule) ---- */
+  const distanceBtns = $$('[data-distance]');
+  const syncDistance = (dist) => {
+    const valid = ['30', '35', '40', '50', '60', '70'].includes(dist) ? dist : '40';
+    root.setAttribute('data-reading-distance', valid + 'cm');
+    distanceBtns.forEach((b) => {
+      const isCur = b.getAttribute('data-distance') === valid;
+      b.classList.toggle('is-active', isCur);
+      b.setAttribute('aria-pressed', String(isCur));
+    });
+  };
+  const initialDistance = store.get('reading-distance') || '40';
+  syncDistance(initialDistance);
+  distanceBtns.forEach((b) => {
+    b.addEventListener('click', () => {
+      const dist = b.getAttribute('data-distance');
+      if (dist) {
+        store.set('reading-distance', dist);
+        syncDistance(dist);
+      }
+    });
+  });
 
   /* ---- 4. Mobile Navigation & Sidebar ---- */
   const drawerBtn = $('[data-drawer-toggle]');

@@ -33,9 +33,18 @@
   src: url('/assets/fonts/libron/Libron-BoldItalic.woff2') format('woff2');
 }
 
-/* ---------- 2. Design Tokens & Color Schemes ---------- */
+/* ---------- 2. Design Tokens & Color Schemes (Choroid v4.0 / Nature Architecture) ---------- */
 :root {
-  /* System & Engineered Typography Stacks (Zero Banned Fonts: Inter, Roboto, Open Sans purged) */
+  /* Reading Size Presets: Calibrated to cap height ~34 arcmin (Swiatczak & Schaeffel 2022) */
+  --choroid-size-30cm: 16px;
+  --choroid-size-35cm: 19px;
+  --choroid-size-40cm: 22px;
+  --choroid-size-50cm: 27px;
+  --choroid-size-60cm: 32px;
+  --choroid-size-70cm: 38px;
+  --choroid-reading-size: var(--choroid-size-40cm);
+
+  /* System & Engineered Typography Stacks */
   --font-heading: 'Space Grotesk', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --font-sans: 'IBM Plex Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --font-serif: 'Libron', Charter, 'Bitstream Charter', 'Sitka Text', Cambria, Georgia, serif;
@@ -107,41 +116,73 @@
   --dur-slow: 350ms;
 }
 
-/* Nature Dark Theme (Universal Biological Baseline — Aleman, Wang & Schaeffel 2018 / Claude Choroid Palette) */
+/* Dynamic Reading Distance Presets */
+[data-reading-distance="30cm"] { --choroid-reading-size: var(--choroid-size-30cm); }
+[data-reading-distance="35cm"] { --choroid-reading-size: var(--choroid-size-35cm); }
+[data-reading-distance="40cm"] { --choroid-reading-size: var(--choroid-size-40cm); }
+[data-reading-distance="50cm"] { --choroid-reading-size: var(--choroid-size-50cm); }
+[data-reading-distance="60cm"] { --choroid-reading-size: var(--choroid-size-60cm); }
+[data-reading-distance="70cm"] { --choroid-reading-size: var(--choroid-size-70cm); }
+
+/* ==========================================================================
+   Variant 1: Choroid Deep (Nature Dark Baseline — Max Contrast 16.5:1, Myopia-Informed)
+   Aleman, Wang & Schaeffel (2018) / Swiatczak & Schaeffel (2022, 2025)
+   ========================================================================== */
 :root,
 [data-theme='dark'],
+[data-theme='deep'],
 [data-theme='nature'],
-[data-theme='nature-dark'] {
+[data-theme='nature-dark'],
+[data-choroid='deep'] {
   color-scheme: dark;
-  --bg-body: #0a0f14;
-  --bg-surface: #101820;
-  --bg-surface-raised: #17222c;
-  --bg-surface-elevated: #22313d;
-  --bg-muted: #1c2630;
+
+  /* Choroid Universal Tokens */
+  --choroid-background-base: #0A0F14;
+  --choroid-background-raised: #101820;
+  --choroid-background-overlay: #17222C;
+  --choroid-background-highlight: #22313D;
+  --choroid-background-border: #2C3C49;
+  --choroid-text-primary: #E9EEF3;
+  --choroid-text-secondary: #B4C0CB;
+  --choroid-text-muted: #74889A;
+  --choroid-accent-red: #F2736D;
+  --choroid-accent-orange: #F29E5C;
+  --choroid-accent-yellow: #F2CC6B;
+  --choroid-accent-green: #8FD694;
+  --choroid-accent-teal: #4FD1C5;
+  --choroid-accent-blue: #6CB6FF;
+  --choroid-accent-purple: #B392F0;
+  --choroid-accent-pink: #F28BB8;
+
+  /* UI System Mappings */
+  --bg-body: var(--choroid-background-base);
+  --bg-surface: var(--choroid-background-raised);
+  --bg-surface-raised: var(--choroid-background-overlay);
+  --bg-surface-elevated: var(--choroid-background-highlight);
+  --bg-muted: var(--choroid-background-overlay);
   --bg-overlay: rgba(10, 15, 20, 0.96);
 
-  --ink: #e9eef3;
-  --ink-2: #b4c0cb;
-  --ink-muted: #74889a;
-  --ink-faint: #4a5c6b;
+  --ink: var(--choroid-text-primary);
+  --ink-2: var(--choroid-text-secondary);
+  --ink-muted: var(--choroid-text-muted);
+  --ink-faint: #4A5C6B;
 
-  --border: #2c3c49;
+  --border: var(--choroid-background-border);
   --border-strong: rgba(233, 238, 243, 0.22);
 
-  --brand: #4fd1c5;
-  --brand-hover: #72ded4;
+  --brand: var(--choroid-accent-teal);
+  --brand-hover: #72DED4;
   --brand-subtle: rgba(79, 209, 197, 0.12);
 
-  --accent: #f29e5c;
+  --accent: var(--choroid-accent-orange);
   --accent-subtle: rgba(242, 158, 92, 0.12);
-  --warning: #f2cc6b;
+  --warning: var(--choroid-accent-yellow);
   --warning-subtle: rgba(242, 204, 107, 0.12);
-  --danger: #f2736d;
+  --danger: var(--choroid-accent-red); /* Strictly reserved for errors/critical alerts */
   --danger-subtle: rgba(242, 115, 109, 0.12);
-  --success: #8fd694;
+  --success: var(--choroid-accent-green);
   --success-subtle: rgba(143, 214, 148, 0.12);
 
-  /* 3-Tier Surface Hierarchy: Zero Drop Shadows */
   --shadow-sm: none;
   --shadow-md: none;
   --shadow-lg: none;
@@ -151,37 +192,121 @@
   --backdrop-glass: none;
 }
 
-/* Nature Light Theme (Daylight & Window Glare Resistance) */
+/* ==========================================================================
+   Variant 2: Choroid Soft (Nature Soft — Reduced Glare & Halation 13.6:1, Astigmatism-Friendly)
+   ========================================================================== */
+[data-theme='soft'],
+[data-choroid='soft'] {
+  color-scheme: dark;
+
+  --choroid-background-base: #121A22;
+  --choroid-background-raised: #18222C;
+  --choroid-background-overlay: #1F2B36;
+  --choroid-background-highlight: #2A3946;
+  --choroid-background-border: #364857;
+  --choroid-text-primary: #DCE3EA;
+  --choroid-text-secondary: #AEBBC7;
+  --choroid-text-muted: #8497A8;
+  --choroid-accent-red: #F4817B;
+  --choroid-accent-orange: #EEA062;
+  --choroid-accent-yellow: #EBCB75;
+  --choroid-accent-green: #92D298;
+  --choroid-accent-teal: #55CBC0;
+  --choroid-accent-blue: #74B5F5;
+  --choroid-accent-purple: #B59BF2;
+  --choroid-accent-pink: #EE90B8;
+
+  --bg-body: var(--choroid-background-base);
+  --bg-surface: var(--choroid-background-raised);
+  --bg-surface-raised: var(--choroid-background-overlay);
+  --bg-surface-elevated: var(--choroid-background-highlight);
+  --bg-muted: var(--choroid-background-overlay);
+  --bg-overlay: rgba(18, 26, 34, 0.96);
+
+  --ink: var(--choroid-text-primary);
+  --ink-2: var(--choroid-text-secondary);
+  --ink-muted: var(--choroid-text-muted);
+  --ink-faint: #536879;
+
+  --border: var(--choroid-background-border);
+  --border-strong: rgba(220, 227, 234, 0.22);
+
+  --brand: var(--choroid-accent-teal);
+  --brand-hover: #7BE3D9;
+  --brand-subtle: rgba(85, 203, 192, 0.12);
+
+  --accent: var(--choroid-accent-orange);
+  --accent-subtle: rgba(238, 160, 98, 0.12);
+  --warning: var(--choroid-accent-yellow);
+  --warning-subtle: rgba(235, 203, 117, 0.12);
+  --danger: var(--choroid-accent-red);
+  --danger-subtle: rgba(244, 129, 123, 0.12);
+  --success: var(--choroid-accent-green);
+  --success-subtle: rgba(146, 210, 152, 0.12);
+
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-xl: none;
+
+  --backdrop-blur: none;
+  --backdrop-glass: none;
+}
+
+/* ==========================================================================
+   Variant 3: Choroid Lumen (Nature Light — High Ambient & Proofreading Fallback 16.3:1)
+   Explicitly noted: NOT myopia-informed, provided for high-ambient daylight legibility
+   ========================================================================== */
 [data-theme='light'],
-[data-theme='nature-light'] {
+[data-theme='lumen'],
+[data-theme='nature-light'],
+[data-choroid='lumen'] {
   color-scheme: light;
-  --bg-body: #f0f2eb;
-  --bg-surface: #e5e9e0;
-  --bg-surface-raised: #dbe0d5;
-  --bg-surface-elevated: #ffffff;
-  --bg-muted: #d4dad0;
-  --bg-overlay: rgba(240, 242, 235, 0.96);
 
-  --ink: #19241c;
-  --ink-2: #354538;
-  --ink-muted: #5a6d5f;
-  --ink-faint: #a9b8ab;
+  --choroid-background-base: #F5F7F9;
+  --choroid-background-raised: #ECEFF3;
+  --choroid-background-overlay: #E2E7EC;
+  --choroid-background-highlight: #D3DAE2;
+  --choroid-background-border: #BFC8D2;
+  --choroid-text-primary: #121A22;
+  --choroid-text-secondary: #3B4856;
+  --choroid-text-muted: #5F6E7D;
+  --choroid-accent-red: #A81E14;
+  --choroid-accent-orange: #8F4106;
+  --choroid-accent-yellow: #6E4C08;
+  --choroid-accent-green: #1A6B33;
+  --choroid-accent-teal: #0B6A63;
+  --choroid-accent-blue: #1A55A3;
+  --choroid-accent-purple: #5F3DB5;
+  --choroid-accent-pink: #A3244F;
 
-  --border: rgba(25, 36, 28, 0.12);
-  --border-strong: rgba(25, 36, 28, 0.24);
+  --bg-body: var(--choroid-background-base);
+  --bg-surface: var(--choroid-background-raised);
+  --bg-surface-raised: var(--choroid-background-overlay);
+  --bg-surface-elevated: #FFFFFF;
+  --bg-muted: var(--choroid-background-highlight);
+  --bg-overlay: rgba(245, 247, 249, 0.96);
 
-  --brand: #2d6139;
-  --brand-hover: #1e4a29;
-  --brand-subtle: rgba(45, 97, 57, 0.10);
+  --ink: var(--choroid-text-primary);
+  --ink-2: var(--choroid-text-secondary);
+  --ink-muted: var(--choroid-text-muted);
+  --ink-faint: #9AA8B7;
 
-  --accent: #8a481e;
-  --accent-subtle: rgba(138, 72, 30, 0.10);
-  --warning: #85531d;
-  --warning-subtle: rgba(133, 83, 29, 0.10);
-  --danger: #943825;
-  --danger-subtle: rgba(148, 56, 37, 0.10);
-  --success: #265e3b;
-  --success-subtle: rgba(38, 94, 59, 0.10);
+  --border: var(--choroid-background-border);
+  --border-strong: rgba(18, 26, 34, 0.24);
+
+  --brand: var(--choroid-accent-teal);
+  --brand-hover: #084F4A;
+  --brand-subtle: rgba(11, 106, 99, 0.10);
+
+  --accent: var(--choroid-accent-orange);
+  --accent-subtle: rgba(143, 65, 6, 0.10);
+  --warning: var(--choroid-accent-yellow);
+  --warning-subtle: rgba(110, 76, 8, 0.10);
+  --danger: var(--choroid-accent-red);
+  --danger-subtle: rgba(168, 30, 20, 0.10);
+  --success: var(--choroid-accent-green);
+  --success-subtle: rgba(26, 107, 51, 0.10);
 
   --shadow-sm: none;
   --shadow-md: none;
@@ -194,40 +319,35 @@
 
 /* Daylight High-Ambient Preference fallback if no explicit theme override */
 @media (prefers-color-scheme: light) {
-  :root:not([data-theme='dark']):not([data-theme='nature']):not([data-theme='nature-dark']) {
+  :root:not([data-theme='dark']):not([data-theme='deep']):not([data-theme='soft']):not([data-theme='nature']):not([data-theme='nature-dark']):not([data-choroid='deep']):not([data-choroid='soft']) {
     color-scheme: light;
-    --bg-body: #f0f2eb;
-    --bg-surface: #e5e9e0;
-    --bg-surface-raised: #dbe0d5;
-    --bg-surface-elevated: #ffffff;
-    --bg-muted: #d4dad0;
-    --bg-overlay: rgba(240, 242, 235, 0.96);
+    --bg-body: #F5F7F9;
+    --bg-surface: #ECEFF3;
+    --bg-surface-raised: #E2E7EC;
+    --bg-surface-elevated: #FFFFFF;
+    --bg-muted: #D3DAE2;
+    --bg-overlay: rgba(245, 247, 249, 0.96);
 
-    --ink: #19241c;
-    --ink-2: #354538;
-    --ink-muted: #5a6d5f;
-    --ink-faint: #a9b8ab;
+    --ink: #121A22;
+    --ink-2: #3B4856;
+    --ink-muted: #5F6E7D;
+    --ink-faint: #9AA8B7;
 
-    --border: rgba(25, 36, 28, 0.12);
-    --border-strong: rgba(25, 36, 28, 0.24);
+    --border: #BFC8D2;
+    --border-strong: rgba(18, 26, 34, 0.24);
 
-    --brand: #2d6139;
-    --brand-hover: #1e4a29;
-    --brand-subtle: rgba(45, 97, 57, 0.10);
+    --brand: #0B6A63;
+    --brand-hover: #084F4A;
+    --brand-subtle: rgba(11, 106, 99, 0.10);
 
-    --accent: #8a481e;
-    --accent-subtle: rgba(138, 72, 30, 0.10);
-    --warning: #85531d;
-    --warning-subtle: rgba(133, 83, 29, 0.10);
-    --danger: #943825;
-    --danger-subtle: rgba(148, 56, 37, 0.10);
-    --success: #265e3b;
-    --success-subtle: rgba(38, 94, 59, 0.10);
-
-    --shadow-sm: none;
-    --shadow-md: none;
-    --shadow-lg: none;
-    --shadow-xl: none;
+    --accent: #8F4106;
+    --accent-subtle: rgba(143, 65, 6, 0.10);
+    --warning: #6E4C08;
+    --warning-subtle: rgba(110, 76, 8, 0.10);
+    --danger: #A81E14;
+    --danger-subtle: rgba(168, 30, 20, 0.10);
+    --success: #1A6B33;
+    --success-subtle: rgba(26, 107, 51, 0.10);
   }
 }
 
@@ -516,24 +636,41 @@ button, input, select, textarea {
 .theme-icon {
   display: none;
 }
-:root .theme-icon--sun,
-[data-theme='dark'] .theme-icon--sun,
-[data-theme='nature'] .theme-icon--sun,
-[data-theme='nature-dark'] .theme-icon--sun {
+:root .theme-icon--deep,
+:root .theme-icon--moon,
+[data-theme='dark'] .theme-icon--deep,
+[data-theme='deep'] .theme-icon--deep,
+[data-theme='nature'] .theme-icon--deep,
+[data-theme='nature-dark'] .theme-icon--deep,
+[data-choroid='deep'] .theme-icon--deep {
   display: inline-flex;
 }
-:root .theme-icon--moon,
-[data-theme='dark'] .theme-icon--moon,
-[data-theme='nature'] .theme-icon--moon,
-[data-theme='nature-dark'] .theme-icon--moon {
+[data-theme='soft'] .theme-icon--soft,
+[data-choroid='soft'] .theme-icon--soft {
+  display: inline-flex;
+}
+[data-theme='soft'] .theme-icon--deep,
+[data-theme='soft'] .theme-icon--moon,
+[data-choroid='soft'] .theme-icon--deep,
+[data-choroid='soft'] .theme-icon--moon {
   display: none;
 }
-[data-theme='light'] .theme-icon--moon,
-[data-theme='nature-light'] .theme-icon--moon {
+[data-theme='light'] .theme-icon--lumen,
+[data-theme='light'] .theme-icon--sun,
+[data-theme='lumen'] .theme-icon--lumen,
+[data-theme='nature-light'] .theme-icon--lumen,
+[data-theme='nature-light'] .theme-icon--sun,
+[data-choroid='lumen'] .theme-icon--lumen {
   display: inline-flex;
 }
-[data-theme='light'] .theme-icon--sun,
-[data-theme='nature-light'] .theme-icon--sun {
+[data-theme='light'] .theme-icon--deep,
+[data-theme='light'] .theme-icon--moon,
+[data-theme='lumen'] .theme-icon--deep,
+[data-theme='lumen'] .theme-icon--moon,
+[data-theme='nature-light'] .theme-icon--deep,
+[data-theme='nature-light'] .theme-icon--moon,
+[data-choroid='lumen'] .theme-icon--deep,
+[data-choroid='lumen'] .theme-icon--moon {
   display: none;
 }
 
@@ -1180,8 +1317,57 @@ button, input, select, textarea {
 /* ---------- 8. Prose & Syntax Highlighting ---------- */
 .prose {
   color: var(--ink);
-  font-size: var(--text-base);
-  line-height: 1.75;
+  font-size: var(--choroid-reading-size, var(--text-base));
+  line-height: 1.65;
+  max-width: 65ch;
+  letter-spacing: 0.01em;
+}
+
+/* Choroid Reading Presets Bar (Calibrated to ~34 arcmin letter height) */
+.reading-presets-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 4px 8px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  font-size: var(--text-xs);
+  margin-bottom: var(--space-6);
+  flex-wrap: wrap;
+}
+.reading-presets-bar__label {
+  color: var(--ink-muted);
+  font-weight: 500;
+  margin-right: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.reading-preset-btn {
+  padding: 2px 8px;
+  background: var(--bg-surface-raised);
+  border: 1px solid var(--border);
+  color: var(--ink-2);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  transition: all var(--dur-fast) ease;
+}
+.reading-preset-btn:hover {
+  color: var(--ink);
+  border-color: var(--border-strong);
+}
+.reading-preset-btn.is-active {
+  background: var(--brand);
+  color: var(--bg-body);
+  border-color: var(--brand);
+  font-weight: 600;
+}
+.choroid-reading {
+  font-size: var(--choroid-reading-size);
+  line-height: 1.6;
+  max-width: 65ch;
+  letter-spacing: 0.01em;
 }
 .prose > * + * {
   margin-top: 1.5em;
@@ -1336,59 +1522,89 @@ pre:hover .code-copy-btn,
   color: var(--brand);
 }
 
-/* Syntax Highlighting Tokens (Claude Choroid Baseline & Nature Light) */
-.highlight .c, .highlight .c1, .highlight .cm { color: #74889a; font-style: italic; }
-.highlight .k, .highlight .kd, .highlight .kn { color: #f29e5c; font-weight: 500; }
-.highlight .s, .highlight .s1, .highlight .s2 { color: #8fd694; }
-.highlight .nf, .highlight .nc { color: #4fd1c5; }
-.highlight .o, .highlight .ow { color: #b4c0cb; }
-.highlight .m, .highlight .mi, .highlight .mf { color: #f2cc6b; }
-.highlight .nt { color: #f2736d; }
-.highlight .na { color: #4fd1c5; }
+/* Syntax Highlighting Tokens (Choroid v4.0 / Nature System) */
+/* Deep Variant (Default Dark Baseline) */
+:root .highlight .c, :root .highlight .c1, :root .highlight .cm,
+[data-theme='dark'] .highlight .c, [data-theme='deep'] .highlight .c,
+[data-choroid='deep'] .highlight .c { color: #74889a; font-style: italic; }
+:root .highlight .k, :root .highlight .kd, :root .highlight .kn,
+[data-theme='dark'] .highlight .k, [data-theme='deep'] .highlight .k,
+[data-choroid='deep'] .highlight .k { color: #b392f0; font-weight: 500; }
+:root .highlight .s, :root .highlight .s1, :root .highlight .s2,
+[data-theme='dark'] .highlight .s, [data-theme='deep'] .highlight .s,
+[data-choroid='deep'] .highlight .s { color: #8fd694; }
+:root .highlight .nf,
+[data-theme='dark'] .highlight .nf, [data-theme='deep'] .highlight .nf,
+[data-choroid='deep'] .highlight .nf { color: #6cb6ff; }
+:root .highlight .nc,
+[data-theme='dark'] .highlight .nc, [data-theme='deep'] .highlight .nc,
+[data-choroid='deep'] .highlight .nc { color: #f2cc6b; }
+:root .highlight .o, :root .highlight .ow,
+[data-theme='dark'] .highlight .o, [data-theme='deep'] .highlight .o,
+[data-choroid='deep'] .highlight .o { color: #b4c0cb; }
+:root .highlight .m, :root .highlight .mi, :root .highlight .mf,
+[data-theme='dark'] .highlight .m, [data-theme='deep'] .highlight .m,
+[data-choroid='deep'] .highlight .m { color: #f29e5c; }
+:root .highlight .nt,
+[data-theme='dark'] .highlight .nt, [data-theme='deep'] .highlight .nt,
+[data-choroid='deep'] .highlight .nt { color: #f28bb8; } /* Pink tag — Red reserved for errors */
+:root .highlight .na,
+[data-theme='dark'] .highlight .na, [data-theme='deep'] .highlight .na,
+[data-choroid='deep'] .highlight .na { color: #f29e5c; }
+:root .highlight .no, :root .highlight .nd,
+[data-theme='dark'] .highlight .no, [data-theme='deep'] .highlight .no,
+[data-choroid='deep'] .highlight .no { color: #4fd1c5; }
+:root .highlight .err,
+[data-theme='dark'] .highlight .err, [data-theme='deep'] .highlight .err,
+[data-choroid='deep'] .highlight .err { color: #f2736d; }
 
-/* Nature Dark Syntax Overrides (Explicit) */
-[data-theme='dark'] .highlight .c, [data-theme='dark'] .highlight .c1, [data-theme='dark'] .highlight .cm,
-[data-theme='nature'] .highlight .c, [data-theme='nature'] .highlight .c1, [data-theme='nature'] .highlight .cm,
-[data-theme='nature-dark'] .highlight .c, [data-theme='nature-dark'] .highlight .c1, [data-theme='nature-dark'] .highlight .cm { color: #74889a; font-style: italic; }
-[data-theme='dark'] .highlight .k, [data-theme='dark'] .highlight .kd, [data-theme='dark'] .highlight .kn,
-[data-theme='nature'] .highlight .k, [data-theme='nature'] .highlight .kd, [data-theme='nature'] .highlight .kn,
-[data-theme='nature-dark'] .highlight .k, [data-theme='nature-dark'] .highlight .kd, [data-theme='nature-dark'] .highlight .kn { color: #f29e5c; font-weight: 500; }
-[data-theme='dark'] .highlight .s, [data-theme='dark'] .highlight .s1, [data-theme='dark'] .highlight .s2,
-[data-theme='nature'] .highlight .s, [data-theme='nature'] .highlight .s1, [data-theme='nature'] .highlight .s2,
-[data-theme='nature-dark'] .highlight .s, [data-theme='nature-dark'] .highlight .s1, [data-theme='nature-dark'] .highlight .s2 { color: #8fd694; }
-[data-theme='dark'] .highlight .nf, [data-theme='dark'] .highlight .nc,
-[data-theme='nature'] .highlight .nf, [data-theme='nature'] .highlight .nc,
-[data-theme='nature-dark'] .highlight .nf, [data-theme='nature-dark'] .highlight .nc { color: #4fd1c5; }
-[data-theme='dark'] .highlight .o, [data-theme='dark'] .highlight .ow,
-[data-theme='nature'] .highlight .o, [data-theme='nature'] .highlight .ow,
-[data-theme='nature-dark'] .highlight .o, [data-theme='nature-dark'] .highlight .ow { color: #b4c0cb; }
-[data-theme='dark'] .highlight .m, [data-theme='dark'] .highlight .mi, [data-theme='dark'] .highlight .mf,
-[data-theme='nature'] .highlight .m, [data-theme='nature'] .highlight .mi, [data-theme='nature'] .highlight .mf,
-[data-theme='nature-dark'] .highlight .m, [data-theme='nature-dark'] .highlight .mi, [data-theme='nature-dark'] .highlight .mf { color: #f2cc6b; }
-[data-theme='dark'] .highlight .nt,
-[data-theme='nature'] .highlight .nt,
-[data-theme='nature-dark'] .highlight .nt { color: #f2736d; }
-[data-theme='dark'] .highlight .na,
-[data-theme='nature'] .highlight .na,
-[data-theme='nature-dark'] .highlight .na { color: #4fd1c5; }
+/* Soft Variant (Reduced Halation 13.6:1) */
+[data-theme='soft'] .highlight .c, [data-theme='soft'] .highlight .c1, [data-theme='soft'] .highlight .cm,
+[data-choroid='soft'] .highlight .c { color: #8497a8; font-style: italic; }
+[data-theme='soft'] .highlight .k, [data-theme='soft'] .highlight .kd, [data-theme='soft'] .highlight .kn,
+[data-choroid='soft'] .highlight .k { color: #b59bf2; font-weight: 500; }
+[data-theme='soft'] .highlight .s, [data-theme='soft'] .highlight .s1, [data-theme='soft'] .highlight .s2,
+[data-choroid='soft'] .highlight .s { color: #92d298; }
+[data-theme='soft'] .highlight .nf,
+[data-choroid='soft'] .highlight .nf { color: #74b5f5; }
+[data-theme='soft'] .highlight .nc,
+[data-choroid='soft'] .highlight .nc { color: #ebcb75; }
+[data-theme='soft'] .highlight .o, [data-theme='soft'] .highlight .ow,
+[data-choroid='soft'] .highlight .o { color: #aebbc7; }
+[data-theme='soft'] .highlight .m, [data-theme='soft'] .highlight .mi, [data-theme='soft'] .highlight .mf,
+[data-choroid='soft'] .highlight .m { color: #eea062; }
+[data-theme='soft'] .highlight .nt,
+[data-choroid='soft'] .highlight .nt { color: #ee90b8; }
+[data-theme='soft'] .highlight .na,
+[data-choroid='soft'] .highlight .na { color: #eea062; }
+[data-theme='soft'] .highlight .no, [data-theme='soft'] .highlight .nd,
+[data-choroid='soft'] .highlight .no { color: #55cbc0; }
+[data-theme='soft'] .highlight .err,
+[data-choroid='soft'] .highlight .err { color: #f4817b; }
 
-/* Nature Light Syntax Tokens (Sunlight High Ambient Reading) */
+/* Lumen Variant (Light Fallback 16.3:1) */
 [data-theme='light'] .highlight .c, [data-theme='light'] .highlight .c1, [data-theme='light'] .highlight .cm,
-[data-theme='nature-light'] .highlight .c, [data-theme='nature-light'] .highlight .c1, [data-theme='nature-light'] .highlight .cm { color: #687e6e; font-style: italic; }
+[data-theme='lumen'] .highlight .c, [data-choroid='lumen'] .highlight .c { color: #5f6e7d; font-style: italic; }
 [data-theme='light'] .highlight .k, [data-theme='light'] .highlight .kd, [data-theme='light'] .highlight .kn,
-[data-theme='nature-light'] .highlight .k, [data-theme='nature-light'] .highlight .kd, [data-theme='nature-light'] .highlight .kn { color: #8a481e; font-weight: 500; }
+[data-theme='lumen'] .highlight .k, [data-choroid='lumen'] .highlight .k { color: #5f3db5; font-weight: 500; }
 [data-theme='light'] .highlight .s, [data-theme='light'] .highlight .s1, [data-theme='light'] .highlight .s2,
-[data-theme='nature-light'] .highlight .s, [data-theme='nature-light'] .highlight .s1, [data-theme='nature-light'] .highlight .s2 { color: #2d6139; }
-[data-theme='light'] .highlight .nf, [data-theme='light'] .highlight .nc,
-[data-theme='nature-light'] .highlight .nf, [data-theme='nature-light'] .highlight .nc { color: #1e5e54; }
+[data-theme='lumen'] .highlight .s, [data-choroid='lumen'] .highlight .s { color: #1a6b33; }
+[data-theme='light'] .highlight .nf,
+[data-theme='lumen'] .highlight .nf, [data-choroid='lumen'] .highlight .nf { color: #1a55a3; }
+[data-theme='light'] .highlight .nc,
+[data-theme='lumen'] .highlight .nc, [data-choroid='lumen'] .highlight .nc { color: #6e4c08; }
 [data-theme='light'] .highlight .o, [data-theme='light'] .highlight .ow,
-[data-theme='nature-light'] .highlight .o, [data-theme='nature-light'] .highlight .ow { color: #4a594e; }
+[data-theme='lumen'] .highlight .o, [data-choroid='lumen'] .highlight .o { color: #3b4856; }
 [data-theme='light'] .highlight .m, [data-theme='light'] .highlight .mi, [data-theme='light'] .highlight .mf,
-[data-theme='nature-light'] .highlight .m, [data-theme='nature-light'] .highlight .mi, [data-theme='nature-light'] .highlight .mf { color: #85531d; }
+[data-theme='lumen'] .highlight .m, [data-choroid='lumen'] .highlight .m { color: #8f4106; }
 [data-theme='light'] .highlight .nt,
-[data-theme='nature-light'] .highlight .nt { color: #8a481e; }
+[data-theme='lumen'] .highlight .nt, [data-choroid='lumen'] .highlight .nt { color: #a3244f; }
 [data-theme='light'] .highlight .na,
-[data-theme='nature-light'] .highlight .na { color: #2b5c4b; }
+[data-theme='lumen'] .highlight .na, [data-choroid='lumen'] .highlight .na { color: #8f4106; }
+[data-theme='light'] .highlight .no, [data-theme='light'] .highlight .nd,
+[data-theme='lumen'] .highlight .no, [data-choroid='lumen'] .highlight .no { color: #0b6a63; }
+[data-theme='light'] .highlight .err,
+[data-theme='lumen'] .highlight .err, [data-choroid='lumen'] .highlight .err { color: #a81e14; }
 
 /* ---------- 9. Projects & Blog Showcases ---------- */
 /* Project Page */

@@ -1,5 +1,7 @@
-# Nature (Choroid) Theme for Alacritty
-# Grounded in Retinal Neurobiology & Myopia Research (Aleman et al., 2018 / Claude Sonnet 5.5 High)
+# Nature (Choroid v4.0) Theme for Alacritty
+# Grounded in Retinal Neurobiology & Myopia Research
+# (Aleman et al. 2018; Swiatczak & Schaeffel 2022; Ingrassia et al. 2024)
+# Default variant: Deep (16.5:1 max contrast, myopia-informed baseline)
 
 [colors.primary]
 background = "#0A0F14"
@@ -11,10 +13,20 @@ cursor = "#4FD1C5"
 
 [colors.selection]
 text = "#E9EEF3"
-background = "#1F4E5F"
+background = "#22313D"
 
 [colors.normal]
-black = "#101820"
+black = "#22313D"
+red = "#F2736D"
+green = "#8FD694"
+yellow = "#F2CC6B"
+blue = "#6CB6FF"
+magenta = "#B392F0"
+cyan = "#4FD1C5"
+white = "#B4C0CB"
+
+[colors.bright]
+black = "#74889A"
 red = "#F2736D"
 green = "#8FD694"
 yellow = "#F2CC6B"
@@ -23,12 +35,60 @@ magenta = "#B392F0"
 cyan = "#4FD1C5"
 white = "#E9EEF3"
 
-[colors.bright]
-black = "#2C3C49"
-red = "#FF857F"
-green = "#A3E8A8"
-yellow = "#FFDE7D"
-blue = "#80C5FF"
-magenta = "#C5A8FF"
-cyan = "#68E5D9"
-white = "#FFFFFF"
+# --- Soft Variant (Reduced glare/halation, astigmatism-friendly) ---
+# [colors.primary]
+# background = "#121A22"
+# foreground = "#DCE3EA"
+# [colors.cursor]
+# text = "#121A22"
+# cursor = "#55CBC0"
+# [colors.selection]
+# text = "#DCE3EA"
+# background = "#2A3946"
+# [colors.normal]
+# black = "#2A3946"
+# red = "#F4817B"
+# green = "#92D298"
+# yellow = "#EBCB75"
+# blue = "#74B5F5"
+# magenta = "#B59BF2"
+# cyan = "#55CBC0"
+# white = "#AEBBC7"
+# [colors.bright]
+# black = "#8497A8"
+# red = "#F4817B"
+# green = "#92D298"
+# yellow = "#EBCB75"
+# blue = "#74B5F5"
+# magenta = "#B59BF2"
+# cyan = "#55CBC0"
+# white = "#DCE3EA"
+
+# --- Lumen Variant (Daylight proofreading fallback, NOT myopia-informed) ---
+# [colors.primary]
+# background = "#F5F7F9"
+# foreground = "#121A22"
+# [colors.cursor]
+# text = "#F5F7F9"
+# cursor = "#0B6A63"
+# [colors.selection]
+# text = "#121A22"
+# background = "#D3DAE2"
+# [colors.normal]
+# black = "#D3DAE2"
+# red = "#A81E14"
+# green = "#1A6B33"
+# yellow = "#6E4C08"
+# blue = "#1A55A3"
+# magenta = "#5F3DB5"
+# cyan = "#0B6A63"
+# white = "#3B4856"
+# [colors.bright]
+# black = "#5F6E7D"
+# red = "#A81E14"
+# green = "#1A6B33"
+# yellow = "#6E4C08"
+# blue = "#1A55A3"
+# magenta = "#5F3DB5"
+# cyan = "#0B6A63"
+# white = "#121A22"

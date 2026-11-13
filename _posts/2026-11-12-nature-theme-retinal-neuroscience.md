@@ -1,7 +1,7 @@
 ---
 title: "Engineering 'Nature': A Color Scheme Grounded in Retinal Neurobiology and Myopia Research"
 date: "2026-11-12"
-description: "Why mainstream syntax themes cause ocular strain and axial elongation, and how we engineered the 'Nature' color system using empirical optical coherence tomography findings from Nature Scientific Reports."
+description: "Why mainstream syntax themes cause ocular strain and axial elongation, and how we engineered the 'Nature' (Choroid v4.0) color system using empirical optical coherence tomography findings from Nature Scientific Reports, TVST, and Vision Research."
 tags: [Theming, Neuroscience, Optics, Myopia, Design System]
 cover_alt: "Nature theme palette specimen and retinal pathway diagrams"
 ---
@@ -12,18 +12,20 @@ Yet, real-world development happens across extreme lighting environments: late-n
 
 Worse, standard IDE syntax highlighting forces the human eye into an optical trap. By painting adjacent tokens in saturated primary colors—deep electric blue beside vivid crimson—standard themes subject the fovea to intense **longitudinal chromatic aberration (LCA)**, while character-by-character contrast spikes force continuous, exhausting contrast-gain readjustments.
 
-In 2018, visual neuroscientists Andrea Aleman, Min Wang, and Frank Schaeffel published a landmark paper in *Scientific Reports* (Nature Publishing Group): **"Reading and Myopia: Contrast Polarity Matters"** ([DOI: 10.1038/s41598-018-28904-x](https://doi.org/10.1038/s41598-018-28904-x)). Their empirical clinical findings provide the missing neurobiological blueprint for software ergonomics.
+In 2018, visual neuroscientists Andrea Aleman, Min Wang, and Frank Schaeffel published a landmark paper in *Scientific Reports* (Nature Publishing Group): **"Reading and Myopia: Contrast Polarity Matters"** ([DOI: 10.1038/s41598-018-28904-x](https://doi.org/10.1038/s41598-018-28904-x)). Follow-up research through 2025—including Swiatczak & Schaeffel (2022), Ingrassia et al. (2024), and Schaeffel's 2025 ZEISS Young Investigator Award lecture—has uncovered critical nuances regarding text size thresholds, full-spectrum requirements, and ocular fatigue.
 
-Here is the science behind why conventional themes strain your eyes, and how we engineered **Nature**—a theme designed from the retina outward, complete with production-ready downloads for VS Code, Neovim, Alacritty, and the web.
+Here is the science behind why conventional themes strain your eyes, and how we engineered **Nature** (featuring the **Choroid v4.0** architecture)—a theme system designed from the retina outward.
+
+![Choroid Color Swatches](/assets/images/choroid-swatch.png)
 
 ---
 
 ## 1. The Retinal Mechanism: ON vs. OFF Pathways
 
-The primate retina does not transmit raw pixel luminance to the visual cortex. Instead, visual processing begins in the retinal ganglion cells, which are organized into two antagonistic parallel pathways:
+The primate retina does not transmit raw pixel luminance to the visual cortex. Instead, visual processing begins in retinal ganglion cells organized into two antagonistic parallel pathways:
 
 1. **ON-Pathway Ganglion Cells:** Receptive fields featuring an excitatory center and inhibitory surround (ON-center / OFF-surround). These cells fire when the center pixel is brighter than the surrounding area (**positive contrast**).
-2. **OFF-Pathway Ganglion Cells:** Receptive fields featuring an inhibitory center and excitatory surround (OFF-center / ON-surround). These cells fire when dark strokes are surrounded by brighter background (**negative contrast**).
+2. **OFF-Pathway Ganglion Cells:** Receptive fields featuring an inhibitory center and excitatory surround (OFF-center / ON-surround). These cells fire when dark strokes are surrounded by a brighter background (**negative contrast**).
 
 Homogeneously illuminated areas of a screen do not stimulate ganglion cells. They respond exclusively to spatial contrast boundaries at the high Fourier spatial frequencies characteristic of typography.
 
@@ -41,21 +43,21 @@ Homogeneously illuminated areas of a screen do not stimulate ganglion cells. The
 
 ### The Natural World vs. The Printed Page
 
-Using custom real-time video Fourier decomposition, Aleman et al. measured the relative ON and OFF stimulus strengths across natural environments (canopies, fields, forest floors, outdoor paths). They discovered that **in natural environments, ON and OFF inputs are largely balanced (1:1 ratio)**. The visual system evolved to function in an ecology where light and dark stimuli activate both channels in equilibrium.
+Using custom real-time video Fourier decomposition, Aleman et al. measured the relative ON and OFF stimulus strengths across natural environments (canopies, fields, forest floors, outdoor paths). They discovered that **in natural environments, ON and OFF inputs are balanced in an approximate 1:1 equilibrium**. The visual system evolved to function in an ecology where light and dark stimuli activate both channels symmetrically.
 
-However, artificial reading environments severely break this balance:
-- **Black text on white paper/screen** creates an extreme, artificial overstimulation of the **retinal OFF pathway**.
+Artificial reading environments break this equilibrium:
+- **Black text on white paper/screen** creates an extreme, continuous overstimulation of the **retinal OFF pathway**.
 - **White text on dark screen** selectively activates the **retinal ON pathway**.
 
 ---
 
-## 2. The Optical Coherence Tomography (OCT) Discovery
+## 2. Optical Coherence Tomography (OCT) & Axial Elongation
 
 To determine whether contrast polarity causally alters ocular physiology, the researchers placed young human subjects in front of brightness-matched displays ($35\text{ cd/m}^2$) and measured their **subfoveal choroidal thickness** using high-resolution Spectral Domain Optical Coherence Tomography (OCT) before, during, and after 60 minutes of reading.
 
 The choroid is the heavily vascularized layer situated directly behind the retina. In optical biometry, choroidal thickness is the primary predictive biomarker of eye growth:
-- **Choroidal Thinning:** Precursor to scleral matrix remodeling, tissue stretching, and **axial elongation (myopia development)**.
-- **Choroidal Thickening:** Physical buffer that inhibits axial eye growth and promotes **emmetropization (myopia suppression)**.
+- **Choroidal Thinning:** Precursor to scleral matrix remodeling, tissue stretching, and **axial elongation (myopia progression)**.
+- **Choroidal Thickening:** Physical and biochemical buffer that inhibits axial eye growth and promotes **emmetropization (myopia suppression)**.
 
 The empirical results were striking:
 
@@ -68,212 +70,170 @@ In only 60 minutes of conventional black-on-white reading, the choroid shrank by
 
 $$\text{Choroidal Thinning } [\mu\text{m}] = 1.44 \times (\text{Refractive Error}) - 11.8\quad (R = 0.71,\ p < 0.001)$$
 
-Conversely, reading bright text on a dark background stimulated the ON pathway, triggering a rapid $+10\ \mu\text{m}$ thickening. The researchers concluded:
+Conversely, reading bright text on a dark background stimulated the ON pathway, triggering a rapid $+10\ \mu\text{m}$ thickening.
 
-> *"Therefore, reading white text from a black screen or tablet may be a way to inhibit myopia, while conventional black text on white background may stimulate myopia."*
-> — Aleman, Wang & Schaeffel (2018)
+### Cross-Species Evidence and Pattern ERGs
 
----
-
-## 3. The Flaws of Existing Dark Themes
-
-If dark backgrounds stimulate the protective ON pathway, why do so many developers experience eye strain, "ghosting," and headaches when using standard dark themes?
-
-### 1. Pitch-Black Halation (#000000)
-Many modern themes pride themselves on "true OLED black" (`#000000`) paired with blinding `#FFFFFF` text. This generates a harsh 21:1 contrast ratio. Because the ocular media is imperfect, intense white point sources against total darkness bleed into neighboring photoreceptors—a phenomenon known as **optical halation or irradiation**. The eye's pupil dilates in response to the overall darkness, widening optical aberrations and causing fuzzy edge fringing.
-
-### 2. Window Glare Vulnerability
-In real life, many developers work near windows. When direct or diffused sunlight strikes a glass monitor panel, specular surface reflections bounce off the screen. On a pitch-black background, specular reflections overpower dark gray code tokens, rendering text completely unreadable unless the developer maxes out monitor brightness, causing thermal dissipation and glare.
-
-### 3. Longitudinal Chromatic Aberration (LCA) & "Rainbow" Syntax
-The human eye is non-achromatic. Across the visible spectrum (400 nm to 700 nm), the eye exhibits approximately **2.00 Diopters ($2.00\text{ D}$)** of longitudinal chromatic aberration:
-- **Short wavelengths (Blue, ~430 nm):** Refracted strongly, focusing **$1.2\text{ D}$ in front of the retina** (myopic defocus).
-- **Long wavelengths (Red, ~680 nm):** Refracted weakly, focusing **$0.8\text{ D}$ behind the retina** (hyperopic defocus).
-
-```
-   Cornea & Lens                   Retina
-       │                             │
-───────┼───────────────────────●─────┼────────  Blue (430nm): Focuses IN FRONT
-       │                      ▲      │
-───────┼──────────────────────┼──────┼────────  Green (550nm): Focuses ON RETINA
-       │                             │  ▲
-───────┼─────────────────────────────┼──●─────  Red (680nm): Focuses BEHIND
-       │                             │
-```
-
-When a syntax theme styles a function keyword in saturated crimson (`#F43F5E`, $\sim 640\text{ nm}$) and the adjacent identifier in saturated cyan/blue (`#38BDF8`, $\sim 470\text{ nm}$), the optical focal planes differ by more than **$1.1\text{ Diopters}$**. 
-
-Because human ocular depth of field is only about $\pm 0.30\text{ D}$, **it is physically impossible for the eye to bring both words into sharp focus simultaneously**. 
-
-As your gaze tracks across the code line, your eye's ciliary muscle undergoes rapid, involuntary **accommodative micro-fluctuations (AMFs)**, repeatedly hunting between the red focal plane and the blue focal plane. This constant hunting triggers asthenopia (ciliary muscle fatigue) and generates hyperopic retinal defocus signals that exacerbate axial elongation.
-
-### 4. Contrast Volatility
-In typical themes, syntactic tokens suffer from wild contrast swings: a keyword might have a contrast ratio of 14:1, the adjacent punctuation drops to 3.2:1, and a string jumps to 11:1. The fovea must constantly readjust local contrast gain on a character-by-character basis within a microscopic $2^\circ$ visual angle.
+These findings are corroborated across animal and human neurophysiology:
+- **Chick and Tree Shrew Studies:** Animal model studies (*Wang 2019*, *Liu 2024*) demonstrated that positive contrast polarity reliably inhibits lens-induced axial elongation and increases retinal dopamine turnover—the primary retinal stop signal for scleral elongation.
+- **Pattern Electroretinograms (PERG):** Studies by *Wagner & Strasser (2023, 2025)* showed marked amplitude differences in retinal ganglion cell electrophysiology between emmetropes and myopes under varying polarity conditions, confirming that the ON-pathway response is physiologically dampened in progressing myopes unless stimulated with sufficient optical contrast.
 
 ---
 
-## 4. The Engineering of Nature
+## 3. The Critical Text Size Threshold: The ~34 Arcmin Rule
 
-To solve these optical and neurobiological challenges, we designed the **Nature** color system. Nature is built around three scientific principles:
+A groundbreaking follow-up investigation (*Swiatczak & Schaeffel 2022, TVST*; *Schaeffel 2025 ZEISS Young Investigator lecture*) revealed a crucial caveat: **inverted contrast only triggers eye shortening when the text is sufficiently large**.
+
+In the 2022 clinical trials:
+- **Large text** (capital letter height $\sim 34.4\text{ arcmin}$) triggered statistically significant axial eye shortening.
+- **Small text** ($\sim 13.75\text{ arcmin}$, identical to standard unmagnified smartphone text viewed at 30 cm) produced **no statistically significant effect** ($p = 0.09$).
+
+```
+       Small Text (~14 arcmin)              Large Text (~34 arcmin)
+      ┌─────────────────────────┐         ┌─────────────────────────┐
+      │   Standard phone text   │         │    Calibrated text      │
+      │   High spatial freq     │         │    Optimal ON-stimulus  │
+      │   No axial shortening   │         │    Significant axial    │
+      │   p = 0.09 (Fail)       │         │    shortening (Success) │
+      └─────────────────────────┘         └─────────────────────────┘
+```
+
+Why does text size dictate the response? When typography is too small, the spatial frequency exceeds the receptive field center of foveal ON-ganglion cells. Instead of clear positive-contrast boundaries, the retinal receptive field integrates the text strokes into a low-contrast blur.
+
+To maintain the required $\sim 34\text{ arcmin}$ visual angle, font sizes must scale dynamically with physical viewing distance:
+
+| Viewing Distance | Cap Height Visual Angle | CSS Font Size | Device Context |
+| :---: | :---: | :---: | :--- |
+| **30 cm** | $\sim 34\text{ arcmin}$ | `16px` | Handheld smartphone (minimum safe distance) |
+| **35 cm** | $\sim 34\text{ arcmin}$ | `19px` | Relaxed smartphone viewing |
+| **40 cm** | $\sim 34\text{ arcmin}$ | `22px` | **Preferred reading distance** (tablets, close laptops) |
+| **50 cm** | $\sim 34\text{ arcmin}$ | `27px` | Standard laptop distance on desk |
+| **60 cm** | $\sim 34\text{ arcmin}$ | `32px` | Standard external desktop monitor (24″–27″) |
+| **70 cm** | $\sim 34\text{ arcmin}$ | `38px` | Large or deep workstation monitor |
+
+Our site provides a calibrated distance toolbar directly above all documentation and blog articles, allowing you to select your physical viewing distance with a single click.
+
+---
+
+## 4. Why Red/Amber Night Filters Fail: The Ingrassia 2024 Discovery
+
+Many software engineers run amber, sepia, or crimson screen filters (such as f.lux or "Night Shift" on maximum warm tint) during extended coding sessions. While reducing circadian blue light before sleep is valuable for sleep hygiene, **using red-only filters for active reading has severe negative consequences for myopia**:
+
+- *Ingrassia, Swiatczak, & Schaeffel (2024, Vision Research)* investigated the physiological effect of red-in-focus reading filters.
+- They discovered that **red-filtered reading paradoxically triggered axial eye lengthening** in emmetropic subjects.
+- By stripping out blue and green wavelengths, red filters eliminate the high-frequency luminance detail processed by the retina. Furthermore, longitudinal chromatic aberration causes red wavelengths to focus *behind* the retina (hyperopic defocus), signaling the sclera to elongate toward the red focal plane.
+
+**The Solution:** Body text must remain **neutral, full-spectrum white/gray** (`#E9EEF3` / `#DCE3EA`). This ensures all cone photoreceptor classes (L, M, and S) remain stimulated and longitudinal chromatic aberration is balanced across the fovea.
+
+---
+
+## 5. Visual Fatigue Under Dark Mode: Red Strictly Reserved for Errors
+
+A comprehensive 2024 study published in *Sensors* examined subjective visual fatigue and objective pupil micro-fluctuations across different text colors under dark mode:
+- **Red text produced the highest visual fatigue** of all tested hues.
+- **Teal and yellow text produced the least visual fatigue**, maintaining high legibility with minimal accommodative fluctuation.
+
+For this reason, the Choroid architecture strictly reserves red (`#F2736D` in Deep, `#F4817B` in Soft, `#A81E14` in Lumen) for critical compiler errors, diagnostics, and warnings. High-frequency syntax elements (such as HTML tags, function names, and attributes) utilize pink (`#F28BB8` / `#EE90B8`), amber-orange (`#F29E5C` / `#EEA062`), teal (`#4FD1C5` / `#55CBC0`), and soft blue (`#6CB6FF` / `#74B5F5`).
+
+---
+
+## 6. Three Calibrated Variants: Deep, Soft, and Lumen
+
+Nature provides three distinct variants to match specific ocular conditions, visual acuities, and ambient light levels:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
-│                        NATURE DESIGN PRINCIPLES                        │
-├──────────────────────────┬─────────────────────────────────────────────┤
-│ 1. Retinal ON-Dominance  │ Positive contrast on deep loam (#111613)    │
-│                          │ triggers +10 µm choroidal protective buffer │
-├──────────────────────────┼─────────────────────────────────────────────┤
-│ 2. Narrow Spectral Band  │ All syntax confined to 515–590 nm corridor   │
-│                          │ Optical chromatic dispersion < 0.35 D       │
-├──────────────────────────┼─────────────────────────────────────────────┤
-│ 3. Iso-Luminant Channels │ Token contrast ratios clamped to 6.8–9.5:1  │
-│                          │ Zero contrast volatility or ciliary hunting │
-└──────────────────────────┴─────────────────────────────────────────────┘
+│                        CHOROID v4.0 VARIANTS                           │
+├───────────────┬────────────────────────────┬───────────────────────────┤
+│ Deep (16.5:1) │ #0A0F14 base / #E9EEF3 ink │ Max contrast baseline     │
+│               │ Full ON-pathway excitation │ Myopia-informed           │
+├───────────────┼────────────────────────────┼───────────────────────────┤
+│ Soft (13.6:1) │ #121A22 base / #DCE3EA ink │ Reduced glare & halation  │
+│               │ Astigmatism-friendly       │ Myopia-informed           │
+├───────────────┼────────────────────────────┼───────────────────────────┤
+│ Lumen (16.3:1)│ #F5F7F9 base / #121A22 ink │ Daylight & older eyes     │
+│               │ Diffuse high-ambient mode  │ NOT myopia-informed       │
+└───────────────┴────────────────────────────┴───────────────────────────┘
 ```
 
-### The 515–590 nm Spectral Corridor
+### 1. Deep Variant (Biological Baseline)
+- **Base Background:** `#0A0F14`
+- **Raised Surface:** `#101820`
+- **Primary Ink:** `#E9EEF3` (16.5:1 contrast ratio)
+- **Ocular Target:** Maximum ON-ganglion cell stimulation. Ideal for users with full optical correction and dark or controlled-lighting environments.
 
-Rather than pulling saturated colors from opposite ends of the rainbow, Nature selects syntax tokens strictly from the mid-spectrum chlorophyll, carotenoid, and earth pigment reflectance zones:
+### 2. Soft Variant (Astigmatism & Halation Reduction)
+- **Base Background:** `#121A22`
+- **Raised Surface:** `#18222C`
+- **Primary Ink:** `#DCE3EA` (13.6:1 contrast ratio)
+- **Ocular Target:** Resolves optical halation (the "glow" or fuzzy edge effect around bright characters on dark backgrounds). Ideal for developers with uncorrected cylinder/astigmatism, dry eye syndrome, or light sensitivity.
 
-```
-Wavelength (nm)    Color Token        Role           Contrast vs. Surface
-─────────────────────────────────────────────────────────────────────────
-515 nm (Sage Teal)  #82bba8            Functions      7.78 : 1
-525 nm (Pale Reed)  #a8c9b8            Types          9.47 : 1
-540 nm (Willow)     #9dc297            Strings        8.57 : 1
-560 nm (River Sand) #b0a898            Operators      7.20 : 1
-580 nm (Clay)       #dbab79            Numbers        8.18 : 1
-585 nm (Amber)      #cf9a68            Keywords       6.86 : 1
-590 nm (Terracotta) #d6a27e            Constants      7.55 : 1
-─────────────────────────────────────────────────────────────────────────
-Lichen Olive        #728877 (Italic)   Comments       4.45 : 1 (Muted)
-Birch White         #dce5d8 (Neutral)  Variables     13.14 : 1 (Primary)
-```
-
-**The Optical Benefit:** Between 515 nm and 590 nm, total longitudinal chromatic aberration is **under $0.35\text{ Diopters}$**. Because this dispersion sits squarely inside the eye's natural depth of field ($\pm 0.30\text{ D}$), **every single word on the line stays in crisp, simultaneous optical focus**. Accommodative micro-fluctuations drop to baseline resting levels.
+### 3. Lumen Variant (Daylight & Proofreading Fallback)
+- **Base Background:** `#F5F7F9`
+- **Raised Surface:** `#ECEFF3`
+- **Primary Ink:** `#121A22` (16.3:1 contrast ratio)
+- **Ocular Target:** Designed for high-glare daytime workstations adjacent to sunlit windows, detailed proofreading, and older eyes experiencing lens scatter.
+- **Important Disclosure:** Lumen is a standard negative-contrast mode and is **explicitly NOT myopia-informed**.
 
 ---
 
-## 5. Dual Biological Modes: Dark and Daylight
+## 7. Screen-Time & Pseudomyopia Protocol
 
-Nature is delivered in two complementary variants tailored to environmental ambient lux:
+Grounded in International Myopia Institute (IMI 2023, 2025) guidelines and clinical pediatric trials:
 
-### Nature Dark (Nocturnal & Low-Ambient Workspaces)
-- **Substrate:** Deep Sub-Canopy Loam (`#111613`, $L^* = 18$). Avoids pitch-black OLED glare while keeping background luminance low.
-- **Reading Ink:** Birch Bark Parchment (`#dce5d8`, contrast 14.15:1 against body, 13.14:1 against surface).
-- **Polarity:** Strict positive contrast activating the retinal ON pathway to stimulate choroidal thickening.
-
-```css
-/* Nature Dark Palette */
---bg-body:             #111613;  /* Understory loam */
---bg-surface:          #171e19;  /* Pine surface */
---bg-surface-raised:   #1e2721;  /* Moss bedrock */
---bg-surface-elevated: #26322b;  /* Canopy plane */
---ink:                 #dce5d8;  /* Birch bark primary */
---ink-2:               #a9bba9;  /* Foliage body */
---ink-muted:           #788d7b;  /* Lichen caption */
---border:              rgba(220, 229, 216, 0.10);
---brand:               #82bba8;  /* Sage lichen teal */
-```
-
-### Nature Light (Daylight & Window-Sunlight Workspaces)
-When direct or diffused window sunlight hits your display, standard dark modes wash out under glass reflections, while 100% white (`#FFFFFF`) triggers intense negative contrast and $-16\ \mu\text{m}$ choroidal thinning.
-
-Nature Light solves this dilemma:
-- **Substrate:** Sun-Bleached Botanical Parchment (`#f0f2eb`, relative luminance $0.88$). It provides high diffuse reflectance to overpower window specular reflections without blinding the retina.
-- **Reading Ink:** Deep Forest Pine Gall Ink (`#19241c`, contrast 14.20:1).
-- **Edge Softening:** The softened background luminance dampens the extreme high-spatial-frequency edges responsible for OFF-pathway overstimulation.
-
-```css
-/* Nature Light Palette */
---bg-body:             #f0f2eb;  /* Sun-bleached parchment */
---bg-surface:          #e5e9e0;  /* River stone */
---bg-surface-raised:   #dbe0d5;  /* Sedimentary substrate */
---bg-surface-elevated: #ffffff;  /* High highlight */
---ink:                 #19241c;  /* Pine gall ink */
---ink-2:               #354538;  /* Secondary prose */
---ink-muted:           #5a6d5f;  /* Weathered moss */
---border:              rgba(25, 36, 28, 0.10);
---brand:               #2d6139;  /* Deep forest fern */
-```
+| Parameter | Clinical Protocol | Neurobiological Rationale |
+| :--- | :--- | :--- |
+| **Viewing Distance** | $\ge 30\text{ cm}$ ($\mathbf{40\text{ cm}}$ preferred) | Near work under 30 cm is an independent clinical risk factor for rapid axial elongation. |
+| **Continuous Reading** | $\le 30\text{ minutes}$ | Continuous near work over 30–45 min induces ciliary spasm and accommodative lag. |
+| **Distance Break** | $\ge 5\text{ minutes}$ | Relax ciliary tonus by viewing distant outdoor objects with high spatial frequency. |
+| **Ambient Room Light** | $500\text{ to }1000\text{ lux}$ | **Avoid reading dark themes in pitch-black rooms.** 500–1000 lux ambient lighting thickens the choroid. |
+| **Outdoor Sunlight** | $\sim 2\text{ hours / day}$ | The single most clinically effective protective factor for children and adolescents. |
+| **Screen Brightness** | Moderate ($35\text{–}85\text{ cd/m}^2$) | Matches the calibrated luminance levels from the Aleman (2018) OCT trials. |
+| **Children Under 3** | Zero screen time | Adheres to WHO, AAP, and China Ministry of Education (2025) directives. |
 
 ---
 
-## 6. Code Specimen: Nature in Action
+## 8. Age-Specific Guidance
 
-Here is an authentic ISO C23 engine excerpt rendered using the Nature syntax tokens:
-
-```c
-#include <stdio.h>
-#include <stdbool.h>
-
-typedef struct {
-    char id[128];
-    double relative_luminance;
-    int wavelength_nm;
-} SpectrumToken;
-
-static bool verify_spectral_corridor(const SpectrumToken *tok) {
-    // Confine chromatic dispersion to 515nm - 590nm window
-    if (tok->wavelength_nm < 515 || tok->wavelength_nm > 590) {
-        return false; // Prevents longitudinal chromatic aberration
-    }
-    return tok->relative_luminance >= 0.35;
-}
-
-int main(void) {
-    const SpectrumToken keyword = { .id = "amber", .wavelength_nm = 585, .relative_luminance = 0.374 };
-    if (verify_spectral_corridor(&keyword)) {
-        printf("Choroidal perfusion preserved: +10µm buffer intact.\n");
-    }
-    return 0;
-}
-```
-
-Notice how the eye smoothly glides across keywords, identifiers, types, and strings without snapping between jarring contrast cliffs or chromatic focal planes.
+| Age Group | Clinical Priority & Recommendations | Variant Selection |
+| :--- | :--- | :--- |
+| **Children (Ages 3–12)** | Outdoor sunlight ($\sim 2\text{ h/day}$), distance $\ge 30\text{ cm}$, regular breaks. Dark mode benefit is unproven in children. | Deep or Soft with large text (`19px`–`22px`) as an optional supplement. |
+| **Teens & Young Adults (Ages 13–25)** | **Highest-risk cohort for adult-onset progression** (students, software engineers). Distance breaks, outdoor time, enlarged text. | **Deep** or **Soft** baseline. |
+| **Adults (Ages 25–40)** | Axial elongation generally stabilizes ($< 0.10\text{ D/yr}$). Benefit of inverted contrast is uncertain; prioritize ocular comfort. | **Soft** (low glare) or **Lumen**. |
+| **Adults (Ages 40–60)** | Accommodative amplitude diminishes (presbyopia); check astigmatism correction first. | **Soft** or **Lumen** (high legibility). |
+| **Adults (60+ Years)** | Lens scatter, pupil miosis, cataract or AMD can flip contrast preferences. Choose purely by legibility. | **Soft** or **Lumen** based on comfort. |
 
 ---
 
-## 7. Download & Installation
+## 9. Clinical Caveats & Accommodative Spasm (Pseudomyopia)
 
-The complete Nature theme is freely available under the MIT license across all major editor and terminal environments:
+> [!IMPORTANT]
+> **Design Rationale, Not Medical Treatment:**
+> The Nature / Choroid color palette and viewing distance presets are ergonomic design tools based on short-term laboratory optical coherence tomography (OCT) findings. They are not medical treatments, do not cure refractive errors, and are not guaranteed to prevent myopia.
 
-### 1. Visual Studio Code
-Download the ready-to-import color theme extension definition:
-- [**nature-vscode.json**](/assets/themes/nature-vscode.json)
-
-*Installation:* Copy `nature-vscode.json` to your VS Code themes directory, or add it to your `.vscode/extensions/` folder.
-
-### 2. Neovim (Lua)
-Download the standalone Neovim colorscheme module:
-- [**nature.nvim**](/assets/themes/nature.nvim)
-
-*Installation:* Place `nature.nvim` into your `~/.config/nvim/lua/colors/` or `colors/nature.lua`, then call:
-```lua
-require("nature").setup()
-```
-
-### 3. Alacritty Terminal
-Download the modern TOML configuration:
-- [**nature-alacritty.toml**](/assets/themes/nature-alacritty.toml)
-
-*Installation:* Import into your `alacritty.toml`:
-```toml
-import = ["/path/to/nature-alacritty.toml"]
-```
-
-### 4. Web CSS & Raw Palette Specification
-For web authors and UI engineers:
-- [**nature.css**](/assets/themes/nature.css) — Standalone CSS custom properties and syntax rules.
-- [**nature.json**](/assets/themes/nature.json) — Full machine-readable specification with Hex, Oklch, relative luminance, and contrast ratios.
+> [!WARNING]
+> **Accommodative Spasm ("Pseudomyopia"):**
+> If your distance vision becomes blurry following prolonged computer work and recovers over minutes to hours, or if near work is accompanied by frontal headaches and eyestrain, you may be experiencing **ciliary accommodative spasm (pseudomyopia)**.
+> 
+> A color palette cannot treat or release accommodative spasm. Pseudomyopia requires a comprehensive eye examination by an optometrist or ophthalmologist, typically including **cycloplegic refraction** (eye drops that temporarily relax the ciliary muscle).
 
 ---
 
-## 8. Experience Nature Live on This Site
+## 10. Download & Installation
 
-Nature is the original and default design system of this website:
-- **Top Navigation:** Click the theme toggle icon in the top header to switch between Nature Dark (the primary biological positive-contrast mode) and Nature Light (the high-ambient daylight mode).
-- **Keyboard Shortcut:** Press **`T`** anywhere on the site to instantly toggle between Nature Dark and Nature Light.
-- **Default State:** The site automatically serves Nature Dark for nocturnal / low-light focus and Nature Light for high-ambient daylight conditions.
+The complete Nature theme is freely available under the MIT license across all major environments:
 
-By aligning screen contrast with the evolutionary biology of human vision, we can write code and read documentation for hours without compromising our long-term ocular health.
+- [**nature-vscode.json**](/assets/themes/nature-vscode.json) — Complete VS Code theme with full syntax scopes.
+- [**nature.nvim**](/assets/themes/nature.nvim) — Standalone Neovim Lua module supporting `deep`, `soft`, and `lumen`.
+- [**nature-alacritty.toml**](/assets/themes/nature-alacritty.toml) — Modern Alacritty terminal configuration.
+- [**nature.css**](/assets/themes/nature.css) — Web design tokens and reading distance classes.
+- [**nature.json**](/assets/themes/nature.json) — Full machine-readable specification.
+- [**choroid.json**](/assets/themes/choroid.json) — Reference Choroid v4.0 specification.
+- [**choroid.css**](/assets/themes/choroid.css) — Reference Choroid CSS tokens.
+
+---
+
+## 11. Experience Nature Live on This Site
+
+- **Cycle Variants:** Click the theme toggle button in the header (or press **`T`** anywhere on your keyboard) to cycle between **Deep &rarr; Soft &rarr; Lumen &rarr; Deep**.
+- **Calibrate Reading Size:** Use the distance buttons (`30cm`, `40cm`, `50cm`, `60cm`) above the article header to match your physical display distance to the $\sim 34\text{ arcmin}$ cap height threshold.

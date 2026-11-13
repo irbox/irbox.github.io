@@ -1,67 +1,242 @@
 {
-  "name": "Nature",
-  "version": "1.0.0",
-  "author": "Irbox",
-  "license": "MIT",
-  "description": "An ocular-ergonomic color system engineered from retinal neurobiology and myopia prevention research (Aleman, Wang & Schaeffel, 2018, Nature Scientific Reports 8:10840).",
+  "name": "Nature (Choroid)",
+  "version": "4.0.0",
+  "type": "dark",
+  "basis": "Aleman, Wang & Schaeffel 2018, Sci Rep 8:10840, plus follow-up literature to 2025. Not medical advice.",
   "research_grounding": {
     "citation": "Aleman, A. C., Wang, M., & Schaeffel, F. (2018). Reading and Myopia: Contrast Polarity Matters. Scientific Reports, 8:10840. DOI:10.1038/s41598-018-28904-x",
-    "retinal_pathway": "Stimulates the retinal ON-pathway through positive contrast polarity, promoting choroidal thickening (+10 µm) and inhibiting scleral axial elongation, while bounding syntax within a 515-590 nm spectral corridor to eliminate longitudinal chromatic aberration (LCA < 0.35 D).",
-    "sunlight_resilience": "Nature Light features a calibrated diffuse parchment baseline (L=0.88) to overpower ambient window glare without triggering the severe -16 µm choroidal thinning of blinding 100% white."
+    "retinal_pathway": "Stimulates the retinal ON-pathway through positive contrast polarity, promoting choroidal thickening (+10 µm) and inhibiting scleral axial elongation, while bounding syntax within a low-LCA spectral corridor to eliminate longitudinal chromatic aberration.",
+    "variants_summary": "Three calibrated variants: Deep (max contrast 16.5:1, myopia-informed baseline), Soft (reduced glare/halation 13.6:1, astigmatism-friendly), and Lumen (16.3:1 daylight fallback for proofreading and older eyes, explicitly documented as NOT myopia-informed)."
   },
-  "schemes": {
-    "nature-dark": {
-      "type": "dark",
+  "variants": {
+    "deep": {
+      "name": "Nature Deep (Choroid Deep)",
       "contrast_polarity": "positive",
-      "backgrounds": {
-        "body": { "hex": "#0a0f14", "oklch": "oklch(0.12 0.012 220)", "relative_luminance": 0.0055, "role": "Choroid baseline floor" },
-        "surface": { "hex": "#101820", "oklch": "oklch(0.18 0.015 220)", "relative_luminance": 0.0102, "role": "Raised surface reading plane" },
-        "surface_raised": { "hex": "#17222c", "oklch": "oklch(0.22 0.018 220)", "relative_luminance": 0.0165, "role": "Overlay cards" },
-        "surface_elevated": { "hex": "#22313d", "oklch": "oklch(0.28 0.020 220)", "relative_luminance": 0.0285, "role": "Highlight floating modal / popover" }
+      "contrast_ratio": 16.5,
+      "color": {
+        "background": {
+          "base": "#0A0F14",
+          "raised": "#101820",
+          "overlay": "#17222C",
+          "highlight": "#22313D",
+          "border": "#2C3C49"
+        },
+        "text": {
+          "primary": "#E9EEF3",
+          "secondary": "#B4C0CB",
+          "muted": "#74889A"
+        },
+        "accent": {
+          "red": "#F2736D",
+          "orange": "#F29E5C",
+          "yellow": "#F2CC6B",
+          "green": "#8FD694",
+          "teal": "#4FD1C5",
+          "blue": "#6CB6FF",
+          "purple": "#B392F0",
+          "pink": "#F28BB8"
+        }
       },
-      "foregrounds": {
-        "primary": { "hex": "#e9eef3", "contrast_ratio": 15.20, "role": "Choroid high-clarity prose" },
-        "secondary": { "hex": "#b4c0cb", "contrast_ratio": 9.40, "role": "Secondary body text" },
-        "muted": { "hex": "#74889a", "contrast_ratio": 5.25, "role": "Muted captions and metadata" },
-        "border": { "hex": "#2c3c49", "role": "Structural boundary borders" }
+      "syntax_roles": {
+        "comment": "#74889A",
+        "keyword": "#B392F0",
+        "string": "#8FD694",
+        "number": "#F29E5C",
+        "function": "#6CB6FF",
+        "type": "#F2CC6B",
+        "variable": "#E9EEF3",
+        "parameter": "#B4C0CB",
+        "tag": "#F28BB8",
+        "attribute": "#F29E5C",
+        "constant": "#4FD1C5",
+        "operator": "#B4C0CB",
+        "error": "#F2736D",
+        "warning": "#F2CC6B",
+        "info": "#6CB6FF",
+        "link": "#6CB6FF"
       },
-      "syntax": {
-        "keyword": { "hex": "#f29e5c", "wavelength_nm": 585, "contrast_ratio": 7.42, "role": "Choroid Amber Orange" },
-        "string": { "hex": "#8fd694", "wavelength_nm": 540, "contrast_ratio": 9.15, "role": "Choroid Chlorophyll Green" },
-        "function": { "hex": "#4fd1c5", "wavelength_nm": 515, "contrast_ratio": 8.65, "role": "Choroid Teal Accent" },
-        "number": { "hex": "#f2cc6b", "wavelength_nm": 580, "contrast_ratio": 8.92, "role": "Choroid Ochre Yellow" },
-        "type": { "hex": "#6cb6ff", "wavelength_nm": 490, "contrast_ratio": 8.10, "role": "Choroid Soft Sky Blue" },
-        "constant": { "hex": "#b392f0", "wavelength_nm": 430, "contrast_ratio": 7.60, "role": "Choroid Soft Lavender" },
-        "operator": { "hex": "#b4c0cb", "wavelength_nm": 560, "contrast_ratio": 9.40, "role": "Choroid Secondary Neutral" },
-        "comment": { "hex": "#74889a", "contrast_ratio": 5.25, "role": "Choroid Muted Olive" },
-        "danger": { "hex": "#f2736d", "contrast_ratio": 6.80, "role": "Choroid Coral Red" }
+      "terminal_ansi": {
+        "black": "#22313D",
+        "red": "#F2736D",
+        "green": "#8FD694",
+        "yellow": "#F2CC6B",
+        "blue": "#6CB6FF",
+        "magenta": "#B392F0",
+        "cyan": "#4FD1C5",
+        "white": "#B4C0CB",
+        "bright_black": "#74889A",
+        "bright_white": "#E9EEF3"
       }
     },
-    "nature-light": {
-      "type": "light",
+    "soft": {
+      "name": "Nature Soft (Choroid Soft)",
+      "contrast_polarity": "positive",
+      "contrast_ratio": 13.6,
+      "color": {
+        "background": {
+          "base": "#121A22",
+          "raised": "#18222C",
+          "overlay": "#1F2B36",
+          "highlight": "#2A3946",
+          "border": "#364857"
+        },
+        "text": {
+          "primary": "#DCE3EA",
+          "secondary": "#AEBBC7",
+          "muted": "#8497A8"
+        },
+        "accent": {
+          "red": "#F4817B",
+          "orange": "#EEA062",
+          "yellow": "#EBCB75",
+          "green": "#92D298",
+          "teal": "#55CBC0",
+          "blue": "#74B5F5",
+          "purple": "#B59BF2",
+          "pink": "#EE90B8"
+        }
+      },
+      "syntax_roles": {
+        "comment": "#8497A8",
+        "keyword": "#B59BF2",
+        "string": "#92D298",
+        "number": "#EEA062",
+        "function": "#74B5F5",
+        "type": "#EBCB75",
+        "variable": "#DCE3EA",
+        "parameter": "#AEBBC7",
+        "tag": "#EE90B8",
+        "attribute": "#EEA062",
+        "constant": "#55CBC0",
+        "operator": "#AEBBC7",
+        "error": "#F4817B",
+        "warning": "#EBCB75",
+        "info": "#74B5F5",
+        "link": "#74B5F5"
+      },
+      "terminal_ansi": {
+        "black": "#2A3946",
+        "red": "#F4817B",
+        "green": "#92D298",
+        "yellow": "#EBCB75",
+        "blue": "#74B5F5",
+        "magenta": "#B59BF2",
+        "cyan": "#55CBC0",
+        "white": "#AEBBC7",
+        "bright_black": "#8497A8",
+        "bright_white": "#DCE3EA"
+      }
+    },
+    "lumen": {
+      "name": "Nature Lumen (Choroid Lumen)",
       "contrast_polarity": "negative",
-      "backgrounds": {
-        "body": { "hex": "#f0f2eb", "oklch": "oklch(0.95 0.012 115)", "relative_luminance": 0.8803, "role": "Sun-bleached botanical parchment" },
-        "surface": { "hex": "#e5e9e0", "oklch": "oklch(0.92 0.015 115)", "relative_luminance": 0.8010, "role": "Weathered river stone" },
-        "surface_raised": { "hex": "#dbe0d5", "oklch": "oklch(0.88 0.018 115)", "relative_luminance": 0.7300, "role": "Layered sedimentary substrate" },
-        "surface_elevated": { "hex": "#ffffff", "oklch": "oklch(1.00 0.000 0)", "relative_luminance": 1.0000, "role": "Diffuse high card" }
+      "contrast_ratio": 16.3,
+      "color": {
+        "background": {
+          "base": "#F5F7F9",
+          "raised": "#ECEFF3",
+          "overlay": "#E2E7EC",
+          "highlight": "#D3DAE2",
+          "border": "#BFC8D2"
+        },
+        "text": {
+          "primary": "#121A22",
+          "secondary": "#3B4856",
+          "muted": "#5F6E7D"
+        },
+        "accent": {
+          "red": "#A81E14",
+          "orange": "#8F4106",
+          "yellow": "#6E4C08",
+          "green": "#1A6B33",
+          "teal": "#0B6A63",
+          "blue": "#1A55A3",
+          "purple": "#5F3DB5",
+          "pink": "#A3244F"
+        }
       },
-      "foregrounds": {
-        "primary": { "hex": "#19241c", "contrast_ratio": 14.20, "role": "Forest pine gall ink" },
-        "secondary": { "hex": "#354538", "contrast_ratio": 9.20, "role": "Secondary botanical prose" },
-        "muted": { "hex": "#5a6d5f", "contrast_ratio": 4.80, "role": "Weathered moss caption" },
-        "border": { "hex": "#a9b8ab", "role": "Morning mist boundary" }
+      "syntax_roles": {
+        "comment": "#5F6E7D",
+        "keyword": "#5F3DB5",
+        "string": "#1A6B33",
+        "number": "#8F4106",
+        "function": "#1A55A3",
+        "type": "#6E4C08",
+        "variable": "#121A22",
+        "parameter": "#3B4856",
+        "tag": "#A3244F",
+        "attribute": "#8F4106",
+        "constant": "#0B6A63",
+        "operator": "#3B4856",
+        "error": "#A81E14",
+        "warning": "#6E4C08",
+        "info": "#1A55A3",
+        "link": "#1A55A3"
       },
-      "syntax": {
-        "keyword": { "hex": "#8a481e", "wavelength_nm": 600, "contrast_ratio": 5.64, "role": "Burnt Russet Bark" },
-        "string": { "hex": "#2d6139", "wavelength_nm": 535, "contrast_ratio": 5.92, "role": "Deep Forest Fern" },
-        "function": { "hex": "#1e5e54", "wavelength_nm": 510, "contrast_ratio": 6.13, "role": "Spruce Needle" },
-        "number": { "hex": "#85531d", "wavelength_nm": 585, "contrast_ratio": 5.25, "role": "Dry Earth Ochre" },
-        "type": { "hex": "#2b5c4b", "wavelength_nm": 520, "contrast_ratio": 6.24, "role": "Juniper Green" },
-        "constant": { "hex": "#8c4424", "wavelength_nm": 595, "contrast_ratio": 5.75, "role": "Terracotta Root" },
-        "operator": { "hex": "#4a594e", "wavelength_nm": 555, "contrast_ratio": 6.03, "role": "Mineral Slate" },
-        "comment": { "hex": "#687e6e", "contrast_ratio": 3.56, "role": "Moss Shading" }
+      "terminal_ansi": {
+        "black": "#D3DAE2",
+        "red": "#A81E14",
+        "green": "#1A6B33",
+        "yellow": "#6E4C08",
+        "blue": "#1A55A3",
+        "magenta": "#5F3DB5",
+        "cyan": "#0B6A63",
+        "white": "#3B4856",
+        "bright_black": "#5F6E7D",
+        "bright_white": "#121A22"
       }
     }
+  },
+  "protocol": {
+    "status": "Precautionary defaults, not a treatment and not guaranteed. Nothing here is proven to prevent myopia in people.",
+    "viewing_distance_cm": {
+      "minimum": 30,
+      "preferred": 40,
+      "basis": "Close reading under 30 cm and continuous reading over 30 min were risk factors in several studies; IMI guidelines cite under 20 cm and over 45 min."
+    },
+    "session": {
+      "max_continuous_minutes": 30,
+      "break_minutes": 5,
+      "break_activity": "Look at a distant object with fine detail, ideally outdoors.",
+      "basis": "Breaks every 30 min were protective in school studies. A 2023 trial found 20-second breaks did not ease eye-strain symptoms; a 2022 trial of 20-20-20 reminders in 29 adults did reduce them. Longer breaks are plausible but untested for myopia."
+    },
+    "ambient_light": {
+      "indoor_target_lux": "500-1000",
+      "avoid": "Reading a dark theme in a dark room",
+      "basis": "500 to 1000 lux thickened the choroid versus darkness in young adults. How this combines with dark themes is untested (inference)."
+    },
+    "outdoor_time": "About 2 hours a day for children; the best-supported protective measure (IMI 2025).",
+    "screen_brightness": "Moderate. The key studies matched screens at 35 to 86 cd/m2.",
+    "small_screens": "Phone-size text was the condition with no significant effect. Hold phones 40 cm or more, enlarge text, prefer larger screens for long reading.",
+    "under_3_years": "No screens (China MOE 2025; WHO and AAP guidance).",
+    "pseudomyopia": "If distance vision is blurry after near work and recovers over minutes to hours, or comes with headaches, see an eye doctor for a cycloplegic exam. A palette cannot treat accommodative spasm."
+  },
+  "age_guidance": {
+    "children": "Outdoor time (about 2 h/day), distance of 30 cm or more and regular breaks are the best-supported measures. Dark-mode benefit is unproven in children. Deep or Soft with large text is an optional extra.",
+    "teens_and_young_adults": "Highest-risk group for adult-onset progression (students, high myopes). Deep or Soft, large text, regular distance breaks, outdoor time.",
+    "adults_25_to_40": "Progression usually slows (<0.1 D/yr). Benefit of inverted contrast is uncertain; choose by comfort (Soft or Lumen).",
+    "adults_40_to_60": "Check presbyopia and astigmatism correction first. Choose by legibility; Soft or Lumen.",
+    "adults_60_plus": "Lens scatter, small pupils, cataract or AMD can flip the legibility advantage either way. Try Soft and Lumen and keep whichever reads best. Myopia relevance is mainly monitoring of high myopia.",
+    "variant_roles": {
+      "deep": "max contrast (16.5:1), myopia-informed baseline",
+      "soft": "reduced glare/halation (13.6:1), astigmatism-friendly, myopia-informed",
+      "lumen": "legibility fallback (16.3:1), daylight reading and older eyes, NOT myopia-informed"
+    }
+  },
+  "evidence_status": "Short-term choroid/axial-length changes in small, mostly young-adult studies. IMI (2023) judged evidence insufficient to use short-term choroid thickening as a treatment biomarker. No long-term trial found.",
+  "reading_guidance": {
+    "polarity": "light text on dark background (inverted contrast)",
+    "note_text_size": "Only large text (cap height ~34 arcmin) gave significant eye shortening in the 2022 follow-up; ~14 arcmin did not.",
+    "font_size_px_for_large_text_by_viewing_distance_cm": {
+      "30": 16,
+      "35": 19,
+      "40": 22,
+      "50": 27,
+      "60": 32,
+      "70": 38
+    },
+    "keep_body_text_neutral": "Avoid red/amber-only or heavily low-blue palettes for long reading.",
+    "red_use": "errors only",
+    "breaks": "Look at distance every 15 min (handheld) / 50 min (desktop); outdoor time remains the best-supported protective factor."
   }
 }

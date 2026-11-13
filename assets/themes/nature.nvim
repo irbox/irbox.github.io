@@ -1,50 +1,107 @@
--- Nature (Choroid) Theme for Neovim
--- Grounded in Retinal Neurobiology & Myopia Research (Aleman et al., 2018 / Claude Sonnet 5.5 High)
+-- Nature (Choroid v4.0) Theme for Neovim
+-- Grounded in Retinal Neurobiology & Myopia Research
+-- (Aleman et al. 2018; Swiatczak & Schaeffel 2022; Ingrassia et al. 2024)
+-- Supports variants: "deep" (default), "soft", "lumen"
 
 local M = {}
 
-function M.setup()
+local palettes = {
+  deep = {
+    bg = "#0A0F14",
+    bg_surface = "#101820",
+    bg_raised = "#17222C",
+    bg_elevated = "#22313D",
+    border = "#2C3C49",
+    fg = "#E9EEF3",
+    fg_secondary = "#B4C0CB",
+    comment = "#74889A",
+    keyword = "#B392F0",
+    string = "#8FD694",
+    number = "#F29E5C",
+    func = "#6CB6FF",
+    type = "#F2CC6B",
+    constant = "#4FD1C5",
+    operator = "#B4C0CB",
+    tag = "#F28BB8",
+    attribute = "#F29E5C",
+    accent = "#4FD1C5",
+    danger = "#F2736D",
+    warning = "#F2CC6B",
+    selection = "#22313D"
+  },
+  soft = {
+    bg = "#121A22",
+    bg_surface = "#18222C",
+    bg_raised = "#1F2B36",
+    bg_elevated = "#2A3946",
+    border = "#364857",
+    fg = "#DCE3EA",
+    fg_secondary = "#AEBBC7",
+    comment = "#8497A8",
+    keyword = "#B59BF2",
+    string = "#92D298",
+    number = "#EEA062",
+    func = "#74B5F5",
+    type = "#EBCB75",
+    constant = "#55CBC0",
+    operator = "#AEBBC7",
+    tag = "#EE90B8",
+    attribute = "#EEA062",
+    accent = "#55CBC0",
+    danger = "#F4817B",
+    warning = "#EBCB75",
+    selection = "#2A3946"
+  },
+  lumen = {
+    bg = "#F5F7F9",
+    bg_surface = "#ECEFF3",
+    bg_raised = "#E2E7EC",
+    bg_elevated = "#D3DAE2",
+    border = "#BFC8D2",
+    fg = "#121A22",
+    fg_secondary = "#3B4856",
+    comment = "#5F6E7D",
+    keyword = "#5F3DB5",
+    string = "#1A6B33",
+    number = "#8F4106",
+    func = "#1A55A3",
+    type = "#6E4C08",
+    constant = "#0B6A63",
+    operator = "#3B4856",
+    tag = "#A3244F",
+    attribute = "#8F4106",
+    accent = "#0B6A63",
+    danger = "#A81E14",
+    warning = "#6E4C08",
+    selection = "#D3DAE2"
+  }
+}
+
+function M.setup(opts)
+  opts = opts or {}
+  local variant = opts.variant or "deep"
+  local c = palettes[variant] or palettes.deep
+
   vim.cmd("hi clear")
   if vim.fn.exists("syntax_on") then
     vim.cmd("syntax reset")
   end
 
   vim.g.colors_name = "nature"
-  vim.o.background = "dark"
-
-  local c = {
-    bg = "#0A0F14",
-    bg_surface = "#101820",
-    bg_raised = "#17222C",
-    bg_elevated = "#22313D",
-    fg = "#E9EEF3",
-    fg_secondary = "#B4C0CB",
-    comment = "#74889A",
-    border = "#2C3C49",
-    keyword = "#F29E5C",
-    string = "#8FD694",
-    func = "#4FD1C5",
-    number = "#F2CC6B",
-    type = "#6CB6FF",
-    constant = "#B392F0",
-    operator = "#B4C0CB",
-    accent = "#4FD1C5",
-    danger = "#F2736D",
-    selection = "#1F4E5F"
-  }
+  vim.o.background = (variant == "lumen") and "light" or "dark"
 
   local highlights = {
     Normal = { fg = c.fg, bg = c.bg },
     NormalFloat = { fg = c.fg, bg = c.bg_surface },
     FloatBorder = { fg = c.border, bg = c.bg_surface },
-    Cursor = { fg = c.bg, bg = c.keyword },
+    Cursor = { fg = c.bg, bg = c.accent },
     CursorLine = { bg = c.bg_surface },
     LineNr = { fg = c.border },
     CursorLineNr = { fg = c.accent, bold = true },
     SignColumn = { bg = c.bg },
     Visual = { bg = c.selection },
-    Search = { fg = c.bg, bg = c.number },
-    IncSearch = { fg = c.bg, bg = c.keyword },
+    Search = { fg = c.bg, bg = c.warning },
+    IncSearch = { fg = c.bg, bg = c.number },
     StatusLine = { fg = c.fg, bg = c.bg_surface },
     StatusLineNC = { fg = c.comment, bg = c.bg },
     VertSplit = { fg = c.border },
@@ -52,7 +109,7 @@ function M.setup()
     Pmenu = { fg = c.fg, bg = c.bg_surface },
     PmenuSel = { fg = c.bg, bg = c.accent },
 
-    -- Syntax
+    -- Syntax Roles (Red strictly reserved for error/warning)
     Comment = { fg = c.comment, italic = true },
     Constant = { fg = c.constant },
     String = { fg = c.string },
@@ -69,13 +126,16 @@ function M.setup()
     PreProc = { fg = c.type },
     Type = { fg = c.type },
     Special = { fg = c.constant },
+    Tag = { fg = c.tag },
     Underlined = { underline = true },
     Error = { fg = c.danger, bold = true },
+    ErrorMsg = { fg = c.danger, bold = true },
+    WarningMsg = { fg = c.warning, bold = true },
     Todo = { fg = c.bg, bg = c.keyword, bold = true }
   }
 
-  for group, opts in pairs(highlights) do
-    vim.api.nvim_set_hl(0, group, opts)
+  for group, hl in pairs(highlights) do
+    vim.api.nvim_set_hl(0, group, hl)
   end
 end
 
