@@ -694,14 +694,6 @@ static void render_icon_moon(StrBuf *out, int size) {
     buf_append_str(out, buf);
 }
 
-static void render_icon_eye(StrBuf *out, int size) {
-    char buf[1024];
-    snprintf(buf, sizeof(buf),
-        "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"%d\" height=\"%d\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z\"/><circle cx=\"12\" cy=\"12\" r=\"3\"/></svg>",
-        size, size);
-    buf_append_str(out, buf);
-}
-
 static void render_icon_menu(StrBuf *out, int size) {
     char buf[1024];
     snprintf(buf, sizeof(buf),
@@ -1538,23 +1530,20 @@ static void render_head(StrBuf *out, const char *title, const char *desc, const 
         "        var d = document.documentElement;\n"
         "        d.classList.add('is-loading');\n"
         "        var t = localStorage.getItem('theme');\n"
-        "        if (t === 'light' || t === 'dark' || t === 'soft' || t === 'lumen' || t === 'deep' || t === 'nature' || t === 'nature-light') {\n"
-        "          d.setAttribute('data-theme', t);\n"
-        "          var ch = (t === 'soft') ? 'soft' : ((t === 'light' || t === 'nature-light' || t === 'lumen') ? 'lumen' : 'deep');\n"
-        "          d.setAttribute('data-choroid', ch);\n"
-        "          var c = (ch === 'lumen') ? '#f5f7f9' : (ch === 'soft' ? '#121a22' : '#0a0f14');\n"
+        "        if (t === 'light') {\n"
+        "          d.setAttribute('data-theme', 'light');\n"
+        "          d.setAttribute('data-enature', 'light');\n"
         "          var metas = document.querySelectorAll('meta[name=\"theme-color\"]');\n"
         "          for (var i = 0; i < metas.length; i++) {\n"
-        "            metas[i].setAttribute('content', c);\n"
+        "            metas[i].setAttribute('content', '#f5f7f9');\n"
         "          }\n"
-        "        }\n"
-        "        var dist = localStorage.getItem('reading-distance') || '40';\n"
-        "        d.setAttribute('data-reading-distance', dist + 'cm');\n"
-        "        d.setAttribute('data-choroid-distance', dist + 'cm');\n"
-        "        var metric = localStorage.getItem('reading-metric');\n"
-        "        if (metric === 'x-height') {\n"
-        "          d.setAttribute('data-choroid-metric', 'x-height');\n"
-        "          d.setAttribute('data-reading-metric', 'x-height');\n"
+        "        } else {\n"
+        "          d.setAttribute('data-theme', 'dark');\n"
+        "          d.setAttribute('data-enature', 'dark');\n"
+        "          var metas = document.querySelectorAll('meta[name=\"theme-color\"]');\n"
+        "          for (var i = 0; i < metas.length; i++) {\n"
+        "            metas[i].setAttribute('content', '#0a0f14');\n"
+        "          }\n"
         "        }\n"
         "        var a = localStorage.getItem('announcement-dismissed');\n"
         "        if (a) {\n"
@@ -1641,13 +1630,11 @@ static void render_header(StrBuf *out, const char *active_section) {
     render_icon_keyboard(out, 19);
     buf_append_str(out,
         "\n      </button>\n"
-        "      <button class=\"icon-btn\" type=\"button\" data-theme-toggle aria-label=\"Toggle color theme (Deep / Soft / Lumen)\" title=\"Toggle theme (Deep / Soft / Lumen)\">\n"
-        "        <span class=\"theme-icon theme-icon--deep theme-icon--moon\">"
+        "      <button class=\"icon-btn\" type=\"button\" data-theme-toggle aria-label=\"Toggle eNature theme (dark / light)\" title=\"Toggle eNature theme (dark / light)\">\n"
+        "        <span class=\"theme-icon theme-icon--moon\">"
     );
     render_icon_moon(out, 20);
-    buf_append_str(out, "</span>\n        <span class=\"theme-icon theme-icon--soft\">");
-    render_icon_eye(out, 20);
-    buf_append_str(out, "</span>\n        <span class=\"theme-icon theme-icon--lumen theme-icon--sun\">");
+    buf_append_str(out, "</span>\n        <span class=\"theme-icon theme-icon--sun\">");
     render_icon_sun(out, 20);
     buf_append_str(out,
         "</span>\n      </button>\n"
@@ -1790,7 +1777,7 @@ static void render_footer(StrBuf *out) {
         "        <h3 class=\"shortcuts-group__title\">General</h3>\n"
         "        <dl class=\"shortcuts-list\">\n"
         "          <div class=\"shortcuts-item\"><dt><kbd>/</kbd> <span class=\"or\">or</span> <kbd>Ctrl</kbd> <kbd>K</kbd></dt><dd>Search site</dd></div>\n"
-        "          <div class=\"shortcuts-item\"><dt><kbd>T</kbd></dt><dd>Toggle light / dark theme</dd></div>\n"
+        "          <div class=\"shortcuts-item\"><dt><kbd>T</kbd></dt><dd>Toggle eNature theme (dark / light)</dd></div>\n"
         "          <div class=\"shortcuts-item\"><dt><kbd>?</kbd></dt><dd>Toggle keyboard shortcuts</dd></div>\n"
         "          <div class=\"shortcuts-item\"><dt><kbd>Ctrl</kbd> <kbd>P</kbd></dt><dd>Print / Export PDF</dd></div>\n"
         "          <div class=\"shortcuts-item\"><dt><kbd>Esc</kbd></dt><dd>Close dialog</dd></div>\n"
@@ -1849,18 +1836,16 @@ static void render_announcement_banner(StrBuf *out, bool hide) {
 
 static void wrap_page_ext(StrBuf *out, const char *title, const char *desc, const char *active_sec, const char *body, const char *body_class, const char *url_path, const char *og_type, const char *date_pub, bool hide_announcement) {
     const char *def_t = (site_config.default_theme[0] != '\0') ? site_config.default_theme : "dark";
-    const char *def_ch = "deep";
-    if (strcmp(def_t, "soft") == 0) def_ch = "soft";
-    else if (strcmp(def_t, "light") == 0 || strcmp(def_t, "nature-light") == 0 || strcmp(def_t, "lumen") == 0) def_ch = "lumen";
+    if (strcmp(def_t, "light") != 0) def_t = "dark";
 
     buf_append_str(out,
         "<!DOCTYPE html>\n"
         "<html lang=\"en\" data-baseurl=\"\" data-theme=\""
     );
     buf_append_str(out, def_t);
-    buf_append_str(out, "\" data-choroid=\"");
-    buf_append_str(out, def_ch);
-    buf_append_str(out, "\" data-reading-distance=\"40cm\" data-choroid-distance=\"40cm\">\n");
+    buf_append_str(out, "\" data-enature=\"");
+    buf_append_str(out, def_t);
+    buf_append_str(out, "\">\n");
     render_head(out, title, desc, url_path, og_type, date_pub);
     buf_append_str(out, "<body");
     if (body_class && strlen(body_class) > 0) {
@@ -2156,20 +2141,6 @@ static void render_projects_sidebar(StrBuf *out, const char *active_slug) {
     buf_append_str(out, "    </nav>\n  </aside>\n");
 }
 
-static void render_reading_presets_bar(StrBuf *out) {
-    buf_append_str(out,
-        "        <div class=\"reading-presets-bar\" role=\"group\" aria-label=\"Calibrated reading font size by viewing distance (~34.4 arcmin rule)\">\n"
-        "          <span class=\"reading-presets-bar__label\">Distance:</span>\n"
-        "          <button class=\"reading-preset-btn\" data-distance=\"30\" type=\"button\" title=\"30 cm viewing distance (16.2px cap / 21.8px x-h, ~34.4 arcmin)\">30cm</button>\n"
-        "          <button class=\"reading-preset-btn is-active\" data-distance=\"40\" type=\"button\" title=\"40 cm preferred viewing distance (21.6px cap / 29.1px x-h, ~34.4 arcmin)\">40cm</button>\n"
-        "          <button class=\"reading-preset-btn\" data-distance=\"50\" type=\"button\" title=\"50 cm viewing distance (27.0px cap / 36.4px x-h, ~34.4 arcmin)\">50cm</button>\n"
-        "          <button class=\"reading-preset-btn\" data-distance=\"60\" type=\"button\" title=\"60 cm monitor viewing distance (32.4px cap / 43.6px x-h, ~34.4 arcmin)\">60cm</button>\n"
-        "          <button class=\"reading-preset-btn\" data-distance=\"70\" type=\"button\" title=\"70 cm monitor viewing distance (37.8px cap / 50.9px x-h, ~34.4 arcmin)\">70cm</button>\n"
-        "          <button class=\"reading-preset-btn reading-preset-btn--metric\" data-metric-toggle type=\"button\" title=\"Toggle between Cap-height (0.70em) and Lowercase x-height (0.52em) 34.4 arcmin calibration\">Metric: Cap (0.70em)</button>\n"
-        "        </div>\n"
-    );
-}
-
 static void render_docs_page(const DocItem *d, const char *out_dir) {
     StrBuf body;
     buf_init(&body, 8192);
@@ -2223,7 +2194,6 @@ static void render_docs_page(const DocItem *d, const char *out_dir) {
         "        </header>\n"
     );
     render_outline_mobile_from_html(&body, d->html_content);
-    render_reading_presets_bar(&body);
     buf_append_str(&body,
         "        <div class=\"prose\" data-prose>\n"
     );
@@ -2612,9 +2582,6 @@ static void render_post_page(const PostItem *p, const char *out_dir) {
         "\n      </button>\n"
         "    </div>\n"
         "  </header>\n"
-    );
-    render_reading_presets_bar(&body);
-    buf_append_str(&body,
         "  <div class=\"prose\" data-prose>\n"
     );
 

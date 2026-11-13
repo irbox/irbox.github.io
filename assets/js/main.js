@@ -53,35 +53,33 @@
     }
   });
 
-  /* ---- 3. Theme Controller (Choroid v4.0 / Nature System: Deep, Soft, Lumen) ---- */
+  /* ---- 3. eNature Theme Controller (Dark / Light) ---- */
   const themeBtns = $$('[data-theme-toggle]');
   const metas = $$('meta[name="theme-color"]');
   const getTheme = () => {
-    const t = root.getAttribute('data-theme') || root.getAttribute('data-choroid') || store.get('theme');
-    if (t === 'soft') return 'soft';
-    if (t === 'light' || t === 'lumen' || t === 'nature-light') return 'light';
-    return 'dark'; // Deep baseline
+    const saved = store.get('theme');
+    if (saved === 'light') return 'light';
+    if (saved === 'dark') return 'dark';
+    const attr = root.getAttribute('data-theme');
+    return (attr === 'light') ? 'light' : 'dark';
   };
   const syncTheme = (t) => {
-    const choroidVariant = (t === 'light' || t === 'lumen') ? 'lumen' : (t === 'soft' ? 'soft' : 'deep');
-    root.setAttribute('data-theme', t);
-    root.setAttribute('data-choroid', choroidVariant);
-    const colors = { dark: '#0a0f14', soft: '#121a22', light: '#f5f7f9' };
-    const labels = {
-      dark: 'Current: Deep (Max contrast 16.5:1, myopia-informed). Click to switch to Soft (or press T)',
-      soft: 'Current: Soft (Reduced halation 13.6:1, astigmatism-friendly). Click to switch to Lumen (or press T)',
-      light: 'Current: Lumen (Daylight fallback 16.3:1). Click to switch to Deep (or press T)'
-    };
-    metas.forEach((m) => m.setAttribute('content', colors[t] || '#0a0f14'));
+    const theme = (t === 'light') ? 'light' : 'dark';
+    root.setAttribute('data-theme', theme);
+    root.setAttribute('data-enature', theme);
+    const color = (theme === 'light') ? '#f5f7f9' : '#0a0f14';
+    metas.forEach((m) => m.setAttribute('content', color));
+    const label = (theme === 'dark')
+      ? 'Current: eNature Dark. Switch to eNature Light (or press T)'
+      : 'Current: eNature Light. Switch to eNature Dark (or press T)';
     themeBtns.forEach((b) => {
-      b.setAttribute('aria-label', labels[t] || labels.dark);
-      b.setAttribute('title', labels[t] || labels.dark);
+      b.setAttribute('aria-label', label);
+      b.setAttribute('title', label);
     });
   };
   const cycleTheme = () => {
     const cur = getTheme();
-    const next = (cur === 'dark') ? 'soft' : ((cur === 'soft') ? 'light' : 'dark');
-    root.setAttribute('data-theme', next);
+    const next = (cur === 'dark') ? 'light' : 'dark';
     store.set('theme', next);
     syncTheme(next);
   };
@@ -89,8 +87,6 @@
   themeBtns.forEach((b) => b.addEventListener('click', cycleTheme));
   window.addEventListener('storage', (e) => {
     if (e.key === 'theme') {
-      if (e.newValue) root.setAttribute('data-theme', e.newValue);
-      else root.removeAttribute('data-theme');
       syncTheme(getTheme());
     }
   });
@@ -99,56 +95,6 @@
       if (!store.get('theme')) syncTheme(m.matches ? 'dark' : 'light');
     });
   } catch {}
-
-  /* ---- 3b. Reading Distance & Font Size Calibration (~34.4 arcmin rule) ---- */
-  const distanceBtns = $$('[data-distance]');
-  const metricBtns = $$('[data-metric-toggle]');
-  const syncDistance = (dist) => {
-    const valid = ['30', '35', '40', '50', '60', '70'].includes(dist) ? dist : '40';
-    root.setAttribute('data-reading-distance', valid + 'cm');
-    root.setAttribute('data-choroid-distance', valid + 'cm');
-    distanceBtns.forEach((b) => {
-      const isCur = b.getAttribute('data-distance') === valid;
-      b.classList.toggle('is-active', isCur);
-      b.setAttribute('aria-pressed', String(isCur));
-    });
-  };
-  const syncMetric = (m) => {
-    const metric = (m === 'x-height') ? 'x-height' : 'cap-height';
-    if (metric === 'x-height') {
-      root.setAttribute('data-choroid-metric', 'x-height');
-      root.setAttribute('data-reading-metric', 'x-height');
-    } else {
-      root.removeAttribute('data-choroid-metric');
-      root.removeAttribute('data-reading-metric');
-    }
-    metricBtns.forEach((b) => {
-      b.setAttribute('data-current-metric', metric);
-      b.textContent = (metric === 'x-height') ? 'Metric: x-height (0.52em)' : 'Metric: Cap (0.70em)';
-      b.setAttribute('aria-pressed', String(metric === 'x-height'));
-    });
-  };
-  const initialDistance = store.get('reading-distance') || '40';
-  syncDistance(initialDistance);
-  const initialMetric = store.get('reading-metric') || 'cap-height';
-  syncMetric(initialMetric);
-  distanceBtns.forEach((b) => {
-    b.addEventListener('click', () => {
-      const dist = b.getAttribute('data-distance');
-      if (dist) {
-        store.set('reading-distance', dist);
-        syncDistance(dist);
-      }
-    });
-  });
-  metricBtns.forEach((b) => {
-    b.addEventListener('click', () => {
-      const cur = root.getAttribute('data-choroid-metric') === 'x-height' ? 'x-height' : 'cap-height';
-      const next = (cur === 'x-height') ? 'cap-height' : 'x-height';
-      store.set('reading-metric', next);
-      syncMetric(next);
-    });
-  });
 
   /* ---- 4. Mobile Navigation & Sidebar ---- */
   const drawerBtn = $('[data-drawer-toggle]');

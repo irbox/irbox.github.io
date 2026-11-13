@@ -1,0 +1,186 @@
+{
+  "name": "eNature",
+  "version": "1.0.0",
+  "type": "dark",
+  "default_variant": "dark",
+  "basis": "Aleman, Wang & Schaeffel 2018, Sci Rep 8:10840; Swiatczak & Schaeffel 2022, TVST; Ingrassia et al. 2024, Vision Res; plus follow-up literature to 2025. Not medical advice.",
+  "research_grounding": {
+    "citation": "Aleman, A. C., Wang, M., & Schaeffel, F. (2018). Reading and Myopia: Contrast Polarity Matters. Scientific Reports, 8:10840. DOI:10.1038/s41598-018-28904-x",
+    "retinal_pathway": "Stimulates the retinal ON-pathway through positive contrast polarity, promoting choroidal thickening (+10 µm) and inhibiting scleral axial elongation, while perifoveal receptive fields (6° to 12°) drive the 34.4 arcmin low-spatial-frequency requirement (~5 cycles/deg).",
+    "variants_summary": "Two calibrated core versions: eNature Dark (default positive-contrast baseline 16.48:1, myopia-informed) and eNature Light (16.34:1 daylight fallback for proofreading and older eyes, explicitly documented as NOT myopia-informed)."
+  },
+  "variants": {
+    "dark": {
+      "name": "eNature Dark",
+      "contrast_polarity": "positive",
+      "contrast_ratio_wcag": "16.48:1 (base) / 15.33:1 (raised)",
+      "apca_lc_raised": -95.3,
+      "color": {
+        "background": {
+          "base": "#0A0F14",
+          "raised": "#101820",
+          "overlay": "#17222C",
+          "highlight": "#22313D",
+          "border": "#2C3C49"
+        },
+        "text": {
+          "primary": "#E9EEF3",
+          "secondary": "#B8C4CF",
+          "muted": "#8C9DAB"
+        },
+        "accent": {
+          "red": "#F69B96",
+          "orange": "#F3A76A",
+          "yellow": "#F2CC6B",
+          "green": "#8FD694",
+          "teal": "#56D6CA",
+          "blue": "#79BDFF",
+          "purple": "#C2A8F3",
+          "pink": "#F49BC1"
+        }
+      },
+      "syntax_roles": {
+        "comment": "#8C9DAB",
+        "keyword": "#79BDFF",
+        "string": "#8FD694",
+        "number": "#F3A76A",
+        "function": "#F2CC6B",
+        "type": "#56D6CA",
+        "variable": "#E9EEF3",
+        "parameter": "#F3A76A",
+        "tag": "#F49BC1",
+        "attribute": "#F3A76A",
+        "constant": "#C2A8F3",
+        "operator": "#B8C4CF",
+        "error": "#F69B96",
+        "warning": "#F2CC6B",
+        "info": "#79BDFF",
+        "link": "#79BDFF"
+      },
+      "terminal_ansi": {
+        "black": "#101820",
+        "red": "#F69B96",
+        "green": "#8FD694",
+        "yellow": "#F2CC6B",
+        "blue": "#79BDFF",
+        "magenta": "#C2A8F3",
+        "cyan": "#56D6CA",
+        "white": "#B8C4CF",
+        "bright_black": "#8C9DAB",
+        "bright_white": "#E9EEF3"
+      }
+    },
+    "light": {
+      "name": "eNature Light",
+      "contrast_polarity": "negative",
+      "contrast_ratio_wcag": "16.34:1 (base) / 15.22:1 (raised)",
+      "apca_lc_raised": 94.7,
+      "color": {
+        "background": {
+          "base": "#F5F7F9",
+          "raised": "#ECEFF3",
+          "overlay": "#E2E7EC",
+          "highlight": "#D3DAE2",
+          "border": "#BFC8D2"
+        },
+        "text": {
+          "primary": "#121A22",
+          "secondary": "#3B4856",
+          "muted": "#586776"
+        },
+        "accent": {
+          "red": "#A81E14",
+          "orange": "#8F4106",
+          "yellow": "#6E4C08",
+          "green": "#1A6B33",
+          "teal": "#0B6A63",
+          "blue": "#1A55A3",
+          "purple": "#5F3DB5",
+          "pink": "#A3244F"
+        }
+      },
+      "syntax_roles": {
+        "comment": "#586776",
+        "keyword": "#1A55A3",
+        "string": "#1A6B33",
+        "number": "#8F4106",
+        "function": "#6E4C08",
+        "type": "#0B6A63",
+        "variable": "#121A22",
+        "parameter": "#8F4106",
+        "tag": "#A3244F",
+        "attribute": "#8F4106",
+        "constant": "#5F3DB5",
+        "operator": "#3B4856",
+        "error": "#A81E14",
+        "warning": "#6E4C08",
+        "info": "#1A55A3",
+        "link": "#1A55A3"
+      },
+      "terminal_ansi": {
+        "black": "#D3DAE2",
+        "red": "#A81E14",
+        "green": "#1A6B33",
+        "yellow": "#6E4C08",
+        "blue": "#1A55A3",
+        "magenta": "#5F3DB5",
+        "cyan": "#0B6A63",
+        "white": "#3B4856",
+        "bright_black": "#586776",
+        "bright_white": "#121A22"
+      }
+    }
+  },
+  "protocol": {
+    "status": "Precautionary defaults, not a treatment and not guaranteed. Nothing here is proven to prevent myopia in people.",
+    "viewing_distance_cm": {
+      "minimum": 30,
+      "preferred": 40,
+      "basis": "Close reading under 30 cm and continuous reading over 30 min were risk factors in several studies; IMI guidelines cite under 20 cm and over 45 min."
+    },
+    "session": {
+      "max_continuous_minutes": 30,
+      "break_minutes": 5,
+      "break_activity": "Look at a distant object with fine detail, ideally outdoors.",
+      "basis": "Breaks every 30 min were protective in school studies. A 2023 trial found 20-second breaks did not ease eye-strain symptoms; a 2022 trial of 20-20-20 reminders in 29 adults did reduce them. Longer breaks are plausible but untested for myopia."
+    },
+    "ambient_light": {
+      "indoor_target_lux": "500-1000",
+      "avoid": "Reading a dark theme in a dark room",
+      "basis": "500 to 1000 lux thickened the choroid versus darkness in young adults. How this combines with dark themes is untested (inference)."
+    },
+    "outdoor_time": "About 2 hours a day for children; the best-supported protective measure (IMI 2025).",
+    "screen_brightness": "Moderate (35 to 86 cd/m2).",
+    "small_screens": "Phone-size text was the condition with no significant effect. Hold phones 40 cm or more, enlarge text, prefer larger screens for long reading.",
+    "under_3_years": "No screens (WHO, AAP, Nov 2025 public health guidance).",
+    "pseudomyopia": "If distance vision is blurry after near work and recovers over minutes to hours, or comes with headaches, see an eye doctor for a cycloplegic exam. A palette cannot treat accommodative spasm."
+  },
+  "age_guidance": {
+    "under_3_years": "No screens (WHO, AAP, Nov 2025 guidance).",
+    "children_3_to_14": "Outdoor time (about 2 h/day), distance of 40 cm or more (22px cap / 29px x-height) and regular breaks are the best-supported measures. Dark-mode benefit is unproven in children. eNature Dark with large text is an optional extra.",
+    "teens_and_young_adults_15_to_25": "Highest-risk group for adult-onset progression (students, high myopes). eNature Dark, 40-60 cm (22px-32px), stop continuous near work at 30 min for 5-min distance break, outdoor time.",
+    "adults_25_to_40": "Progression usually slows (<0.1 D/yr). Benefit of inverted contrast is uncertain; choose by comfort (eNature Dark or eNature Light); maintain 500-1000 lux room lighting.",
+    "adults_40_to_60": "Presbyopia and uncorrected astigmatism dominate comfort; prioritize accurate near-work lenses; eNature Dark or eNature Light (27px-38px).",
+    "older_adults_60_plus": "Clear lenses read better on eNature Light; lens scatter or cataract often favours eNature Dark (22px-32px+).",
+    "variant_roles": {
+      "dark": "max contrast (16.48:1), myopia-informed baseline",
+      "light": "legibility fallback (16.34:1), daylight reading and older eyes, NOT myopia-informed"
+    }
+  },
+  "typography_presets": {
+    "cap_height_0_70em": {
+      "30cm": "16.2px",
+      "40cm": "21.6px",
+      "50cm": "27.0px",
+      "60cm": "32.4px",
+      "70cm": "37.8px"
+    },
+    "x_height_0_52em": {
+      "30cm": "21.8px",
+      "40cm": "29.1px",
+      "50cm": "36.4px",
+      "60cm": "43.6px",
+      "70cm": "50.9px"
+    }
+  }
+}

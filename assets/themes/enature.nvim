@@ -1,0 +1,126 @@
+-- eNature Theme for Neovim
+-- Grounded in Retinal Neurobiology & Myopia Research
+-- (Aleman et al. 2018; Swiatczak & Schaeffel 2022; Ingrassia et al. 2024; Fan et al. 2024)
+-- Supports variants: "dark" (default baseline), "light" (daylight fallback)
+
+local M = {}
+
+local palettes = {
+  dark = {
+    bg = "#0A0F14",
+    bg_surface = "#101820",
+    bg_raised = "#17222C",
+    bg_elevated = "#22313D",
+    border = "#2C3C49",
+    fg = "#E9EEF3",
+    fg_secondary = "#B8C4CF",
+    comment = "#8C9DAB",
+    keyword = "#79BDFF",
+    string = "#8FD694",
+    number = "#F3A76A",
+    func = "#F2CC6B",
+    type = "#56D6CA",
+    constant = "#C2A8F3",
+    operator = "#B8C4CF",
+    tag = "#F49BC1",
+    attribute = "#F3A76A",
+    accent = "#56D6CA",
+    cursor = "#F2CC6B",
+    selection_fg = "#F2CC6B",
+    selection_bg = "#22313D",
+    danger = "#F69B96",
+    warning = "#F2CC6B"
+  },
+  light = {
+    bg = "#F5F7F9",
+    bg_surface = "#ECEFF3",
+    bg_raised = "#E2E7EC",
+    bg_elevated = "#D3DAE2",
+    border = "#BFC8D2",
+    fg = "#121A22",
+    fg_secondary = "#3B4856",
+    comment = "#586776",
+    keyword = "#1A55A3",
+    string = "#1A6B33",
+    number = "#8F4106",
+    func = "#6E4C08",
+    type = "#0B6A63",
+    constant = "#5F3DB5",
+    operator = "#3B4856",
+    tag = "#A3244F",
+    attribute = "#8F4106",
+    accent = "#0B6A63",
+    cursor = "#6E4C08",
+    selection_fg = "#121A22",
+    selection_bg = "#D3DAE2",
+    danger = "#A81E14",
+    warning = "#6E4C08"
+  }
+}
+-- Backward compatibility aliases
+palettes.deep = palettes.dark
+palettes.lumen = palettes.light
+
+function M.setup(opts)
+  opts = opts or {}
+  local variant = opts.variant or "dark"
+  local c = palettes[variant] or palettes.dark
+
+  vim.cmd("hi clear")
+  if vim.fn.exists("syntax_on") then
+    vim.cmd("syntax reset")
+  end
+
+  vim.g.colors_name = "enature"
+  vim.o.background = (variant == "light" or variant == "lumen") and "light" or "dark"
+
+  local highlights = {
+    Normal = { fg = c.fg, bg = c.bg },
+    NormalFloat = { fg = c.fg, bg = c.bg_surface },
+    FloatBorder = { fg = c.border, bg = c.bg_surface },
+    Cursor = { fg = c.bg, bg = c.cursor },
+    CursorLine = { bg = c.bg_surface },
+    LineNr = { fg = c.comment },
+    CursorLineNr = { fg = c.cursor, bold = true },
+    SignColumn = { bg = c.bg },
+    Visual = { fg = c.selection_fg, bg = c.selection_bg },
+    Search = { fg = c.bg, bg = c.warning },
+    IncSearch = { fg = c.bg, bg = c.number },
+    StatusLine = { fg = c.fg, bg = c.bg_surface },
+    StatusLineNC = { fg = c.comment, bg = c.bg },
+    VertSplit = { fg = c.border },
+    WinSeparator = { fg = c.border },
+    Pmenu = { fg = c.fg, bg = c.bg_surface },
+    PmenuSel = { fg = c.bg, bg = c.accent },
+
+    -- Syntax Roles (Red strictly quarantined for error/warning)
+    Comment = { fg = c.comment, italic = true },
+    Constant = { fg = c.constant },
+    String = { fg = c.string },
+    Character = { fg = c.string },
+    Number = { fg = c.number },
+    Boolean = { fg = c.number, bold = true },
+    Identifier = { fg = c.fg },
+    Function = { fg = c.func },
+    Statement = { fg = c.keyword, bold = true },
+    Conditional = { fg = c.keyword, bold = true },
+    Repeat = { fg = c.keyword, bold = true },
+    Operator = { fg = c.operator },
+    Keyword = { fg = c.keyword, bold = true },
+    PreProc = { fg = c.type },
+    Type = { fg = c.type },
+    Special = { fg = c.constant },
+    Tag = { fg = c.tag },
+    Underlined = { underline = true },
+    Error = { fg = c.danger, bold = true },
+    ErrorMsg = { fg = c.danger, bold = true },
+    WarningMsg = { fg = c.warning, bold = true },
+    Todo = { fg = c.bg, bg = c.warning, bold = true }
+  }
+
+  for group, hl in pairs(highlights) do
+    vim.api.nvim_set_hl(0, group, hl)
+  end
+end
+
+return M

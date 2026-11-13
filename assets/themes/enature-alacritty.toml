@@ -1,0 +1,36 @@
+# eNature Theme for Alacritty
+# Grounded in Retinal Neurobiology & Myopia Research
+# (Aleman et al. 2018; Swiatczak & Schaeffel 2022; Ingrassia et al. 2024; Fan et al. 2024)
+# Default variant: eNature Dark (16.48:1 max contrast, positive-polarity baseline)
+
+[colors.primary]
+background = "#0A0F14"
+foreground = "#E9EEF3"
+
+[colors.cursor]
+text = "#0A0F14"
+cursor = "#F2CC6B"
+
+[colors.selection]
+text = "#F2CC6B"
+background = "#22313D"
+
+[colors.normal]
+black = "#101820"
+red = "#F69B96"
+green = "#8FD694"
+yellow = "#F2CC6B"
+blue = "#79BDFF"
+magenta = "#C2A8F3"
+cyan = "#56D6CA"
+white = "#B8C4CF"
+
+[colors.bright]
+black = "#8C9DAB"
+red = "#F69B96"
+green = "#8FD694"
+yellow = "#F2CC6B"
+blue = "#79BDFF"
+magenta = "#C2A8F3"
+cyan = "#56D6CA"
+white = "#E9EEF3"

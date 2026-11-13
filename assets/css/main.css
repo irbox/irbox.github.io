@@ -33,17 +33,27 @@
   src: url('/assets/fonts/libron/Libron-BoldItalic.woff2') format('woff2');
 }
 
-/* ---------- 2. Design Tokens & Color Schemes (Choroid v3.0 / Nature Architecture) ---------- */
+/* ---------- 2. Design Tokens & Color Schemes (eNature Architecture) ---------- */
 :root {
   /* Reading Size Presets: Calibrated to cap height ~34.4 arcmin (0.70em cap-height basis) */
-  --choroid-size-30cm: 16.2px;
-  --choroid-size-35cm: 18.9px;
-  --choroid-size-40cm: 21.6px;
-  --choroid-size-50cm: 27.0px;
-  --choroid-size-60cm: 32.4px;
-  --choroid-size-70cm: 37.8px;
-  --choroid-reading-size: var(--choroid-size-40cm);
-  --choroid-body-weight: 450;
+  --enature-size-30cm: 16.2px;
+  --enature-size-35cm: 18.9px;
+  --enature-size-40cm: 21.6px;
+  --enature-size-50cm: 27.0px;
+  --enature-size-60cm: 32.4px;
+  --enature-size-70cm: 37.8px;
+  --enature-reading-size: var(--enature-size-40cm);
+  --enature-body-weight: 450;
+
+  /* Backward-compatible aliases */
+  --choroid-size-30cm: var(--enature-size-30cm);
+  --choroid-size-35cm: var(--enature-size-35cm);
+  --choroid-size-40cm: var(--enature-size-40cm);
+  --choroid-size-50cm: var(--enature-size-50cm);
+  --choroid-size-60cm: var(--enature-size-60cm);
+  --choroid-size-70cm: var(--enature-size-70cm);
+  --choroid-reading-size: var(--enature-reading-size);
+  --choroid-body-weight: var(--enature-body-weight);
 
   /* System & Engineered Typography Stacks */
   --font-heading: 'Space Grotesk', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
@@ -118,16 +128,23 @@
 }
 
 /* Dynamic Reading Distance Presets (~34.4 arcmin Cap-Height Basis: 0.70em) */
-[data-reading-distance="30cm"], [data-choroid-distance="30cm"] { --choroid-reading-size: var(--choroid-size-30cm); }
-[data-reading-distance="35cm"], [data-choroid-distance="35cm"] { --choroid-reading-size: var(--choroid-size-35cm); }
-[data-reading-distance="40cm"], [data-choroid-distance="40cm"] { --choroid-reading-size: var(--choroid-size-40cm); }
-[data-reading-distance="50cm"], [data-choroid-distance="50cm"] { --choroid-reading-size: var(--choroid-size-50cm); }
-[data-reading-distance="60cm"], [data-choroid-distance="60cm"] { --choroid-reading-size: var(--choroid-size-60cm); }
-[data-reading-distance="70cm"], [data-choroid-distance="70cm"] { --choroid-reading-size: var(--choroid-size-70cm); }
+[data-reading-distance="30cm"], [data-choroid-distance="30cm"], [data-enature-distance="30cm"] { --enature-reading-size: var(--enature-size-30cm); --choroid-reading-size: var(--enature-size-30cm); }
+[data-reading-distance="35cm"], [data-choroid-distance="35cm"], [data-enature-distance="35cm"] { --enature-reading-size: var(--enature-size-35cm); --choroid-reading-size: var(--enature-size-35cm); }
+[data-reading-distance="40cm"], [data-choroid-distance="40cm"], [data-enature-distance="40cm"] { --enature-reading-size: var(--enature-size-40cm); --choroid-reading-size: var(--enature-size-40cm); }
+[data-reading-distance="50cm"], [data-choroid-distance="50cm"], [data-enature-distance="50cm"] { --enature-reading-size: var(--enature-size-50cm); --choroid-reading-size: var(--enature-size-50cm); }
+[data-reading-distance="60cm"], [data-choroid-distance="60cm"], [data-enature-distance="60cm"] { --enature-reading-size: var(--enature-size-60cm); --choroid-reading-size: var(--enature-size-60cm); }
+[data-reading-distance="70cm"], [data-choroid-distance="70cm"], [data-enature-distance="70cm"] { --enature-reading-size: var(--enature-size-70cm); --choroid-reading-size: var(--enature-size-70cm); }
 
 /* Optional Strict Lowercase x-Height Presets (~34.4 arcmin Basis: 0.52em) */
 :root[data-choroid-metric="x-height"],
-:root[data-reading-metric="x-height"] {
+:root[data-reading-metric="x-height"],
+:root[data-enature-metric="x-height"] {
+  --enature-size-30cm: 21.8px;
+  --enature-size-35cm: 25.4px;
+  --enature-size-40cm: 29.1px;
+  --enature-size-50cm: 36.4px;
+  --enature-size-60cm: 43.6px;
+  --enature-size-70cm: 50.9px;
   --choroid-size-30cm: 21.8px;
   --choroid-size-35cm: 25.4px;
   --choroid-size-40cm: 29.1px;
@@ -137,7 +154,7 @@
 }
 
 /* ==========================================================================
-   Variant 1: Choroid Deep (Nature Dark Baseline — Max Contrast 16.48:1, Myopia-Informed)
+   Variant 1: eNature Dark (Baseline — Positive Contrast 16.48:1, Myopia-Informed)
    Aleman, Wang & Schaeffel (2018) / Swiatczak & Schaeffel (2022, 2025)
    ========================================================================== */
 :root,
@@ -145,55 +162,77 @@
 [data-theme='deep'],
 [data-theme='nature'],
 [data-theme='nature-dark'],
+[data-theme='enature'],
+[data-theme='enature-dark'],
+[data-enature='dark'],
 [data-choroid='deep'] {
   color-scheme: dark;
 
-  /* Choroid Universal Tokens (APCA |Lc| >= 60.6 on raised code blocks) */
-  --choroid-background-base: #0A0F14;
-  --choroid-background-raised: #101820;
-  --choroid-background-overlay: #17222C;
-  --choroid-background-highlight: #22313D;
-  --choroid-background-border: #2C3C49;
-  --choroid-text-primary: #E9EEF3;
-  --choroid-text-secondary: #B8C4CF;
-  --choroid-text-muted: #8C9DAB;
-  --choroid-accent-red: #F69B96;     /* Strictly reserved for errors */
-  --choroid-accent-orange: #F3A76A;
-  --choroid-accent-yellow: #F2CC6B;  /* Lowest dark-mode visual fatigue */
-  --choroid-accent-green: #8FD694;
-  --choroid-accent-teal: #56D6CA;
-  --choroid-accent-blue: #79BDFF;
-  --choroid-accent-purple: #C2A8F3;
-  --choroid-accent-pink: #F49BC1;
-  --choroid-body-weight: 450;
+  /* eNature Universal Tokens (APCA |Lc| >= 60.6 on raised code blocks) */
+  --enature-background-base: #0A0F14;
+  --enature-background-raised: #101820;
+  --enature-background-overlay: #17222C;
+  --enature-background-highlight: #22313D;
+  --enature-background-border: #2C3C49;
+  --enature-text-primary: #E9EEF3;
+  --enature-text-secondary: #B8C4CF;
+  --enature-text-muted: #8C9DAB;
+  --enature-accent-red: #F69B96;     /* Strictly reserved for errors */
+  --enature-accent-orange: #F3A76A;
+  --enature-accent-yellow: #F2CC6B;  /* Lowest dark-mode visual fatigue */
+  --enature-accent-green: #8FD694;
+  --enature-accent-teal: #56D6CA;
+  --enature-accent-blue: #79BDFF;
+  --enature-accent-purple: #C2A8F3;
+  --enature-accent-pink: #F49BC1;
+  --enature-body-weight: 450;
+
+  /* Backward-compatible aliases */
+  --choroid-background-base: var(--enature-background-base);
+  --choroid-background-raised: var(--enature-background-raised);
+  --choroid-background-overlay: var(--enature-background-overlay);
+  --choroid-background-highlight: var(--enature-background-highlight);
+  --choroid-background-border: var(--enature-background-border);
+  --choroid-text-primary: var(--enature-text-primary);
+  --choroid-text-secondary: var(--enature-text-secondary);
+  --choroid-text-muted: var(--enature-text-muted);
+  --choroid-accent-red: var(--enature-accent-red);
+  --choroid-accent-orange: var(--enature-accent-orange);
+  --choroid-accent-yellow: var(--enature-accent-yellow);
+  --choroid-accent-green: var(--enature-accent-green);
+  --choroid-accent-teal: var(--enature-accent-teal);
+  --choroid-accent-blue: var(--enature-accent-blue);
+  --choroid-accent-purple: var(--enature-accent-purple);
+  --choroid-accent-pink: var(--enature-accent-pink);
+  --choroid-body-weight: var(--enature-body-weight);
 
   /* UI System Mappings */
-  --bg-body: var(--choroid-background-base);
-  --bg-surface: var(--choroid-background-raised);
-  --bg-surface-raised: var(--choroid-background-overlay);
-  --bg-surface-elevated: var(--choroid-background-highlight);
-  --bg-muted: var(--choroid-background-overlay);
+  --bg-body: var(--enature-background-base);
+  --bg-surface: var(--enature-background-raised);
+  --bg-surface-raised: var(--enature-background-overlay);
+  --bg-surface-elevated: var(--enature-background-highlight);
+  --bg-muted: var(--enature-background-overlay);
   --bg-overlay: rgba(10, 15, 20, 0.96);
 
-  --ink: var(--choroid-text-primary);
-  --ink-2: var(--choroid-text-secondary);
-  --ink-muted: var(--choroid-text-muted);
+  --ink: var(--enature-text-primary);
+  --ink-2: var(--enature-text-secondary);
+  --ink-muted: var(--enature-text-muted);
   --ink-faint: #5A6D7C;
 
-  --border: var(--choroid-background-border);
+  --border: var(--enature-background-border);
   --border-strong: rgba(233, 238, 243, 0.22);
 
-  --brand: var(--choroid-accent-teal);
+  --brand: var(--enature-accent-teal);
   --brand-hover: #72DED4;
   --brand-subtle: rgba(86, 214, 202, 0.12);
 
-  --accent: var(--choroid-accent-orange);
+  --accent: var(--enature-accent-orange);
   --accent-subtle: rgba(243, 167, 106, 0.12);
-  --warning: var(--choroid-accent-yellow);
+  --warning: var(--enature-accent-yellow);
   --warning-subtle: rgba(242, 204, 107, 0.12);
-  --danger: var(--choroid-accent-red); /* Strictly reserved for errors/critical alerts */
+  --danger: var(--enature-accent-red); /* Strictly reserved for errors/critical alerts */
   --danger-subtle: rgba(246, 155, 150, 0.12);
-  --success: var(--choroid-accent-green);
+  --success: var(--enature-accent-green);
   --success-subtle: rgba(143, 214, 148, 0.12);
   --selection-fg: #F2CC6B;
   --selection-bg: #22313D;
@@ -272,59 +311,80 @@
 }
 
 /* ==========================================================================
-   Variant 3: Choroid Lumen (Nature Light — High Ambient & Proofreading Fallback 16.34:1)
+   Variant 2: eNature Light (High Ambient & Daylight Fallback 16.34:1)
    Explicitly noted: NOT myopia-informed, provided for high-ambient daylight legibility
    ========================================================================== */
 [data-theme='light'],
 [data-theme='lumen'],
 [data-theme='nature-light'],
+[data-theme='enature-light'],
+[data-enature='light'],
 [data-choroid='lumen'] {
   color-scheme: light;
 
-  --choroid-background-base: #F5F7F9;
-  --choroid-background-raised: #ECEFF3;
-  --choroid-background-overlay: #E2E7EC;
-  --choroid-background-highlight: #D3DAE2;
-  --choroid-background-border: #BFC8D2;
-  --choroid-text-primary: #121A22;
-  --choroid-text-secondary: #3B4856;
-  --choroid-text-muted: #586776;
-  --choroid-accent-red: #A81E14;
-  --choroid-accent-orange: #8F4106;
-  --choroid-accent-yellow: #6E4C08;
-  --choroid-accent-green: #1A6B33;
-  --choroid-accent-teal: #0B6A63;
-  --choroid-accent-blue: #1A55A3;
-  --choroid-accent-purple: #5F3DB5;
-  --choroid-accent-pink: #A3244F;
-  --choroid-body-weight: 400;
+  --enature-background-base: #F5F7F9;
+  --enature-background-raised: #ECEFF3;
+  --enature-background-overlay: #E2E7EC;
+  --enature-background-highlight: #D3DAE2;
+  --enature-background-border: #BFC8D2;
+  --enature-text-primary: #121A22;
+  --enature-text-secondary: #3B4856;
+  --enature-text-muted: #586776;
+  --enature-accent-red: #A81E14;
+  --enature-accent-orange: #8F4106;
+  --enature-accent-yellow: #6E4C08;
+  --enature-accent-green: #1A6B33;
+  --enature-accent-teal: #0B6A63;
+  --enature-accent-blue: #1A55A3;
+  --enature-accent-purple: #5F3DB5;
+  --enature-accent-pink: #A3244F;
+  --enature-body-weight: 400;
 
-  --bg-body: var(--choroid-background-base);
-  --bg-surface: var(--choroid-background-raised);
-  --bg-surface-raised: var(--choroid-background-overlay);
+  /* Backward-compatible aliases */
+  --choroid-background-base: var(--enature-background-base);
+  --choroid-background-raised: var(--enature-background-raised);
+  --choroid-background-overlay: var(--enature-background-overlay);
+  --choroid-background-highlight: var(--enature-background-highlight);
+  --choroid-background-border: var(--enature-background-border);
+  --choroid-text-primary: var(--enature-text-primary);
+  --choroid-text-secondary: var(--enature-text-secondary);
+  --choroid-text-muted: var(--enature-text-muted);
+  --choroid-accent-red: var(--enature-accent-red);
+  --choroid-accent-orange: var(--enature-accent-orange);
+  --choroid-accent-yellow: var(--enature-accent-yellow);
+  --choroid-accent-green: var(--enature-accent-green);
+  --choroid-accent-teal: var(--enature-accent-teal);
+  --choroid-accent-blue: var(--enature-accent-blue);
+  --choroid-accent-purple: var(--enature-accent-purple);
+  --choroid-accent-pink: var(--enature-accent-pink);
+  --choroid-body-weight: var(--enature-body-weight);
+
+  --bg-body: var(--enature-background-base);
+  --bg-surface: var(--enature-background-raised);
+  --bg-surface-raised: var(--enature-background-overlay);
   --bg-surface-elevated: #FFFFFF;
-  --bg-muted: var(--choroid-background-highlight);
+  --bg-muted: var(--enature-background-highlight);
   --bg-overlay: rgba(245, 247, 249, 0.96);
 
-  --ink: var(--choroid-text-primary);
-  --ink-2: var(--choroid-text-secondary);
-  --ink-muted: var(--choroid-text-muted);
+  --ink: var(--enature-text-primary);
+  --ink-2: var(--enature-text-secondary);
+  --ink-muted: var(--enature-text-muted);
   --ink-faint: #9AA8B7;
 
-  --border: var(--choroid-background-border);
+  --border: var(--enature-background-border);
   --border-strong: rgba(18, 26, 34, 0.24);
 
-  --brand: var(--choroid-accent-teal);
+  --brand: var(--enature-accent-teal);
   --brand-hover: #084F4A;
   --brand-subtle: rgba(11, 106, 99, 0.10);
 
-  --accent: var(--choroid-accent-orange);
+  --accent: var(--enature-accent-orange);
   --accent-subtle: rgba(143, 65, 6, 0.10);
-  --warning: var(--choroid-accent-yellow);
+  --warning: var(--enature-accent-yellow);
   --warning-subtle: rgba(110, 76, 8, 0.10);
-  --danger: var(--choroid-accent-red);
+  --danger: var(--enature-accent-red);
   --danger-subtle: rgba(168, 30, 20, 0.10);
-  --success: var(--choroid-accent-green);
+  --success: var(--enature-accent-green);
   --success-subtle: rgba(26, 107, 51, 0.10);
   --selection-fg: #121A22;
   --selection-bg: #D3DAE2;
@@ -661,40 +721,35 @@ mark, ::selection {
 .theme-icon {
   display: none;
 }
-:root .theme-icon--deep,
 :root .theme-icon--moon,
-[data-theme='dark'] .theme-icon--deep,
-[data-theme='deep'] .theme-icon--deep,
-[data-theme='nature'] .theme-icon--deep,
-[data-theme='nature-dark'] .theme-icon--deep,
-[data-choroid='deep'] .theme-icon--deep {
+[data-theme='dark'] .theme-icon--moon,
+[data-enature='dark'] .theme-icon--moon,
+[data-theme='deep'] .theme-icon--moon,
+[data-theme='nature'] .theme-icon--moon,
+[data-theme='nature-dark'] .theme-icon--moon,
+[data-choroid='deep'] .theme-icon--moon {
   display: inline-flex;
 }
-[data-theme='soft'] .theme-icon--soft,
-[data-choroid='soft'] .theme-icon--soft {
-  display: inline-flex;
-}
-[data-theme='soft'] .theme-icon--deep,
-[data-theme='soft'] .theme-icon--moon,
-[data-choroid='soft'] .theme-icon--deep,
-[data-choroid='soft'] .theme-icon--moon {
+:root .theme-icon--sun,
+[data-theme='dark'] .theme-icon--sun,
+[data-enature='dark'] .theme-icon--sun,
+[data-theme='deep'] .theme-icon--sun,
+[data-theme='nature'] .theme-icon--sun,
+[data-theme='nature-dark'] .theme-icon--sun,
+[data-choroid='deep'] .theme-icon--sun {
   display: none;
 }
-[data-theme='light'] .theme-icon--lumen,
 [data-theme='light'] .theme-icon--sun,
-[data-theme='lumen'] .theme-icon--lumen,
-[data-theme='nature-light'] .theme-icon--lumen,
+[data-enature='light'] .theme-icon--sun,
+[data-theme='lumen'] .theme-icon--sun,
 [data-theme='nature-light'] .theme-icon--sun,
-[data-choroid='lumen'] .theme-icon--lumen {
+[data-choroid='lumen'] .theme-icon--sun {
   display: inline-flex;
 }
-[data-theme='light'] .theme-icon--deep,
 [data-theme='light'] .theme-icon--moon,
-[data-theme='lumen'] .theme-icon--deep,
+[data-enature='light'] .theme-icon--moon,
 [data-theme='lumen'] .theme-icon--moon,
-[data-theme='nature-light'] .theme-icon--deep,
 [data-theme='nature-light'] .theme-icon--moon,
-[data-choroid='lumen'] .theme-icon--deep,
 [data-choroid='lumen'] .theme-icon--moon {
   display: none;
 }
@@ -1554,41 +1609,41 @@ pre:hover .code-copy-btn,
   color: var(--brand);
 }
 
-/* Syntax Highlighting Tokens (Choroid v3.0 / Nature System) */
-/* Deep Variant (Default Dark Baseline) */
+/* Syntax Highlighting Tokens (eNature System) */
+/* eNature Dark (Default Baseline) */
 :root .highlight .c, :root .highlight .c1, :root .highlight .cm,
 [data-theme='dark'] .highlight .c, [data-theme='deep'] .highlight .c,
-[data-choroid='deep'] .highlight .c { color: #8c9dab; font-style: italic; }
+[data-enature='dark'] .highlight .c, [data-choroid='deep'] .highlight .c { color: #8c9dab; font-style: italic; }
 :root .highlight .k, :root .highlight .kd, :root .highlight .kn,
 [data-theme='dark'] .highlight .k, [data-theme='deep'] .highlight .k,
-[data-choroid='deep'] .highlight .k { color: #79bdff; font-weight: 500; }
+[data-enature='dark'] .highlight .k, [data-choroid='deep'] .highlight .k { color: #79bdff; font-weight: 500; }
 :root .highlight .s, :root .highlight .s1, :root .highlight .s2,
 [data-theme='dark'] .highlight .s, [data-theme='deep'] .highlight .s,
-[data-choroid='deep'] .highlight .s { color: #8fd694; }
+[data-enature='dark'] .highlight .s, [data-choroid='deep'] .highlight .s { color: #8fd694; }
 :root .highlight .nf,
 [data-theme='dark'] .highlight .nf, [data-theme='deep'] .highlight .nf,
-[data-choroid='deep'] .highlight .nf { color: #f2cc6b; }
+[data-enature='dark'] .highlight .nf, [data-choroid='deep'] .highlight .nf { color: #f2cc6b; }
 :root .highlight .nc,
 [data-theme='dark'] .highlight .nc, [data-theme='deep'] .highlight .nc,
-[data-choroid='deep'] .highlight .nc { color: #56d6ca; }
+[data-enature='dark'] .highlight .nc, [data-choroid='deep'] .highlight .nc { color: #56d6ca; }
 :root .highlight .o, :root .highlight .ow,
 [data-theme='dark'] .highlight .o, [data-theme='deep'] .highlight .o,
-[data-choroid='deep'] .highlight .o { color: #b8c4cf; }
+[data-enature='dark'] .highlight .o, [data-choroid='deep'] .highlight .o { color: #b8c4cf; }
 :root .highlight .m, :root .highlight .mi, :root .highlight .mf,
 [data-theme='dark'] .highlight .m, [data-theme='deep'] .highlight .m,
-[data-choroid='deep'] .highlight .m { color: #c2a8f3; }
+[data-enature='dark'] .highlight .m, [data-choroid='deep'] .highlight .m { color: #c2a8f3; }
 :root .highlight .nt,
 [data-theme='dark'] .highlight .nt, [data-theme='deep'] .highlight .nt,
-[data-choroid='deep'] .highlight .nt { color: #f49bc1; } /* Pink tag — Red strictly quarantined for errors */
+[data-enature='dark'] .highlight .nt, [data-choroid='deep'] .highlight .nt { color: #f49bc1; } /* Pink tag — Red strictly quarantined for errors */
 :root .highlight .na,
 [data-theme='dark'] .highlight .na, [data-theme='deep'] .highlight .na,
-[data-choroid='deep'] .highlight .na { color: #f3a76a; }
+[data-enature='dark'] .highlight .na, [data-choroid='deep'] .highlight .na { color: #f3a76a; }
 :root .highlight .no, :root .highlight .nd,
 [data-theme='dark'] .highlight .no, [data-theme='deep'] .highlight .no,
-[data-choroid='deep'] .highlight .no { color: #c2a8f3; }
+[data-enature='dark'] .highlight .no, [data-choroid='deep'] .highlight .no { color: #c2a8f3; }
 :root .highlight .err,
 [data-theme='dark'] .highlight .err, [data-theme='deep'] .highlight .err,
-[data-choroid='deep'] .highlight .err { color: #f69b96; text-decoration: underline; }
+[data-enature='dark'] .highlight .err, [data-choroid='deep'] .highlight .err { color: #f69b96; text-decoration: underline; }
 
 /* Soft Variant (Reduced Halation 13.55:1) */
 [data-theme='soft'] .highlight .c, [data-theme='soft'] .highlight .c1, [data-theme='soft'] .highlight .cm,
@@ -1614,29 +1669,29 @@ pre:hover .code-copy-btn,
 [data-theme='soft'] .highlight .err,
 [data-choroid='soft'] .highlight .err { color: #f79e99; text-decoration: underline; }
 
-/* Lumen Variant (Light Fallback 16.34:1) */
+/* eNature Light (Light Fallback 16.34:1) */
 [data-theme='light'] .highlight .c, [data-theme='light'] .highlight .c1, [data-theme='light'] .highlight .cm,
-[data-theme='lumen'] .highlight .c, [data-choroid='lumen'] .highlight .c { color: #586776; font-style: italic; }
+[data-theme='lumen'] .highlight .c, [data-enature='light'] .highlight .c, [data-choroid='lumen'] .highlight .c { color: #586776; font-style: italic; }
 [data-theme='light'] .highlight .k, [data-theme='light'] .highlight .kd, [data-theme='light'] .highlight .kn,
-[data-theme='lumen'] .highlight .k, [data-choroid='lumen'] .highlight .k { color: #1a55a3; font-weight: 500; }
+[data-theme='lumen'] .highlight .k, [data-enature='light'] .highlight .k, [data-choroid='lumen'] .highlight .k { color: #1a55a3; font-weight: 500; }
 [data-theme='light'] .highlight .s, [data-theme='light'] .highlight .s1, [data-theme='light'] .highlight .s2,
-[data-theme='lumen'] .highlight .s, [data-choroid='lumen'] .highlight .s { color: #1a6b33; }
+[data-theme='lumen'] .highlight .s, [data-enature='light'] .highlight .s, [data-choroid='lumen'] .highlight .s { color: #1a6b33; }
 [data-theme='light'] .highlight .nf,
-[data-theme='lumen'] .highlight .nf, [data-choroid='lumen'] .highlight .nf { color: #6e4c08; }
+[data-theme='lumen'] .highlight .nf, [data-enature='light'] .highlight .nf, [data-choroid='lumen'] .highlight .nf { color: #6e4c08; }
 [data-theme='light'] .highlight .nc,
-[data-theme='lumen'] .highlight .nc, [data-choroid='lumen'] .highlight .nc { color: #0b6a63; }
+[data-theme='lumen'] .highlight .nc, [data-enature='light'] .highlight .nc, [data-choroid='lumen'] .highlight .nc { color: #0b6a63; }
 [data-theme='light'] .highlight .o, [data-theme='light'] .highlight .ow,
-[data-theme='lumen'] .highlight .o, [data-choroid='lumen'] .highlight .o { color: #3b4856; }
+[data-theme='lumen'] .highlight .o, [data-enature='light'] .highlight .o, [data-choroid='lumen'] .highlight .o { color: #3b4856; }
 [data-theme='light'] .highlight .m, [data-theme='light'] .highlight .mi, [data-theme='light'] .highlight .mf,
-[data-theme='lumen'] .highlight .m, [data-choroid='lumen'] .highlight .m { color: #5f3db5; }
+[data-theme='lumen'] .highlight .m, [data-enature='light'] .highlight .m, [data-choroid='lumen'] .highlight .m { color: #5f3db5; }
 [data-theme='light'] .highlight .nt,
-[data-theme='lumen'] .highlight .nt, [data-choroid='lumen'] .highlight .nt { color: #a3244f; }
+[data-theme='lumen'] .highlight .nt, [data-enature='light'] .highlight .nt, [data-choroid='lumen'] .highlight .nt { color: #a3244f; }
 [data-theme='light'] .highlight .na,
-[data-theme='lumen'] .highlight .na, [data-choroid='lumen'] .highlight .na { color: #8f4106; }
+[data-theme='lumen'] .highlight .na, [data-enature='light'] .highlight .na, [data-choroid='lumen'] .highlight .na { color: #8f4106; }
 [data-theme='light'] .highlight .no, [data-theme='light'] .highlight .nd,
-[data-theme='lumen'] .highlight .no, [data-choroid='lumen'] .highlight .no { color: #5f3db5; }
+[data-theme='lumen'] .highlight .no, [data-enature='light'] .highlight .no, [data-choroid='lumen'] .highlight .no { color: #5f3db5; }
 [data-theme='light'] .highlight .err,
-[data-theme='lumen'] .highlight .err, [data-choroid='lumen'] .highlight .err { color: #a81e14; text-decoration: underline; }
+[data-theme='lumen'] .highlight .err, [data-enature='light'] .highlight .err, [data-choroid='lumen'] .highlight .err { color: #a81e14; text-decoration: underline; }
 
 /* ---------- 9. Projects & Blog Showcases ---------- */
 /* Project Page */

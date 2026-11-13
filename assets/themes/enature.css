@@ -1,0 +1,235 @@
+/**
+ * eNature Theme — Design Tokens & Reading Presets
+ * Grounded in Retinal Neurobiology & Myopia Research
+ * (Aleman, Wang & Schaeffel 2018; Swiatczak & Schaeffel 2022; Ingrassia et al. 2024; Fan et al. 2024)
+ * 
+ * Two calibrated core versions:
+ * - eNature Dark: Max contrast positive-polarity baseline (16.48:1 base / 15.33:1 raised), ON-pathway active
+ * - eNature Light: Daylight high-ambient fallback (16.34:1 base / 15.22:1 raised) for proofreading (NOT myopia-informed)
+ */
+
+/* ==========================================================================
+   1. eNature Dark — Default Positive-Contrast Baseline
+   ========================================================================== */
+:root,
+[data-theme='dark'],
+[data-theme='deep'],
+[data-theme='nature'],
+[data-theme='nature-dark'],
+[data-theme='enature'],
+[data-theme='enature-dark'],
+[data-enature='dark'],
+[data-choroid='deep'] {
+  color-scheme: dark;
+
+  /* Surfaces */
+  --bg-body: #0A0F14;
+  --bg-surface: #101820;
+  --bg-surface-raised: #17222C;
+  --bg-surface-elevated: #22313D;
+  --bg-muted: #1A2530;
+  --bg-overlay: rgba(10, 15, 20, 0.96);
+
+  /* Inks (Cool-Neutral D65 preserving blue-channel LCA cues) */
+  --ink: #E9EEF3;
+  --ink-2: #B8C4CF;
+  --ink-muted: #8C9DAB;
+  --ink-faint: #5A6D7C;
+
+  /* Structural Borders */
+  --border: #2C3C49;
+  --border-strong: rgba(233, 238, 243, 0.22);
+
+  /* Accents (|Lc| >= 60.6 on raised pre/code surfaces) */
+  --brand: #56D6CA;
+  --brand-hover: #72DED4;
+  --brand-subtle: rgba(86, 214, 202, 0.12);
+
+  --accent-teal: #56D6CA;
+  --accent-green: #8FD694;
+  --accent-orange: #F3A76A;
+  --accent-yellow: #F2CC6B;
+  --accent-blue: #79BDFF;
+  --accent-purple: #C2A8F3;
+  --accent-pink: #F49BC1;
+  --accent-red: #F69B96;
+
+  /* Low visual fatigue priority */
+  --accent: #F3A76A;
+  --warning: #F2CC6B;
+  --danger: #F69B96;
+  --success: #8FD694;
+  --selection-fg: #F2CC6B;
+  --selection-bg: #22313D;
+
+  --enature-body-weight: 450;
+  --choroid-body-weight: 450;
+
+  /* Syntax Roles */
+  --syn-comment: #8C9DAB;
+  --syn-keyword: #79BDFF;
+  --syn-string: #8FD694;
+  --syn-number: #F3A76A;
+  --syn-function: #F2CC6B;
+  --syn-type: #56D6CA;
+  --syn-variable: #E9EEF3;
+  --syn-parameter: #F3A76A;
+  --syn-tag: #F49BC1;
+  --syn-attribute: #F3A76A;
+  --syn-constant: #C2A8F3;
+  --syn-operator: #B8C4CF;
+  --syn-error: #F69B96;
+  --syn-warning: #F2CC6B;
+}
+
+/* ==========================================================================
+   2. eNature Light — Daylight Proofreading Fallback
+   ========================================================================== */
+[data-theme='light'],
+[data-theme='lumen'],
+[data-theme='nature-light'],
+[data-theme='enature-light'],
+[data-enature='light'],
+[data-choroid='lumen'] {
+  color-scheme: light;
+
+  /* Surfaces */
+  --bg-body: #F5F7F9;
+  --bg-surface: #ECEFF3;
+  --bg-surface-raised: #E2E7EC;
+  --bg-surface-elevated: #D3DAE2;
+  --bg-muted: #E5EAEF;
+  --bg-overlay: rgba(245, 247, 249, 0.96);
+
+  /* Inks */
+  --ink: #121A22;
+  --ink-2: #3B4856;
+  --ink-muted: #586776;
+  --ink-faint: #8E9CA9;
+
+  /* Structural Borders */
+  --border: #BFC8D2;
+  --border-strong: rgba(18, 26, 34, 0.22);
+
+  /* Accents */
+  --brand: #0B6A63;
+  --brand-hover: #074A45;
+  --brand-subtle: rgba(11, 106, 99, 0.10);
+
+  --accent-teal: #0B6A63;
+  --accent-green: #1A6B33;
+  --accent-orange: #8F4106;
+  --accent-yellow: #6E4C08;
+  --accent-blue: #1A55A3;
+  --accent-purple: #5F3DB5;
+  --accent-pink: #A3244F;
+  --accent-red: #A81E14;
+
+  --accent: #8F4106;
+  --warning: #6E4C08;
+  --danger: #A81E14;
+  --success: #1A6B33;
+  --selection-fg: #121A22;
+  --selection-bg: #D3DAE2;
+
+  --enature-body-weight: 400;
+  --choroid-body-weight: 400;
+
+  /* Syntax Roles */
+  --syn-comment: #586776;
+  --syn-keyword: #1A55A3;
+  --syn-string: #1A6B33;
+  --syn-number: #8F4106;
+  --syn-function: #6E4C08;
+  --syn-type: #0B6A63;
+  --syn-variable: #121A22;
+  --syn-parameter: #8F4106;
+  --syn-tag: #A3244F;
+  --syn-attribute: #8F4106;
+  --syn-constant: #5F3DB5;
+  --syn-operator: #3B4856;
+  --syn-error: #A81E14;
+  --syn-warning: #6E4C08;
+}
+
+/* ==========================================================================
+   3. Reading Size Presets (~34.4 arcmin Basis)
+   ========================================================================== */
+/* Cap-Height Basis (0.70em, Default) */
+:root {
+  --enature-size-30cm: 16.2px;
+  --enature-size-40cm: 21.6px;
+  --enature-size-50cm: 27.0px;
+  --enature-size-60cm: 32.4px;
+  --enature-size-70cm: 37.8px;
+  --enature-reading-size: var(--enature-size-40cm);
+
+  --choroid-size-30cm: var(--enature-size-30cm);
+  --choroid-size-40cm: var(--enature-size-40cm);
+  --choroid-size-50cm: var(--enature-size-50cm);
+  --choroid-size-60cm: var(--enature-size-60cm);
+  --choroid-size-70cm: var(--enature-size-70cm);
+  --choroid-reading-size: var(--enature-reading-size);
+}
+
+/* Optional Strict Lowercase x-height Basis (0.52em = 34.4 arcmin) */
+:root[data-enature-metric="x-height"],
+:root[data-choroid-metric="x-height"] {
+  --enature-size-30cm: 21.8px;
+  --enature-size-40cm: 29.1px;
+  --enature-size-50cm: 36.4px;
+  --enature-size-60cm: 43.6px;
+  --enature-size-70cm: 50.9px;
+  --choroid-size-30cm: 21.8px;
+  --choroid-size-40cm: 29.1px;
+  --choroid-size-50cm: 36.4px;
+  --choroid-size-60cm: 43.6px;
+  --choroid-size-70cm: 50.9px;
+}
+
+/* Attribute Selectors for Distance */
+:root[data-enature-distance='30cm'], :root[data-choroid-distance='30cm'], :root[data-reading-distance='30cm'] { --enature-reading-size: var(--enature-size-30cm); --choroid-reading-size: var(--enature-size-30cm); }
+:root[data-enature-distance='40cm'], :root[data-choroid-distance='40cm'], :root[data-reading-distance='40cm'] { --enature-reading-size: var(--enature-size-40cm); --choroid-reading-size: var(--enature-size-40cm); }
+:root[data-enature-distance='50cm'], :root[data-choroid-distance='50cm'], :root[data-reading-distance='50cm'] { --enature-reading-size: var(--enature-size-50cm); --choroid-reading-size: var(--enature-size-50cm); }
+:root[data-enature-distance='60cm'], :root[data-choroid-distance='60cm'], :root[data-reading-distance='60cm'] { --enature-reading-size: var(--enature-size-60cm); --choroid-reading-size: var(--enature-size-60cm); }
+:root[data-enature-distance='70cm'], :root[data-choroid-distance='70cm'], :root[data-reading-distance='70cm'] { --enature-reading-size: var(--enature-size-70cm); --choroid-reading-size: var(--enature-size-70cm); }
+
+/* Typography and Subpixel Stem-Thinning Protection */
+body {
+  background-color: var(--bg-body);
+  color: var(--ink);
+  font-weight: var(--enature-body-weight, 450);
+  line-height: 1.65;
+  font-size-adjust: 0.52;
+  -webkit-font-smoothing: auto;
+  text-rendering: optimizeLegibility;
+}
+
+.enature-reading,
+.choroid-reading {
+  font-size: var(--enature-reading-size);
+  line-height: 1.65;
+  max-width: 62ch;
+  letter-spacing: 0.012em;
+  word-spacing: 0.02em;
+}
+
+code, pre, kbd, samp {
+  background-color: var(--bg-surface);
+  color: var(--ink);
+  border: 1px solid var(--border);
+}
+
+a {
+  color: var(--brand);
+  text-underline-offset: 0.18em;
+}
+
+mark, ::selection {
+  background-color: var(--selection-bg);
+  color: var(--selection-fg);
+}
+
+.error, .err, [aria-invalid="true"] {
+  color: var(--danger) !important;
+}
