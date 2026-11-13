@@ -1752,7 +1752,6 @@ static void render_footer(StrBuf *out) {
     buf_append_str(out,
         "<footer class=\"footer\">\n"
         "  <div class=\"container\">\n"
-        "    <hr class=\"divider\">\n"
         "    <div class=\"footer__row\">\n"
         "      <a class=\"brand\" href=\"/\" aria-label=\""
     );
@@ -2904,7 +2903,7 @@ static void render_projects_landing(const char *out_dir) {
 
     buf_append_str(&body,
         "<div class=\"container section\">\n"
-        "  <header class=\"center page-header\">\n"
+        "  <header class=\"page-header\">\n"
         "    <h1 class=\"display-1\">Projects</h1>\n"
         "    <p class=\"lead\">Things I've built, with write-ups, tech stacks and links.</p>\n"
         "  </header>\n\n"
@@ -2983,7 +2982,7 @@ static void render_blog_landing(const char *out_dir) {
 
     buf_append_str(&body,
         "<div class=\"container section\">\n"
-        "  <header class=\"center page-header\">\n"
+        "  <header class=\"page-header\">\n"
         "    <h1 class=\"display-1\">Blog</h1>\n"
         "    <p class=\"lead\">Notes on design, engineering and shipping.</p>\n"
         "  </header>\n\n"

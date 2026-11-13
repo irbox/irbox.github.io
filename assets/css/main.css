@@ -922,6 +922,11 @@ mark, ::selection {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
+  margin-bottom: var(--space-8);
+}
+.center .chips,
+.chips--center {
+  justify-content: center;
 }
 .chip {
   display: inline-flex;
@@ -2280,6 +2285,9 @@ dialog.search {
     flex-direction: column;
     padding: var(--space-6) var(--space-4);
   }
+  .doc {
+    flex-direction: column;
+  }
   .outline {
     display: none;
   }
@@ -2320,7 +2328,8 @@ dialog.search {
     font-size: 1rem;
     max-width: 100%;
   }
-  .container {
+  .container,
+  .topnav__inner {
     padding-inline: var(--space-4);
   }
   .hero {
@@ -2338,7 +2347,8 @@ dialog.search {
 }
 
 @media (max-width: 480px) {
-  .container {
+  .container,
+  .topnav__inner {
     padding-inline: 16px;
   }
   .hero__cta {
@@ -2416,6 +2426,8 @@ dialog.search {
 .doc {
   flex: 1;
   min-width: 0;
+  display: flex;
+  gap: var(--space-8);
 }
 .page-section {
   padding-block: var(--space-8);
@@ -2426,7 +2438,11 @@ dialog.search {
   border-bottom: 1px solid var(--border);
 }
 .category {
-  margin-bottom: var(--space-8);
+  margin-bottom: var(--space-10);
+}
+.category h2,
+.category .display-3 {
+  margin-bottom: var(--space-4);
 }
 .release {
   display: flex;
